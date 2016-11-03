@@ -1,0 +1,44 @@
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 0px;
+  padding: 10px 16px;
+  background-color: #f5bb05;
+  color: black;
+}
+
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn.active,
+.open .dropdown-toggle.btn {
+  opacity: 0.6;
+}
+
+.lnk {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lnk:hover,
+.lnk:focus,
+.lnk:active,
+.lnk.active,
+.open .dropdown-toggle.lnk {
+  background-color: #f5bb05;
+  background-image: none;
+}

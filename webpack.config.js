@@ -1,19 +1,35 @@
 var webpack = require('webpack');
 var path = require('path');
+var envFile = require('node-env-file');
+
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+try {
+  envFile(path.join(__dirname, 'config/' + process.env.NODE_ENV + '.env'));
+} catch (e) {
+
+}
 
 module.exports = {
   entry: [
     'script!jquery/dist/jquery.min.js',
-    'script!foundation-sites/dist/foundation.min.js',
     './app/app.jsx'
   ],
-  externals: {
-    jquery: 'jQuery'
-  },
   plugins: [
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jQuery': 'jquery'
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+         D_EMAIL: JSON.stringify(process.env.D_EMAIL)
+      }
     })
   ],
   output: {
@@ -22,8 +38,13 @@ module.exports = {
   },
   resolve: {
     root: __dirname,
+    modulesDirectories: [
+      'node_modules',
+      './app/components',
+      './app/api',
+      './app/css'
+    ],
     alias: {
-      applicationStyles: 'app/styles/app.scss'
     },
     extensions: ['', '.js', '.jsx']
   },
@@ -34,15 +55,14 @@ module.exports = {
         query: {
           presets: ['react', 'es2015', 'stage-0']
         },
+
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/
-      }
+      },
+      { test: /\.css$/, loader: "style!css" },
+
+      { test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url' }
     ]
   },
-  sassLoader: {
-    includePaths: [
-      path.resolve(__dirname, './node_modules/foundation-sites/scss')
-    ]
-  },
-  devtool: 'cheap-module-eval-source-map'
+  devtool: process.env.NODE_ENV === 'production' ? undefined : 'cheap-module-eval-source-map'
 };
