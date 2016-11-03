@@ -5,7 +5,8 @@ var nodemailer = require('nodemailer');
 
 // Create our app
 var app = express();
-var router = express.Router();
+
+const PORT = process.env.PORT || 3000;
 
 
 app.use(function (req, res, next){
@@ -58,8 +59,5 @@ app.get('/send',function(req,res){
 });
 });
 
-
-app.set('port', (process.env.PORT || 3000));
-app.listen(app.get('port'), function () {
-  console.log('App is running at port', app.get('port'));
-});
+app.listen(PORT);
+console.log("server started on port " + PORT);
