@@ -1,7 +1,6 @@
 var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
-var bodyParser = require('body-parser');
 
 
 // Create our app
@@ -17,12 +16,9 @@ app.use(function (req, res, next){
   }
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 
 // serve static assets normally
-app.use(express.static('public'));
-//app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 
 // handle every other route with index.html, which will contain
 // a script tag to your application's JavaScript file(s).
@@ -39,14 +35,11 @@ var smtpConfig = {
 };
 var smtpTransport = nodemailer.createTransport(smtpConfig);
 
-app.use('/send', router);
 // handle every other route with index.html, which will contain
 // a script tag to your application's JavaScript file(s).
-app.get('*', function (request, res){
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-});
 
-router.get('/',function(req,res){
+
+app.get('/send',function(req,res){
     var mailOptions={
         to : req.query.to,
         subject : req.query.subject,
