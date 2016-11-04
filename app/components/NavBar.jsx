@@ -1,40 +1,39 @@
 import React from 'react';
-import {Navbar, NavItem, NavDropdown, MenuItem,Nav} from 'react-bootstrap';
-import lnk from 'styles.css'
+import {Navbar, Nav, NavItem, FormGroup, FormControl} from 'react-bootstrap';
+import select from 'styles.css'
 
 export var NavBar = React.createClass({
 
   getInitialState: function() {
     return {
-      active: 1
+
     };
   },
 
   handleSelect: function(selectedKey) {
-   this.setState({
-     active: selectedKey
-   });
+
  },
 
  render: function () {
 
   return (
-    <Navbar collapseOnSelect style={{backgroundColor: '#ffffff',borderWidth: '5px', borderBottomColor: '#f5bd00'}}>
+    <Navbar style={{backgroundColor: '#ffffff',borderWidth: '5px', borderBottomColor: '#f5bd00', padding: '15px'}}>
       <Navbar.Header>
         <Navbar.Brand>
           <a href="#">
-            <img src="images/logo.png" height="25px" />
+            <img src="images/logo.png" height="40px" />
           </a>
         </Navbar.Brand>
-        <Navbar.Toggle />
       </Navbar.Header>
-      <Navbar.Collapse>
-        <Nav pullRight activeKey={this.state.active} onSelect={this.handleSelect}>
-          <NavItem className="lnk" eventKey="1" href="#top">HOME</NavItem>
-          <NavItem className="lnk" eventKey="2" href="#features">FEATURES</NavItem>
-          <NavItem className="lnk" eventKey="3" href="#contact">CONTACT</NavItem>
-        </Nav>
-      </Navbar.Collapse>
+      <Nav pullRight>
+        <NavItem>
+          <select id="selectCentre" className="select">
+            <option value="bishan">Bishan</option>
+            <option value="bishan">Punggol</option>
+            <option value="bishan">Kovan</option>
+          </select>
+        </NavItem>
+      </Nav>
     </Navbar>
   );
 }

@@ -30,8 +30,8 @@ var smtpConfig = {
     port: 465,
     secure: true, // use SSL
     auth: {
-      user: 'contact@fka.sg', // Your email id
-      pass: 'firstkick1234' // Your password
+      user: process.env.GMAIL_U, // Your email id
+      pass: process.env.GMAIL_P // Your password
     }
 };
 var smtpTransport = nodemailer.createTransport(smtpConfig);

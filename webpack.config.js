@@ -28,7 +28,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-         D_EMAIL: JSON.stringify(process.env.D_EMAIL)
+        GMAIL_U: JSON.stringify(process.env.GMAIL_U),
+        GMAIL_P: JSON.stringify(process.env.GMAIL_P)
       }
     })
   ],

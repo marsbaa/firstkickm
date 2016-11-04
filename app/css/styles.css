@@ -29,16 +29,15 @@
   opacity: 0.6;
 }
 
-.lnk {
-  font-size: 12px;
-  font-weight: 600;
-}
 
-.lnk:hover,
-.lnk:focus,
-.lnk:active,
-.lnk.active,
-.open .dropdown-toggle.lnk {
-  background-color: #f5bb05;
-  background-image: none;
-}
+.select {
+   background-color: #f5bb05;
+   color: white;
+   width:100%;
+   padding: 10px;
+   font-size: 16px;
+   line-height: 1;
+   border: 1px;
+   border-radius: 5px;
+   height: 34px;
+   }
