@@ -17,7 +17,7 @@ export var NavBar = React.createClass({
  render: function () {
 
   return (
-    <Navbar style={{backgroundColor: '#ffffff',borderWidth: '5px', borderBottomColor: '#f5bd00', padding: '15px'}}>
+    <Navbar style={{backgroundColor: '#ffffff', padding: '10px', marginBottom: '0'}}>
       <Navbar.Header>
         <Navbar.Brand>
           <a href="#">
@@ -25,15 +25,6 @@ export var NavBar = React.createClass({
           </a>
         </Navbar.Brand>
       </Navbar.Header>
-      <Nav pullRight>
-        <NavItem>
-          <select id="selectCentre" className="select">
-            <option value="bishan">Bishan</option>
-            <option value="bishan">Punggol</option>
-            <option value="bishan">Kovan</option>
-          </select>
-        </NavItem>
-      </Nav>
     </Navbar>
   );
 }

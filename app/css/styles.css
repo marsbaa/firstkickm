@@ -29,10 +29,18 @@
   opacity: 0.6;
 }
 
+.header {
+  background-color: #f5bb05;
+  width:100%;
+  color: black;
+  border: 1px;
+  border-radius: 3px;
+  overflow: auto;
+}
 
 .select {
    background-color: #f5bb05;
-   color: white;
+   color: black;
    width:100%;
    padding: 10px;
    font-size: 16px;
