@@ -7,11 +7,10 @@ export var CentresProfile = React.createClass({
 
    return (
      <div className="header">
-       <Col xs={0} sm={1} md={1}/>
-       <Col xs={8} sm={8} md={9}>
+       <Col xs={8} md={9}>
          <h4>Centres Profile</h4>
        </Col>
-       <Col xs={4} sm={3} md={2} style={{textAlign: 'right'}}>
+       <Col xs={4} md={2} style={{textAlign: 'right'}}>
          <Button bsStyle="warning">+</Button>
        </Col>
 

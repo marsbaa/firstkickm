@@ -34,7 +34,13 @@
   width:100%;
   color: black;
   border: 1px;
-  border-radius: 3px;
+  overflow: auto;
+}
+
+.formContainer {
+  margin: 0 1px;
+  border: 1px solid #f5bb05;
+  padding: 15px;
   overflow: auto;
 }
 
