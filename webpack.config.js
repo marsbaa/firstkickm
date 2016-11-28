@@ -15,27 +15,46 @@ module.exports = {
     'script!jquery/dist/jquery.min.js',
     './app/app.jsx'
   ],
-  plugins: [
+  plugins: process.env.NODE_ENV === 'production' ? [
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jQuery': 'jquery'
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        API_KEY: JSON.stringify(process.env.API_KEY),
+        AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
+        DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+        STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
+        GMAIL_U: JSON.stringify(process.env.GMAIL_U),
+        GMAIL_P: JSON.stringify(process.env.GMAIL_P)
       }
+    })
+  ] : [
+    new webpack.ProvidePlugin({
+      '$': 'jquery',
+      'jQuery': 'jquery'
     }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        API_KEY: JSON.stringify(process.env.API_KEY),
+        AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
+        DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+        STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
         GMAIL_U: JSON.stringify(process.env.GMAIL_U),
         GMAIL_P: JSON.stringify(process.env.GMAIL_P)
       }
     })
   ],
   output: {
-    path: __dirname,
-    filename: './public/bundle.js'
+    path: 'public',
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
     root: __dirname,
@@ -46,6 +65,9 @@ module.exports = {
       './app/css'
     ],
     alias: {
+      actions: 'app/actions/actions.jsx',
+      reducers: 'app/reducers/reducers.jsx',
+      configureStore: 'app/store/configureStore.jsx'
     },
     extensions: ['', '.js', '.jsx']
   },

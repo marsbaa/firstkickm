@@ -1,8 +1,9 @@
-.btn {
+.mainbtn {
   display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
+  padding: 10px 12px;
+  margin: 3px 5px;
+  font-size: 16px;
+  width: 100%;
   font-weight: normal;
   line-height: 1.42857143;
   text-align: center;
@@ -14,11 +15,40 @@
       -ms-user-select: none;
           user-select: none;
   background-image: none;
-  border: 1px solid transparent;
-  border-radius: 0px;
-  padding: 10px 16px;
-  background-color: #f5bb05;
-  color: black;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px;
+  background-color: #656565;
+  color: white;
+}
+
+.mainbtn:hover,
+.mainbtn:focus,
+.mainbtn:active,
+.mainbtn.active,
+.mainopen .dropdown-toggle.btn {
+  opacity: 0.6;
+}
+
+.btn {
+  display: inline-block;
+  padding: 3px 12px;
+  margin: auto 5px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px;
+  background-color: #656565;
+  color: white;
 }
 
 .btn:hover,
@@ -30,10 +60,30 @@
 }
 
 .header {
-  background-color: #f5bb05;
+  margin-top: 20px;
+  margin-bottom: 5px;
   width:100%;
-  color: black;
   border: 1px;
+  overflow: auto;
+  vertical-align: middle;
+  font-size: 16px;
+  font-family: avenir;
+  padding : 4px 0px;
+}
+
+.headerlnk {
+  text-decoration: none;
+  color: #f5bb05;
+  border-bottom: 1px dashed;
+  padding-top: 5px;
+  fontWeight: 500;
+  margin-left: 20px;
+}
+
+.body {
+  padding: 0px 8px;
+  background-color: white;
+  min-height: 100%;
   overflow: auto;
 }
 
