@@ -9,6 +9,7 @@ export var MainMenu = React.createClass({
 
 
   handleSelect(e) {
+    var {dispatch} = this.props;
     e.preventDefault();
     if (e.target.value === '0') {
       document.getElementById("trials").disabled = true;
@@ -19,6 +20,7 @@ export var MainMenu = React.createClass({
       document.getElementById("trials").disabled = false;
       document.getElementById("student").disabled = false;
       document.getElementById("coach").disabled = false;
+      dispatch(actions.updateSelectedCentre(e.target.value))
     }
   },
 
@@ -40,9 +42,12 @@ export var MainMenu = React.createClass({
                       <option value="2">Jurong</option>
                       <option value="3">Kovan</option>
                       <option value="4">Punggol</option>
+                      <option value="5">Thomson</option>
+                      <option value="6">Tampines</option>
+                      <option value="7">Yishun</option>
                     </FormControl>
                   </FormGroup>
-                <Link to="" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
+                <Link to="/m/tr" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="student" disabled>Student Attendance</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/cp" activeClassName="active"><button className="mainbtn">Centres Profile</button></Link>

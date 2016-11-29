@@ -6,6 +6,13 @@ var compression = require('compression')
 // Create our app
 var app = express();
 
+app.use(function (req, res, next){
+  if (req.headers['x-forwarded-proto'] === 'https') {
+    res.redirect('http://' + req.hostname + req.url);
+  } else {
+    next();
+  }
+});
 
 
 app.use(compression())

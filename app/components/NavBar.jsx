@@ -6,9 +6,15 @@ var actions = require('actions');
 import {Link} from 'react-router'
 
 export var NavBar = React.createClass({
+
   onLogout() {
-  var {dispatch} = this.props;
-  dispatch(actions.startLogout());
+    var {dispatch} = this.props;
+   dispatch(actions.startLogout());
+  },
+
+ componentDidMount() {
+   var {dispatch} = this.props;
+   dispatch(actions.startAddTrials());
  },
 
  render: function () {

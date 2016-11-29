@@ -23,6 +23,19 @@ export var navbarReducer = (state = {link: '', title: ''}, action) => {
   };
 };
 
+export var trialsReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TRIALS':
+      return [
+        ...state,
+        ...action.trials
+      ];
+    default:
+      return state;
+  }
+};
+
+
 export var centreReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_CENTRES':
@@ -35,6 +48,17 @@ export var centreReducer = (state = [], action) => {
         ...state,
         {...action.centre}
       ];
+    default:
+      return state;
+  }
+};
+
+export var selectionReducer = (state={}, action) => {
+  switch (action.type) {
+    case 'UPDATE_SELECTED_CENTRE':
+      return {
+        selectedCentre: action.id
+      };
     default:
       return state;
   }
