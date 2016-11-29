@@ -4,17 +4,18 @@ var {connect} = require('react-redux');
 import {PageHeader, Col, Row} from 'react-bootstrap'
 import TrialsFilter from 'TrialsFilter'
 import Trial from 'Trial'
+import Search from 'Search'
 import moment from 'moment'
 
 export var TrialList = React.createClass({
   componentDidMount () {
-    var {dispatch} = this.props;
+    var {dispatch, selection} = this.props;
     dispatch(actions.updateNavTitle("/m/cp/tr", "Trial List"));
   },
 
   render () {
-    var {trials, selection} = this.props;
-    var filteredTrials = TrialsFilter.filter(trials, selection.selectedCentre, "");
+    var {trials, selection, searchText} = this.props;
+    var filteredTrials = TrialsFilter.filter(trials, selection.selectedCentre, searchText);
     var html=[];
 
     if (filteredTrials.length !== 0) {
@@ -33,13 +34,13 @@ export var TrialList = React.createClass({
             }, 0);
 
             html.push(
-              <Row key={dateId} style={{backgroundColor: '#cdcdcd', padding: '0 10px', borderBottom: '1px solid grey'}}>
-                <Col xs={8} md={8}>
+              <Row key={dateId} style={{backgroundColor: '#ffc600', padding: '0px 15px'}}>
+                <Col xs={9} md={9}>
                   <h5>{moment(dateId).format('DD.MMM YYYY')}</h5>
                 </Col>
-                  <Col xs={2} md={2}>                 <h5 style={{textAlign: 'right'}}>T:{trialNum}</h5>
-                </Col>
-                <Col xs={2} md={2}>                 <h5 style={{color:'green'}}>A:{attendedNum}</h5>
+                  <Col xs={3} md={3} style={{textAlign: 'center'}}>
+                    <h5><font style={{color: 'white'}}>{attendedNum}</font> / {trialNum}
+                    </h5>
                 </Col>
               </Row>
               );
@@ -51,6 +52,7 @@ export var TrialList = React.createClass({
 
     return (
       <div>
+        <Search />
         {html}
       </div>
     )

@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export var authReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN':
@@ -30,6 +32,20 @@ export var trialsReducer = (state = [], action) => {
         ...state,
         ...action.trials
       ];
+    case 'TOGGLE_TRIAL':
+      return state.map((trial) => {
+        if (trial.id === action.id) {
+          var nextAttended = !trial.attended;
+
+          return {
+            ...trial,
+            attended: nextAttended,
+            attendedOn: moment().unix()
+          };
+        } else {
+          return trial;
+        }
+      });
     default:
       return state;
   }
@@ -62,4 +78,13 @@ export var selectionReducer = (state={}, action) => {
     default:
       return state;
   }
+};
+
+export var searchTextReducer = (state = '', action) => {
+  switch (action.type) {
+    case 'SET_SEARCH_TEXT':
+      return action.searchText;
+    default:
+      return state;
+  };
 };

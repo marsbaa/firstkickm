@@ -12,7 +12,6 @@ module.exports = {
       var text = trial.childName.toLowerCase();
       return searchText.length === 0 || text.indexOf(searchText) > -1;
     });
-
     // Sort trials with completed first
     filteredTrials.sort((a, b) => {
       if (a.attended && !b.attended) {

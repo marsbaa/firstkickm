@@ -1,5 +1,6 @@
 import firebase, {firebaseRef} from 'app/firebase';
 import axios from 'axios'
+import moment from 'moment'
 
 //Login & Logout Actions
 
@@ -142,6 +143,31 @@ export var addTrials = (trials) => {
   };
 };
 
+export var startToggleTrial = (id) => {
+  return (dispatch) => {
+    var trialsRef = firebaseRef.child('trials/' + id);
+
+    return trialsRef.once('value').then((snapshot) => {
+      var val = snapshot.val();
+      var attended = (val.attended === undefined) || (val.attended === false) ? true : false;
+      var attendedOn = attended ? moment().unix() : null;
+      return trialsRef.update({
+        attended,
+        attendedOn
+      });
+    }).then(() => {
+      dispatch(toggleTrial(id));
+    });
+  }
+};
+
+export var toggleTrial = (id) => {
+  return {
+    type: 'TOGGLE_TRIAL',
+    id
+  };
+};
+
 
 //Centre Profile
 export var startCentres = () => {
@@ -198,5 +224,13 @@ export var updateSelectedCentre = (id) => {
   return {
     type: 'UPDATE_SELECTED_CENTRE',
     id
+  };
+};
+
+// Search
+export var setSearchText = (searchText) => {
+  return {
+    type: 'SET_SEARCH_TEXT',
+    searchText
   };
 };

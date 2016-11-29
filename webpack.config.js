@@ -15,6 +15,9 @@ module.exports = {
     'script!jquery/dist/jquery.min.js',
     './app/app.jsx'
   ],
+  externals: {
+    jquery: 'jQuery'
+  },
   plugins: process.env.NODE_ENV === 'production' ? [
     new webpack.ProvidePlugin({
       '$': 'jquery',
