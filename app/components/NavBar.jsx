@@ -29,7 +29,7 @@ export var NavBar = React.createClass({
              </Link>
              <Link className="headerlnk" to={navbar.link}>{navbar.title}</Link>
           </Navbar.Brand>
-          <Navbar.Toggle />
+          <Navbar.Toggle style={{marginTop: '15px'}}/>
         </Navbar.Header>
         <Navbar.Collapse>
          <Nav pullRight>

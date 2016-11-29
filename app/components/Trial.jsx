@@ -25,7 +25,7 @@ export var Trial = React.createClass({
           <div>
                 <input type="checkbox" checked={attended} name="attendSwitch" style={{marginRight: '5px'}} readOnly/><font className={trialClassName}>{truncatedChildName} ({getAge(dateOfBirth)})</font>
           </div>
-          <div style={{paddingLeft: '15px', fontSize: '9px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contactNumber}
+          <div style={{paddingLeft: '15px', fontSize: '10px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contactNumber}
             <Glyphicon style={{color: '#656565',paddingLeft: '10px'}} glyph="envelope" /> {email}
           </div>
         </Col>
