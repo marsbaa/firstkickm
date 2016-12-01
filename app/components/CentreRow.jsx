@@ -13,7 +13,7 @@ render: function() {
         <td>{centre.id}</td>
         <td>{_.capitalize(centre.name)}</td>
         <td>
-           <Link to={"/m/cp/"+centre.id}>
+           <Link to={"/m/centres/"+centre.id}>
              <button className="btn"><Glyphicon glyph="pencil" /></button>
            </Link>
         </td>

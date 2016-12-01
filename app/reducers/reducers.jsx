@@ -51,6 +51,18 @@ export var trialsReducer = (state = [], action) => {
   }
 };
 
+export var coachReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_COACHES':
+      return [
+        ...state,
+        ...action.coaches
+      ];
+    default:
+      return state;
+ }
+};
+
 
 export var centreReducer = (state = [], action) => {
   switch (action.type) {
@@ -64,17 +76,27 @@ export var centreReducer = (state = [], action) => {
         ...state,
         {...action.centre}
       ];
+    case 'UPDATE_CENTRE':
+      return state.map((centre) => {
+        if ((centre.id) === action.centre.id) {
+          return {
+           ...centre,
+           ...action.centre
+         };
+        }
+        else {
+          return centre;
+        }
+      });
     default:
       return state;
   }
 };
 
-export var selectionReducer = (state={}, action) => {
+export var selectionReducer = (state='0', action) => {
   switch (action.type) {
     case 'UPDATE_SELECTED_CENTRE':
-      return {
-        selectedCentre: action.id
-      };
+      return action.id;
     default:
       return state;
   }

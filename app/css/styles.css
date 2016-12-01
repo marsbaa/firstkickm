@@ -151,7 +151,7 @@
 
 .trialCompleted {
    border-bottom: 1px dashed pink;
-   color: pink;
+   color: #f5bb05;
 }
 
 .search{
@@ -160,4 +160,11 @@
   padding: 5px;
   border: 1px solid #f5bb05;
   text-align: center;
+}
+
+.boy{
+}
+
+.girl{
+  color: pink;
 }

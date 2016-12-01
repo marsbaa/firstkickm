@@ -14,13 +14,14 @@ export var Search = React.createClass({
 
   render: function () {
     var {searchText} = this.props;
+    var type = this.props.type;
 
     return (
         <Row style={{padding: '10px'}}>
           <Col xs={12} md={12}>
             <FormGroup style={{marginBottom: '0px'}}>
               <InputGroup>
-                <FormControl type="text" placeholder="Search for child" value={searchText} onChange={this.updateSearchText}/>
+                <FormControl type="text" placeholder={"Search for " + type} value={searchText} onChange={this.updateSearchText}/>
                     <InputGroup.Addon style={{backgroundColor: '#f5bb05', color: 'white'}}><Glyphicon glyph="search" /></InputGroup.Addon>
               </InputGroup>
             </FormGroup>

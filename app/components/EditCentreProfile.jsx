@@ -51,32 +51,42 @@ export var EditCentreProfile = React.createClass({
         errorMessageName : ''
       })
     }
-    var centreExist = _.findIndex(centres, (c) => {return c.id === centreID});
-    if (centreExist === -1) {
-      this.setState({
-        errorID: null,
-        errorMessageID: ''
-      });
+
+    var currentCentreID = this.props.params.centreID;
+    if (currentCentreID === '0'){
+      var centreExist = _.findIndex(centres, (c) => {return c.id === centreID});
+      if (centreExist === -1) {
+        this.setState({
+          errorID: null,
+          errorMessageID: ''
+        });
       var centre = {
         id: centreID,
         name: centreName,
       };
-      if (this.state.mode === 'add') {
-        dispatch(actions.addCentre(centre));
-        browserHistory.push('/m/cp');
+      dispatch(actions.addCentre(centre));
+      browserHistory.push('/m/cp');
       }
-      else if (this.state.mode === 'edit') {
+      else {
+        this.setState({
+          errorID: 'error',
+          errorMessageID : 'Centre ID exist. Please choose another Centre ID.'
+        });
+      }
+    }
+
+    else if (count === 0) {
+      console.log(centres);
+        var selectedCentre = _.find(centres, {id: centreID});
+        var centre = {
+          key: selectedCentre.key,
+          id: centreID,
+          name: centreName,
+        };
         dispatch(actions.updateCentre(centre));
         browserHistory.push('/m/cp');
-      }
+    }
 
-    }
-    else {
-      this.setState({
-        errorID: 'error',
-        errorMessageID : 'Centre ID exist. Please choose another Centre ID.'
-      });
-    }
   },
 
   componentDidMount() {

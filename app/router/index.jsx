@@ -10,6 +10,10 @@ import EditCentreProfile from 'EditCentreProfile'
 import CentresTable from 'CentresTable'
 import TrialsApp from 'TrialsApp'
 import TrialList from 'TrialList'
+import TrialEdit from 'TrialEdit'
+import CoachesApp from 'CoachesApp'
+import CoachesList from 'CoachesList'
+import EditCoach from 'EditCoach'
 
 var requireLogin = (nextState, replace, next) => {
   if (!firebase.auth().currentUser) {
@@ -31,12 +35,17 @@ export default (
         <IndexRoute component={Login} onEnter={redirectIfLoggedIn}/>
         <Route path="m" component={NavBar} onEnter={requireLogin}>
           <IndexRoute component={MainMenu}/>
-          <Route path="cp" component={CentresApp}>
+          <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresTable}/>
             <Route path=":centreID" component={EditCentreProfile} />
           </Route>
           <Route path="tr" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
+            <Route path=":key" component={TrialEdit} />
+          </Route>
+          <Route path="coaches" component={CoachesApp}>
+            <IndexRoute component={CoachesList}/>
+            <Route path=":coachId" component={EditCoach} />
           </Route>
         </Route>
     </Route>

@@ -9,13 +9,13 @@ import moment from 'moment'
 
 export var TrialList = React.createClass({
   componentDidMount () {
-    var {dispatch, selection} = this.props;
+    var {dispatch} = this.props;
     dispatch(actions.updateNavTitle("/m/cp/tr", "Trial List"));
   },
 
   render () {
     var {trials, selection, searchText} = this.props;
-    var filteredTrials = TrialsFilter.filter(trials, selection.selectedCentre, searchText);
+    var filteredTrials = TrialsFilter.filter(trials, selection, searchText);
     var html=[];
 
     if (filteredTrials.length !== 0) {
@@ -34,7 +34,7 @@ export var TrialList = React.createClass({
             }, 0);
 
             html.push(
-              <Row key={dateId} style={{backgroundColor: '#ffc600', padding: '0px 15px'}}>
+              <Row key={dateId} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
                 <Col xs={9} md={9}>
                   <h5>{moment(dateId).format('DD.MMM YYYY')}</h5>
                 </Col>
@@ -52,7 +52,7 @@ export var TrialList = React.createClass({
 
     return (
       <div>
-        <Search />
+        <Search type="child"/>
         {html}
       </div>
     )

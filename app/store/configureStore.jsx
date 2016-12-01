@@ -1,6 +1,6 @@
 var redux = require('redux');
 import thunk from 'redux-thunk';
-var {authReducer, centreReducer, navbarReducer,trialsReducer, selectionReducer, searchTextReducer} = require('reducers');
+var {authReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer} = require('reducers');
 
 export var configure = (initialState = {}) => {
   var reducer = redux.combineReducers({
@@ -9,7 +9,8 @@ export var configure = (initialState = {}) => {
     navbar: navbarReducer,
     trials: trialsReducer,
     selection: selectionReducer,
-    searchText: searchTextReducer
+    searchText: searchTextReducer,
+    coaches: coachReducer
   });
 
   var store = redux.createStore(reducer, initialState, redux.compose(

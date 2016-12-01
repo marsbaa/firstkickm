@@ -169,6 +169,49 @@ export var toggleTrial = (id) => {
 };
 
 
+//Coaches Profile
+export var startCoaches = () => {
+   return (dispatch) => {
+   var coachesRef = firebaseRef.child('coaches');
+   coachesRef.once('value').then((snapshot) => {
+    var coaches = snapshot.val();
+    var parsedCoaches = [];
+
+    Object.keys(coaches).forEach((coachId)=> {
+      parsedCoaches.push({
+        key: coachId,
+        name: coaches[coachId].name,
+        nric: coaches[coachId].nric,
+        dateOfBirth: coaches[coachId].dateOfBirth,
+        address: coaches[coachId].address,
+        contact: coaches[coachId].contact,
+        email: coaches[coachId].email,
+        education: coaches[coachId].education,
+        occupation: coaches[coachId].occupation,
+        bank: coaches[coachId].bank,
+        accountNumber: coaches[coachId].accountNumber,
+        paymentRate: coaches[coachId].paymentRate,
+        transport: coaches[coachId].modeOfTransport,
+        centres: coaches[coachId].centres,
+        qualification: coaches[coachId].qualification,
+        startDate: coaches[coachId].startDate,
+        firstAid: coaches[coachId].firstAid,
+        issueDate: coaches[coachId].issueDate
+      });
+    });
+    dispatch(addCoaches(parsedCoaches));
+  });
+};
+};
+
+export var addCoaches = (coaches) => {
+  return {
+    type: 'ADD_COACHES',
+    coaches
+  };
+};
+
+
 //Centre Profile
 export var startCentres = () => {
    return (dispatch) => {
@@ -179,8 +222,9 @@ export var startCentres = () => {
 
     Object.keys(centres).forEach((centreId)=> {
       parsedCentres.push({
-        id: centreId,
-        ...centres[centreId]
+        key: centreId,
+        id: centres[centreId].id,
+        name: centres[centreId].name
       });
     });
     dispatch(addCentres(parsedCentres));
@@ -209,13 +253,14 @@ export var addCentre = (centre) => {
 };
 
 export var updateCentre = (centre) => {
-  var centreRef = firebaseRef.child('centres');
-  centreRef.push().set({
-    id : centre.id,
-    name : centre.name
-  });
+  var updates=  {};
+  updates['/centres/'+centre.key] = {
+   id : centre.id,
+   name : centre.name
+ };
+  firebase.database().ref().update(updates);
   return {
-    type: 'ADD_CENTRE',
+    type: 'UPDATE_CENTRE',
     centre
   };
 };

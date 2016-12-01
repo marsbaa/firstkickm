@@ -20,7 +20,7 @@ export var CentresTable = React.createClass({
 
   componentDidMount () {
     var {dispatch} = this.props;
-    dispatch(actions.updateNavTitle("/m/cp", "Centres Profile"));
+    dispatch(actions.updateNavTitle("/m/centres", "Centres Profile"));
   },
 
   render: function () {
