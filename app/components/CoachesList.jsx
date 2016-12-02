@@ -32,7 +32,7 @@ export var CoachesList = React.createClass({
            <Search type="coach" />
          </Col>
          <Col xs={4} md={4}>
-         <Link to="/m/cp/0"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}}>Add Coach</button></Link>
+         <Link to="/m/coaches/add"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}}>Add Coach</button></Link>
          </Col>
        </Row>
       {html}

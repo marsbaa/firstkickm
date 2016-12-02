@@ -9,7 +9,7 @@ export var Coach = React.createClass({
   render: function() {
     var {name, key} = this.props.coach;
     var truncatedName = _.truncate(name, {
-  'length': 22});
+  'length': 28});
 
   return (
       <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>

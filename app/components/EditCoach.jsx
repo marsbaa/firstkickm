@@ -7,11 +7,59 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 
 export var EditCoach = React.createClass({
+
+  formSubmit(e) {
+    e.preventDefault();
+    var {dispatch} = this.props;
+    var coachId = this.props.params.coachId;
+    var coach = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      dateOfBirth: document.getElementById('dateOfBirth').value,
+      occupation: document.getElementById('occupation').value,
+      address: document.getElementById('address').value,
+      bank: document.getElementById('bank').value,
+      accountNumber: document.getElementById('accountNumber').value,
+      qualification: document.getElementById('qualification').value,
+      firstAid: document.getElementById('firstAid').value,
+      startDate: document.getElementById('startDate').value,
+      nric: document.getElementById('nric').value,
+      education: document.getElementById('education').value,
+      paymentRate: document.getElementById('paymentRate').value
+    };
+    if (coachId === "add") {
+      dispatch(actions.addCoach(coach));
+    }
+    else {
+      dispatch(actions.updateCoach(coachId, coach));
+    }
+
+  },
+
   render: function() {
     var coachId = this.props.params.coachId;
-    var {coaches} = this.props;
-    var coach = _.find(coaches, {key: coachId});
-
+    var coach = {}
+    if (coachId === "add") {
+      coach = {
+        name: "",
+        email: "",
+        dateOfBirth: "",
+        occupation: "",
+        address: "",
+        bank: "select",
+        accountNumber: "",
+        qualification: "",
+        firstAid: false,
+        startDate: "",
+        nric: "",
+        education: "",
+        paymentRate: "select"
+      }
+    }
+    else {
+      var {coaches} = this.props;
+      coach = _.find(coaches, {key: coachId});
+    }
   return (
     <Grid>
       <Row>
@@ -51,14 +99,15 @@ export var EditCoach = React.createClass({
          <FormGroup>
            <ControlLabel>Address</ControlLabel>
            <FormControl style={{marginBottom: '10px'}}
-           id="nric"
+           id="address"
            componentClass="textarea"
            placeholder="Enter Address"
            defaultValue={coach.address}/>
          </FormGroup>
            <FormGroup>
              <ControlLabel>Bank</ControlLabel>
-              <FormControl componentClass="select" defaultValue={coach.bank}>
+              <FormControl id="bank" componentClass="select" defaultValue={coach.bank}>
+                <option value="select">Select</option>
                 <option value="DBS">DBS</option>
                 <option value="POSB">POSB</option>
                 <option value="OCBC">OCBC</option>
@@ -108,11 +157,13 @@ export var EditCoach = React.createClass({
             id="startDate"
             type="text"
             placeholder="Enter Start Date"
+            defaultValue=""
            />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Payment Rate</ControlLabel>
-             <FormControl componentClass="select" defaultValue={coach.paymentRate}>
+             <FormControl id="paymentRate" componentClass="select" defaultValue={coach.paymentRate}>
+               <option value="select">Select</option>
                <option value="OJT">OJT</option>
                <option value="30">30</option>
                <option value="40">40</option>
@@ -123,7 +174,7 @@ export var EditCoach = React.createClass({
           </FormGroup>
           <FormGroup>
             <ControlLabel>First Aid Trained</ControlLabel>
-             <FormControl componentClass="select" defaultValue={coach.firstAid}>
+             <FormControl id="firstAid" componentClass="select" defaultValue={coach.firstAid}>
                <option value="true">Yes</option>
                <option value="false">No</option>
              </FormControl>

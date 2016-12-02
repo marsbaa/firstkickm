@@ -58,6 +58,23 @@ export var coachReducer = (state = [], action) => {
         ...state,
         ...action.coaches
       ];
+    case 'ADD_COACH':
+      return [
+        ...state,
+        {...action.coach}
+      ];
+    case 'UPDATE_COACH':
+      return state.map((coach) => {
+        if ((coach.key) === action.coachId) {
+          return {
+           ...coach,
+           ...action.coach
+         };
+        }
+        else {
+          return coach;
+        }
+      });
     default:
       return state;
  }

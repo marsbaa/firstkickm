@@ -211,6 +211,30 @@ export var addCoaches = (coaches) => {
   };
 };
 
+export var addCoach = (coach) => {
+  var coachesRef = firebaseRef.child('coaches');
+  var newKey = coachesRef.push().key;
+  var updates = {};
+  updates[newKey] = coach;
+  coachesRef.update(updates);
+  coach.key = newKey;
+  return {
+    type: 'ADD_COACH',
+    coach
+  };
+};
+
+export var updateCoach = (coachId, coach) => {
+  var updates=  {};
+  updates['/coaches/'+ coachId] = coach;
+  firebase.database().ref().update(updates);
+  return {
+    type: 'UPDATE_COACH',
+    coachId,
+    coach
+  };
+};
+
 
 //Centre Profile
 export var startCentres = () => {
