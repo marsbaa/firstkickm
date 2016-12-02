@@ -65,7 +65,7 @@ export var EditCentreProfile = React.createClass({
         name: centreName,
       };
       dispatch(actions.addCentre(centre));
-      browserHistory.push('/m/cp');
+      browserHistory.push('/m/centres');
       }
       else {
         this.setState({
@@ -84,7 +84,7 @@ export var EditCentreProfile = React.createClass({
           name: centreName,
         };
         dispatch(actions.updateCentre(centre));
-        browserHistory.push('/m/cp');
+        browserHistory.push('/m/centres');
     }
 
   },

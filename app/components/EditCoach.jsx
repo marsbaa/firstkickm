@@ -5,6 +5,7 @@ var actions = require('actions')
 import moment from 'moment'
 import {Link} from 'react-router'
 import _ from 'lodash'
+import {browserHistory} from 'react-router'
 
 export var EditCoach = React.createClass({
 
@@ -16,6 +17,7 @@ export var EditCoach = React.createClass({
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
       dateOfBirth: document.getElementById('dateOfBirth').value,
+      contact: document.getElementById('contact').value,
       occupation: document.getElementById('occupation').value,
       address: document.getElementById('address').value,
       bank: document.getElementById('bank').value,
@@ -29,9 +31,11 @@ export var EditCoach = React.createClass({
     };
     if (coachId === "add") {
       dispatch(actions.addCoach(coach));
+      browserHistory.push('/m/coaches');
     }
     else {
       dispatch(actions.updateCoach(coachId, coach));
+      browserHistory.push('/m/coaches');
     }
 
   },
@@ -43,6 +47,7 @@ export var EditCoach = React.createClass({
       coach = {
         name: "",
         email: "",
+        contact: "",
         dateOfBirth: "",
         occupation: "",
         address: "",
@@ -130,9 +135,9 @@ export var EditCoach = React.createClass({
           <FormGroup>
             <ControlLabel>Contact Number</ControlLabel>
             <FormControl style={{marginBottom: '10px'}}
-            id="contactNumber"
+            id="contact"
             type="text"
-            placeholder="Enter Date of Birth"
+            placeholder="Enter Contact Number"
             defaultValue={coach.contact}/>
           </FormGroup>
           <FormGroup>
