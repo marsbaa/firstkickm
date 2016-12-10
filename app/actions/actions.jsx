@@ -240,7 +240,7 @@ export var updateCoach = (coachId, coach) => {
 export var startCentres = () => {
    return (dispatch) => {
    var centreRef = firebaseRef.child('centres');
-   centreRef.once('value').then((snapshot) => {
+   centreRef.orderByChild('id').once('value').then((snapshot) => {
     var centres = snapshot.val();
     var parsedCentres = [];
 
@@ -248,7 +248,9 @@ export var startCentres = () => {
       parsedCentres.push({
         key: centreId,
         id: centres[centreId].id,
-        name: centres[centreId].name
+        name: centres[centreId].name,
+        logoURL: centres[centreId].logoURL,
+        terms: centres[centreId].terms
       });
     });
     dispatch(addCentres(parsedCentres));
@@ -280,7 +282,9 @@ export var updateCentre = (centre) => {
   var updates=  {};
   updates['/centres/'+centre.key] = {
    id : centre.id,
-   name : centre.name
+   name : centre.name,
+   logoURL : centre.logoURL,
+   terms : centre.terms
  };
   firebase.database().ref().update(updates);
   return {
@@ -296,6 +300,22 @@ export var updateSelectedCentre = (id) => {
   };
 };
 
+export var saveTerm = (centre) => {
+  var updates=  {};
+  updates['/centres/'+ centre.key] = {
+   id: centre.id,
+   name: centre.name,
+   logoURL : centre.logoURL,
+   terms: centre.terms
+ };
+  firebase.database().ref().update(updates);
+  return {
+    type: 'SAVE_TERM',
+    centre
+  };
+
+}
+
 // Search
 export var setSearchText = (searchText) => {
   return {
@@ -303,3 +323,12 @@ export var setSearchText = (searchText) => {
     searchText
   };
 };
+
+//Term Dates
+export var updateSelectedDays = (id, selectedDays) => {
+  return {
+    type: 'UPDATE_TERM_SELECTED_DAYS',
+    id,
+    selectedDays
+  }
+}

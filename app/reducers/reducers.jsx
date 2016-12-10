@@ -105,6 +105,18 @@ export var centreReducer = (state = [], action) => {
           return centre;
         }
       });
+      case 'SAVE_TERM':
+        return state.map((centre) => {
+          if ((centre.id) === action.centre.key) {
+            return {
+             ...centre,
+             ...action.centre
+           };
+          }
+          else {
+            return centre;
+          }
+        });
     default:
       return state;
   }
@@ -127,3 +139,13 @@ export var searchTextReducer = (state = '', action) => {
       return state;
   };
 };
+
+export var termReducer = (state=[], action) => {
+  switch (action.type) {
+    case 'UPDATE_TERM_SELECTED_DAYS':
+      state[action.id] = action.selectedDays;
+      return state;
+    default:
+      return state;
+  }
+}

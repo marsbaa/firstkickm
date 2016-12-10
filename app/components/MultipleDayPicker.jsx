@@ -2,56 +2,50 @@ import React from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import "react-day-picker/lib/style.css"
 import _ from 'lodash'
+var actions = require('actions');
+import {Link} from 'react-router'
+var {connect} = require('react-redux');
 
 export var MultipleDayPicker = React.createClass({
   getInitialState: function() {
     return {
-      selectedDays : []
+      selectedDays: []
     };
   },
 
-  printDates: function() {
-    if (this.state.selectedDays.length != 0) {
-      this.state.selectedDays.map((d) => {
-        console.log(d);
-      });
-    }
-    else {
-      console.log("No Dates Selected for this term");
-    }
-
+  isDaySelected(day) {
+    return this.state.selectedDays.some(selectedDay =>
+      DateUtils.isSameDay(selectedDay, day),
+    );
   },
 
   handleDayClick(e, day, { selected }) {
-      var pSelected = this.state.selectedDays;
-      var found = _.findIndex(pSelected, (d) => {return DateUtils.isSameDay(d, day)});
-      if (found != -1) {
-            pSelected.splice(found, 1);
-      }
-      else {
-        pSelected.push(day);
-      }
-      this.setState({
-        selectedDays: pSelected
-      });
-    },
+    var {dispatch} = this.props;
+    var id = this.props.tab;
+    const { selectedDays } = this.state;
+    if (selected) {
+      const selectedIndex = selectedDays.findIndex(selectedDay =>
+        DateUtils.isSameDay(selectedDay, day),
+      );
+      selectedDays.splice(selectedIndex, 1);
+    } else {
+      selectedDays.push(day);
+    }
+    this.setState({ selectedDays });
+    dispatch(actions.updateSelectedDays(id, selectedDays));
+  },
+
   render: function () {
-   const { selectedDays } = this.state;
    return (
-     <DayPicker numberOfMonths={ 2 } onDayClick={ this.handleDayClick } selectedDays = {day => {
-         if (selectedDays.length != 0) {
-          var f = selectedDays.map((d) => {
-           return DateUtils.isSameDay(day, d)});
-           var dateMatch = _.findIndex(f, (b) => {return b === true});
-           if (dateMatch != -1) {
-             return true;
-           }
-           else {
-             return false;
-           }
-       }}}/>
+     <DayPicker
+          selectedDays={ this.isDaySelected}
+          onDayClick={ this.handleDayClick }
+          numberOfMonths={ 2 }
+        />
+
    );
  }
  });
 
- export default (MultipleDayPicker);
+ export default connect((state) => {return state;
+})(MultipleDayPicker);

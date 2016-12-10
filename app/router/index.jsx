@@ -7,7 +7,7 @@ import Login from 'Login';
 import CentresApp from 'CentresApp';
 import MainMenu from 'MainMenu';
 import EditCentreProfile from 'EditCentreProfile'
-import CentresTable from 'CentresTable'
+import CentresList from 'CentresList'
 import TrialsApp from 'TrialsApp'
 import TrialList from 'TrialList'
 import TrialEdit from 'TrialEdit'
@@ -15,12 +15,6 @@ import CoachesApp from 'CoachesApp'
 import CoachesList from 'CoachesList'
 import EditCoach from 'EditCoach'
 
-var requireLogin = (nextState, replace, next) => {
-  if (!firebase.auth().currentUser) {
-    replace('/');
-  }
-  next();
-};
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
@@ -29,17 +23,24 @@ var redirectIfLoggedIn = (nextState, replace, next) => {
   next();
 };
 
+function requireAuth(nextState, replace, next) {
+  if (!firebase.auth().currentUser) {
+    replace('/');
+  }
+  next();
+};
+
 export default (
   <Router history={browserHistory}>
     <Route path="/">
-        <IndexRoute component={Login} onEnter={redirectIfLoggedIn}/>
-        <Route path="m" component={NavBar} onEnter={requireLogin}>
+        <IndexRoute component={Login} />
+        <Route path="m" component={NavBar} onEnter={requireAuth}>
           <IndexRoute component={MainMenu}/>
           <Route path="centres" component={CentresApp}>
-            <IndexRoute component={CentresTable}/>
+            <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={EditCentreProfile} />
           </Route>
-          <Route path="tr" component={TrialsApp}>
+          <Route path="trials/:selectedCentreId" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
             <Route path=":key" component={TrialEdit} />
           </Route>

@@ -18,7 +18,7 @@ export var TermTabs = React.createClass({
     for (var i=0; i < tabs; i++) {
       var count = i+1;
       html.push(<Tab key={"tab"+count} eventKey={count} title={"T" + count}>
-        <MultipleDayPicker ref={"mdp"+count} key={"MDP"+count}/>
+        <MultipleDayPicker ref={"mdp"+count} key={count} tab={count}/>
       </Tab>
     );
    };

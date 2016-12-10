@@ -36,6 +36,7 @@ export var MainMenu = React.createClass({
 
     render: function() {
         var {selection} = this.props;
+        var trialsLink = "/m/trials/" + selection;
 
         return (
           <Grid style={{paddingTop:'20px', overflow: 'hidden'}}>
@@ -56,7 +57,7 @@ export var MainMenu = React.createClass({
                       <option value="7">Yishun</option>
                     </FormControl>
                   </FormGroup>
-                <Link to="/m/tr" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
+                <Link to={trialsLink}activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="student" disabled>Student Attendance</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/coaches" activeClassName="active"><button className="mainbtn">Coaches Profile</button></Link>

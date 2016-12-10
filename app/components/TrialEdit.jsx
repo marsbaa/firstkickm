@@ -1,6 +1,6 @@
-import React from 'react';
-var {connect} = require('react-redux');
-var actions = require('actions');
+import React from 'react'
+var {connect} = require('react-redux')
+var actions = require('actions')
 import {Row, Col} from 'react-bootstrap'
 
 export var TrialEdit = React.createClass({
@@ -9,7 +9,7 @@ export var TrialEdit = React.createClass({
     var key = this.props.params.key;
     var {trials} = this.props;
     var trial = _.find(trials, {id: key});
-    
+
     return (
         <Row style={{padding: '10px'}}>
           <Col xs={6} md={6}>
