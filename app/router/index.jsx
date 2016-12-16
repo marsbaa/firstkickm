@@ -40,9 +40,9 @@ export default (
             <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={EditCentreProfile} />
           </Route>
-          <Route path="trials/:selectedCentreId" component={TrialsApp}>
+          <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
-            <Route path=":key" component={TrialEdit} />
+            <Route path=":studentId" component={TrialEdit} />
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>

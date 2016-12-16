@@ -33,7 +33,7 @@ export var Trial = React.createClass({
           </div>
         </Col>
         <Col xs={5} md={5} style={{textAlign:'right'}}>
-          <Link className="headerlnk" to={"/m/tr/"+ id}><button className="innerbtn"><Glyphicon glyph="pencil" /> </button></Link>
+          <Link className="headerlnk" to={"/m/trials/"+id}><button className="innerbtn"><Glyphicon glyph="pencil" /> </button></Link>
           <button className="innerbtn" >Register</button>
         </Col>
       </Row>

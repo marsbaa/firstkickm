@@ -15,6 +15,7 @@ export var NavBar = React.createClass({
  componentDidMount() {
    var {dispatch} = this.props;
    dispatch(actions.startAddTrials());
+   dispatch(actions.startCentres());
  },
 
  render: function () {

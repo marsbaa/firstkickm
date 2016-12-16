@@ -11,7 +11,7 @@ render: function() {
   return (
       <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
         <Col xs={9} md={9} style={{fontSize: '14px'}}>
-          <Image src={centre.logoURL} style={{height:'25px'}} /> {centre.id}.{' '}{_.capitalize(centre.name)}
+          <img src={centre.logoURL} style={{height:'25px'}} />  {centre.id}.{' '}{_.capitalize(centre.name)}
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
           <Link to={"/m/centres/"+ centre.id}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>

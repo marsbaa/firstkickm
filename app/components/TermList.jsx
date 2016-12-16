@@ -58,7 +58,7 @@ export var TermList = React.createClass({
        };
        Object.keys(centre.terms).forEach((termId) => {
           var term = centre.terms[termId];
-          html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', overflow: 'auto', borderRadius: '5px 5px 0px 0px'}} key={term.name}>
+          html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px'}} key={term.name}>
             {term.name}
             <button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="trash" /> </button>
           </div>

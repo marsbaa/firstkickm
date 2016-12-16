@@ -3,10 +3,6 @@ var actions = require('actions');
 var {connect} = require('react-redux');
 
 export var CentresProfile = React.createClass({
-  componentDidMount() {
-    var {dispatch} = this.props;
-    dispatch(actions.startCentres());
-  },
 
   render: function () {
 

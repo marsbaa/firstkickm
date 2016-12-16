@@ -1,33 +1,84 @@
 import React from 'react'
 var {connect} = require('react-redux')
 var actions = require('actions')
-import {Row, Col} from 'react-bootstrap'
+import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
 
 export var TrialEdit = React.createClass({
 
   render: function () {
-    var key = this.props.params.key;
-    var {trials} = this.props;
+    var key = this.props.params.studentId;
+    var {trials,centres} = this.props;
     var trial = _.find(trials, {id: key});
+
+    //Centre List
+    var centreOptions = [];
+    centreOptions.push(<option key="0" value="0">select</option>);
+    centres.map((centre) => {
+      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    });
 
     return (
         <Row style={{padding: '10px'}}>
-          <Col xs={6} md={6}>
-            <label>Child's Name
-                  <input id="childName" type="text" defaultValue={trial.childName}/>
-                </label>
-                <label>Mobile Number
-                  <input id="contactNumber" type="text" defaultValue={trial.contactNumber}/>
-                </label>
-                <label>Email
-                  <input id="email" type="text" defaultValue={trial.email}/>
-                </label>
-                <label>Gender</label>
-                  <input type="radio" name="gender" id="boy" defaultChecked/><label for="boy">Boy</label>
-                  <input type="radio" name="gender" id="girl" required /><label for="girl" >Girl</label>
-                <label>Date of Birth (YYYY-MM-DD)
-                  <input id="dateOfBirth" type="text" defaultValue={trial.dateOfBirth}/>
-                </label>
+          <Col md={6}>
+            <FormGroup>
+              <ControlLabel>Child's Name</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="childName"
+              type="text"
+              placeholder="Enter Child's Name"
+              defaultValue={trial.childName}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Mobile Number</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="contactNumber"
+              type="text"
+              placeholder="Enter Mobile Number"
+              defaultValue={trial.contactNumber}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Email</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="Email"
+              type="text"
+              placeholder="Enter Email"
+              defaultValue={trial.email}/>
+            </FormGroup>
+            <FormGroup>
+              <Radio name="gender" inline>
+                Boy
+              </Radio>
+              {' '}
+              <Radio name="gender" inline>
+                Girl
+              </Radio>
+            </FormGroup>
+          </Col>
+          <Col md={6}>
+            <FormGroup>
+              <ControlLabel>Date of Birth</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="dateOfBirth"
+              type="text"
+              placeholder="Enter Date of Birth"
+              defaultValue={trial.dateOfBirth}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Selected Centre</ControlLabel>
+              <FormControl
+                id="centreSelect" componentClass="select" placeholder="select"
+                defaultValue={trial.venueId}>
+                {centreOptions}
+              </FormControl>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Selected Class Time</ControlLabel>
+              <FormControl
+                id="selectedTimeSlot" componentClass="select" placeholder="select"
+                defaultValue={trial.timeOfTrial}>
+                  <option value="0">select</option>
+              </FormControl>
+            </FormGroup>
           </Col>
         </Row>
     );

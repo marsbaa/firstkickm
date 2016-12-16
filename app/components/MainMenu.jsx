@@ -35,8 +35,14 @@ export var MainMenu = React.createClass({
     },
 
     render: function() {
-        var {selection} = this.props;
-        var trialsLink = "/m/trials/" + selection;
+        var {selection, centres} = this.props;
+        var trialsLink = "/m/trials/";
+        var centreOptions = [];
+        centreOptions.push(<option key="0" value="0">select</option>);
+        centres.map((centre) => {
+          centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+        });
+
 
         return (
           <Grid style={{paddingTop:'20px', overflow: 'hidden'}}>
@@ -47,14 +53,7 @@ export var MainMenu = React.createClass({
                     <FormControl
                       id="centreSelect" componentClass="select" placeholder="select" onChange={this.handleSelect}
                       defaultValue={selection}>
-                      <option value="0">select</option>
-                      <option value="1">Bishan</option>
-                      <option value="2">Jurong</option>
-                      <option value="3">Kovan</option>
-                      <option value="4">Punggol</option>
-                      <option value="5">Thomson</option>
-                      <option value="6">Tampines</option>
-                      <option value="7">Yishun</option>
+                      {centreOptions}
                     </FormControl>
                   </FormGroup>
                 <Link to={trialsLink}activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>

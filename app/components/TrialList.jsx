@@ -9,13 +9,13 @@ import moment from 'moment'
 
 export var TrialList = React.createClass({
   componentDidMount () {
-    var {dispatch} = this.props;
-    dispatch(actions.updateNavTitle("/m/trials", "Trial List"));
+    var {dispatch, selection} = this.props;
+    var link = "/m/trials";
+    dispatch(actions.updateNavTitle(link, "Trial List"));
   },
 
   render () {
-    var {trials, searchText} = this.props;
-    var selection = this.props.params.selectedCentreId;
+    var {trials, searchText, selection} = this.props;
     var filteredTrials = TrialsFilter.filter(trials, selection, searchText);
     var html=[];
 

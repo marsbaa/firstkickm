@@ -39,6 +39,7 @@ export var EditCentreProfile = React.createClass({
     });
   },
 
+
   saveTerm(e, centre) {
     e.preventDefault();
     var {dispatch, terms} = this.props;
@@ -141,6 +142,7 @@ export var EditCentreProfile = React.createClass({
 
   },
 
+
   componentDidMount() {
     var {dispatch} = this.props;
     var centreID = this.props.params.centreID;
@@ -203,10 +205,14 @@ export var EditCentreProfile = React.createClass({
               placeholder="Enter Logo URL"
               defaultValue={centre.logoURL} onChange={this.handleChange}/>
             </FormGroup>
-            <Image src={this.state.logoURL} style={{width:'100%'}}/>
+            <FormGroup>
+              <ControlLabel>Class Day & Time</ControlLabel>
+              <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button>
+            </FormGroup>
           </Col>
            <Col md={6}>
-             <button className="btn" style={{backgroundColor: '#f5bb05', marginBottom: '5px'}} onClick={this.open}>Add Term</button>
+             <ControlLabel>Term Dates</ControlLabel>
+             <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}} onClick={this.open}>Add Term</button>
              <div>
               <TermList centreId={centreID}/>
              </div>

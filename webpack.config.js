@@ -85,9 +85,15 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/
       },
-      { test: /\.css$/, loader: "style!css" },
-
-      { test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url' }
+      {
+        test: /\.png$/,
+        loader: "url-loader"
+      },
+      {
+        test: /\.jpg$/,
+        loader: "file-loader"
+      },
+      { test: /\.css$/, loader: "style!css" }
     ]
   },
   devtool: process.env.NODE_ENV === 'production' ? undefined : 'cheap-module-eval-source-map'
