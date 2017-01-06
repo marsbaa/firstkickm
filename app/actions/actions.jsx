@@ -279,14 +279,15 @@ export var addCentre = (centre) => {
 };
 
 export var updateCentre = (centre) => {
+  var CentreRef = firebase.database().ref('/centres/');
   var updates=  {};
-  updates['/centres/'+centre.key] = {
+  updates[centre.key] = {
    id : centre.id,
    name : centre.name,
    logoURL : centre.logoURL,
-   terms : centre.terms
+   calendars : centre.calendars
  };
-  firebase.database().ref().update(updates);
+  CentreRef.update(updates);
   return {
     type: 'UPDATE_CENTRE',
     centre

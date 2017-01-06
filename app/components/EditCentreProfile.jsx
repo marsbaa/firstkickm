@@ -89,8 +89,7 @@ export var EditCentreProfile = React.createClass({
       var centre = {
         id: centreID,
         name: centreName,
-        logoURL: logoURL,
-        calendars: centres[centreExist].calendars
+        logoURL: logoURL
       };
       dispatch(actions.addCentre(centre));
       browserHistory.push('/m/centres');
@@ -110,7 +109,7 @@ export var EditCentreProfile = React.createClass({
           id: centreID,
           name: centreName,
           logoURL: logoURL,
-          terms: selectedCentre.terms
+          calendars: selectedCentre.calendars
         };
         dispatch(actions.updateCentre(centre));
         browserHistory.push('/m/centres');
@@ -180,6 +179,7 @@ export var EditCentreProfile = React.createClass({
               type="text"
               placeholder="Enter Logo URL"
               defaultValue={centre.logoURL} onChange={this.handleChange}/>
+            <Image src={this.state.logoURL} responsive/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Class Day & Time</ControlLabel>
@@ -195,7 +195,7 @@ export var EditCentreProfile = React.createClass({
               <DeleteTermModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} calendarKey={this.state.deleteTerm} />
               <TermList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete}/>
              </div>
-             <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.formSubmit}>Save Centre Profile</button>
+             <button className="btn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>
          </Row>
        </Grid>
