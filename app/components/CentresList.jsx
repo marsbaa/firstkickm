@@ -6,6 +6,7 @@ import Centre from 'Centre'
 import {btn} from 'styles.css'
 import Search from 'Search'
 var actions = require('actions');
+import _ from 'lodash'
 
 export var CentresList = React.createClass({
 
@@ -13,6 +14,7 @@ export var CentresList = React.createClass({
   renderCentre() {
     var {centres} = this.props;
     var html = []
+    centres = _.orderBy(centres, 'id', 'asc');
     centres.map((centre) => {
       html.push(<Centre key={centre.id} c={centre} />);
     });
