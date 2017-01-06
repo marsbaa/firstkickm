@@ -1,6 +1,8 @@
 import React from 'react';
 import {FormControl, ControlLabel, FormGroup} from 'react-bootstrap'
 import TermTabs from 'TermTabs'
+var actions = require('actions');
+var {connect} = require('react-redux');
 
 export var TermDatesSelector = React.createClass({
   getInitialState: function() {
@@ -18,13 +20,23 @@ export var TermDatesSelector = React.createClass({
     )
   },
 
+  componentWillMount() {
+    var numOfTerms = this.props.numOfTerms;
+    this.setState({terms: numOfTerms});
+  },
+
+  componentDidMount() {
+    document.getElementById("selectNumOfTerms").value = this.state.terms;
+  },
+
 
   render: function () {
+
    return (
      <div>
-       <FormGroup controlId="formControlsSelect">
+       <FormGroup>
         <ControlLabel>No. of Terms per year</ControlLabel>
-        <FormControl componentClass="select" placeholder="select" onChange={this.handleChange}>
+        <FormControl id="selectNumOfTerms" componentClass="select" placeholder="select" onChange={this.handleChange}>
           <option value="6">6</option>
           <option value="5">5</option>
           <option value="4">4</option>
@@ -33,11 +45,11 @@ export var TermDatesSelector = React.createClass({
           <option value="1">1</option>
         </FormControl>
       </FormGroup>
-       <TermTabs terms={this.state.terms} />
+       <TermTabs numOfTerms={this.state.terms} mode={this.props.mode}/>
      </div>
 
    );
  }
  });
 
- export default (TermDatesSelector);
+ export default connect ()(TermDatesSelector);

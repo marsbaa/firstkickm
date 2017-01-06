@@ -1,9 +1,10 @@
 import React from 'react'
 import {Grid,Row,Panel,Col,FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
 import {btn} from 'styles.css'
-import TermDatesSelector from 'TermDatesSelector'
 import {browserHistory} from 'react-router'
 import TermList from 'TermList'
+import DeleteTermModal from 'DeleteTermModal'
+import {Link} from 'react-router'
 
 var actions = require('actions');
 var {connect} = require('react-redux');
@@ -14,12 +15,11 @@ export var EditCentreProfile = React.createClass({
     return {
       errorID: null,
       errorName: null,
-      errorTermName: null,
       errorMessageID : '',
       errorMessageName: '',
-      errorMessageTermName: '',
       logoURL: '',
-      showModal: false
+      showModal: false,
+      deleteTerm: ''
     };
   },
 
@@ -28,7 +28,11 @@ export var EditCentreProfile = React.createClass({
   },
 
   open() {
-    this.setState({ showModal: true });
+    this.setState({showModal: true});
+  },
+
+  delete(key) {
+    this.setState({deleteTerm: key});
   },
 
 
@@ -39,34 +43,6 @@ export var EditCentreProfile = React.createClass({
     });
   },
 
-
-  saveTerm(e, centre) {
-    e.preventDefault();
-    var {dispatch, terms} = this.props;
-    var termName = document.getElementById("termName").value;
-    if (termName === "") {
-      this.setState({
-        errorTermName: 'error',
-        errorMessageTermName: 'Field Empty. Please enter Term Name'
-      });
-    }
-    else {
-      this.setState({
-        errorTermName: null,
-        errorMessageTermName: ''
-      });
-      console.log(centre);
-      if (typeof centre.term != 'undefined') {
-        centre.terms[centre.terms.length] = {name: termName, terms};
-      }
-      else {
-        centre.terms = [];
-        centre.terms[0] = {name: termName, terms};
-      }
-      dispatch(actions.saveTerm(centre));
-      this.setState({showModal: false});
-    }
-  },
 
   formSubmit(e) {
     e.preventDefault();
@@ -114,7 +90,7 @@ export var EditCentreProfile = React.createClass({
         id: centreID,
         name: centreName,
         logoURL: logoURL,
-        terms: centres[centreExist].terms
+        calendars: centres[centreExist].calendars
       };
       dispatch(actions.addCentre(centre));
       browserHistory.push('/m/centres');
@@ -160,7 +136,7 @@ export var EditCentreProfile = React.createClass({
 
   render: function () {
     var centreID = this.props.params.centreID;
-    var centre = {id: '', name: '', logoURL: '', terms: []};
+    var centre = {key:'', id: '', name: '', logoURL: '', calendars: []};
     var {centres} = this.props;
     if (centreID != '0') {
       centres.map((c) => {
@@ -170,7 +146,7 @@ export var EditCentreProfile = React.createClass({
       });
     }
     else {
-      centre = {id: '', name: '', logoURL: '', terms: []};
+      centre = {id: '', name: '', logoURL: '', calendars: []};
     }
 
    return (
@@ -212,34 +188,17 @@ export var EditCentreProfile = React.createClass({
           </Col>
            <Col md={6}>
              <ControlLabel>Term Dates</ControlLabel>
-             <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}} onClick={this.open}>Add Term</button>
+               <Link to={"/m/centres/"+centreID+
+                 "/add"} activeClassName="active"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}}>Add Term</button>
+               </Link>
              <div>
-              <TermList centreId={centreID}/>
+              <DeleteTermModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} calendarKey={this.state.deleteTerm} />
+              <TermList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete}/>
              </div>
              <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>
          </Row>
        </Grid>
-       <Modal show={this.state.showModal} onHide={this.close}>
-         <Modal.Header closeButton>
-           <Modal.Title>Add Term</Modal.Title>
-         </Modal.Header>
-         <Modal.Body>
-           <FormGroup validationState={this.state.errorTermName}>
-             <ControlLabel>Term Name</ControlLabel>
-             <FormControl style={{marginBottom: '10px'}}
-             id="termName"
-             type="text"
-             placeholder="Enter Name of Term"/>
-           <HelpBlock>{this.state.errorMessageTermName}</HelpBlock>
-           </FormGroup>
-          <TermDatesSelector />
-         </Modal.Body>
-         <Modal.Footer>
-           <Button onClick={this.close}>Close</Button>
-           <Button onClick={(e) => this.saveTerm(e, centre)}>Save</Button>
-         </Modal.Footer>
-       </Modal>
      </div>
 
    );

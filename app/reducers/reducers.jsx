@@ -105,18 +105,47 @@ export var centreReducer = (state = [], action) => {
           return centre;
         }
       });
-      case 'SAVE_TERM':
-        return state.map((centre) => {
-          if ((centre.id) === action.centre.key) {
-            return {
-             ...centre,
-             ...action.centre
-           };
-          }
-          else {
-            return centre;
-          }
-        });
+    case 'ADD_TERM':
+    return state.map((centre) => {
+      if ((centre.key) === action.centreKey) {
+        if (centre.calendars === undefined) {
+          centre= {...centre, calendars: []};
+
+        }
+        centre.calendars[action.termKey] = {
+          name: action.termName,
+          term: action.terms
+        };
+        return centre;
+      }
+      else {
+        return centre;
+      }
+    });
+    case 'UPDATE_TERM':
+    return state.map((centre) => {
+      if ((centre.key) === action.centreKey) {
+        centre.calendars[action.calendarKey] = {
+          name: action.termName,
+          term: action.terms
+        };
+        return centre;
+      }
+      else {
+        return centre;
+      }
+    });
+    case 'DELETE_TERM':
+    return state.map((centre) => {
+      if ((centre.key) === action.centreKey) {
+        centre.calendars = _.omit(centre.calendars, action.calendarKey);
+        return centre;
+      }
+      else {
+        return centre;
+      }
+    });
+
     default:
       return state;
   }
@@ -145,6 +174,40 @@ export var termReducer = (state=[], action) => {
     case 'UPDATE_TERM_SELECTED_DAYS':
       state[action.id] = action.selectedDays;
       return state;
+    case 'START_TERMS':
+      return action.terms;
+
+    case 'RESET_TERMS':
+      return [];
+    default:
+      return state;
+  }
+}
+
+export var ageGroupReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'ADD_AGE_GROUPS':
+      return [
+        ...state,
+        ...action.ageGroups
+      ];
+    case 'ADD_AGE_GROUP':
+      return [
+        ...state,
+      {...action.ageGroup}
+    ];
+    case 'UPDATE_AGE_GROUP':
+      return state.map((ageGroup) => {
+        if ((ageGroup.key) === action.key) {
+          return {
+           ...ageGroup,
+           ...action.ageGroup
+         };
+        }
+        else {
+          return ageGroup;
+        }
+      });
     default:
       return state;
   }

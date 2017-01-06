@@ -14,6 +14,10 @@ import TrialEdit from 'TrialEdit'
 import CoachesApp from 'CoachesApp'
 import CoachesList from 'CoachesList'
 import EditCoach from 'EditCoach'
+import Settings from 'Settings'
+import SettingsList from 'SettingsList'
+import EditAgeGroup from 'EditAgeGroup'
+import EditTerm from 'EditTerm'
 
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
@@ -38,7 +42,8 @@ export default (
           <IndexRoute component={MainMenu}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
-            <Route path=":centreID" component={EditCentreProfile} />
+            <Route path=":centreID" component={EditCentreProfile}/>
+            <Route path=":centreID/:calendarKey" component={EditTerm} />
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
@@ -47,6 +52,10 @@ export default (
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>
             <Route path=":coachId" component={EditCoach} />
+          </Route>
+          <Route path="settings" component={Settings}>
+            <IndexRoute component={SettingsList}/>
+              <Route path="ageGroup/:name" component={EditAgeGroup} />
           </Route>
         </Route>
     </Route>

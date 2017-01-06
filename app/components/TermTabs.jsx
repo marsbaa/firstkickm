@@ -26,10 +26,9 @@ export var TermTabs = React.createClass({
  },
 
   render: function () {
-  const numOfTabs = this.props.terms;
      return (
        <Tabs defaultActiveKey={this.state.key} onSelect={this.handleSelect} id="tabsSelector">
-         {this.TabContent(numOfTabs)}
+         {this.TabContent(this.props.numOfTerms)}
        </Tabs>
      );
    }

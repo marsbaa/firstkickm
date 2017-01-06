@@ -1,15 +1,14 @@
-import React from 'react';
-import {Col, Button, Glyphicon} from 'react-bootstrap';
-import {Link} from 'react-router'
-import {header, button, btn, headerlnk} from 'styles.css';
-
-var actions = require('actions');
-var {connect} = require('react-redux');
+import React from 'react'
+import _ from 'lodash'
+var actions = require('actions')
+var {connect} = require('react-redux')
 
 export var CoachesApp = React.createClass({
   componentDidMount() {
-    var {dispatch} = this.props;
-    dispatch(actions.startCoaches());
+    var {dispatch, coaches} = this.props;
+    if (_.isEmpty(coaches)) {
+      dispatch(actions.startCoaches());
+    }
   },
 
   render: function () {
@@ -23,4 +22,5 @@ export var CoachesApp = React.createClass({
  }
  });
 
- export default connect ()(CoachesApp);
+ export default connect((state) => {return state;
+})(CoachesApp);

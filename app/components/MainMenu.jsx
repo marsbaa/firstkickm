@@ -37,6 +37,8 @@ export var MainMenu = React.createClass({
     render: function() {
         var {selection, centres} = this.props;
         var trialsLink = "/m/trials/";
+
+        //Centre List
         var centreOptions = [];
         centreOptions.push(<option key="0" value="0">select</option>);
         centres.map((centre) => {
@@ -61,6 +63,7 @@ export var MainMenu = React.createClass({
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/coaches" activeClassName="active"><button className="mainbtn">Coaches Profile</button></Link>
                 <Link to="m/centres" activeClassName="active"><button className="mainbtn">Centres Profile</button></Link>
+                <Link to="m/settings" activeClassName="active"><button className="mainbtn">Settings</button></Link>
               </Col>
             </Row>
           </Grid>

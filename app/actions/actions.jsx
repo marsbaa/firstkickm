@@ -250,7 +250,7 @@ export var startCentres = () => {
         id: centres[centreId].id,
         name: centres[centreId].name,
         logoURL: centres[centreId].logoURL,
-        terms: centres[centreId].terms
+        calendars: centres[centreId].calendars
       });
     });
     dispatch(addCentres(parsedCentres));
@@ -300,21 +300,52 @@ export var updateSelectedCentre = (id) => {
   };
 };
 
-export var saveTerm = (centre) => {
-  var updates=  {};
-  updates['/centres/'+ centre.key] = {
-   id: centre.id,
-   name: centre.name,
-   logoURL : centre.logoURL,
-   terms: centre.terms
- };
-  firebase.database().ref().update(updates);
-  return {
-    type: 'SAVE_TERM',
-    centre
+export var addTerm = (centreKey, terms, termName) => {
+  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars');
+  var termKey = TermRef.push().key;
+  var updates = {};
+  updates[termKey] = {
+    name: termName,
+    term: terms
   };
+  TermRef.update(updates);
+  return {
+    type: 'ADD_TERM',
+    centreKey,
+    terms,
+    termKey,
+    termName
+  };
+};
 
+export var updateTerm = (centreKey, terms, termName, calendarKey) => {
+  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars');
+  var updates = {};
+  updates[calendarKey] = {
+    name: termName,
+    term: terms
+  };
+  TermRef.update(updates);
+  return {
+    type: 'UPDATE_TERM',
+    centreKey,
+    terms,
+    calendarKey,
+    termName
+  };
+};
+
+export var deleteTerm = (centreKey, calendarKey) => {
+  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars/' + calendarKey);
+  TermRef.remove();
+  return {
+    type: 'DELETE_TERM',
+    centreKey,
+    calendarKey
+  }
 }
+
+
 
 // Search
 export var setSearchText = (searchText) => {
@@ -332,3 +363,69 @@ export var updateSelectedDays = (id, selectedDays) => {
     selectedDays
   }
 }
+
+export var startTerms = (terms) => {
+  return {
+    type: 'START_TERMS',
+    terms
+  }
+}
+
+export var resetTerms = () => {
+  return {
+    type: 'RESET_TERMS'
+  }
+}
+
+//Settings
+export var startAgeGroup = () => {
+   return (dispatch) => {
+   var ageGroupRef = firebaseRef.child('ageGroup');
+   ageGroupRef.once('value').then((snapshot) => {
+    var ageGroup = snapshot.val();
+    var parsedAgeGroup = [];
+
+    Object.keys(ageGroup).forEach((ageGroupId)=> {
+      parsedAgeGroup.push({
+        key: ageGroupId,
+        name: ageGroup[ageGroupId].name,
+        minAge: ageGroup[ageGroupId].minAge,
+        maxAge: ageGroup[ageGroupId].maxAge
+      });
+    });
+    dispatch(addAgeGroups(parsedAgeGroup));
+  });
+};
+};
+
+export var addAgeGroups = (ageGroups) => {
+  return {
+    type: 'ADD_AGE_GROUPS',
+    ageGroups
+  };
+};
+
+export var addAgeGroup = (ageGroup) => {
+  var ageGroupRef = firebaseRef.child('ageGroup');
+  var newKey = ageGroupRef.push().key;
+  var updates = {};
+  updates[newKey] = ageGroup;
+  ageGroupRef.update(updates);
+  ageGroup.key = newKey;
+  return {
+    type: 'ADD_AGE_GROUP',
+    ageGroup
+  }
+}
+
+export var updateAgeGroup = (ageGroup) => {
+  var updates=  {};
+  updates['/ageGroup/'+ ageGroup.key] = ageGroup;
+  firebase.database().ref().update(updates);
+  var key = ageGroup.key;
+  return {
+    type: 'UPDATE_AGE_GROUP',
+    key,
+    ageGroup
+  };
+};

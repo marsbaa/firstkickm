@@ -15,11 +15,11 @@ export var MultipleDayPicker = React.createClass({
 
   isDaySelected(day) {
     return this.state.selectedDays.some(selectedDay =>
-      DateUtils.isSameDay(selectedDay, day),
-    );
+      DateUtils.isSameDay(selectedDay, day));
   },
 
   handleDayClick(e, day, { selected }) {
+    e.preventDefault();
     var {dispatch} = this.props;
     var id = this.props.tab;
     const { selectedDays } = this.state;
@@ -35,10 +35,28 @@ export var MultipleDayPicker = React.createClass({
     dispatch(actions.updateSelectedDays(id, selectedDays));
   },
 
+  componentDidMount() {
+     var {terms} = this.props;
+     var id = this.props.tab;
+     const { selectedDays } = this.state;
+     if (!(_.isEmpty(terms))) {
+        if(!(_.isEmpty(terms[id]))) {
+          terms[id].map((day) =>
+          {
+            var newDay = new Date(day);
+            selectedDays.push(newDay);
+          });
+        }
+       this.setState({ selectedDays })
+     }
+
+  },
+
+
   render: function () {
    return (
      <DayPicker
-          selectedDays={ this.isDaySelected}
+          selectedDays={this.isDaySelected}
           onDayClick={ this.handleDayClick }
           numberOfMonths={ 2 }
         />
