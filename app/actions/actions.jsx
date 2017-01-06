@@ -430,3 +430,9 @@ export var updateAgeGroup = (ageGroup) => {
     ageGroup
   };
 };
+
+export var resetAgeGroup = () => {
+  return {
+    type: 'RESET_AGE_GROUP'
+  }
+}

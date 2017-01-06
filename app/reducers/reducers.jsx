@@ -196,6 +196,8 @@ export var ageGroupReducer = (state=[], action) => {
         ...state,
       {...action.ageGroup}
     ];
+    case 'RESET_AGE_GROUP':
+      return [];
     case 'UPDATE_AGE_GROUP':
       return state.map((ageGroup) => {
         if ((ageGroup.key) === action.key) {

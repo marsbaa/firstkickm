@@ -18,6 +18,7 @@ import Settings from 'Settings'
 import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
 import EditTerm from 'EditTerm'
+import EditClass from 'EditClass'
 
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
@@ -44,6 +45,7 @@ export default (
             <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={EditCentreProfile}/>
             <Route path=":centreID/:calendarKey" component={EditTerm} />
+            <Route path=":centreID/class/:classKey" component={EditClass} />
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>

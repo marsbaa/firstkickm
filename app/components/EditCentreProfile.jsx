@@ -1,5 +1,5 @@
 import React from 'react'
-import {Grid,Row,Panel,Col,FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
+import {Grid,Row,Panel,Col, Form, FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
 import {btn} from 'styles.css'
 import {browserHistory} from 'react-router'
 import TermList from 'TermList'
@@ -19,7 +19,8 @@ export var EditCentreProfile = React.createClass({
       errorMessageName: '',
       logoURL: '',
       showModal: false,
-      deleteTerm: ''
+      deleteTerm: '',
+      classRow: 0
     };
   },
 
@@ -42,7 +43,6 @@ export var EditCentreProfile = React.createClass({
       logoURL: e.target.value
     });
   },
-
 
   formSubmit(e) {
     e.preventDefault();
@@ -183,7 +183,8 @@ export var EditCentreProfile = React.createClass({
             </FormGroup>
             <FormGroup>
               <ControlLabel>Class Day & Time</ControlLabel>
-              <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button>
+              <Link to={"/m/centres/"+centreID+"/class/add"}>
+                <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button></Link>
             </FormGroup>
           </Col>
            <Col md={6}>
