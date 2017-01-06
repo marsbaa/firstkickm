@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import Centre from 'Centre'
 import {btn} from 'styles.css'
 import Search from 'Search'
+import CentresFilter from 'CentresFilter'
 var actions = require('actions');
 import _ from 'lodash'
 
@@ -12,10 +13,11 @@ export var CentresList = React.createClass({
 
 
   renderCentre() {
-    var {centres} = this.props;
+    var {centres, searchText} = this.props;
     var html = []
     centres = _.orderBy(centres, 'id', 'asc');
-    centres.map((centre) => {
+    var filteredCentres= CentresFilter.filter(centres, searchText);
+    filteredCentres.map((centre) => {
       html.push(<Centre key={centre.id} c={centre} />);
     });
     return html;

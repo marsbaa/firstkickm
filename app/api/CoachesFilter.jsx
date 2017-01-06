@@ -7,7 +7,7 @@ module.exports = {
       var text = coach.name.toLowerCase();
       return searchText.length === 0 || text.indexOf(searchText) !== -1;
     });
-    
+
     return filteredCoaches;
   }
 };
