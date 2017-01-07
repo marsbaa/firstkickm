@@ -1,24 +1,30 @@
 import React from 'react';
 import {Grid, Row, Col, FormGroup, ControlLabel, FormControl, HelpBlock, Button} from 'react-bootstrap'
-import TimePicker from 'rc-time-picker';
+import TimePicker from 'react-timepicker';
 import moment from 'moment'
 var actions = require('actions');
 var {connect} = require('react-redux');
 import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
-import 'rc-time-picker/assets/index.css';
+import 'react-timepicker/timepicker.css';
 
 export var EditClass = React.createClass({
   getInitialState() {
    return {
-     value: moment(),
+     startTime: '',
+     endTime: ''
    };
  },
 
- handleValueChange(value) {
-   console.log(value && value.format('HH:mm:ss'));
-   this.setState({ value });
- },
+  onChangeStartTime(hours,minutes) {
+    var time = hours+":"+minutes;
+    this.setState({startTime: time});
+  },
+
+  onChangeEndTime(hours,minutes) {
+    var time = hours+":"+minutes;
+    this.setState({endTime: time});
+  },
 
   goBack(e) {
     e.preventDefault();
@@ -53,7 +59,8 @@ export var EditClass = React.createClass({
   },
 
   render: function () {
-
+    console.log(this.state.startTime)
+    console.log(this.state.endTime)
      return (
        <Grid>
          <Row>
@@ -66,11 +73,11 @@ export var EditClass = React.createClass({
              </FormGroup>
              <FormGroup>
                <ControlLabel>Start Time</ControlLabel>
-                 <TimePicker style={{width: '100%'}} defaultValue={this.state.value} showSecond={false} onChange={this.handleValueChange}/>
+                <TimePicker onChange={this.onChangeStartTime} />
              </FormGroup>
              <FormGroup>
                <ControlLabel>End Time</ControlLabel>
-                 <TimePicker style={{width: '100%'}} defaultValue={this.state.value} showSecond={false} onChange={this.handleValueChange}/>
+                 <TimePicker onChange={this.onChangeEndTime}/>
              </FormGroup>
 
              <Button onClick={this.goBack}>Cancel</Button>
