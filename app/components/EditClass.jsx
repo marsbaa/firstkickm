@@ -12,8 +12,32 @@ export var EditClass = React.createClass({
   getInitialState() {
    return {
      startTime: '',
-     endTime: ''
+     endTime: '',
+     ageGroup: '',
+     day: '',
+     term: ''
    };
+ },
+
+ handleChange(e) {
+   e.preventDefault();
+   this.setState({
+     ageGroup: e.target.value
+   })
+ },
+
+ handleDayChange(e) {
+   e.preventDefault();
+   this.setState({
+     day: e.target.value
+   })
+ },
+
+ handleTermChange(e) {
+   e.preventDefault();
+   this.setState({
+     term: e.target.value
+   })
  },
 
   onChangeStartTime(hours,minutes) {
@@ -34,7 +58,22 @@ export var EditClass = React.createClass({
 
   saveClass(e) {
     e.preventDefault();
+    var {dispatch, centres} = this.props;
     var centreID = this.props.params.centreID;
+    var centre;
+    centres.map((c) => {
+      if(c.id === centreID) {
+        centre = c;
+      }
+    });
+    var cla = {
+      ageGroup : this.state.ageGroup,
+      day : this.state.day,
+      termKey : this.state.term,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime
+    };
+    dispatch(actions.addClass(cla, centre.key));
     browserHistory.push('/m/centres/'+ centreID);
   },
 
@@ -59,16 +98,47 @@ export var EditClass = React.createClass({
   },
 
   render: function () {
-    console.log(this.state.startTime)
-    console.log(this.state.endTime)
+     var {centres} = this.props;
+     var centreID = this.props.params.centreID;
+     var centre;
+     centres.map((c) => {
+       if(c.id === centreID) {
+         centre = c;
+       }
+     });
+     var termhtml = [];
+     Object.keys(centre.calendars).forEach((termId) => {
+       termhtml.push(<option key={termId} value={termId}>{centre.calendars[termId].name}</option>);
+     });
+
      return (
        <Grid>
          <Row>
            <Col md={6}>
              <FormGroup>
                <ControlLabel>Age Group</ControlLabel>
-                 <FormControl id="selectAgeGroup" componentClass="select" placeholder="select" onChange={this.handleChange}>
+                 <FormControl id="selectAgeGroup" componentClass="select" onChange={this.handleChange}>
                    {this.generateAgeGroups()}
+                 </FormControl>
+             </FormGroup>
+             <FormGroup>
+               <ControlLabel>Day of Week</ControlLabel>
+                 <FormControl id="selectDay" componentClass="select" onChange={this.handleDayChange}>
+                   <option value="select">Select Day of Week</option>
+                   <option value="saturday">Saturday</option>
+                   <option value="sunday">Sunday</option>
+                   <option value="monday">Monday</option>
+                   <option value="tuesday">Tuesday</option>
+                   <option value="wednesday">Wednesday</option>
+                   <option value="thursday">Thursday</option>
+                   <option value="friday">Friday</option>
+                 </FormControl>
+             </FormGroup>
+             <FormGroup>
+               <ControlLabel>Term Calendar</ControlLabel>
+                 <FormControl id="selectTerm" componentClass="select" onChange={this.handleTermChange}>
+                   <option value="select">Select Term to Follow</option>
+                   {termhtml}
                  </FormControl>
              </FormGroup>
              <FormGroup>

@@ -121,7 +121,7 @@ export var startAddTrials = () => {
       console.log(response);
   });
 
-    return trialsRef.orderByChild("dateOfTrial").startAt("2016-06-01").once("value").then((snapshot) => {
+    return trialsRef.orderByChild("dateOfTrial").startAt("2017-01-01").once("value").then((snapshot) => {
       var trials = snapshot.val() || {};
       var parsedTrials = [];
 
@@ -345,6 +345,20 @@ export var deleteTerm = (centreKey, calendarKey) => {
     calendarKey
   }
 }
+
+export var addClass = (cla, centreKey) => {
+  var classRef = firebase.database().ref('/centres/' + centreKey+'/classes');
+  var classKey = classRef.push().key;
+  var updates = {};
+  updates[classKey] = cla;
+  classRef.update(updates);
+  cla.key = classKey;
+  return {
+    type: 'ADD_CLASS',
+    centreKey,
+    cla
+  };
+};
 
 
 

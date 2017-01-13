@@ -1,58 +1,70 @@
 import React from 'react';
-import {Link} from 'react-router'
-import {FormGroup, ControlLabel, Grid, Row, Col} from 'react-bootstrap'
+import {Link, browserHistory} from 'react-router'
 import {connect} from 'react-redux';
+import {Row, Col} from 'react-bootstrap'
 var actions = require('actions');
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
+import TermButton from 'TermButton'
+import moment from 'moment'
+import _ from 'lodash'
 
 
 export var ScheduleApp = React.createClass({
-  getInitialState: function() {
-    return {
-      value: [],
-      options : []
-    };
-  },
-  handleSelectChange (value) {
-  		console.log('You\'ve selected:', value);
-  		this.setState({ value });
-  	},
-
-  componentDidMount() {
-    var {dispatch} = this.props;
-    dispatch(actions.updateNavTitle("/m/coachschedule", "Coach Scheduling"));
+  componentWillMount () {
+    var {dispatch, coaches} = this.props;
+    if (_.isEmpty(coaches)) {
+      dispatch(actions.startCoaches());
+    }
   },
 
-  render: function () {
-      var {dispatch, coaches} = this.props;
-      var coachOptions = [];
-      coaches.map((coach) => {
-        coachOptions.push({label: coach.name, value: coach.key});
-      });
-      console.log(coachOptions);
-   return (
-     <Grid>
-       <Row style={{height: '200px'}}>
-         <Col md={6}>
-           <FormGroup>
-             <ControlLabel>U6 9:00am - 10:00am</ControlLabel>
-              <Select
-                   name="form-field-name"
-                   multi={true}
-                   value={this.state.value}
-                   options={coachOptions}
-                   onChange={this.handleSelectChange}
-               />
-           </FormGroup>
+  render() {
+    var {selection, centres} = this.props;
+    var centre;
+    centres.map((c) => {
+      if(c.id === selection) {
+        centre = c;
+      }
+    });
+    var calendars = centre.calendars;
+    var termDates = [];
+    var count=0;
+    Object.keys(calendars).forEach((calendarKey)=> {
+      var terms = calendars[calendarKey].term
+      Object.keys(terms).forEach((termID) => {
+        var term = terms[termID];
+        Object.keys(term).forEach((dateID) => {
+          var date = term[dateID];
+          if (moment(date).isAfter() && count<8) {
+            termDates.push({
+              term: termID,
+              session: parseInt(dateID)+1,
+              date,
+              calendarKey
+            });
+            count++;
+          }
+        })
+      })
+    })
+    var termDates = _.orderBy(termDates, ['term', 'session'], ['asc', 'asc']);
 
+    var html = [];
+    termDates.map((dateInfo) => {
+        html.push(<TermButton key={dateInfo.date} title={"T"+dateInfo.term+"-S"+dateInfo.session} date={moment(dateInfo.date).format('D MMM')} />)
+    })
+
+
+    return (
+      <div style={{paddingTop: '20px'}}>
+        <Row style={{ paddingBottom: '8px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+          <Col xs={12} md={12}>
+          {html}
          </Col>
-       </Row>
-     </Grid>
-
-   );
- }
- });
+        </Row>
+        {this.props.children}
+      </div>
+    );
+  }
+});
 
  export default connect((state) => {return state;
 })(ScheduleApp);

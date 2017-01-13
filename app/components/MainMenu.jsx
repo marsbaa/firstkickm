@@ -20,6 +20,7 @@ export var MainMenu = React.createClass({
       document.getElementById("trials").disabled = false;
       document.getElementById("student").disabled = false;
       document.getElementById("coach").disabled = false;
+        document.getElementById("coachSchedule").disabled = false;
       dispatch(actions.updateSelectedCentre(e.target.value));
     }
   },
@@ -31,6 +32,7 @@ export var MainMenu = React.createClass({
         document.getElementById("trials").disabled = false;
         document.getElementById("student").disabled = false;
         document.getElementById("coach").disabled = false;
+        document.getElementById("coachSchedule").disabled = false;
       }
     },
 
@@ -61,7 +63,8 @@ export var MainMenu = React.createClass({
                 <Link to={trialsLink}activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="student" disabled>Student Attendance</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
-                <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule">Coach Scheduling</button></Link>
+                <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule"
+                disabled>Coach Scheduling</button></Link>
                 <Link to="m/coaches" activeClassName="active"><button className="mainbtn">Coaches Profile</button></Link>
                 <Link to="m/centres" activeClassName="active"><button className="mainbtn">Centres Profile</button></Link>
                 <Link to="m/settings" activeClassName="active"><button className="mainbtn">Settings</button></Link>

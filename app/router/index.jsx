@@ -19,8 +19,9 @@ import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
 import EditTerm from 'EditTerm'
 import EditClass from 'EditClass'
-import CoachSchedule from 'CoachSchedule'
 import ScheduleApp from 'ScheduleApp'
+import Schedule from 'Schedule'
+import ScheduleMain from 'ScheduleMain'
 
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
@@ -53,8 +54,9 @@ export default (
             <IndexRoute component={TrialList}/>
             <Route path=":studentId" component={TrialEdit} />
           </Route>
-          <Route path="coachschedule" component={CoachSchedule}>
-            <IndexRoute component={ScheduleApp} />
+          <Route path="coachschedule" component={ScheduleApp}>
+            <IndexRoute component={ScheduleMain} />
+            <Route path=":calendarKey" component={Schedule} />
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>

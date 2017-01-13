@@ -145,6 +145,19 @@ export var centreReducer = (state = [], action) => {
         return centre;
       }
     });
+    case 'ADD_CLASS':
+    return state.map((centre) => {
+      if ((centre.key) === action.centreKey) {
+        if (centre.classes === undefined) {
+          centre= {...centre, classes: []};
+        }
+        centre.classes.push({...action.cla});
+        return centre;
+      }
+      else {
+        return centre;
+      }
+    });
 
     default:
       return state;

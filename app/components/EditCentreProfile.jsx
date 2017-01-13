@@ -1,10 +1,9 @@
 import React from 'react'
 import {Grid,Row,Panel,Col, Form, FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
 import {btn} from 'styles.css'
-import {browserHistory} from 'react-router'
 import TermList from 'TermList'
 import DeleteTermModal from 'DeleteTermModal'
-import {Link} from 'react-router'
+import {Link, browserHistory} from 'react-router'
 
 var actions = require('actions');
 var {connect} = require('react-redux');
