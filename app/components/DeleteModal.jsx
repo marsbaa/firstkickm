@@ -20,20 +20,26 @@ export var DeleteTermModal = React.createClass({
   delete(e) {
     e.preventDefault();
     var {dispatch} = this.props;
-    dispatch(actions.deleteTerm(this.props.centreKey, this.props.calendarKey));
+    if (this.props.type === "class") {
+      dispatch(actions.deleteClass(this.props.centreKey, this.props.deleteKey));
+    }
+    else if (this.props.type === "term") {
+      dispatch(actions.deleteTerm(this.props.centreKey, this.props.deleteKey));
+    }
     this.props.closeModal();
   },
 
 
   render: function () {
+     var type = this.props.type;
 
      return (
        <Modal show={this.props.showModal} onHide={this.close}>
          <Modal.Header closeButton>
-           <Modal.Title>Delete Term</Modal.Title>
+           <Modal.Title>Delete {type}</Modal.Title>
          </Modal.Header>
          <Modal.Body>
-           <h6>Are you sure you want to delete Term?</h6>
+           <h6>Are you sure you want to delete {type}?</h6>
          </Modal.Body>
          <Modal.Footer>
            <Button onClick={this.close}>Close</Button>

@@ -168,6 +168,46 @@ export var toggleTrial = (id) => {
   };
 };
 
+//Students Profile
+export var startStudents = () => {
+   return (dispatch) => {
+   var studentsRef = firebaseRef.child('students');
+   studentsRef.once('value').then((snapshot) => {
+    var students = snapshot.val();
+    var parsedStudents = [];
+
+    Object.keys(students).forEach((studentId)=> {
+      parsedStudents.push({
+        childName: students[studentId].childName,
+        ageGroup: students[studentId].ageGroup,
+        gender: students[studentId].gender,
+        dateOfBirth: students[studentId].dateOfBirth,
+        medicalHistory: students[studentId].medicalHistory,
+        medicalCondition: students[studentId].medicalCondition,
+        dateAdded: students[studentId].dateAdded,
+        parentName: students[studentId].parentName,
+        email: students[studentId].email,
+        currentClassTime: students[studentId].currentClassTime,
+        currentClassDay: students[studentId].currentClassDay,
+        address: students[studentId].address,
+        contact: students[studentId].contact,
+        venueId: students[studentId].venueId,
+        centre: students[studentId].centre,
+        trialId: students[studentId].trialId
+      });
+    });
+    dispatch(addStudents(parsedStudents));
+  });
+};
+};
+
+export var addStudents = (students) => {
+  return {
+    type: 'ADD_STUDENTS',
+    students
+  };
+};
+
 
 //Coaches Profile
 export var startCoaches = () => {
@@ -250,7 +290,8 @@ export var startCentres = () => {
         id: centres[centreId].id,
         name: centres[centreId].name,
         logoURL: centres[centreId].logoURL,
-        calendars: centres[centreId].calendars
+        calendars: centres[centreId].calendars,
+        classes: centres[centreId].classes
       });
     });
     dispatch(addCentres(parsedCentres));
@@ -285,7 +326,8 @@ export var updateCentre = (centre) => {
    id : centre.id,
    name : centre.name,
    logoURL : centre.logoURL,
-   calendars : centre.calendars
+   calendars : centre.calendars,
+   classes: centres.classes
  };
   CentreRef.update(updates);
   return {
@@ -359,6 +401,16 @@ export var addClass = (cla, centreKey) => {
     cla
   };
 };
+
+export var deleteClass = (centreKey, classKey) => {
+  var ClassRef = firebase.database().ref('/centres/' + centreKey + '/classes/' + classKey);
+  ClassRef.remove();
+  return {
+    type: 'DELETE_CLASS',
+    centreKey,
+    classKey
+  }
+}
 
 
 

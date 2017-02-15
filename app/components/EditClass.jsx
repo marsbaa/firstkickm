@@ -41,12 +41,52 @@ export var EditClass = React.createClass({
  },
 
   onChangeStartTime(hours,minutes) {
-    var time = hours+":"+minutes;
+    var formattedHours, formattedMinutes, amPm;
+    if (hours < 12) {
+      formattedHours = hours
+      amPm = "am";
+    }
+    else if (hours === 12) {
+      amPm = "pm"
+      formattedHours = hours;
+    }
+    else {
+      formattedHours = hours-12;
+      amPm = "pm"
+    }
+
+    if (minutes < 10) {
+      formattedMinutes = "0"+minutes;
+    }
+    else {
+      formattedMinutes = minutes;
+    }
+     var time = formattedHours+":"+formattedMinutes+" "+amPm;
     this.setState({startTime: time});
   },
 
   onChangeEndTime(hours,minutes) {
-    var time = hours+":"+minutes;
+    var formattedHours, formattedMinutes, amPm;
+    if (hours < 12) {
+      formattedHours = hours
+      amPm = "am";
+    }
+    else if (hours === 12) {
+      amPm = "pm"
+      formattedHours = hours;
+    }
+    else {
+      formattedHours = hours-12;
+      amPm = "pm"
+    }
+
+    if (minutes < 10) {
+      formattedMinutes = "0"+minutes;
+    }
+    else {
+      formattedMinutes = minutes;
+    }
+     var time = formattedHours+":"+formattedMinutes+" "+amPm;
     this.setState({endTime: time});
   },
 

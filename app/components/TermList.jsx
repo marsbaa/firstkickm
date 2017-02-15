@@ -12,6 +12,7 @@ export var TermList = React.createClass({
     e.preventDefault();
     this.props.openModal();
     this.props.handleDeleteKey(id);
+    this.props.handleDeleteType("term");
   },
 
   render: function () {

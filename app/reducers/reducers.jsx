@@ -51,6 +51,19 @@ export var trialsReducer = (state = [], action) => {
   }
 };
 
+export var studentReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_STUDENTS':
+      return [
+        ...state,
+        ...action.students
+      ];
+    default:
+      return state;
+ }
+};
+
+
 export var coachReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_COACHES':
@@ -151,7 +164,17 @@ export var centreReducer = (state = [], action) => {
         if (centre.classes === undefined) {
           centre= {...centre, classes: []};
         }
-        centre.classes.push({...action.cla});
+        centre.classes[action.cla.key] = action.cla;
+        return centre;
+      }
+      else {
+        return centre;
+      }
+    });
+    case 'DELETE_CLASS':
+    return state.map((centre) => {
+      if ((centre.key) === action.centreKey) {
+        centre.classes = _.omit(centre.classes, action.classKey);
         return centre;
       }
       else {

@@ -2,7 +2,8 @@ import React from 'react'
 import {Grid,Row,Panel,Col, Form, FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
 import {btn} from 'styles.css'
 import TermList from 'TermList'
-import DeleteTermModal from 'DeleteTermModal'
+import ClassList from 'ClassList'
+import DeleteModal from 'DeleteModal'
 import {Link, browserHistory} from 'react-router'
 
 var actions = require('actions');
@@ -18,7 +19,8 @@ export var EditCentreProfile = React.createClass({
       errorMessageName: '',
       logoURL: '',
       showModal: false,
-      deleteTerm: '',
+      delete: '',
+      type: '',
       classRow: 0
     };
   },
@@ -32,9 +34,12 @@ export var EditCentreProfile = React.createClass({
   },
 
   delete(key) {
-    this.setState({deleteTerm: key});
+    this.setState({delete: key});
   },
 
+  type(type) {
+    this.setState({type: type});
+  },
 
   handleChange(e) {
     e.preventDefault();
@@ -180,20 +185,23 @@ export var EditCentreProfile = React.createClass({
               defaultValue={centre.logoURL} onChange={this.handleChange}/>
             <Image src={this.state.logoURL} responsive/>
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>Class Day & Time</ControlLabel>
-              <Link to={"/m/centres/"+centreID+"/class/add"}>
-                <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button></Link>
-            </FormGroup>
           </Col>
            <Col md={6}>
+             <FormGroup>
+               <ControlLabel>Class Day & Time</ControlLabel>
+               <Link to={"/m/centres/"+centreID+"/class/add"}>
+                 <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button></Link>
+             </FormGroup>
+             <div style={{marginBottom: '20px'}}>
+               <ClassList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type} />
+             </div>
              <ControlLabel>Term Dates</ControlLabel>
                <Link to={"/m/centres/"+centreID+
                  "/add"} activeClassName="active"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}}>Add Term</button>
                </Link>
              <div>
-              <DeleteTermModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} calendarKey={this.state.deleteTerm} />
-              <TermList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete}/>
+              <DeleteModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} deleteKey={this.state.delete} type={this.state.type}/>
+              <TermList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
              </div>
              <button className="btn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>

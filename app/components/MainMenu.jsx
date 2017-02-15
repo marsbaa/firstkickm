@@ -60,8 +60,8 @@ export var MainMenu = React.createClass({
                       {centreOptions}
                     </FormControl>
                   </FormGroup>
-                <Link to={trialsLink}activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
-                <Link to="" activeClassName="active"><button className="mainbtn" id="student" disabled>Student Attendance</button></Link>
+                <Link to={trialsLink} activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
+                <Link to="m/attendance" activeClassName="active"><button className="mainbtn" id="student" disabled>Student Attendance</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule"
                 disabled>Coach Scheduling</button></Link>
