@@ -168,6 +168,8 @@ export var toggleTrial = (id) => {
   };
 };
 
+
+
 //Students Profile
 export var startStudents = () => {
    return (dispatch) => {
@@ -178,22 +180,8 @@ export var startStudents = () => {
 
     Object.keys(students).forEach((studentId)=> {
       parsedStudents.push({
-        childName: students[studentId].childName,
-        ageGroup: students[studentId].ageGroup,
-        gender: students[studentId].gender,
-        dateOfBirth: students[studentId].dateOfBirth,
-        medicalHistory: students[studentId].medicalHistory,
-        medicalCondition: students[studentId].medicalCondition,
-        dateAdded: students[studentId].dateAdded,
-        parentName: students[studentId].parentName,
-        email: students[studentId].email,
-        currentClassTime: students[studentId].currentClassTime,
-        currentClassDay: students[studentId].currentClassDay,
-        address: students[studentId].address,
-        contact: students[studentId].contact,
-        venueId: students[studentId].venueId,
-        centre: students[studentId].centre,
-        trialId: students[studentId].trialId
+        key: studentId,
+        ...students[studentId]
       });
     });
     dispatch(addStudents(parsedStudents));
@@ -205,6 +193,33 @@ export var addStudents = (students) => {
   return {
     type: 'ADD_STUDENTS',
     students
+  };
+};
+
+export var updateAttendance = (date, id) => {
+  return (dispatch) => {
+    var attendanceRef = firebaseRef.child('students/'+id+'/attendance/'+date);
+    attendanceRef.once('value').then((snapshot) => {
+      var attendance = snapshot.val();
+      if (attendance === null) {
+        attendance = {}
+      }
+          attendance.attended = (attendance.attended === undefined) || (attendance.attended === false) ? true : false;
+
+      return attendanceRef.update({
+        attended : attendance.attended
+      });
+    }).then(() => {
+      dispatch(toggleAttendance(date, id));
+    });
+  }
+};
+
+export var toggleAttendance = (date, id) => {
+  return {
+    type: 'TOGGLE_ATTENDANCE',
+    date,
+    id
   };
 };
 
@@ -320,16 +335,10 @@ export var addCentre = (centre) => {
 };
 
 export var updateCentre = (centre) => {
-  var CentreRef = firebase.database().ref('/centres/');
   var updates=  {};
-  updates[centre.key] = {
-   id : centre.id,
-   name : centre.name,
-   logoURL : centre.logoURL,
-   calendars : centre.calendars,
-   classes: centres.classes
- };
-  CentreRef.update(updates);
+  updates['/centres/'+ centre.key+'/logoURL'] = centre.logoURL;
+  updates['/centres/'+ centre.key+'/name'] = centre.name;
+  firebase.database().ref().update(updates);
   return {
     type: 'UPDATE_CENTRE',
     centre

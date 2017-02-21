@@ -7,7 +7,7 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 import {browserHistory} from 'react-router'
 
-export var EditCoach = React.createClass({
+export var CoachEdit = React.createClass({
 
   formSubmit(e) {
     e.preventDefault();
@@ -195,4 +195,4 @@ export var EditCoach = React.createClass({
 
 
 export default connect((state) => {return state;
-})(EditCoach);
+})(CoachEdit);

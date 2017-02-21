@@ -6,7 +6,7 @@ var {connect} = require('react-redux');
 import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
 
-export var EditTerm = React.createClass({
+export var TermEdit = React.createClass({
   getInitialState: function() {
     return {
       errorTermName: null,
@@ -124,4 +124,4 @@ export var EditTerm = React.createClass({
 });
 
 export default connect((state) => {return state;
-})(EditTerm);
+})(TermEdit);

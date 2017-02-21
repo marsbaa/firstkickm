@@ -10,7 +10,7 @@ var actions = require('actions');
 var {connect} = require('react-redux');
 var _ = require('lodash');
 
-export var EditCentreProfile = React.createClass({
+export var CentreEdit = React.createClass({
   getInitialState: function() {
     return {
       errorID: null,
@@ -125,6 +125,7 @@ export var EditCentreProfile = React.createClass({
   componentDidMount() {
     var {dispatch} = this.props;
     var centreID = this.props.params.centreID;
+    var {centres} = this.props;
     this.setState({
       logoURL: document.getElementById('logoURL').value
     });
@@ -134,6 +135,7 @@ export var EditCentreProfile = React.createClass({
     else {
       dispatch(actions.updateNavTitle("/m/centres", "Edit Centre"));
     }
+
 
   },
 
@@ -214,4 +216,4 @@ export var EditCentreProfile = React.createClass({
  });
 
  export default connect((state) => {return state;
-})(EditCentreProfile);
+})(CentreEdit);

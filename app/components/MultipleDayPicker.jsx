@@ -56,6 +56,7 @@ export var MultipleDayPicker = React.createClass({
   render: function () {
    return (
      <DayPicker
+          initialMonth={ this.state.selectedDays[0]}
           selectedDays={this.isDaySelected}
           onDayClick={ this.handleDayClick }
           numberOfMonths={ 2 }

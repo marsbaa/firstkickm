@@ -8,7 +8,7 @@ import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
 import 'react-timepicker/timepicker.css';
 
-export var EditClass = React.createClass({
+export var ClassEdit = React.createClass({
   getInitialState() {
    return {
      startTime: '',
@@ -200,4 +200,4 @@ export var EditClass = React.createClass({
 });
 
 export default connect((state) => {return state;
-})(EditClass);
+})(ClassEdit);

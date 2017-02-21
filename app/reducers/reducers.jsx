@@ -51,6 +51,7 @@ export var trialsReducer = (state = [], action) => {
   }
 };
 
+
 export var studentReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_STUDENTS':
@@ -58,6 +59,28 @@ export var studentReducer = (state = [], action) => {
         ...state,
         ...action.students
       ];
+    case 'TOGGLE_ATTENDANCE':
+      return state.map((student) => {
+        if (student.key === action.id) {
+          if (student.attendance === undefined) {
+            student.attendance = { [action.date] : {} }
+          }
+          var attendedDate = student.attendance[action.date];
+          var nextAttended = (attendedDate.attended === undefined) | (attendedDate.attended === false) ? true:false;
+          console.log(nextAttended);
+          return {
+            ...student,
+            attendance: {
+              [action.date] : {
+                attended: nextAttended
+              }
+            }
+          };
+        }
+        else {
+          return student;
+        }
+      })
     default:
       return state;
  }

@@ -8,6 +8,7 @@ var actions = require('actions');
 import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
 import _ from 'lodash'
+import moment from 'moment'
 
 export var AttendanceList = React.createClass({
 
@@ -23,36 +24,63 @@ export var AttendanceList = React.createClass({
     dispatch(actions.updateNavTitle("/m/attendance", centre.name+" Attendance"));
   },
 
+
+
   render: function () {
-    var {students, searchText, selection} = this.props;
-    var filteredStudents = StudentsFilter.filter(students, selection, searchText);
+    var {students, searchText, selection, centres, attendance} = this.props;
+    var centre;
+    centres.map((c) => {
+      if(c.id === selection) {
+        centre = c;
+      }
+    });
+
+    var today=-1;
     var html=[];
-    if (filteredStudents.length !== 0) {
-      var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
-      Object.keys(groupTime).forEach((timeSlot)=> {
-        var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
-        Object.keys(groupAge).forEach((age)=> {
-          var group = groupAge[age];
-          html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-             <Col xs={9} md={9}>
-               <h5>{age} {timeSlot}</h5>
-             </Col>
-               <Col xs={3} md={3} style={{textAlign: 'center'}}>
-                 <h5><font style={{color: 'white'}}>0</font> / 3
-                 </h5>
-             </Col>
-           </Row>);
-
-           Object.keys(group).forEach((studentId) => {
-               html.push(<Student key={group[studentId].childName} student={group[studentId]} />);
-           });
-        })
-
-
-
-
+    Object.keys(centre.calendars).forEach((termId) => {
+      var calendar = centre.calendars[termId];
+      Object.keys(calendar.term).forEach((term) => {
+         calendar.term[term].map((date) => {
+           if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+             today = 1;
+           }
+         })
       });
+    });
+    if (today !== -1) {
+      var filteredStudents = StudentsFilter.filter(students, selection, searchText);
+      if (filteredStudents.length !== 0) {
+        var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
+        Object.keys(groupTime).forEach((timeSlot)=> {
+          var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
+          Object.keys(groupAge).forEach((age)=> {
+            var group = groupAge[age];
+            html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+               <Col xs={9} md={9}>
+                 <h5>{age} {timeSlot}</h5>
+               </Col>
+                 <Col xs={3} md={3} style={{textAlign: 'center'}}>
+                   <h5><font style={{color: 'white'}}>0</font> / {_.size(group)}
+                   </h5>
+               </Col>
+             </Row>);
+
+             Object.keys(group).forEach((studentId) => {
+                 html.push(<Student key={group[studentId].key} student={group[studentId]}/>);
+
+             });
+          })
+
+
+
+
+        });
+      }
     }
+    else {
+      html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)
+    }
+
 
    return (
      <div>

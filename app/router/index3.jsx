@@ -1,62 +1,54 @@
 import firebase from 'app/firebase/';
 import React from 'react';
-import {Route, Router, IndexRoute, browserHistory} from 'react-router';
+import {Route, Router, IndexRoute, browserHistory, IndexRedirect} from 'react-router';
 
 import NavBar from 'NavBar';
 import Login from 'Login';
-import MainMenu from 'MainMenu';
-//Components for Centre Profile
 import CentresApp from 'CentresApp';
-import CentreEdit from 'CentreEdit'
+import MainMenu from 'MainMenu';
+import EditCentreProfile from 'EditCentreProfile'
 import CentresList from 'CentresList'
-import TermEdit from 'TermEdit'
-import ClassEdit from 'ClassEdit'
-//Components for Trials
 import TrialsApp from 'TrialsApp'
 import TrialList from 'TrialList'
 import TrialEdit from 'TrialEdit'
-
-//Components for Coaches
 import CoachesApp from 'CoachesApp'
 import CoachesList from 'CoachesList'
-import CoachEdit from 'CoachEdit'
-
+import EditCoach from 'EditCoach'
 import Settings from 'Settings'
 import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
-
+import EditTerm from 'EditTerm'
+import EditClass from 'EditClass'
 import ScheduleApp from 'ScheduleApp'
 import Schedule from 'Schedule'
 import ScheduleMain from 'ScheduleMain'
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
 
+import AuthService from 'AuthService'
 
-var redirectIfLoggedIn = (nextState, replace, next) => {
-  if (firebase.auth().currentUser) {
-    replace('/m');
-  }
-  next();
-};
+const auth = new AuthService('O6sBBbl1RwKg77FA76knLBC6wfTcrW8L', 'fka.auth0.com');
 
-function requireAuth(nextState, replace, next) {
-  if (!firebase.auth().currentUser) {
-    replace('/');
+// validate authentication for private routes
+const requireAuth = (nextState, replace) => {
+  if (!auth.loggedIn()) {
+    replace({ pathname: '/login' })
   }
-  next();
-};
+}
+
 
 export default (
   <Router history={browserHistory}>
-    <Route path="/">
-        <IndexRoute component={Login} />
+    <Route path="/" auth={auth}>
+       <IndexRedirect to="/m" />
+        <Route path="login" component={Login} />
         <Route path="m" component={NavBar} onEnter={requireAuth}>
           <IndexRoute component={MainMenu}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
-            <Route path=":centreID" component={CentreEdit}/>
-            <Route path=":centreID/:calendarKey" component={TermEdit} />
-            <Route path=":centreID/class/:classKey" component={ClassEdit} />
+            <Route path=":centreID" component={EditCentreProfile}/>
+            <Route path=":centreID/:calendarKey" component={EditTerm} />
+            <Route path=":centreID/class/:classKey" component={EditClass} />
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
@@ -71,7 +63,7 @@ export default (
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>
-            <Route path=":coachId" component={CoachEdit} />
+            <Route path=":coachId" component={EditCoach} />
           </Route>
           <Route path="settings" component={Settings}>
             <IndexRoute component={SettingsList}/>
