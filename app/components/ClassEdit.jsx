@@ -61,7 +61,7 @@ export var ClassEdit = React.createClass({
     else {
       formattedMinutes = minutes;
     }
-     var time = formattedHours+":"+formattedMinutes+" "+amPm;
+     var time = formattedHours+":"+formattedMinutes+amPm;
     this.setState({startTime: time});
   },
 
@@ -86,7 +86,7 @@ export var ClassEdit = React.createClass({
     else {
       formattedMinutes = minutes;
     }
-     var time = formattedHours+":"+formattedMinutes+" "+amPm;
+     var time = formattedHours+":"+formattedMinutes+amPm;
     this.setState({endTime: time});
   },
 

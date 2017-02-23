@@ -24,7 +24,7 @@ export var DeleteTermModal = React.createClass({
       dispatch(actions.deleteClass(this.props.centreKey, this.props.deleteKey));
     }
     else if (this.props.type === "term") {
-      dispatch(actions.deleteTerm(this.props.centreKey, this.props.deleteKey));
+      dispatch(actions.deleteTerm(this.props.deleteKey));
     }
     this.props.closeModal();
   },

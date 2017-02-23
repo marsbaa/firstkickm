@@ -9,7 +9,10 @@ import moment from 'moment'
 
 export var TrialList = React.createClass({
   componentDidMount () {
-    var {dispatch, selection} = this.props;
+    var {dispatch, selection, ageGroup} = this.props;
+    if (_.isEmpty(ageGroup)) {
+      dispatch(actions.startAgeGroup());
+    }
     var link = "/m/trials";
     dispatch(actions.updateNavTitle(link, "Trial List"));
   },

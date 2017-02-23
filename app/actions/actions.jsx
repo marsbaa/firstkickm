@@ -352,50 +352,6 @@ export var updateSelectedCentre = (id) => {
   };
 };
 
-export var addTerm = (centreKey, terms, termName) => {
-  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars');
-  var termKey = TermRef.push().key;
-  var updates = {};
-  updates[termKey] = {
-    name: termName,
-    term: terms
-  };
-  TermRef.update(updates);
-  return {
-    type: 'ADD_TERM',
-    centreKey,
-    terms,
-    termKey,
-    termName
-  };
-};
-
-export var updateTerm = (centreKey, terms, termName, calendarKey) => {
-  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars');
-  var updates = {};
-  updates[calendarKey] = {
-    name: termName,
-    term: terms
-  };
-  TermRef.update(updates);
-  return {
-    type: 'UPDATE_TERM',
-    centreKey,
-    terms,
-    calendarKey,
-    termName
-  };
-};
-
-export var deleteTerm = (centreKey, calendarKey) => {
-  var TermRef = firebase.database().ref('/centres/' + centreKey + '/calendars/' + calendarKey);
-  TermRef.remove();
-  return {
-    type: 'DELETE_TERM',
-    centreKey,
-    calendarKey
-  }
-}
 
 export var addClass = (cla, centreKey) => {
   var classRef = firebase.database().ref('/centres/' + centreKey+'/classes');
@@ -420,6 +376,82 @@ export var deleteClass = (centreKey, classKey) => {
     classKey
   }
 }
+
+//calendars
+
+export var startCalendars = () => {
+  return (dispatch) => {
+  var CalendarRef = firebaseRef.child('calendars');
+  var parsedCalendars = [];
+  return CalendarRef.once('value').then((snapshot) => {
+    var value = snapshot.val();
+    if (value !== null){
+      Object.keys(value).forEach((termKey) => {
+        parsedCalendars.push({
+          key: termKey,
+          name: value[termKey].name,
+          terms: value[termKey].terms,
+          centreKey: value[termKey].centreKey
+        });
+      });
+      dispatch(addCalendars(parsedCalendars));
+    }
+  });
+    }
+};
+
+export var addCalendars = (calendars) => {
+  return {
+    type: 'ADD_CALENDARS',
+    calendars
+  }
+};
+
+export var addTerm = (centreKey, terms, termName) => {
+  var CalendarRef = firebase.database().ref('calendars');
+  var termKey = CalendarRef.push().key;
+  var updates = {};
+  updates[termKey] = {
+    centreKey,
+    name: termName,
+    terms: terms
+  };
+  CalendarRef.update(updates);
+  return {
+    type: 'ADD_TERM',
+    centreKey,
+    terms,
+    termKey,
+    name: termName
+  };
+};
+
+export var updateTerm = (centreKey, terms, termName, calendarKey) => {
+  var CalendarRef = firebase.database().ref('calendars');
+  var updates = {};
+  updates[calendarKey] = {
+    centreKey,
+    name: termName,
+    term: terms
+  };
+  CalendarRef.update(updates);
+  return {
+    type: 'UPDATE_TERM',
+    centreKey,
+    terms,
+    calendarKey,
+    termName
+  };
+};
+
+export var deleteTerm = (termKey) => {
+  var CalendarRef = firebase.database().ref('calendars/' + termKey);
+  CalendarRef.remove();
+  return {
+    type: 'DELETE_TERM',
+    termKey
+  }
+};
 
 
 

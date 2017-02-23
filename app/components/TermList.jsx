@@ -16,12 +16,12 @@ export var TermList = React.createClass({
   },
 
   render: function () {
-     var {centres} = this.props;
-     var centreID = this.props.centreId;
+     var {centres, calendars} = this.props;
+     var centreKey = this.props.centreKey;
      var html = [];
      var centre = {};
      centres.map((c) => {
-       if(c.id === centreID) {
+       if(c.key === centreKey) {
          centre = c;
        }
      });
@@ -34,21 +34,19 @@ export var TermList = React.createClass({
        });
       return dates;
      };
-
-     if (centre.calendars !== undefined) {
-       Object.keys(centre.calendars).forEach((termId) => {
-          var term = centre.calendars[termId];
+     if (calendars.length !== 0) {
+         calendars.map((term) => {
           html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px'}} key={term.name}>
             {term.name}
-            <button className="innerbtn" style={{float: 'right' }} onClick={(e) => this.openModal(e, termId)}><Glyphicon glyph="trash" /> </button>
+            <button className="innerbtn" style={{float: 'right' }} onClick={(e) => this.openModal(e, term.key)}><Glyphicon glyph="trash" /> </button>
 
-            <Link to={"/m/centres/"+centreID+
-                "/"+termId} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
+            <Link to={"/m/centres/"+centreKey+
+                "/"+term.key} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
 
           </div>
-            )
-          Object.keys(term.term).forEach((termId) => {
-            html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+termId}><b>Term {termId} <font style={{color:'orange'}}>({_.size(term.term[termId])} sessions)</font></b><br/> {generateDates(term.term[termId])}</div>);
+        );
+          term.terms.map((dates, id) => {
+            html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+id}><b>Term {id} <font style={{color:'orange'}}>({_.size(term.terms[id])} sessions)</font></b><br/> {generateDates(term.terms[id])}</div>);
           })
         });
       }

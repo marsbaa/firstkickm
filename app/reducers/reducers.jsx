@@ -141,46 +141,7 @@ export var centreReducer = (state = [], action) => {
           return centre;
         }
       });
-    case 'ADD_TERM':
-    return state.map((centre) => {
-      if ((centre.key) === action.centreKey) {
-        if (centre.calendars === undefined) {
-          centre= {...centre, calendars: []};
 
-        }
-        centre.calendars[action.termKey] = {
-          name: action.termName,
-          term: action.terms
-        };
-        return centre;
-      }
-      else {
-        return centre;
-      }
-    });
-    case 'UPDATE_TERM':
-    return state.map((centre) => {
-      if ((centre.key) === action.centreKey) {
-        centre.calendars[action.calendarKey] = {
-          name: action.termName,
-          term: action.terms
-        };
-        return centre;
-      }
-      else {
-        return centre;
-      }
-    });
-    case 'DELETE_TERM':
-    return state.map((centre) => {
-      if ((centre.key) === action.centreKey) {
-        centre.calendars = _.omit(centre.calendars, action.calendarKey);
-        return centre;
-      }
-      else {
-        return centre;
-      }
-    });
     case 'ADD_CLASS':
     return state.map((centre) => {
       if ((centre.key) === action.centreKey) {
@@ -209,6 +170,43 @@ export var centreReducer = (state = [], action) => {
       return state;
   }
 };
+
+export var calendarReducer = (state=[], action) => {
+  switch (action.type) {
+    case 'ADD_CALENDARS':
+      return [
+        ...action.calendars
+      ];
+    case 'ADD_TERM':
+    return [
+      ...state,
+      { key: action.termKey,
+        centreKey: action.centreKey,
+        name: action.name,
+        terms: action.terms
+      }
+    ];
+    case 'UPDATE_TERM':
+    return state.map((term, id) => {
+      if (term[id].key === action.termKey) {
+        return {
+          key: action.termKey,
+          centreKey: action.centreKey,
+          name: action.name,
+          terms: action.terms
+        }
+      }
+    });
+    case 'DELETE_TERM':
+      return state.filter((term) => {
+        return term.key !== action.termKey;
+      });
+
+
+    default:
+      return state;
+  }
+}
 
 export var selectionReducer = (state='0', action) => {
   switch (action.type) {

@@ -141,7 +141,7 @@ export var CentreEdit = React.createClass({
 
   render: function () {
     var centreID = this.props.params.centreID;
-    var centre = {key:'', id: '', name: '', logoURL: '', calendars: []};
+    var centre = {key:'', id: '', name: '', logoURL: ''};
     var {centres} = this.props;
     if (centreID != '0') {
       centres.map((c) => {
@@ -151,7 +151,7 @@ export var CentreEdit = React.createClass({
       });
     }
     else {
-      centre = {id: '', name: '', logoURL: '', calendars: []};
+      centre = {id: '', name: '', logoURL: ''};
     }
 
    return (
@@ -203,7 +203,7 @@ export var CentreEdit = React.createClass({
                </Link>
              <div>
               <DeleteModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} deleteKey={this.state.delete} type={this.state.type}/>
-              <TermList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
+              <TermList centreKey={centre.key} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
              </div>
              <button className="btn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>
