@@ -432,7 +432,7 @@ export var updateTerm = (centreKey, terms, termName, calendarKey) => {
   updates[calendarKey] = {
     centreKey,
     name: termName,
-    term: terms
+    terms: terms
   };
   CalendarRef.update(updates);
   return {
@@ -440,7 +440,7 @@ export var updateTerm = (centreKey, terms, termName, calendarKey) => {
     centreKey,
     terms,
     calendarKey,
-    termName
+    name: termName
   };
 };
 

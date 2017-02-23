@@ -187,14 +187,17 @@ export var calendarReducer = (state=[], action) => {
       }
     ];
     case 'UPDATE_TERM':
-    return state.map((term, id) => {
-      if (term[id].key === action.termKey) {
+    return state.map((term) => {
+      if (term.key === action.termKey) {
         return {
           key: action.termKey,
           centreKey: action.centreKey,
           name: action.name,
           terms: action.terms
         }
+      }
+      else {
+        return term;
       }
     });
     case 'DELETE_TERM':

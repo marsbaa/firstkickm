@@ -35,19 +35,21 @@ export var TermList = React.createClass({
       return dates;
      };
      if (calendars.length !== 0) {
-         calendars.map((term) => {
-          html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px'}} key={term.name}>
-            {term.name}
-            <button className="innerbtn" style={{float: 'right' }} onClick={(e) => this.openModal(e, term.key)}><Glyphicon glyph="trash" /> </button>
+         calendars.map((term, id) => {
+          if (term.centreKey === centreKey) {
+            html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px'}} key={term.name}>
+              {term.name}
+              <button className="innerbtn" style={{float: 'right' }} onClick={(e) => this.openModal(e, term.key)}><Glyphicon glyph="trash" /> </button>
 
-            <Link to={"/m/centres/"+centreKey+
-                "/"+term.key} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
+              <Link to={"/m/centres/"+centre.id+
+                  "/"+id} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
 
-          </div>
-        );
-          term.terms.map((dates, id) => {
-            html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+id}><b>Term {id} <font style={{color:'orange'}}>({_.size(term.terms[id])} sessions)</font></b><br/> {generateDates(term.terms[id])}</div>);
-          })
+            </div>
+          );
+            term.terms.map((dates, id) => {
+              html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+id}><b>Term {id} <font style={{color:'orange'}}>({_.size(term.terms[id])} sessions)</font></b><br/> {generateDates(term.terms[id])}</div>);
+            });
+          }
         });
       }
 

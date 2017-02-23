@@ -19,10 +19,10 @@ export var TermEdit = React.createClass({
     browserHistory.push('/m/centres/'+ centreID);
   },
 
-  saveTerm(e, centre) {
+  saveTerm(e, centreKey) {
     e.preventDefault();
     var centreID = this.props.params.centreID;
-    var {dispatch, terms} = this.props;
+    var {dispatch, terms, calendars} = this.props;
     var calendarKey = this.props.params.calendarKey;
     var termName = document.getElementById("termName").value;
     if (termName === "") {
@@ -37,10 +37,10 @@ export var TermEdit = React.createClass({
         errorMessageTermName: ''
       });
       if (calendarKey === 'add') {
-        dispatch(actions.addTerm(centre.key, terms, termName));
+        dispatch(actions.addTerm(centreKey, terms, termName));
       }
       else {
-        dispatch(actions.updateTerm(centre.key, terms, termName, calendarKey));
+        dispatch(actions.updateTerm(centreKey, terms, termName, calendars[calendarKey].key));
       }
       browserHistory.push('/m/centres/'+ centreID);
     }
@@ -54,22 +54,12 @@ export var TermEdit = React.createClass({
   componentWillMount() {
     var {dispatch} = this.props;
     var centreID = this.props.params.centreID;
-    var {centres} = this.props;
+    var {calendars} = this.props;
     var calendarKey = this.props.params.calendarKey;
-    var centre = {};
-    var term = {};
-    if (centreID != '0') {
-      centres.map((c) => {
-        if(c.id === centreID) {
-          centre = c;
-        }
-      });
-      if (calendarKey !== 'add') {
-        term = centre.calendars[calendarKey].term;
-        dispatch(actions.startTerms(term));
+    if (calendarKey !== 'add') {
+        var terms = calendars[calendarKey].terms;
+        dispatch(actions.startTerms(terms));
       }
-
-    }
   },
 
 
@@ -77,27 +67,25 @@ export var TermEdit = React.createClass({
   render: function () {
     var centreID = this.props.params.centreID;
     var calendarKey = this.props.params.calendarKey;
-    var {centres} = this.props;
-    var centre = {};
+    var {centres, calendars} = this.props;
     var term = {};
     var count = 0;
     var numOfTerms = 6;
-    if (centreID != '0') {
-      centres.map((c) => {
-        if(c.id === centreID) {
-          centre = c;
-        }
-      });
-      if (calendarKey !== 'add') {
-        term = centre.calendars[calendarKey];
-        if (term !== undefined) {
-          term.term.map((termID) => {
-            count++;
-          })
-          numOfTerms = count;
-        }
+    var centre = {};
+    centres.map((c) => {
+      if(c.id === centreID) {
+        centre = c;
       }
+    });
 
+    if (calendarKey !== 'add') {
+      term = calendars[calendarKey];
+      if (term !== undefined) {
+        term.terms.map((termID) => {
+          count++;
+        })
+          numOfTerms = count;
+      }
     }
 
      return (
@@ -115,7 +103,7 @@ export var TermEdit = React.createClass({
              </FormGroup>
              <TermDatesSelector terms={term.term} mode={calendarKey} numOfTerms={numOfTerms}/>
              <Button onClick={this.goBack}>Cancel</Button>
-             <Button onClick={(e) => this.saveTerm(e, centre)}>Save</Button>
+             <Button onClick={(e) => this.saveTerm(e, centre.key)}>Save</Button>
           </Col>
         </Row>
       </Grid>
