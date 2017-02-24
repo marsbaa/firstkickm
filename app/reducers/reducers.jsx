@@ -32,6 +32,26 @@ export var trialsReducer = (state = [], action) => {
         ...state,
         ...action.trials
       ];
+    case 'UPDATE_TRIAL':
+      return state.map((trial) => {
+        if (trial.id === action.trial.id) {
+          return {
+            ...trial,
+            childName: action.trial.childName,
+            contactNumber: action.trial.contactNumber,
+            email: action.trial.email,
+            gender: action.trial.gender,
+            dateOfBirth: action.trial.dateOfBirth,
+            dateOfTrial: action.trial.dateOfTrial,
+            venueId: action.trial.venueId,
+            timeOfTrial: action.trial.timeOfTrial,
+            parentName: action.trial.parentName,
+            medicalCondition: action.trial.medicalCondition
+          };
+        } else {
+          return trial;
+        }
+      });
     case 'TOGGLE_TRIAL':
       return state.map((trial) => {
         if (trial.id === action.id) {

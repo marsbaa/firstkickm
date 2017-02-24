@@ -143,6 +143,27 @@ export var addTrials = (trials) => {
   };
 };
 
+export var updateTrial = (trial) => {
+  var trialsRef = firebaseRef.child('trials/' + trial.id);
+  trialsRef.update({
+    childName: trial.childName,
+    contactNumber: trial.contactNumber,
+    email: trial.email,
+    gender: trial.gender,
+    venueId: trial.venueId,
+    dateOfBirth: trial.dateOfBirth,
+    dateOfTrial: trial.dateOfTrial,
+    timeOfTrial: trial.timeOfTrial,
+    parentName: trial.parentName,
+    medicalCondition: trial.medicalCondition
+  });
+  return {
+    type: 'UPDATE_TRIAL',
+    trial
+  };
+};
+
+
 export var startToggleTrial = (id) => {
   return (dispatch) => {
     var trialsRef = firebaseRef.child('trials/' + id);
@@ -305,7 +326,6 @@ export var startCentres = () => {
         id: centres[centreId].id,
         name: centres[centreId].name,
         logoURL: centres[centreId].logoURL,
-        calendars: centres[centreId].calendars,
         classes: centres[centreId].classes
       });
     });

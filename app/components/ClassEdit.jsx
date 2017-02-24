@@ -138,7 +138,7 @@ export var ClassEdit = React.createClass({
   },
 
   render: function () {
-     var {centres} = this.props;
+     var {centres, calendars} = this.props;
      var centreID = this.props.params.centreID;
      var centre;
      centres.map((c) => {
@@ -147,8 +147,10 @@ export var ClassEdit = React.createClass({
        }
      });
      var termhtml = [];
-     Object.keys(centre.calendars).forEach((termId) => {
-       termhtml.push(<option key={termId} value={termId}>{centre.calendars[termId].name}</option>);
+     calendars.map((term) => {
+       if (centre.key === term.centreKey) {
+          termhtml.push(<option key={term.key} value={term.key}>{term.name}</option>);
+       }
      });
 
      return (

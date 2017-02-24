@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import {browserHistory} from 'react-router'
 var {connect} = require('react-redux')
 var actions = require('actions')
 import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
@@ -8,8 +9,7 @@ export var TrialEdit = React.createClass({
 
   getInitialState(){
     return {
-      selectedCentre : 0,
-      gender : true,
+      selectedCentre : "",
       trialDate : ''
     }
   },
@@ -33,14 +33,21 @@ export var TrialEdit = React.createClass({
     var {trials,centres} = this.props;
     var trial = _.find(trials, {id: key});
     this.setState({selectedCentre: trial.venueId});
-    this.setState({gender : trial.gender === 'boy'? true: false});
     this.setState({trialDate: trial.dateOfTrial});
+  },
+
+  componentDidMount() {
+    var key = this.props.params.studentId;
+    var {trials} = this.props;
+    var trial = _.find(trials, {id: key});
+    document.getElementById("boy").checked = trial.gender==="boy" ? true: false;
+    document.getElementById("girl").checked = trial.gender==="girl" ? true: false;
   },
 
   onFormSubmit: function (e) {
     e.preventDefault();
-    var {dispatch} = this.props;
-    var key = this.props.params.trial;
+    var {dispatch, centres} = this.props;
+    var key = this.props.params.studentId;
     var trial = {
       id: key,
       childName: document.getElementById("childName").value,
@@ -48,9 +55,9 @@ export var TrialEdit = React.createClass({
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
-      dateOfTrial: document.getElementById("datePicker").value,
-      venueId: Centre.nameToId(document.getElementById("selectCentre").value),
-      timeOfTrial: document.getElementById("selectTimeSlot").value,
+      dateOfTrial: document.getElementById("trialDateSelect").value,
+      venueId: document.getElementById("centreSelect").value.toString(),
+      timeOfTrial: document.getElementById("timeSlotSelect").value,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value
     };
@@ -60,7 +67,7 @@ export var TrialEdit = React.createClass({
 
   render: function () {
     var key = this.props.params.studentId;
-    var {trials,centres, ageGroup} = this.props;
+    var {trials,centres, ageGroup, calendars} = this.props;
     var trial = _.find(trials, {id: key});
     var getAge = (dob) => {
     var now = moment();
@@ -87,10 +94,11 @@ export var TrialEdit = React.createClass({
     classTimeSlots.push(<option key="0" value="0">select</option>);
     var centre = {};
     centres.map((c) => {
-      if(c.id === this.state.selectedCentre) {
+      if(c.id === this.state.selectedCentre.toString()) {
         centre = c;
       }
     });
+    console.log(centre);
 
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
@@ -102,6 +110,19 @@ export var TrialEdit = React.createClass({
 
     });
 
+    //Trial dates
+    var trialDateOptions = [];
+    trialDateOptions.push(<option key="0" value="0">select</option>);
+    calendars.map((calendar) => {
+      if (centre.key === calendar.centreKey) {
+        calendar.terms.map((term) => {
+          term.map((dates) => {
+            var formattedDate = moment(dates).format("YYYY-MM-DD");
+            trialDateOptions.push(<option key={formattedDate} value={formattedDate}>{formattedDate}</option>);
+          })
+        })
+      }
+    })
 
 
     return (
@@ -119,12 +140,13 @@ export var TrialEdit = React.createClass({
             <FormGroup>
               <ControlLabel>Selected Class Time</ControlLabel>
               <FormControl
-                id="selectedTimeSlot" componentClass="select" placeholder="select"
+                id="timeSlotSelect" componentClass="select" placeholder="select"
                 defaultValue={trial.timeOfTrial}>
                 {classTimeSlots}
               </FormControl>
             </FormGroup>
             <FormGroup>
+              <ControlLabel>Date of Trial</ControlLabel>
               <FormControl
                 id="trialDateSelect" componentClass="select" placeholder="select"
                 defaultValue={trial.dateOfTrial}
@@ -171,7 +193,7 @@ export var TrialEdit = React.createClass({
             <FormGroup>
               <ControlLabel>Email</ControlLabel>
               <FormControl style={{marginBottom: '10px'}}
-              id="Email"
+              id="email"
               type="text"
               placeholder="Enter Email"
               defaultValue={trial.email}/>
@@ -185,14 +207,15 @@ export var TrialEdit = React.createClass({
               defaultValue={trial.parentName}/>
             </FormGroup>
             <FormGroup>
-              <Radio name="gender" checked={this.state.gender} onClick={this.changeGender} inline>
+              <Radio id="boy" value="boy" name="gender" inline>
                 Boy
               </Radio>
               {' '}
-              <Radio name="gender" checked={!this.state.gender} onClick={this.changeGender}inline>
+              <Radio id="girl" value="girl" name="gender" inline>
                 Girl
               </Radio>
             </FormGroup>
+            <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.onFormSubmit}>Save Child Profile</button>
           </Col>
         </Row>
     );
