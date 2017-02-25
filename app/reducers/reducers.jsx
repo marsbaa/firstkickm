@@ -93,8 +93,6 @@ export var studentReducer = (state = [], action) => {
             };
           }
         else {
-            var attendee = student.attendance[action.date];
-            console.log(attendee);
             return {
               ...student,
               attendance: {

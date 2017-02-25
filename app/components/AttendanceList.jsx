@@ -47,7 +47,7 @@ export var AttendanceList = React.createClass({
           })
         })
       }
-    })
+    });
 
     if (today !== -1) {
       var filteredStudents = StudentsFilter.filter(students, selection, searchText);
@@ -57,12 +57,21 @@ export var AttendanceList = React.createClass({
           var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
           Object.keys(groupAge).forEach((age)=> {
             var group = groupAge[age];
+            var attended = 0;
+            var date = moment().format("YYYY-MM-DD");
+            Object.keys(group).forEach((studentId) => {
+              if (group[studentId].attendance !== undefined) {
+                if (group[studentId].attendance[date].attended) {
+                  attended = attended + 1;
+                }
+              }
+            });
             html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
                <Col xs={9} md={9}>
                  <h5>{age} {timeSlot}</h5>
                </Col>
                  <Col xs={3} md={3} style={{textAlign: 'center'}}>
-                   <h5><font style={{color: 'white'}}>0</font> / {_.size(group)}
+                   <h5><font style={{color: 'white'}}>{attended}</font> / {_.size(group)}
                    </h5>
                </Col>
              </Row>);
