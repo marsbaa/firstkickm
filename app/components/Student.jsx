@@ -15,7 +15,9 @@ export var Student = React.createClass({
     var date = moment().format("YYYY-MM-DD");
     var attended=false;
     if (attendance !== undefined) {
-      attended = attendance[date].attended;
+      if (attendance[date] !== undefined) {
+        attended = attendance[date].attended;
+      }
     }
 
 

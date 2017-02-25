@@ -83,19 +83,27 @@ export var studentReducer = (state = [], action) => {
       return state.map((student) => {
         if (student.key === action.id) {
           if (student.attendance === undefined) {
-            student.attendance = { [action.date] : {} }
+            return {
+              ...student,
+              attendance: {
+                [action.date] : {
+                  attended: true
+                }
+              }
+            };
           }
-          var attendedDate = student.attendance[action.date];
-          var nextAttended = (attendedDate.attended === undefined) | (attendedDate.attended === false) ? true:false;
-          console.log(nextAttended);
-          return {
-            ...student,
-            attendance: {
-              [action.date] : {
-                attended: nextAttended
+        else {
+            var attendee = student.attendance[action.date];
+            console.log(attendee);
+            return {
+              ...student,
+              attendance: {
+                [action.date] : {
+                  attended: student.attendance[action.date].attended === true ? false:true
+                }
               }
             }
-          };
+          }
         }
         else {
           return student;

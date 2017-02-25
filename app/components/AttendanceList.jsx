@@ -27,7 +27,7 @@ export var AttendanceList = React.createClass({
 
 
   render: function () {
-    var {students, searchText, selection, centres, attendance} = this.props;
+    var {students, searchText, selection, centres, calendars} = this.props;
     var centre;
     centres.map((c) => {
       if(c.id === selection) {
@@ -37,16 +37,18 @@ export var AttendanceList = React.createClass({
 
     var today=-1;
     var html=[];
-    Object.keys(centre.calendars).forEach((termId) => {
-      var calendar = centre.calendars[termId];
-      Object.keys(calendar.term).forEach((term) => {
-         calendar.term[term].map((date) => {
-           if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
-             today = 1;
-           }
-         })
-      });
-    });
+    calendars.map((calendar) => {
+      if (calendar.centreKey === centre.key) {
+        calendar.terms.map((term) => {
+          term.map ((date)=> {
+            if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+              today = 1;
+            }
+          })
+        })
+      }
+    })
+
     if (today !== -1) {
       var filteredStudents = StudentsFilter.filter(students, selection, searchText);
       if (filteredStudents.length !== 0) {

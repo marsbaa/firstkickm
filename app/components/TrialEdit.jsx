@@ -98,7 +98,6 @@ export var TrialEdit = React.createClass({
         centre = c;
       }
     });
-    console.log(centre);
 
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
