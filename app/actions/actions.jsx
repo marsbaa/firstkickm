@@ -163,6 +163,31 @@ export var updateTrial = (trial) => {
   };
 };
 
+export var addTrial = (trial) => {
+  var trialsRef = firebaseRef.child('trials');
+  var newKey = trialsRef.push().key;
+  var updates = {};
+  updates[newKey] = {
+    childName: trial.childName,
+    contactNumber: trial.contactNumber,
+    email: trial.email,
+    gender: trial.gender,
+    venueId: trial.venueId,
+    dateAdded: moment().format('YYYY-MM-DD'),
+    dateOfBirth: trial.dateOfBirth,
+    dateOfTrial: trial.dateOfTrial,
+    timeOfTrial: trial.timeOfTrial,
+    parentName: trial.parentName,
+    medicalCondition: trial.medicalCondition
+  };
+  trialsRef.update(updates);
+  trial.id = newKey;
+  return {
+    type: 'ADD_TRIAL',
+    trial
+  };
+};
+
 
 export var startToggleTrial = (id) => {
   return (dispatch) => {

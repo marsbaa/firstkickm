@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {FormGroup, ControlLabel, Grid, Row, Col} from 'react-bootstrap'
+import {FormGroup, ControlLabel} from 'react-bootstrap'
 import {connect} from 'react-redux';
 var actions = require('actions');
 import Select from 'react-select';
@@ -26,17 +26,16 @@ export var Schedule = React.createClass({
 
   render: function () {
       var {dispatch, coaches} = this.props;
+      var cla = this.props.cla;
       var coachOptions = [];
       coaches.map((coach) => {
-        coachOptions.push({label: coach.name, value: coach.key});
+        coachOptions.push({label: coach.name , value: coach.key});
       });
-      console.log(coachOptions);
+      var className = cla.ageGroup + " " + cla.startTime + " " + cla.endTime;
+
    return (
-     <Grid style={{paddingTop: '20px'}}>
-       <Row style={{height: '200px'}}>
-         <Col md={6}>
            <FormGroup>
-             <ControlLabel>U6 9:00am - 10:00am</ControlLabel>
+             <ControlLabel>{className}</ControlLabel>
               <Select
                    name="form-field-name"
                    multi={true}
@@ -45,10 +44,6 @@ export var Schedule = React.createClass({
                    onChange={this.handleSelectChange}
                />
            </FormGroup>
-
-         </Col>
-       </Row>
-     </Grid>
 
    );
  }

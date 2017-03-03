@@ -5,7 +5,7 @@ var {connect} = require('react-redux')
 var {Link, IndexLink} = require('react-router')
 var actions = require('actions');
 
-export var MainMenu = React.createClass({
+class MainMenu extends React.Component {
 
 
   handleSelect(e) {
@@ -23,7 +23,7 @@ export var MainMenu = React.createClass({
         document.getElementById("coachSchedule").disabled = false;
       dispatch(actions.updateSelectedCentre(e.target.value));
     }
-  },
+  }
 
     componentDidMount() {
       var {dispatch, selection} = this.props;
@@ -34,9 +34,9 @@ export var MainMenu = React.createClass({
         document.getElementById("coach").disabled = false;
         document.getElementById("coachSchedule").disabled = false;
       }
-    },
+    }
 
-    render: function() {
+    render() {
         var {selection, centres} = this.props;
         var trialsLink = "/m/trials/";
 
@@ -55,7 +55,7 @@ export var MainMenu = React.createClass({
                   <FormGroup style={{textAlign: 'center', margin: '3px 5px', width: '100%'}}>
                     <ControlLabel>Select Centre</ControlLabel>
                     <FormControl
-                      id="centreSelect" componentClass="select" placeholder="select" onChange={this.handleSelect}
+                      id="centreSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}
                       defaultValue={selection}>
                       {centreOptions}
                     </FormControl>
@@ -73,7 +73,7 @@ export var MainMenu = React.createClass({
           </Grid>
         );
     }
-});
+}
 
 export default connect((state) => {return state;
 })(MainMenu);

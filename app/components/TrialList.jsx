@@ -1,13 +1,14 @@
 import React from 'react'
 var actions = require('actions');
 var {connect} = require('react-redux');
+import {Link} from 'react-router';
 import {PageHeader, Col, Row} from 'react-bootstrap'
 import TrialsFilter from 'TrialsFilter'
 import Trial from 'Trial'
 import Search from 'Search'
 import moment from 'moment'
 
-export var TrialList = React.createClass({
+class TrialList extends React.Component{
   componentDidMount () {
     var {dispatch, selection, ageGroup} = this.props;
     if (_.isEmpty(ageGroup)) {
@@ -15,7 +16,7 @@ export var TrialList = React.createClass({
     }
     var link = "/m/trials";
     dispatch(actions.updateNavTitle(link, "Trial List"));
-  },
+  }
 
   render () {
     var {trials, searchText, selection} = this.props;
@@ -56,12 +57,19 @@ export var TrialList = React.createClass({
 
     return (
       <div>
-        <Search type="child"/>
+        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+          <Col xs={8} md={8}>
+            <Search type="child" />
+          </Col>
+          <Col xs={4} md={4}>
+          <Link to="/m/trials/add"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}}>Add Trial</button></Link>
+          </Col>
+        </Row>
         {html}
       </div>
     )
   }
-});
+}
 
 export default connect((state) => {return state;
 })(TrialList);

@@ -32,6 +32,11 @@ export var trialsReducer = (state = [], action) => {
         ...state,
         ...action.trials
       ];
+    case 'ADD_TRIAL':
+      return [
+        ...state,
+        action.trial
+      ];
     case 'UPDATE_TRIAL':
       return state.map((trial) => {
         if (trial.id === action.trial.id) {

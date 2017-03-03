@@ -8,48 +8,49 @@ import moment from 'moment'
 import _ from 'lodash'
 
 
-export var ScheduleApp = React.createClass({
+class ScheduleApp extends React.Component {
   componentWillMount () {
     var {dispatch, coaches} = this.props;
     if (_.isEmpty(coaches)) {
       dispatch(actions.startCoaches());
     }
-  },
+  }
 
   render() {
-    var {selection, centres} = this.props;
-    var centre;
+    var {selection, centres, calendars} = this.props;
+    var centreKey;
     centres.map((c) => {
       if(c.id === selection) {
-        centre = c;
+        centreKey = c.key;
       }
     });
-    var calendars = centre.calendars;
     var termDates = [];
     var count=0;
-    Object.keys(calendars).forEach((calendarKey)=> {
-      var terms = calendars[calendarKey].term
-      Object.keys(terms).forEach((termID) => {
-        var term = terms[termID];
-        Object.keys(term).forEach((dateID) => {
-          var date = term[dateID];
-          if (moment(date).isAfter() && count<8) {
-            termDates.push({
-              term: termID,
-              session: parseInt(dateID)+1,
-              date,
-              calendarKey
-            });
-            count++;
-          }
+    calendars.map((calendar) => {
+      if (calendar.centreKey === centreKey) {
+        calendar.terms.map((term, termID) => {
+          term.map((date, dateID) => {
+            if (moment(date).isAfter() && count < 8) {
+              termDates.push({
+                term: termID,
+                session: parseInt(dateID)+1,
+                date,
+                calendarKey: calendar.key
+              });
+              count++;
+            }
+          })
         })
-      })
+      }
     })
+
     var termDates = _.orderBy(termDates, ['term', 'session'], ['asc', 'asc']);
 
     var html = [];
     termDates.map((dateInfo) => {
-        html.push(<TermButton key={dateInfo.date} title={"T"+dateInfo.term+"-S"+dateInfo.session} date={moment(dateInfo.date).format('D MMM')} />)
+        html.push(<TermButton key={dateInfo.date} title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}
+        calendarKey = {dateInfo.calendarKey}
+        />)
     })
 
 
@@ -64,7 +65,7 @@ export var ScheduleApp = React.createClass({
       </div>
     );
   }
-});
+}
 
  export default connect((state) => {return state;
 })(ScheduleApp);

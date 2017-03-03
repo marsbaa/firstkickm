@@ -20,10 +20,11 @@ export var TermButton = React.createClass({
   render: function() {
     var title = this.props.title;
     var date = this.props.date;
+    var displayDate = this.props.displayDate;
     var calendarKey = this.props.calendarKey;
 
   return (
-    <Link to={"/m/coachschedule/"+calendarKey}>
+    <Link to={"/m/coachschedule/"+calendarKey+"/"+date}>
       <table style={{textAlign:'center', float: 'left', width:'12%', margin:'0 1px'}}>
         <tbody>
         <tr style={{backgroundColor: this.state.topColor}}>
@@ -33,7 +34,7 @@ export var TermButton = React.createClass({
         </tr>
         <tr style={{backgroundColor: '#656565'}} >
           <td style={{color: 'white', fontSize: '12px', padding: '2px', borderRadius:'0px 0px 5px 5px'}}>
-            {date}
+            {displayDate}
           </td>
         </tr>
       </tbody>

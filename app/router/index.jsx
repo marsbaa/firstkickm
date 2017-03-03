@@ -15,6 +15,9 @@ import ClassEdit from 'ClassEdit'
 import TrialsApp from 'TrialsApp'
 import TrialList from 'TrialList'
 import TrialEdit from 'TrialEdit'
+import TrialAdd from 'TrialAdd'
+import TrialRegister from 'TrialRegister'
+//import Payment from 'Payment'
 
 //Components for Coaches
 import CoachesApp from 'CoachesApp'
@@ -26,7 +29,7 @@ import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
 
 import ScheduleApp from 'ScheduleApp'
-import Schedule from 'Schedule'
+import ScheduleList from 'ScheduleList'
 import ScheduleMain from 'ScheduleMain'
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
@@ -60,14 +63,16 @@ export default (
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
-            <Route path=":studentId" component={TrialEdit} />
+            <Route path="edit/:studentId" component={TrialEdit} />
+            <Route path="add" component={TrialAdd} />
+            <Route path="register/:studentId" component={TrialRegister} />
           </Route>
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />
-            <Route path=":calendarKey" component={Schedule} />
+            <Route path=":calendarKey/:date" component={ScheduleList} />
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>

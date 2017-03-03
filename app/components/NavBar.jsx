@@ -5,21 +5,21 @@ var {connect} = require('react-redux');
 var actions = require('actions');
 import {Link} from 'react-router'
 
-export var NavBar = React.createClass({
+class NavBar extends React.Component {
 
   onLogout() {
     var {dispatch} = this.props;
    dispatch(actions.startLogout());
-  },
+  }
 
  componentDidMount() {
    var {dispatch} = this.props;
    dispatch(actions.startAddTrials());
    dispatch(actions.startCentres());
    dispatch(actions.startCalendars());
- },
+ }
 
- render: function () {
+ render() {
    var {navbar} = this.props;
   return (
     <div>
@@ -50,7 +50,7 @@ export var NavBar = React.createClass({
 
   );
 }
-});
+}
 
 export default connect((state) => {return state;
 })(NavBar);

@@ -61,8 +61,10 @@ export var AttendanceList = React.createClass({
             var date = moment().format("YYYY-MM-DD");
             Object.keys(group).forEach((studentId) => {
               if (group[studentId].attendance !== undefined) {
-                if (group[studentId].attendance[date].attended) {
-                  attended = attended + 1;
+                if (group[studentId].attendance[date] !== undefined) {
+                  if (group[studentId].attendance[date].attended) {
+                    attended = attended + 1;
+                  }
                 }
               }
             });
