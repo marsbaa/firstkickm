@@ -23,7 +23,7 @@ class ScheduleList extends React.Component{
       }
     });
    return (
-     <Grid style={{paddingTop: '20px'}}>
+     <Grid style={{paddingTop: '20px', paddingBottom: '200px'}}>
        <Row style={{height: '200px'}}>
          <Col md={12} xs={12}>
            {html}

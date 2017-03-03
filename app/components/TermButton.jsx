@@ -33,7 +33,7 @@ export var TermButton = React.createClass({
           </td>
         </tr>
         <tr style={{backgroundColor: '#656565'}} >
-          <td style={{color: 'white', fontSize: '12px', padding: '2px', borderRadius:'0px 0px 5px 5px'}}>
+          <td style={{color: 'white', fontSize: '11px', padding: '2px', borderRadius:'0px 0px 5px 5px'}}>
             {displayDate}
           </td>
         </tr>
