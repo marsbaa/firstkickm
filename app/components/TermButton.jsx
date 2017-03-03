@@ -1,6 +1,7 @@
 import React from 'react'
 import {Glyphicon} from 'react-bootstrap'
 import {Link} from 'react-router'
+import moment from 'moment'
 
 
 export var TermButton = React.createClass({
@@ -25,7 +26,7 @@ export var TermButton = React.createClass({
 
   return (
     <Link to={"/m/coachschedule/"+calendarKey+"/"+date}>
-      <table style={{textAlign:'center', float: 'left', width:'12%', margin:'0 1px'}}>
+      <table style={{textAlign:'center', float: 'left', width:'11.5%', margin:'0 1px'}}>
         <tbody>
         <tr style={{backgroundColor: this.state.topColor}}>
           <td style={{ color: '#656565', fontSize: '10px', padding: '2px', borderRadius:'5px 5px 0px 0px'}}>
@@ -33,8 +34,9 @@ export var TermButton = React.createClass({
           </td>
         </tr>
         <tr style={{backgroundColor: '#656565'}} >
-          <td style={{color: 'white', fontSize: '11px', padding: '2px', borderRadius:'0px 0px 5px 5px'}}>
-            {displayDate}
+          <td style={{color: 'white', fontSize: '12px', padding: '1px', borderRadius:'0px 0px 5px 5px'}}>
+            {moment(date).format('MMM')}<br/>
+          {moment(date).format('D')}
           </td>
         </tr>
       </tbody>
