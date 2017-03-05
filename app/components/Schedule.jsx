@@ -11,13 +11,23 @@ export var Schedule = React.createClass({
   getInitialState: function() {
     return {
       value: [],
+      previousValue: [],
       options : []
     };
   },
   handleSelectChange (value) {
-  		console.log('You\'ve selected:', value);
+      var {dispatch} = this.props;
+      var date = this.props.date;
+      var classKey = this.props.classKey;
+      dispatch(actions.toggleSchedule(classKey, date, value));
+      this.props.onUpdateList(value);
   		this.setState({ value });
+
   	},
+
+  componentWillMount(){
+    this.setState({value: this.props.assigned});
+  },
 
   componentDidMount() {
     var {dispatch} = this.props;
@@ -25,14 +35,8 @@ export var Schedule = React.createClass({
   },
 
   render: function () {
-      var {dispatch, coaches} = this.props;
       var cla = this.props.cla;
-      var coachOptions = [];
-      coaches.map((coach) => {
-        coachOptions.push({label: coach.name , value: coach.key});
-      });
       var className = cla.ageGroup + " " + cla.startTime + " " + cla.endTime;
-
    return (
            <FormGroup>
              <ControlLabel>{className}</ControlLabel>
@@ -40,7 +44,7 @@ export var Schedule = React.createClass({
                    name="form-field-name"
                    multi={true}
                    value={this.state.value}
-                   options={coachOptions}
+                   options={this.props.coachOptions}
                    onChange={this.handleSelectChange}
                />
            </FormGroup>

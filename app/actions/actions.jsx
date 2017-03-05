@@ -499,6 +499,54 @@ export var deleteTerm = (termKey) => {
 };
 
 
+//Schedule
+export var toggleSchedule = (classKey, date, val) => {
+  var ScheduleRef = firebase.database().ref('coachSchedule/'+classKey);
+  var updates = {
+    [date] : {
+      assigned: val
+    }
+  };
+  ScheduleRef.update(updates);
+  return {
+    type: 'TOGGLE_SCHEDULE',
+    classKey,
+    date,
+    val
+  };
+};
+
+export var startCoachSchedule = () => {
+  return (dispatch) => {
+  var CoachScheduleRef = firebase.database().ref('coachSchedule');
+  var parsedSchedule = [];
+  return CoachScheduleRef.once('value').then((snapshot) => {
+    var value = snapshot.val();
+    if (value !== null){
+      Object.keys(value).forEach((classId) => {
+           var schedule = value[classId];
+        Object.keys(schedule).forEach((date)=> {
+          parsedSchedule.push({
+            classKey: classId,
+            date : date,
+            scheduleKey: classId+date,
+            assigned: schedule[date].assigned
+          });
+        })
+
+      });
+      dispatch(addCoachSchedule(parsedSchedule));
+    }
+  });
+    }
+}
+
+export var addCoachSchedule = (coachSchedule) => {
+  return {
+    type: 'ADD_COACHSCHEDULE',
+    coachSchedule
+  }
+};
 
 // Search
 export var setSearchText = (searchText) => {

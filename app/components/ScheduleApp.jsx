@@ -10,9 +10,12 @@ import _ from 'lodash'
 
 class ScheduleApp extends React.Component {
   componentWillMount () {
-    var {dispatch, coaches} = this.props;
+    var {dispatch, coaches, coachSchedule} = this.props;
     if (_.isEmpty(coaches)) {
       dispatch(actions.startCoaches());
+    }
+    if (_.isEmpty(coachSchedule)) {
+      dispatch(actions.startCoachSchedule());
     }
   }
 
@@ -30,14 +33,13 @@ class ScheduleApp extends React.Component {
       if (calendar.centreKey === centreKey) {
         calendar.terms.map((term, termID) => {
           term.map((date, dateID) => {
-            if (moment(date).isAfter() && count < 8) {
+            if (moment(date).isAfter()) {
               termDates.push({
                 term: termID,
                 session: parseInt(dateID)+1,
                 date,
                 calendarKey: calendar.key
               });
-              count++;
             }
           })
         })
@@ -45,7 +47,7 @@ class ScheduleApp extends React.Component {
     })
 
     var termDates = _.orderBy(termDates, ['term', 'session'], ['asc', 'asc']);
-
+    termDates = _.slice(termDates, 0, 8);
     var html = [];
     termDates.map((dateInfo) => {
         html.push(<TermButton key={dateInfo.date} title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}

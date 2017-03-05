@@ -29,7 +29,7 @@ import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
 
 import ScheduleApp from 'ScheduleApp'
-import ScheduleList from 'ScheduleList'
+import ScheduleContainer from 'ScheduleContainer'
 import ScheduleMain from 'ScheduleMain'
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
@@ -72,7 +72,7 @@ export default (
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />
-            <Route path=":calendarKey/:date" component={ScheduleList} />
+            <Route path=":calendarKey/:date" component={ScheduleContainer} />
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>

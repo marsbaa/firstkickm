@@ -1,4 +1,5 @@
 import moment from 'moment'
+import _ from 'lodash'
 
 export var authReducer = (state = {}, action) => {
   switch (action.type) {
@@ -241,6 +242,47 @@ export var calendarReducer = (state=[], action) => {
       return state;
   }
 }
+
+export var coachScheduleReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_COACHSCHEDULE':
+      return [
+        ...action.coachSchedule
+      ];
+    case 'TOGGLE_SCHEDULE':
+      var scheduleKey = action.classKey+action.date;
+        if (_.findIndex(state, { scheduleKey : scheduleKey}) === -1) {
+            return [
+              ...state,
+              {
+                scheduleKey,
+                classKey: action.classKey,
+                date: action.date,
+                assigned: action.val
+              }
+            ]
+        }
+        else {
+          return state.map((schedule) => {
+            if (schedule.scheduleKey === scheduleKey) {
+              return {
+                scheduleKey,
+                classKey: action.classKey,
+                date: action.date,
+                assigned: action.val
+              }
+            }
+            else {
+              return schedule
+            }
+          })
+        }
+
+
+    default:
+      return state;
+}
+};
 
 export var selectionReducer = (state='0', action) => {
   switch (action.type) {

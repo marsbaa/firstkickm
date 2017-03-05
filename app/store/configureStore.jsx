@@ -1,6 +1,6 @@
 var redux = require('redux');
 import thunk from 'redux-thunk';
-var {authReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer, termReducer, ageGroupReducer, studentReducer, calendarReducer} = require('reducers');
+var {authReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer, termReducer, ageGroupReducer, studentReducer, calendarReducer, coachScheduleReducer} = require('reducers');
 
 export var configure = (initialState = {}) => {
   var reducer = redux.combineReducers({
@@ -14,7 +14,8 @@ export var configure = (initialState = {}) => {
     terms: termReducer,
     ageGroup: ageGroupReducer,
     students: studentReducer,
-    calendars: calendarReducer
+    calendars: calendarReducer,
+    coachSchedule: coachScheduleReducer
   });
 
   var store = redux.createStore(reducer, initialState, redux.compose(
