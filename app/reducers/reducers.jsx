@@ -85,6 +85,23 @@ export var studentReducer = (state = [], action) => {
         ...state,
         ...action.students
       ];
+    case 'ADD_STUDENT':
+      return [
+        ...state,
+        ...action.student
+      ];
+    case 'UPDATE_STUDENT':
+      return state.map((student) => {
+        if ((student.key) === action.studentId) {
+          return {
+           ...student,
+           ...action.student
+         };
+        }
+        else {
+          return student;
+        }
+      });
     case 'TOGGLE_ATTENDANCE':
       return state.map((student) => {
         if (student.key === action.id) {

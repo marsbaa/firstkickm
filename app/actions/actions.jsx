@@ -242,6 +242,30 @@ export var addStudents = (students) => {
   };
 };
 
+export var addStudent = (student) => {
+  var studentRef = firebaseRef.child('students');
+  var newKey = studentRef.push().key;
+  var updates = {};
+  updates[newKey] = student;
+  studentRef.update(updates);
+  student.key = newKey;
+  return {
+    type: 'ADD_STUDENT',
+    student
+  };
+}
+
+export var updateStudent = (studentId, student) => {
+  var updates=  {};
+  updates['/students/'+ studentId] = student;
+  firebase.database().ref().update(updates);
+  return {
+    type: 'UPDATE_STUDENT',
+    studentId,
+    student
+  };
+};
+
 export var updateAttendance = (date, id) => {
   return (dispatch) => {
     var attendanceRef = firebaseRef.child('students/'+id+'/attendance/'+date);

@@ -3,7 +3,7 @@ import {Link} from 'react-router'
 import {Row, Col} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import {btn} from 'styles.css'
-import Student from 'Student'
+import Attendee from 'Attendee'
 var actions = require('actions');
 import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
@@ -79,7 +79,7 @@ export var AttendanceList = React.createClass({
              </Row>);
 
              Object.keys(group).forEach((studentId) => {
-                 html.push(<Student key={group[studentId].key} student={group[studentId]}/>);
+                 html.push(<Attendee key={group[studentId].key} student={group[studentId]}/>);
 
              });
           })

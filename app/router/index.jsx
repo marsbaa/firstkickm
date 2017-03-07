@@ -31,8 +31,16 @@ import EditAgeGroup from 'EditAgeGroup'
 import ScheduleApp from 'ScheduleApp'
 import ScheduleContainer from 'ScheduleContainer'
 import ScheduleMain from 'ScheduleMain'
+
+//Student Attendance
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
+
+//Student Profile
+import StudentApp from 'StudentApp'
+import StudentList from 'StudentList'
+import StudentEdit from 'StudentEdit'
+import StudentAdd from 'StudentAdd'
 
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
@@ -69,6 +77,11 @@ export default (
           </Route>
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
+          </Route>
+          <Route path="students" component={StudentApp}>
+            <IndexRoute component={StudentList}/>
+            <Route path="edit/:studentId" component={StudentEdit} />
+            <Route path="add" component={StudentAdd} />
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />
