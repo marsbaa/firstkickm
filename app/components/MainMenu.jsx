@@ -17,6 +17,7 @@ class MainMenu extends React.Component {
       document.getElementById("coach").disabled = true;
       document.getElementById("coachSchedule").disabled = true;
       document.getElementById("attendance").disabled = true;
+      document.getElementById("payment").disabled = true;
     }
     else {
       document.getElementById("trials").disabled = false;
@@ -24,6 +25,7 @@ class MainMenu extends React.Component {
       document.getElementById("coach").disabled = false;
       document.getElementById("coachSchedule").disabled = false;
       document.getElementById("attendance").disabled = false;
+      document.getElementById("payment").disabled = false;
       dispatch(actions.updateSelectedCentre(e.target.value));
     }
   }
@@ -37,12 +39,13 @@ class MainMenu extends React.Component {
         document.getElementById("attendance").disabled = false;
         document.getElementById("coach").disabled = false;
         document.getElementById("coachSchedule").disabled = false;
+        document.getElementById("payment").disabled = false;
       }
     }
 
     render() {
         var {selection, centres} = this.props;
-        var trialsLink = "/m/trials/";
+        var trialsLink = "m/trials";
 
         //Centre List
         var centreOptions = [];
@@ -64,8 +67,9 @@ class MainMenu extends React.Component {
                       {centreOptions}
                     </FormControl>
                   </FormGroup>
-                <Link to={trialsLink} activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
+                <Link to="m/trials" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
                 <Link to="m/attendance" activeClassName="active"><button className="mainbtn" id="attendance" disabled>Student Attendance</button></Link>
+                <Link to="m/payment" activeClassName="active"><button className="mainbtn" id="payment" disabled>Payment</button></Link>
                 <Link to="m/students" activeClassName="active"><button className="mainbtn" id="student" disabled>Students Profile</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule"

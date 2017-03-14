@@ -15,7 +15,7 @@ class NavBar extends React.Component {
  componentDidMount() {
    var {dispatch} = this.props;
    dispatch(actions.startAddTrials());
-   dispatch(actions.startCentres());
+   //dispatch(actions.startCentres());
    dispatch(actions.startCalendars());
    dispatch(actions.startAgeGroup());
  }
@@ -37,7 +37,7 @@ class NavBar extends React.Component {
         <Navbar.Collapse>
          <Nav pullRight>
            <NavItem>
-             <butt onClick={this.onLogout}>
+             <butt onClick={this.onLogout.bind(this)}>
                Log Out
              </butt>
            </NavItem>

@@ -17,7 +17,10 @@ import TrialList from 'TrialList'
 import TrialEdit from 'TrialEdit'
 import TrialAdd from 'TrialAdd'
 import TrialRegister from 'TrialRegister'
-//import Payment from 'Payment'
+
+import PaymentApp from 'PaymentApp'
+import PaymentList from 'PaymentList'
+import PaymentForm from 'PaymentForm'
 
 //Components for Coaches
 import CoachesApp from 'CoachesApp'
@@ -82,6 +85,10 @@ export default (
             <IndexRoute component={StudentList}/>
             <Route path="edit/:studentId" component={StudentEdit} />
             <Route path="add" component={StudentAdd} />
+          </Route>
+          <Route path="payment" component={PaymentApp}>
+            <IndexRoute component={PaymentList}/>
+            <Route path="collection/:studentId" component={PaymentForm}/>
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />
