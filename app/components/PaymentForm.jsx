@@ -259,6 +259,7 @@ class PaymentForm extends React.Component {
          <ControlLabel>Cheque No.</ControlLabel>
            <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
            id="chequeNumber"
+           autoFocus
            type="text"
            placeholder="Enter Cheque No."/>
        </Col>
@@ -275,6 +276,7 @@ class PaymentForm extends React.Component {
              <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
              id="collectedAmount"
              type="text"
+             autoFocus
              placeholder="Enter amount collected (SGD$)"
              defaultValue={totalFee}
              />
