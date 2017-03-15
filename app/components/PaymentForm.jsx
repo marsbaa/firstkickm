@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
-import {Tabs, Tab, Grid, Row, Col, FormGroup, ControlLabel, Panel} from 'react-bootstrap'
+import {Tabs, Tab, Grid, Row, Col, Form, FormGroup, FormControl, ControlLabel, Panel, Button} from 'react-bootstrap'
+import btn from 'styles.css'
 var actions = require('actions')
 var {connect} = require('react-redux')
 import DatePicker from 'react-datepicker'
@@ -20,7 +21,8 @@ class PaymentForm extends React.Component {
       numOfSession: [],
       promotion: 0,
       selectedTermDates: [],
-      deselectedTermDates: []
+      deselectedTermDates: [],
+      form: ''
     };
   }
 
@@ -30,6 +32,11 @@ class PaymentForm extends React.Component {
     this.setState({
       startDate: dates
     });
+  }
+
+   handleForm(e, type) {
+    e.preventDefault()
+    this.setState({form : type})
   }
 
   handleDatesChange(selected, payerId) {
@@ -42,6 +49,11 @@ class PaymentForm extends React.Component {
     var deselectedTermDates= this.state.deselectedTermDates;
     deselectedTermDates[payerId] = deselected
     this.setState({deselectedTermDates})
+  }
+
+  formSubmit(e) {
+    e.preventDefault()
+    console.log("Paid")
   }
 
   componentWillMount() {
@@ -192,10 +204,10 @@ class PaymentForm extends React.Component {
           var datehtml = []
           term.map((date, dateId) => {
             if (dateId === 0) {
-              datehtml.push(<font style={{fontSize: '9px'}}><i>{moment(date).format("D MMM")}</i></font>)
+              datehtml.push(<font key={date} style={{fontSize: '9px'}}><i>{moment(date).format("D MMM")}</i></font>)
             }
             else {
-              datehtml.push(<font style={{fontSize: '9px'}}><i>, {moment(date).format("D MMM")}</i></font>)
+              datehtml.push(<font key={date} style={{fontSize: '9px'}}><i>, {moment(date).format("D MMM")}</i></font>)
             }
           })
           fees.push(<Row key={student.childName+termId} style={{padding: '0px 15px', marginTop: '5px', lineHeight: '12px'}}>
@@ -211,7 +223,7 @@ class PaymentForm extends React.Component {
           })
           if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
             fees.push(<Row key={"earlybird"+termId+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
-              <Col xs={8} md={8}><b style={{color: '#ff66bc'}}>Early Bird Discount</b></Col>
+              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Early Bird Discount</b></Col>
               <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
             </Row>)
             totalFee -= 20;
@@ -223,13 +235,56 @@ class PaymentForm extends React.Component {
       }
       if (id >= 1) {
         fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
-          <Col xs={8} md={8}><b style={{color: '#ff66bc'}}>Sibling Discount</b></Col>
+          <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
           <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
         </Row>)
         totalFee -= 20;
       }
 
     })
+
+    var formhtml = []
+    if (this.state.form === 'cheque') {
+      formhtml.push(<Row key={'cheque'} style={{marginTop: '15px', textAlign: 'center'}}>
+       <Col md={6} xs={6}>
+         <ControlLabel>Amount Collected</ControlLabel>
+         <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+         id="collectedAmount"
+         type="text"
+         placeholder="Enter amount collected (SGD$)"
+         defaultValue={totalFee}
+         />
+       </Col>
+       <Col md={6} xs={6}>
+         <ControlLabel>Cheque No.</ControlLabel>
+           <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+           id="chequeNumber"
+           type="text"
+           placeholder="Enter Cheque No."/>
+       </Col>
+       <Col md={12} xs={12}>
+         <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
+       </Col>
+      </Row>)
+    }
+    else if (this.state.form === 'cash') {
+      formhtml.push(<Row key={'amount'} style={{marginTop: '15px', textAlign: 'center'}}>
+        <Col md={3} xs={3}></Col>
+        <Col md={6} xs={6}>
+          <ControlLabel>Amount Collected</ControlLabel>
+             <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+             id="collectedAmount"
+             type="text"
+             placeholder="Enter amount collected (SGD$)"
+             defaultValue={totalFee}
+             />
+        </Col>
+        <Col md={3} xs={3}></Col>
+          <Col md={12} xs={12}>
+            <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
+          </Col>
+      </Row>)
+    }
 
 
 
@@ -250,6 +305,17 @@ class PaymentForm extends React.Component {
            </Row>}>
               {fees}
            </Panel>
+         </Col>
+       </Row>
+       <Row>
+         <Col md={12} xs={12}>
+           <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Payment Method</font>}>
+             <button onClick={(e) => { this.handleForm(e, "cash")}} style={{width: "45%", height: "50px"}} className="btn">Cash</button>
+             <button onClick={(e) => { this.handleForm(e, "cheque")}} style={{width: "45%", height: "50px"}} className="btn">Cheque</button>
+           </Panel>
+         </Col>
+         <Col md={12} xs={12}>
+           {formhtml}
          </Col>
        </Row>
      </Grid>

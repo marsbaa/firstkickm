@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import {downbtn, datebtn} from 'styles.css'
 var actions = require('actions')
 var {connect} = require('react-redux')
 import moment from 'moment'
@@ -86,12 +87,12 @@ class PaymentDatesSelector extends React.Component {
     if (deselected === undefined) {
       deselected = []
     }
-    if (e.target.className === "btn btn btn-default") {
-      e.target.className = "downbtn btn btn-default"
+    if (e.target.className === "datebtn") {
+      e.target.className = "downbtn"
       deselected.push(date);
     }
-    else if (e.target.className === "downbtn btn btn-default"){
-      e.target.className = "btn btn btn-default"
+    else if (e.target.className === "downbtn"){
+      e.target.className = "datebtn"
       var index = _.findIndex(deselected, (d) => {
            return moment(d).isSame(date)})
       _.pullAt(deselected, index)
@@ -104,7 +105,7 @@ class PaymentDatesSelector extends React.Component {
     var renderDatesButton = (dates) => {
       var html = [];
       dates.map((date) => {
-          html.push(<Button className="btn" key={date} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleDatesChange(e, date)}}>{moment(date).format('D MMM')}</Button>)
+          html.push(<button className="datebtn" key={date} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleDatesChange(e, date)}}>{moment(date).format('D MMM')}</button>)
         })
       return html;
     }
