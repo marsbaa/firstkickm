@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import {Tabs, Tab, Grid, Row, Col, Form, FormGroup, FormControl, ControlLabel, Panel, Button} from 'react-bootstrap'
-import btn from 'styles.css'
+import {datebtn, downbtn} from 'styles.css'
 var actions = require('actions')
 var {connect} = require('react-redux')
 import DatePicker from 'react-datepicker'
@@ -244,6 +244,8 @@ class PaymentForm extends React.Component {
     })
 
     var formhtml = []
+    var chequeClass = 'datebtn'
+    var cashClass = 'datebtn'
     if (this.state.form === 'cheque') {
       formhtml.push(<Row key={'cheque'} style={{marginTop: '15px', textAlign: 'center'}}>
        <Col md={6} xs={6}>
@@ -267,6 +269,8 @@ class PaymentForm extends React.Component {
          <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
        </Col>
       </Row>)
+      chequeClass = 'downbtn'
+
     }
     else if (this.state.form === 'cash') {
       formhtml.push(<Row key={'amount'} style={{marginTop: '15px', textAlign: 'center'}}>
@@ -286,6 +290,7 @@ class PaymentForm extends React.Component {
             <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
           </Col>
       </Row>)
+      cashClass = 'downbtn'
     }
 
 
@@ -312,8 +317,8 @@ class PaymentForm extends React.Component {
        <Row>
          <Col md={12} xs={12}>
            <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Payment Method</font>}>
-             <button onClick={(e) => { this.handleForm(e, "cash")}} style={{width: "45%", height: "50px"}} className="btn">Cash</button>
-             <button onClick={(e) => { this.handleForm(e, "cheque")}} style={{width: "45%", height: "50px"}} className="btn">Cheque</button>
+             <button className={cashClass} onClick={(e) => { this.handleForm(e, "cash")}} style={{width: "45%", height: "50px"}}>Cash</button>
+             <button className={chequeClass} onClick={(e) => { this.handleForm(e, "cheque")}} style={{width: "45%", height: "50px"}}>Cheque</button>
            </Panel>
          </Col>
          <Col md={12} xs={12}>
