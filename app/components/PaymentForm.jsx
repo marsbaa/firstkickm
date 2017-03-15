@@ -260,13 +260,14 @@ class PaymentForm extends React.Component {
        <Col md={6} xs={6}>
          <ControlLabel>Cheque No.</ControlLabel>
            <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+            
            id="chequeNumber"
-           autoFocus
            type="text"
            placeholder="Enter Cheque No."/>
        </Col>
        <Col md={12} xs={12}>
-         <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
+         <Button style={{width: '100%', margin: '20px 0px'}}
+           autoFocus onClick={this.formSubmit.bind(this)}>Payment Collected</Button>
        </Col>
       </Row>)
       chequeClass = 'downbtn'
