@@ -45,6 +45,8 @@ import StudentList from 'StudentList'
 import StudentEdit from 'StudentEdit'
 import StudentAdd from 'StudentAdd'
 
+//Total collection
+import TotalCollection from 'TotalCollection'
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
@@ -66,6 +68,7 @@ export default (
         <IndexRoute component={Login} />
         <Route path="m" component={NavBar} onEnter={requireAuth}>
           <IndexRoute component={MainMenu}/>
+          <Route path="total" component={TotalCollection}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={CentreEdit}/>

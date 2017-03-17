@@ -17,7 +17,8 @@ class MainMenu extends React.Component {
       document.getElementById("coach").disabled = true;
       document.getElementById("coachSchedule").disabled = true;
       document.getElementById("attendance").disabled = true;
-      document.getElementById("payment").disabled = true;
+      document.getElementById("makePayment").disabled = true;
+      document.getElementById("totalCollection").disabled = true;
     }
     else {
       document.getElementById("trials").disabled = false;
@@ -25,7 +26,8 @@ class MainMenu extends React.Component {
       document.getElementById("coach").disabled = false;
       document.getElementById("coachSchedule").disabled = false;
       document.getElementById("attendance").disabled = false;
-      document.getElementById("payment").disabled = false;
+      document.getElementById("makePayment").disabled = false;
+      document.getElementById("totalCollection").disabled = false;
       dispatch(actions.updateSelectedCentre(e.target.value));
     }
   }
@@ -39,7 +41,8 @@ class MainMenu extends React.Component {
         document.getElementById("attendance").disabled = false;
         document.getElementById("coach").disabled = false;
         document.getElementById("coachSchedule").disabled = false;
-        document.getElementById("payment").disabled = false;
+        document.getElementById("makePayment").disabled = false;
+        document.getElementById("totalCollection").disabled = false;
       }
     }
 
@@ -69,7 +72,8 @@ class MainMenu extends React.Component {
                   </FormGroup>
                 <Link to="m/trials" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
                 <Link to="m/attendance" activeClassName="active"><button className="mainbtn" id="attendance" disabled>Student Attendance</button></Link>
-                <Link to="m/payment" activeClassName="active"><button className="mainbtn" id="payment" disabled>Payment</button></Link>
+                <Link to="m/payment" activeClassName="active"><button className="mainbtn" id="makePayment" disabled>Make Payment</button></Link>
+                <Link to="m/total" activeClassName="active"><button className="mainbtn" id="totalCollection" disabled>Total Collection</button></Link>
                 <Link to="m/students" activeClassName="active"><button className="mainbtn" id="student" disabled>Students Profile</button></Link>
                 <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
                 <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule"

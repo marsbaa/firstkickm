@@ -96,6 +96,10 @@ export var paymentReducer = (state = [], action) => {
           earlyBird: payment.earlyBird
         }
       ];
+    case 'ADD_PAYMENTS':
+      return [
+        ...action.payments
+      ]
       default:
         return state;
       }
