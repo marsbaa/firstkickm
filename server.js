@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var nodemailer = require('nodemailer');
+var compression = require('compression')
 //var fs = require('fs')
 //var bodyParser = require('body-parser')
 
@@ -19,7 +20,7 @@ var smtpTransport = nodemailer.createTransport(smtpConfig);
 // Create our app
 var app = express();
 const PORT = process.env.PORT || 3000;
-
+app.use(compression())
 app.use('/', express.static(path.join(__dirname, 'public')));
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: true}));
