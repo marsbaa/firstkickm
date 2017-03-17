@@ -4,12 +4,6 @@ var actions = require('actions')
 var {connect} = require('react-redux')
 
 class PaymentApp extends React.Component {
-  componentDidMount() {
-    var {dispatch, students} = this.props;
-    if (_.isEmpty(students)) {
-      dispatch(actions.startStudents());
-    }
-  }
 
   render() {
 

@@ -27,28 +27,25 @@ class PaymentList extends React.Component {
 
 
   render() {
-    var {students, searchText, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-
+    var {students, searchText, selection} = this.props;
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection, searchText);
+    var actualStudents = StudentsFilter.filter(students, selection, "");
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
+      var actualGroupTime = _.groupBy(actualStudents, 'currentClassTime')
       Object.keys(groupTime).forEach((timeSlot)=> {
         var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
+        var actualGroupAge = _.groupBy(actualGroupTime[timeSlot], 'ageGroup');
         Object.keys(groupAge).forEach((age)=> {
           var group = groupAge[age];
+          var actualGroup = actualGroupAge[age];
           html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
              <Col xs={8} md={8}>
                <h5>{age} {timeSlot}</h5>
              </Col>
                <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                 <h5>Class Size: {_.size(group)}</h5>
+                 <h5>Class Size: {_.size(actualGroup)}</h5>
              </Col>
            </Row>);
 
@@ -59,6 +56,8 @@ class PaymentList extends React.Component {
         })
       })
     }
+
+
 
    return (
      <div>

@@ -18,6 +18,7 @@ class NavBar extends React.Component {
    //dispatch(actions.startCentres());
    dispatch(actions.startCalendars());
    dispatch(actions.startAgeGroup());
+   dispatch(actions.startStudents());
  }
 
  render() {

@@ -77,6 +77,29 @@ export var trialsReducer = (state = [], action) => {
   }
 };
 
+export var paymentReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_PAYMENT':
+      var payment = action.paymentDetails
+      return [
+        ...state,
+        {
+          key: payment.key,
+          centreId: payment.centreId,
+          ageGroup: payment.ageGroup,
+          childName: payment.childName,
+          childKey: payment.childKey,
+          date: payment.date,
+          total: payment.total,
+          termsPaid: payment.termsPaid,
+          siblingDiscount: payment.siblingDiscount,
+          earlyBird: payment.earlyBird
+        }
+      ];
+      default:
+        return state;
+      }
+}
 
 export var studentReducer = (state = [], action) => {
   switch (action.type) {

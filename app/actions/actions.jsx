@@ -73,10 +73,10 @@ export var startAddTrials = () => {
           return '4';
           break;
         case '5':
-          return '5';
+          return '6';
           break;
         case '9':
-          return '6';
+          return '5';
           break;
         case '8':
           return '7';
@@ -659,4 +659,45 @@ export var resetAgeGroup = () => {
   return {
     type: 'RESET_AGE_GROUP'
   }
+}
+
+//Payment
+
+
+export var addPayment = (paymentDetails) => {
+  return (dispatch) => {
+    var paymentRef = firebaseRef.child('payments');
+    var newKey = paymentRef.push().key;
+    var updates = {}
+    updates[newKey] = paymentDetails;
+    paymentRef.update(updates);
+    paymentDetails.key = newKey;
+    dispatch(addPaymentRecord(paymentDetails))
+    dispatch(addStudentPayment(paymentDetails))
+  }
+}
+
+export var addPaymentRecord = (paymentDetails) => {
+  return {
+    type: 'ADD_PAYMENT',
+    paymentDetails
+  }
+}
+
+export var addStudentPayment = (paymentDetails) => {
+   var studentRef = firebaseRef.child('students/' + paymentDetails.childKey +'/payments');
+   var newKey = studentRef.push().key;
+   var updates = {}
+   updates[newKey] = {
+     paymentKey: paymentDetails.key,
+     date: paymentDetails.date,
+     termsPaid: paymentDetails.termsPaid,
+     total: paymentDetails.total
+   }
+   studentRef.update(updates);
+   return {
+     type: 'ADD_STUDENT_PAYMENT',
+     paymentDetails,
+     key: newKey
+   }
 }

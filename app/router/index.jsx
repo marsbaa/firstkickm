@@ -45,6 +45,7 @@ import StudentList from 'StudentList'
 import StudentEdit from 'StudentEdit'
 import StudentAdd from 'StudentAdd'
 
+import Root from 'Root'
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
