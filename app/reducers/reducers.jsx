@@ -93,7 +93,10 @@ export var paymentReducer = (state = [], action) => {
           total: payment.total,
           termsPaid: payment.termsPaid,
           siblingDiscount: payment.siblingDiscount,
-          earlyBird: payment.earlyBird
+          earlyBird: payment.earlyBird,
+          paymentMethod: payment.paymentMethod,
+          chequeNumber: payment.chequeNumber !== null ? '':payment.chequeNumber,
+          email: payment.email
         }
       ];
     case 'ADD_PAYMENTS':
