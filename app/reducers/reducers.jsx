@@ -95,7 +95,7 @@ export var paymentReducer = (state = [], action) => {
           siblingDiscount: payment.siblingDiscount,
           earlyBird: payment.earlyBird,
           paymentMethod: payment.paymentMethod,
-          chequeNumber: payment.chequeNumber !== null ? '':payment.chequeNumber,
+          chequeNumber: payment.chequeNumber !== null ? payment.chequeNumber:'',
           email: payment.email
         }
       ];

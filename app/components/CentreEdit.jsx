@@ -55,12 +55,13 @@ export var CentreEdit = React.createClass({
     var centreName = document.getElementById('centreName').value;
     var logoURL = document.getElementById('logoURL').value;
     var count = 0;
-    if (centreID === '') {
+    if (_.size(centreID) == 0) {
+      count += 1;
       this.setState({
         errorID: 'error',
         errorMessageID: 'Field Empty. Please enter Centre ID'
       });
-      count += 1;
+
     }
     else {
       this.setState({
@@ -68,12 +69,13 @@ export var CentreEdit = React.createClass({
         errorMessageID : ''
       })
     }
-    if (centreName === '') {
+    if (_.size(centreName) == 0) {
+      count += 1;
       this.setState({
         errorName: 'error',
         errorMessageName: 'Field Empty. Please enter Centre Name'
       });
-      count += 1;
+
     }
     else {
       this.setState({
