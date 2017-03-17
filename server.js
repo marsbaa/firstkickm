@@ -18,9 +18,8 @@ var smtpTransport = nodemailer.createTransport(smtpConfig);
 
 // Create our app
 var app = express();
+const PORT = process.env.PORT || 3000;
 
-
-app.set('port', (process.env.PORT || 3000));
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -56,6 +55,5 @@ app.post('/send',function(req,res){
 });
 
 
-app.listen(app.get('port'), function() {
-  console.log('Server started on: ' + app.get('port'));
-});
+app.listen(PORT);
+console.log("server started on port " + PORT);
