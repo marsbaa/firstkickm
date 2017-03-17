@@ -436,7 +436,7 @@ class PaymentForm extends React.Component {
           </FormGroup>
        </Col>
        <Col md={12} xs={12}>
-         <Button style={{width: '100%', margin: '20px 0px'}}
+         <Button style={{width: '100%', margin: '20px 0px', height: '30px'}}
            onClick={this.checkValid.bind(this)}>Payment Collected</Button>
        </Col>
       </Row>)
@@ -468,7 +468,7 @@ class PaymentForm extends React.Component {
         </Col>
         <Col md={3} xs={3}></Col>
           <Col md={12} xs={12}>
-            <Button style={{width: '100%', margin: '20px 0px'}} onClick={this.checkValid.bind(this)}>Payment Collected</Button>
+            <Button style={{width: '100%', margin: '20px 0px', height: '30px'}} onClick={this.checkValid.bind(this)}>Payment Collected</Button>
           </Col>
       </Row>)
       cashClass = 'downbtn'
