@@ -51,6 +51,56 @@
   color: white;
 }
 
+.normalbtn {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  background-color: #656565;
+  color: white;
+}
+
+.normalbtn:hover,
+.normalbtn:focus,
+.normalbtn:active,
+.normalbtn.active,
+.open .dropdown-toggle.normalbtn {
+  opacity: 1;
+}
+
+.selectedbtn {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  background-color: #b4b4b4;
+  color: white;
+}
+
+.selectedbtn:hover,
+.selectedbtn:focus,
+.selectedbtn:active,
+.selectedbtn.active,
+.open .dropdown-toggle.selectedbtn {
+  opacity: 1;
+}
+
 .datebtn {
   display: inline-block;
   padding: 3px 12px;
