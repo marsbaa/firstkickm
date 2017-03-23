@@ -5,6 +5,10 @@ import {Route, Router, IndexRoute, browserHistory} from 'react-router';
 import NavBar from 'NavBar';
 import Login from 'Login';
 import MainMenu from 'MainMenu';
+//Components for Access
+import UserApp from 'UserApp'
+import UserList from 'UserList'
+import UserEdit from 'UserEdit'
 //Components for Centre Profile
 import CentresApp from 'CentresApp';
 import CentreEdit from 'CentreEdit'
@@ -68,6 +72,10 @@ export default (
         <IndexRoute component={Login} />
         <Route path="m" component={NavBar} onEnter={requireAuth}>
           <IndexRoute component={MainMenu}/>
+          <Route path="users" component={UserApp}>
+            <IndexRoute component={UserList}/>
+            <Route path=":userId" component={UserEdit} />
+          </Route>
           <Route path="total" component={TotalCollection}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>

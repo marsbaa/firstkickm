@@ -3,7 +3,7 @@ import {Navbar, Nav, NavItem,Image, Button} from 'react-bootstrap';
 import body from 'styles.css'
 var {connect} = require('react-redux');
 var actions = require('actions');
-import {Link} from 'react-router'
+import {Link, browserHistory} from 'react-router'
 
 class NavBar extends React.Component {
 
@@ -19,10 +19,49 @@ class NavBar extends React.Component {
    dispatch(actions.startCalendars());
    dispatch(actions.startAgeGroup());
    dispatch(actions.startStudents());
+   dispatch(actions.startUsers());
  }
 
  render() {
-   var {navbar} = this.props;
+   var {users, auth, navbar} = this.props;
+   var user;
+   if (auth.email === 'ray@marsbaa.com') {
+     user = {
+       name: 'Ray Yee',
+       email: 'ray@marsbaa.com',
+       assignedRoles : 'Manager',
+       assignedCentres : { 0 : 'all'}
+     }
+   }
+   else {
+     user = _.find(users, ['email', auth.email])
+   }
+   var html=[]
+   if (user !== undefined) {
+     if (user.assignedRoles.indexOf('Manager') > -1) {
+       html.push(
+           <NavItem key="centres" eventKey={1}>
+           <butt onClick={(e)=> {
+                e.preventDefault()
+                 browserHistory.push("/m/centres")}}>Centres Profile</butt>
+             </NavItem>)
+      html.push(
+        <NavItem key="settings" eventKey={2}>
+        <butt onClick={(e)=> {
+             e.preventDefault()
+              browserHistory.push("/m/settings")}}>Settings</butt>
+      </NavItem>
+      )
+      html.push(
+        <NavItem key="users" eventKey={3}>
+       <butt onClick={(e)=> {
+            e.preventDefault()
+             browserHistory.push("/m/users")}}>Access Rights</butt>
+      </NavItem>
+      )
+     }
+   }
+
   return (
     <div>
       <Navbar style={{backgroundColor: '#ffffff', padding: '10px', marginBottom: '0'}}>
@@ -37,7 +76,8 @@ class NavBar extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
          <Nav pullRight>
-           <NavItem>
+           {html}
+           <NavItem eventKey={4}>
              <butt onClick={this.onLogout.bind(this)}>
                Log Out
              </butt>

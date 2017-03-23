@@ -21,4 +21,5 @@ export var Settings = React.createClass({
  }
  });
 
- export default connect ()(Settings);
+ export default connect((state) => {return state;
+})(Settings);

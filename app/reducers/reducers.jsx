@@ -5,7 +5,8 @@ export var authReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN':
       return {
-          uid: action.uid
+          uid: action.uid,
+          email : action.email
         };
     case 'LOGOUT':
       return {};
@@ -25,6 +26,44 @@ export var navbarReducer = (state = {link: '', title: ''}, action) => {
        return state;
   };
 };
+
+export var usersReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_USERS':
+      return [
+        ...action.users
+      ];
+    case 'ADD_USER' :
+      var user = action.user
+      return [
+        ...state,
+        {
+          key: user.key,
+          name: user.name,
+          email: user.email,
+          assignedCentres: user.assignedCentres,
+          assignedRoles : user.assignedRoles
+        }
+      ];
+      case 'UPDATE_USER' :
+        return state.map((user) => {
+          if (user.key === action.userId) {
+            return {
+              ...user,
+              name: action.user.name,
+              email: action.user.email,
+              assignedCentres: action.user.assignedCentres,
+              assignedRoles: action.user.assignedRoles
+            }
+          }
+          else {
+            return user
+          }
+        })
+      default:
+        return state;
+    }
+  };
 
 export var trialsReducer = (state = [], action) => {
   switch (action.type) {

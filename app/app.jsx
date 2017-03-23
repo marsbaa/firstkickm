@@ -13,7 +13,7 @@ import firebase from 'app/firebase/';
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch(actions.login(user.uid));
+    store.dispatch(actions.login(user.uid, user.email));
     browserHistory.push('/m');
   }
   else {

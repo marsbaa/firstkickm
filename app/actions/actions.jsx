@@ -25,10 +25,11 @@ export var startLogout = () => {
   };
 };
 
-export var login = (uid) => {
+export var login = (uid, email) => {
   return{
     type: 'LOGIN',
-    uid
+    uid,
+    email
   };
 };
 
@@ -46,6 +47,61 @@ export var updateNavTitle = (link, title) => {
     title
   };
 };
+
+//Actions for UserApp
+export var startUsers = () => {
+   return (dispatch) => {
+   var usersRef = firebaseRef.child('users');
+   usersRef.once('value').then((snapshot) => {
+    var users = snapshot.val();
+    var parsedUsers = [];
+
+    Object.keys(users).forEach((userId)=> {
+      var user = users[userId]
+      parsedUsers.push({
+        key: userId,
+        name: user.name,
+        email: user.email,
+        assignedCentres : user.assignedCentres,
+        assignedRoles : user.assignedRoles
+      });
+    });
+    dispatch(addUsers(parsedUsers));
+  });
+};
+};
+
+export var addUsers = (users) => {
+  return {
+    type: 'ADD_USERS',
+    users
+  };
+};
+
+export var addUser = (user) => {
+  var usersRef = firebaseRef.child('users');
+  var newKey = usersRef.push().key;
+  var updates = {};
+  updates[newKey] = user;
+  usersRef.update(updates);
+  user.key = newKey;
+  return {
+    type: 'ADD_USER',
+    user
+  };
+}
+
+export var updateUser = (user, userId) => {
+  var usersRef = firebaseRef.child('users/' + userId);
+  var updates = user
+  usersRef.update(updates);
+  return {
+    type: 'UPDATE_USER',
+    user,
+    userId
+  };
+}
+
 
 //Actions for TrialsApp
 export var startAddTrials = () => {

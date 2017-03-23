@@ -11,51 +11,79 @@ class MainMenu extends React.Component {
   handleSelect(e) {
     var {dispatch} = this.props;
     e.preventDefault();
-    if (e.target.value === '0') {
-      document.getElementById("trials").disabled = true;
-      document.getElementById("student").disabled = true;
-      document.getElementById("coach").disabled = true;
-      document.getElementById("coachSchedule").disabled = true;
-      document.getElementById("attendance").disabled = true;
-      document.getElementById("makePayment").disabled = true;
-      document.getElementById("totalCollection").disabled = true;
-    }
-    else {
-      document.getElementById("trials").disabled = false;
-      document.getElementById("student").disabled = false;
-      document.getElementById("coach").disabled = false;
-      document.getElementById("coachSchedule").disabled = false;
-      document.getElementById("attendance").disabled = false;
-      document.getElementById("makePayment").disabled = false;
-      document.getElementById("totalCollection").disabled = false;
-      dispatch(actions.updateSelectedCentre(e.target.value));
-    }
+    dispatch(actions.updateSelectedCentre(e.target.value));
   }
 
     componentDidMount() {
       var {dispatch, selection} = this.props;
       dispatch(actions.updateNavTitle("/m", "Dashboard"));
-      if (selection != "0") {
-        document.getElementById("trials").disabled = false;
-        document.getElementById("student").disabled = false;
-        document.getElementById("attendance").disabled = false;
-        document.getElementById("coach").disabled = false;
-        document.getElementById("coachSchedule").disabled = false;
-        document.getElementById("makePayment").disabled = false;
-        document.getElementById("totalCollection").disabled = false;
-      }
+
     }
 
     render() {
-        var {selection, centres} = this.props;
-        var trialsLink = "m/trials";
-
+        var {selection, centres, users, auth} = this.props;
+        var user;
+        if (auth.email === 'ray@marsbaa.com') {
+          user = {
+            name: 'Ray Yee',
+            email: 'ray@marsbaa.com',
+            assignedRoles : 'Manager',
+            assignedCentres : { 0 : 'all'}
+          }
+        }
+        else {
+          user = _.find(users, ['email', auth.email])
+        }
         //Centre List
         var centreOptions = [];
         centreOptions.push(<option key="0" value="0">select</option>);
-        centres.map((centre) => {
-          centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
-        });
+        if (user !== undefined) {
+          centres.map((centre) => {
+            var index = _.findIndex(user.assignedCentres, (c) => { return c == centre.id })
+            if (index !== -1 || user.assignedCentres[0] === 'all') {
+              centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+            }
+          });
+          var menuHTML = []
+          if (user.assignedRoles === 'Administrator') {
+            menuHTML.push(<div key="adminmenu">
+            <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection === '0' ? true : false}>Trials</button></Link>
+            <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection === '0' ? true : false}>Student Attendance</button></Link>
+            <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection === '0' ? true : false}>Make Payment</button></Link>
+            <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection === '0' ? true : false}>Total Collection</button></Link>
+            <Link to="" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+            </div>)
+          }
+          else if(user.assignedRoles === 'Head Coach') {
+              menuHTML.push(
+                <div key="headcoachmenu">
+                  <Link to="" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+                <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
+                  disabled={selection === '0' ? true : false}>Coach Scheduling</button></Link>
+                </div>
+
+            )
+          }
+          else if (user.assignedRoles === 'Manager') {
+            menuHTML.push(
+              <div key="managermenu">
+                <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection === '0' ? true : false}>Trials</button></Link>
+                <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection === '0' ? true : false}>Student Attendance</button></Link>
+                <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection === '0' ? true : false}>Make Payment</button></Link>
+                <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection === '0' ? true : false}>Total Collection</button></Link>
+                <Link to="" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+                  <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
+                    disabled={selection === '0' ? true : false}>Coach Scheduling</button></Link>
+                  <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection === '0' ? true : false}>Students Profile</button></Link>
+                <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>
+              </div>
+
+            )
+          }
+        }
+
+
+
 
 
         return (
@@ -70,17 +98,8 @@ class MainMenu extends React.Component {
                       {centreOptions}
                     </FormControl>
                   </FormGroup>
-                <Link to="m/trials" activeClassName="active"><button className="mainbtn" id="trials" disabled>Trials</button></Link>
-                <Link to="m/attendance" activeClassName="active"><button className="mainbtn" id="attendance" disabled>Student Attendance</button></Link>
-                <Link to="m/payment" activeClassName="active"><button className="mainbtn" id="makePayment" disabled>Make Payment</button></Link>
-                <Link to="m/total" activeClassName="active"><button className="mainbtn" id="totalCollection" disabled>Total Collection</button></Link>
-                <Link to="m/students" activeClassName="active"><button className="mainbtn" id="student" disabled>Students Profile</button></Link>
-                <Link to="" activeClassName="active"><button className="mainbtn" id="coach" disabled>Coach Attendance</button></Link>
-                <Link to="m/coachschedule" activeClassName="active"><button className="mainbtn" id="coachSchedule"
-                disabled>Coach Scheduling</button></Link>
-                <Link to="m/coaches" activeClassName="active"><button className="mainbtn">Coaches Profile</button></Link>
-                <Link to="m/centres" activeClassName="active"><button className="mainbtn">Centres Profile</button></Link>
-                <Link to="m/settings" activeClassName="active"><button className="mainbtn">Settings</button></Link>
+                {menuHTML}
+
               </Col>
             </Row>
           </Grid>

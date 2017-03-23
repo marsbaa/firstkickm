@@ -25,7 +25,7 @@ module.exports = {
     }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    //new webpack.optimize.UglifyJsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
@@ -33,8 +33,7 @@ module.exports = {
         AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
         DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
         STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-        GMAIL_U: JSON.stringify(process.env.GMAIL_U),
-        GMAIL_P: JSON.stringify(process.env.GMAIL_P)
+        SMS: JSON.stringify(process.env.SMS)
       }
     })
   ] : [
@@ -49,8 +48,7 @@ module.exports = {
         AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
         DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
         STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-        GMAIL_U: JSON.stringify(process.env.GMAIL_U),
-        GMAIL_P: JSON.stringify(process.env.GMAIL_P)
+        SMS: JSON.stringify(process.env.SMS)
       }
     })
   ],

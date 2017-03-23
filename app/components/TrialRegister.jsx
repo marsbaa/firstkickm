@@ -3,30 +3,57 @@ import moment from 'moment'
 import {browserHistory} from 'react-router'
 var {connect} = require('react-redux')
 var actions = require('actions')
-import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
+import {Row, Col, FormControl, FormGroup, ControlLabel, Radio, Well, Checkbox, Glyphicon} from 'react-bootstrap'
+import SMS from 'SMS'
 
-export var TrialRegister = React.createClass({
+class TrialRegister extends React.Component{
 
-  getInitialState(){
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       selectedCentre : "",
-      trialDate : ''
+      trialDate : '',
+      tcCheck: false
     }
-  },
+
+  }
+
+  handleTC(e) {
+    e.preventDefault();
+    this.setState({
+      tcCheck: this.state.tcCheck === false ? true: false
+    })
+  }
 
   centreSelect(e) {
     e.preventDefault();
     this.setState({
       selectedCentre: e.target.value
     });
-  },
+  }
 
   trialDateSelect(e) {
     e.preventDefault();
     this.setState({
       trialDate : e.target.value
     });
-  },
+  }
+
+  renderCheck(e) {
+    e.preventDefault()
+    if (!this.state.tcCheck) {
+      return (
+        <div>
+          <label style={{color:'red', fontSize:'10px'}}>Please agree to the Terms and Conditions before proceeding. </label>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div></div>
+      );
+    }
+  }
 
   componentWillMount() {
     var key = this.props.params.studentId;
@@ -34,7 +61,7 @@ export var TrialRegister = React.createClass({
     var trial = _.find(trials, {id: key});
     this.setState({selectedCentre: trial.venueId});
     this.setState({trialDate: trial.dateOfTrial});
-  },
+  }
 
   componentDidMount() {
     var key = this.props.params.studentId;
@@ -42,9 +69,9 @@ export var TrialRegister = React.createClass({
     var trial = _.find(trials, {id: key});
     document.getElementById("boy").checked = trial.gender==="boy" ? true: false;
     document.getElementById("girl").checked = trial.gender==="girl" ? true: false;
-  },
+  }
 
-  onFormSubmit: function (e) {
+  onFormSubmit(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
     var key = this.props.params.studentId;
@@ -61,11 +88,11 @@ export var TrialRegister = React.createClass({
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value
     };
-    dispatch(actions.updateTrial(trial));
+    //dispatch(actions.updateTrial(trial));
     browserHistory.push(`/m/trials`);
-  },
+  }
 
-  render: function () {
+  render() {
     var key = this.props.params.studentId;
     var {trials,centres, ageGroup, calendars} = this.props;
     var trial = _.find(trials, {id: key});
@@ -128,6 +155,74 @@ export var TrialRegister = React.createClass({
         <Row style={{padding: '10px'}}>
           <Col md={6}>
             <FormGroup>
+              <ControlLabel>Parent's Name</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="parentName"
+              type="text"
+              placeholder="Enter Parent's Name"
+              defaultValue={trial.parentName}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Child's Name</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="childName"
+              type="text"
+              placeholder="Enter Child's Name"
+              defaultValue={trial.childName}/>
+            </FormGroup>
+            <FormGroup>
+              <Radio id="boy" value="boy" name="gender" inline>
+                Boy
+              </Radio>
+              {' '}
+              <Radio id="girl" value="girl" name="gender" inline>
+                Girl
+              </Radio>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Date of Birth</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="dateOfBirth"
+              type="text"
+              placeholder="Enter Date of Birth"
+              defaultValue={trial.dateOfBirth}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Mobile Number</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="contactNumber"
+              type="text"
+              placeholder="Enter Mobile Number"
+              defaultValue={trial.contactNumber}/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Email</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="email"
+              type="text"
+              placeholder="Enter Email"
+              defaultValue={trial.email}/>
+            </FormGroup>
+
+
+          </Col>
+          <Col md={6}>
+            <FormGroup>
+              <ControlLabel>Address</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="address"
+              type="text"
+              placeholder="Enter Address"
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Postal Code</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="postalcode"
+              type="text"
+              placeholder="Enter Postal Code"/>
+            </FormGroup>
+            <FormGroup>
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id="centreSelect" componentClass="select" placeholder="select"
@@ -154,34 +249,6 @@ export var TrialRegister = React.createClass({
               </FormControl>
             </FormGroup>
             <FormGroup>
-              <ControlLabel>Child's Name</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
-              id="childName"
-              type="text"
-              placeholder="Enter Child's Name"
-              defaultValue={trial.childName}/>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>Mobile Number</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
-              id="contactNumber"
-              type="text"
-              placeholder="Enter Mobile Number"
-              defaultValue={trial.contactNumber}/>
-            </FormGroup>
-
-          </Col>
-          <Col md={6}>
-            <FormGroup>
-              <ControlLabel>Date of Birth</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
-              id="dateOfBirth"
-              type="text"
-              placeholder="Enter Date of Birth"
-              defaultValue={trial.dateOfBirth}/>
-            </FormGroup>
-
-            <FormGroup>
               <ControlLabel>Medical Condition</ControlLabel>
               <FormControl style={{marginBottom: '10px'}}
               id="medicalCondition"
@@ -189,37 +256,30 @@ export var TrialRegister = React.createClass({
               placeholder="Enter Medical Condition"
               defaultValue={trial.medicalCondition}/>
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>Email</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
-              id="email"
-              type="text"
-              placeholder="Enter Email"
-              defaultValue={trial.email}/>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>Parent's Name</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
-              id="parentName"
-              type="text"
-              placeholder="Enter Parent's Name"
-              defaultValue={trial.parentName}/>
-            </FormGroup>
-            <FormGroup>
-              <Radio id="boy" value="boy" name="gender" inline>
-                Boy
-              </Radio>
-              {' '}
-              <Radio id="girl" value="girl" name="gender" inline>
-                Girl
-              </Radio>
-            </FormGroup>
-            <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.onFormSubmit}>Save Child Profile</button>
-          </Col>
+            </Col>
+            <Col md={12} xs={12}>
+              <Well>
+                <FormGroup>
+                  <Checkbox id="termConditions" onChange={this.handleTC.bind(this)}>
+                    I agree to the terms & conditions set out by First Kick Academy
+                  </Checkbox>
+                  {this.renderCheck.bind(this)}
+                </FormGroup>
+              </Well>
+              <button className="btn" style={{width: '100%', margin: '0'}} onClick={ () => {
+                  if(this.state.tcCheck) {
+                    console.log(this.state.tcCheck)
+                    var msg = '&msg=Please%20save%20this%20number%2091010666&dstno=6590364283';
+                    SMS.sendSMS(msg)
+                  }
+                }}>Next Step (Payment) <Glyphicon glyph="chevron-right" /></button>
+            </Col>
+
+
         </Row>
     );
   }
-});
+}
 
 export default connect(
   (state) => {
