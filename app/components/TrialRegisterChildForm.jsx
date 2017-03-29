@@ -63,7 +63,11 @@ class TrialRegisterChildForm extends React.Component{
     var {dispatch} = this.props;
     var {id} = this.props.trial;
     var classTimeSelector = document.getElementById('timeSlotSelect'+id);
-    var classTime = classTimeSelector.options[classTimeSelector.selectedIndex].text;
+    var classTimeDay = classTimeSelector.options[classTimeSelector.selectedIndex].text;
+    var init = classTimeDay.indexOf('(')
+    var fin = classTimeDay.indexOf(')')
+    var classDay = classTimeDay.substr(init+1, fin-init-1)
+    console.log(classDay)
     var trial = {
       id: id,
       childName: document.getElementById("childName"+id).value,
@@ -71,14 +75,15 @@ class TrialRegisterChildForm extends React.Component{
       dateOfBirth: document.getElementById("dateOfBirth"+id).value,
       dateOfTrial: document.getElementById("trialDateSelect"+id).value,
       venueId: document.getElementById("centreSelect"+id).value.toString(),
-      currentClassTime: classTime,
+      currentClassTime: document.getElementById('timeSlotSelect'+id).value,
+      currentClassDay: classDay,
       medicalCondition: document.getElementById("medicalCondition"+id).value
     };
     dispatch(actions.updateRegister(trial));
     this.open();
 
   }
-  
+
   componentDidMount () {
     window.scrollTo(0, 0)
   }
