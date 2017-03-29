@@ -39,7 +39,7 @@ export var TrialAdd = React.createClass({
     var {dispatch, centres} = this.props;
     var trial = {
       childName: document.getElementById("childName").value,
-      contactNumber: document.getElementById("contactNumber").value,
+      contact: document.getElementById("contactNumber").value,
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,

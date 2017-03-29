@@ -8,7 +8,7 @@ import {Link} from 'react-router'
 
 class Trial extends React.Component{
   render () {
-    var {id, childName, dateOfBirth, contactNumber, email, gender, dispatch, attended, attendedOn} = this.props;
+    var {id, childName, dateOfBirth, contact, email, gender, dispatch, attended, attendedOn} = this.props;
     var trialClassName = attended ? 'trialCompleted' : 'trial';
     var truncatedChildName = _.truncate(childName, {
   'length': 18});
@@ -30,7 +30,7 @@ class Trial extends React.Component{
           <div style={{paddingLeft: '20px', fontSize: '10px', color: '#9a9a9a'}}>
             <Glyphicon style={{color: '#656565'}} glyph="envelope" /> {email.toLowerCase()}
           </div>
-          <div style={{paddingLeft: '20px', fontSize: '10px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contactNumber}
+          <div style={{paddingLeft: '20px', fontSize: '10px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contact}
           </div>
         </Col>
         <Col xs={5} md={5} style={{textAlign:'right'}}>

@@ -21,6 +21,7 @@ import TrialList from 'TrialList'
 import TrialEdit from 'TrialEdit'
 import TrialAdd from 'TrialAdd'
 import TrialRegister from 'TrialRegister'
+import TrialPaymentForm from 'TrialPaymentForm'
 
 import PaymentApp from 'PaymentApp'
 import PaymentList from 'PaymentList'
@@ -30,6 +31,7 @@ import PaymentForm from 'PaymentForm'
 import CoachesApp from 'CoachesApp'
 import CoachesList from 'CoachesList'
 import CoachEdit from 'CoachEdit'
+import CoachAttendance from 'CoachAttendance'
 
 import Settings from 'Settings'
 import SettingsList from 'SettingsList'
@@ -85,10 +87,12 @@ export default (
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
-            <Route path="edit/:studentId" component={TrialEdit} />
+            <Route path="edit/:trialId" component={TrialEdit} />
             <Route path="add" component={TrialAdd} />
-            <Route path="register/:studentId" component={TrialRegister} />
+            <Route path="register/:trialId" component={TrialRegister} />
+            <Route path="payment" component={TrialPaymentForm} />
           </Route>
+          <Route path="coachattendance" component={CoachAttendance} />
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
           </Route>

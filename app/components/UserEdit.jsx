@@ -1,6 +1,6 @@
 import React from 'react'
 var {connect} = require('react-redux')
-import {Grid, Row, Col, Glyphicon, Form, FormGroup, FormControl, ControlLabel, ButtonGroup} from 'react-bootstrap'
+import {Grid, Row, Col, Glyphicon, Form, FormGroup, FormControl, ControlLabel, ButtonGroup, Button} from 'react-bootstrap'
 var actions = require('actions')
 import moment from 'moment'
 import {Link} from 'react-router'
@@ -60,13 +60,7 @@ class UserEdit extends React.Component{
 
   handleRoleChange(e, role) {
     e.preventDefault();
-    var selected = this.state.assignedRoles
-    if (e.target.className === "datebtn") {
-      e.target.className = "downbtn"
-    }
-    else if (e.target.className === "downbtn"){
-      e.target.className = "datebtn"
-    }
+
     this.setState({assignedRoles: role})
   }
 
@@ -110,7 +104,7 @@ class UserEdit extends React.Component{
       if (user.assignedRoles === role) {
        rolesBtnClass = "downbtn"
       }
-      roleshtml.push(<button className={rolesBtnClass} key={role} style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</button>)
+      roleshtml.push(<Button className="datebtn" key={role} active={this.state.assignedRoles === role}style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</Button>)
     })
 
 
@@ -145,9 +139,11 @@ class UserEdit extends React.Component{
             </div>
             <div style={{marginTop: '15px'}}>
               <ControlLabel>Roles</ControlLabel>
-              <ButtonGroup>
-                {roleshtml}
-              </ButtonGroup>
+              <div>
+                <ButtonGroup style={{width: '100%'}}>
+                  {roleshtml}
+                </ButtonGroup>
+              </div>
             </div>
           </Col>
           <Col md={12} xs={12} style={{marginTop: '20px', marginBottom: '30px'}}>

@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware, combineReducers} from 'redux'
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension/logOnlyInProduction'
-var {authReducer, usersReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer, termReducer, ageGroupReducer, studentReducer, calendarReducer, coachScheduleReducer, paymentReducer} = require('reducers');
+var {authReducer, usersReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer, termReducer, ageGroupReducer, studentReducer, calendarReducer, coachScheduleReducer, paymentReducer, registrationReducer} = require('reducers');
 
 export var configure = (initialState = {}) => {
   var reducer = combineReducers({
@@ -18,7 +18,8 @@ export var configure = (initialState = {}) => {
     students: studentReducer,
     calendars: calendarReducer,
     coachSchedule: coachScheduleReducer,
-    payments: paymentReducer
+    payments: paymentReducer,
+    register: registrationReducer
   });
   var store = createStore(reducer, initialState, composeWithDevTools(
     applyMiddleware(thunk)

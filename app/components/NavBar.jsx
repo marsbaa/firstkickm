@@ -15,7 +15,7 @@ class NavBar extends React.Component {
  componentDidMount() {
    var {dispatch} = this.props;
    dispatch(actions.startAddTrials());
-   //dispatch(actions.startCentres());
+   dispatch(actions.startCentres());
    dispatch(actions.startCalendars());
    dispatch(actions.startAgeGroup());
    dispatch(actions.startStudents());

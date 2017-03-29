@@ -162,7 +162,7 @@ export var startAddTrials = () => {
                   parentId: trials.parent_id,
                   parentName: capitalize(trials.parent_name),
                   email: trials.parent_email,
-                  contactNumber: trials.parent_contactno,
+                  contact: trials.parent_contactno,
                   venueId: reId(trials.venue_id),
                   dateOfTrial: trials.dateoftrail,
                   timeOfTrial: trials.timeoftrail,
@@ -203,7 +203,7 @@ export var updateTrial = (trial) => {
   var trialsRef = firebaseRef.child('trials/' + trial.id);
   trialsRef.update({
     childName: trial.childName,
-    contactNumber: trial.contactNumber,
+    contact: trial.contact,
     email: trial.email,
     gender: trial.gender,
     venueId: trial.venueId,
@@ -225,7 +225,7 @@ export var addTrial = (trial) => {
   var updates = {};
   updates[newKey] = {
     childName: trial.childName,
-    contactNumber: trial.contactNumber,
+    contact: trial.contact,
     email: trial.email,
     gender: trial.gender,
     venueId: trial.venueId,
@@ -311,6 +311,35 @@ export var addStudent = (student) => {
   };
 }
 
+export var addTrialStudent = (student) => {
+  var studentRef = firebaseRef.child('students');
+  var newKey = studentRef.push().key;
+  var updates = {};
+  updates[newKey] = {
+    trialId : student.id,
+    address : student.address,
+    ageGroup : student.ageGroup,
+    childName : student.childName,
+    contact: student.contact,
+    currentClassDay : student.currentClassDay,
+    currentClassTime : student.currentClassTime,
+    dateAdded: moment().format('YYYY-MM-DD'),
+    dateOfBirth : student.dateOfBirth,
+    email: student.email,
+    gender: student.gender,
+    parentName: student.parentName,
+    medicalCondition: student.medicalCondition,
+    venueId: student.venueId,
+    centre : student.centre
+   }
+  studentRef.update(updates);
+  student.key = newKey;
+  return {
+    type: 'ADD_STUDENT',
+    student
+  };
+}
+
 export var updateStudent = (studentId, student) => {
   var updates=  {};
   updates['/students/'+ studentId] = student;
@@ -361,23 +390,7 @@ export var startCoaches = () => {
     Object.keys(coaches).forEach((coachId)=> {
       parsedCoaches.push({
         key: coachId,
-        name: coaches[coachId].name,
-        nric: coaches[coachId].nric,
-        dateOfBirth: coaches[coachId].dateOfBirth,
-        address: coaches[coachId].address,
-        contact: coaches[coachId].contact,
-        email: coaches[coachId].email,
-        education: coaches[coachId].education,
-        occupation: coaches[coachId].occupation,
-        bank: coaches[coachId].bank,
-        accountNumber: coaches[coachId].accountNumber,
-        paymentRate: coaches[coachId].paymentRate,
-        transport: coaches[coachId].modeOfTransport,
-        centres: coaches[coachId].centres,
-        qualification: coaches[coachId].qualification,
-        startDate: coaches[coachId].startDate,
-        firstAid: coaches[coachId].firstAid,
-        issueDate: coaches[coachId].issueDate
+        ...coaches[coachId]
       });
     });
     dispatch(addCoaches(parsedCoaches));
@@ -413,6 +426,45 @@ export var updateCoach = (coachId, coach) => {
     type: 'UPDATE_COACH',
     coachId,
     coach
+  };
+};
+
+export var updateCoachAttendance = (date, id, classKey, paymentRate) => {
+  return (dispatch) => {
+    var classId = null;
+    var sessionRate = null;
+    var attendanceRef = firebaseRef.child('coaches/'+id+'/attendance/'+date);
+    attendanceRef.once('value').then((snapshot) => {
+      var attendance = snapshot.val();
+      if (attendance === null) {
+        attendance = {}
+      }
+          attendance.attended = (attendance.attended === undefined) || (attendance.attended === false) ? true : null;
+
+
+      if (attendance.attended) {
+        classId = classKey
+        sessionRate = paymentRate
+      }
+
+      return attendanceRef.update({
+        attended : attendance.attended,
+        classId,
+        sessionRate
+      });
+    }).then(() => {
+      dispatch(toggleCoachAttendance(date, id, classId, sessionRate));
+    });
+  }
+};
+
+export var toggleCoachAttendance = (date, id, classId, sessionRate) => {
+  return {
+    type: 'TOGGLE_COACH_ATTENDANCE',
+    date,
+    id,
+    classId,
+    sessionRate
   };
 };
 
@@ -794,3 +846,33 @@ export var addPayments = (payments) => {
    payments
  };
 };
+
+
+//Registration Actions
+export var addRegister = (payers) => {
+  return {
+    type: 'ADD_REGISTER',
+    payers
+  }
+}
+
+export var updateRegister = (trial) => {
+  return {
+    type: 'UPDATE_REGISTER',
+    trial
+  }
+}
+
+export var updateJoining = (id) => {
+  return {
+    type: 'UPDATE_JOINING',
+    id
+  }
+}
+
+export var updateParentDetails = (parentDetails) => {
+  return {
+    type: 'UPDATE_PARENT',
+    parentDetails
+  }
+}

@@ -54,6 +54,7 @@ class StudentAdd extends React.Component {
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
       address: document.getElementById("address").value,
+      postalcode: document.getElementById('postalcode').value,
       ageGroup: document.getElementById("ageGroup").value
     };
     dispatch(actions.addStudent(student));
@@ -167,6 +168,14 @@ class StudentAdd extends React.Component {
               id="address"
               type="text"
               placeholder="Enter Address"
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Postal Code</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="postalcode"
+              type="text"
+              placeholder="Enter Postal Code"
               />
             </FormGroup>
             <FormGroup>

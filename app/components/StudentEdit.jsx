@@ -194,6 +194,14 @@ class StudentEdit extends React.Component {
               defaultValue={student.address}/>
             </FormGroup>
             <FormGroup>
+              <ControlLabel>Postal Code</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+              id="postalcode"
+              type="text"
+              placeholder="Enter Postal Code"
+              />
+            </FormGroup>
+            <FormGroup>
               <ControlLabel>Parent's Name</ControlLabel>
               <FormControl style={{marginBottom: '10px'}}
               id="parentName"

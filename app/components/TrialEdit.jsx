@@ -29,7 +29,7 @@ export var TrialEdit = React.createClass({
   },
 
   componentWillMount() {
-    var key = this.props.params.studentId;
+    var key = this.props.params.trialId;
     var {trials,centres} = this.props;
     var trial = _.find(trials, {id: key});
     this.setState({selectedCentre: trial.venueId});
@@ -37,7 +37,7 @@ export var TrialEdit = React.createClass({
   },
 
   componentDidMount() {
-    var key = this.props.params.studentId;
+    var key = this.props.params.trialId;
     var {trials} = this.props;
     var trial = _.find(trials, {id: key});
     document.getElementById("boy").checked = trial.gender==="boy" ? true: false;
@@ -47,11 +47,11 @@ export var TrialEdit = React.createClass({
   onFormSubmit: function (e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
-    var key = this.props.params.studentId;
+    var key = this.props.params.trialId;
     var trial = {
       id: key,
       childName: document.getElementById("childName").value,
-      contactNumber: document.getElementById("contactNumber").value,
+      contact: document.getElementById("contactNumber").value,
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
@@ -66,7 +66,7 @@ export var TrialEdit = React.createClass({
   },
 
   render: function () {
-    var key = this.props.params.studentId;
+    var key = this.props.params.trialId;
     var {trials,centres, ageGroup, calendars} = this.props;
     var trial = _.find(trials, {id: key});
     var getAge = (dob) => {
@@ -167,7 +167,7 @@ export var TrialEdit = React.createClass({
               id="contactNumber"
               type="text"
               placeholder="Enter Mobile Number"
-              defaultValue={trial.contactNumber}/>
+              defaultValue={trial.contact}/>
             </FormGroup>
 
           </Col>

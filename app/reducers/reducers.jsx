@@ -157,7 +157,7 @@ export var studentReducer = (state = [], action) => {
     case 'ADD_STUDENT':
       return [
         ...state,
-        ...action.student
+        {...action.student}
       ];
     case 'UPDATE_STUDENT':
       return state.map((student) => {
@@ -229,6 +229,38 @@ export var coachReducer = (state = [], action) => {
           return coach;
         }
       });
+      case 'TOGGLE_COACH_ATTENDANCE':
+        return state.map((coach) => {
+          if (coach.key === action.id) {
+            if (coach.attendance === undefined) {
+              return {
+                ...coach,
+                attendance: {
+                  [action.date] : {
+                    attended: true,
+                    classId: action.classId,
+                    sessionRate: action.sessionRate
+                  }
+                }
+              };
+            }
+          else {
+              return {
+                ...coach,
+                attendance: {
+                  [action.date] : {
+                    attended: coach.attendance[action.date].attended === true ? false:true,
+                    classId: action.classId,
+                    sessionRate: action.sessionRate
+                  }
+                }
+              }
+            }
+          }
+          else {
+            return coach;
+          }
+        })
     default:
       return state;
  }
@@ -433,3 +465,57 @@ export var ageGroupReducer = (state=[], action) => {
       return state;
   }
 }
+
+
+export var registrationReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'ADD_REGISTER':
+      return [
+        ...action.payers
+      ];
+    case 'UPDATE_REGISTER':
+      return state.map((register) => {
+        if (register.id === action.trial.id) {
+          return {
+            ...register,
+            childName: action.trial.childName,
+            gender: action.trial.gender,
+            dateOfBirth: action.trial.dateOfBirth,
+            dateOfTrial: action.trial.dateOfTrial,
+            venueId: action.trial.venueId,
+            currentClassTime: action.trial.currentClassTime,
+            currentClassDay: action.trial.currentClassDay,
+            medicalCondition: action.trial.medicalCondition
+          }
+        }
+        else {
+          return register;
+        }
+      });
+      case 'UPDATE_JOINING':
+        return state.map((register) => {
+          if (register.id === action.id) {
+            return {
+              ...register,
+              joining : register.joining === true ? false : true
+            }
+          }
+          else {
+            return register;
+          }
+        });
+        case 'UPDATE_PARENT':
+          return state.map((register) => {
+              return {
+                ...register,
+                parentName: action.parentDetails.parentName,
+                contactNumber: action.parentDetails.contactNumber,
+                email: action.parentDetails.email,
+                address: action.parentDetails.address,
+                postalcode: action.parentDetails.postalcode
+              }
+            })
+    default:
+      return state;
+    }
+  }

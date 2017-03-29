@@ -23,8 +23,6 @@ firebase.auth().onAuthStateChanged((user) => {
 
 });
 
-store.dispatch(actions.startCentres());
-
 ReactDOM.render(
   <Provider store={store}>
     {router}

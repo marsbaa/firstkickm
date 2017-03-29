@@ -51,7 +51,7 @@ export var TrialRegister = React.createClass({
     var trial = {
       id: key,
       childName: document.getElementById("childName").value,
-      contactNumber: document.getElementById("contactNumber").value,
+      contact: document.getElementById("contactNumber").value,
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
@@ -167,7 +167,7 @@ export var TrialRegister = React.createClass({
               id="contactNumber"
               type="text"
               placeholder="Enter Mobile Number"
-              defaultValue={trial.contactNumber}/>
+              defaultValue={trial.contact}/>
             </FormGroup>
 
           </Col>

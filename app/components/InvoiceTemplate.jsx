@@ -53,7 +53,7 @@ var Root = React.createClass({
            }
          })
          html.push(
-           <Row key={'Term'+paymentDetail.childName} style={{lineHeight: '12px', margin: '5px 30px'}}>
+           <Row key={'Term'+paymentDetail.childName+termId} style={{lineHeight: '12px', margin: '5px 30px'}}>
              <Col xs={8} md={8}><b>Term {termId}</b> ({term.length} sessions)</Col>
              <Col xs={4} md={4} style={{textAlign: 'right'}}>${cost}</Col>
              <Col xs={8} md={8} style={{marginTop: '0px'}}>{datehtml}</Col>
@@ -61,6 +61,15 @@ var Root = React.createClass({
            </Row>
            )
        })
+       if (paymentDetail.registration) {
+
+          html.push(
+            <Row key={'registration'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>
+              <Col xs={8} md={8}><b>Registration Fee</b></Col>
+              <Col xs={4} md={4} style={{textAlign: 'right'}}>$80</Col>
+            </Row>
+            )
+        }
        if (paymentDetail.earlyBird) {
          html.push(
            <Row key={'early'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>

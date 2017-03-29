@@ -1,7 +1,6 @@
 module.exports = {
   sendSMS: function(msg) {
     var URL = process.env.SMS + msg
-    console.log(URL)
     $.ajax({
       url: URL,
       cors: true,
