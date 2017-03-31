@@ -10,9 +10,10 @@ var actions = require('actions');
 var {connect} = require('react-redux');
 var _ = require('lodash');
 
-export var CentreEdit = React.createClass({
-  getInitialState: function() {
-    return {
+class CentreEdit extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       errorID: null,
       errorName: null,
       errorMessageID : '',
@@ -22,31 +23,37 @@ export var CentreEdit = React.createClass({
       delete: '',
       type: '',
       classRow: 0
-    };
-  },
+    }
+    this.close = this.close.bind(this)
+    this.open = this.open.bind(this)
+    this.delete = this.delete.bind(this)
+    this.type = this.type.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.formSubmit = this.formSubmit.bind(this)
+  }
 
   close() {
     this.setState({ showModal: false });
-  },
+  }
 
   open() {
     this.setState({showModal: true});
-  },
+  }
 
   delete(key) {
     this.setState({delete: key});
-  },
+  }
 
   type(type) {
     this.setState({type: type});
-  },
+  }
 
   handleChange(e) {
     e.preventDefault();
     this.setState({
       logoURL: e.target.value
     });
-  },
+  }
 
   formSubmit(e) {
     e.preventDefault();
@@ -121,7 +128,7 @@ export var CentreEdit = React.createClass({
         browserHistory.push('/m/centres');
     }
 
-  },
+  }
 
 
   componentDidMount() {
@@ -139,9 +146,9 @@ export var CentreEdit = React.createClass({
     }
 
 
-  },
+  }
 
-  render: function () {
+  render() {
     var centreID = this.props.params.centreID;
     var centre = {key:'', id: '', name: '', logoURL: ''};
     var {centres} = this.props;
@@ -186,7 +193,7 @@ export var CentreEdit = React.createClass({
               id="logoURL"
               type="text"
               placeholder="Enter Logo URL"
-              defaultValue={centre.logoURL} onChange={this.handleChange}/>
+              defaultValue={centre.logoURL} onChange={this.handleChange.bind(this)}/>
             <Image src={this.state.logoURL} responsive/>
             </FormGroup>
           </Col>
@@ -215,7 +222,7 @@ export var CentreEdit = React.createClass({
 
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(CentreEdit);

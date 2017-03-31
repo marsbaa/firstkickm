@@ -2,16 +2,17 @@ import React from 'react';
 import {Tabs, Tab} from 'react-bootstrap'
 import MultipleDayPicker from 'MultipleDayPicker'
 
-export var TermTabs = React.createClass({
-  getInitialState: function() {
-    return {
+class TermTabs extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       key : 1
-    };
-  },
+    }
+  }
 
   handleSelect(key) {
     this.setState({key});
-  },
+  }
 
   TabContent(tabs) {
     var html = [];
@@ -23,15 +24,15 @@ export var TermTabs = React.createClass({
     );
    };
    return html;
- },
+ }
 
-  render: function () {
+  render() {
      return (
-       <Tabs defaultActiveKey={this.state.key} onSelect={this.handleSelect} id="tabsSelector">
+       <Tabs defaultActiveKey={this.state.key} onSelect={this.handleSelect.bind(this)} id="tabsSelector">
          {this.TabContent(this.props.numOfTerms)}
        </Tabs>
      );
    }
-});
+}
 
 export default (TermTabs);

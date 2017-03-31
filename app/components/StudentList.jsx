@@ -14,29 +14,17 @@ class StudentList extends React.Component {
 
 
   componentDidMount () {
-    var {dispatch, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-    dispatch(actions.updateNavTitle("/m/students", centre.name));
+    var {dispatch, selection} = this.props;
+    dispatch(actions.updateNavTitle("/m/students", selection.name));
   }
 
 
 
   render() {
-    var {students, searchText, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
+    var {students, searchText, selection} = this.props;
 
     var html=[];
-    var filteredStudents = StudentsFilter.filter(students, selection, searchText);
+    var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
       Object.keys(groupTime).forEach((timeSlot)=> {

@@ -31,12 +31,12 @@ class StudentAdd extends React.Component {
 
   componentWillMount() {
     var {selection} = this.props;
-    this.setState({selectedCentre: selection});
+    this.setState({selectedCentre: selection.id});
   }
 
   onFormSubmit(e) {
     e.preventDefault();
-    var {dispatch, centres} = this.props;
+    var {dispatch} = this.props;
     var selected = document.getElementById("timeSlotSelect");
     var classTimeDay = selected.options[selected.selectedIndex].text;
     var a = _.split(classTimeDay, '(');
@@ -80,14 +80,9 @@ class StudentAdd extends React.Component {
     //Class TimeSlots
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
-    Object.keys(centre.classes).forEach((classID) => {
-      var cla = centre.classes[classID];
+
+    Object.keys(selection.classes).forEach((classID) => {
+      var cla = selection.classes[classID];
       if (cla.ageGroup === this.state.ageGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+cla.day+")";
@@ -129,7 +124,7 @@ class StudentAdd extends React.Component {
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id="centreSelect" componentClass="select" placeholder="select"
-                defaultValue={selection}
+                defaultValue={selection.id}
                 onChange={this.centreSelect.bind(this)}>
                 {centreOptions}
               </FormControl>

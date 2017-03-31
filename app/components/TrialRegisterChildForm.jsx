@@ -67,7 +67,6 @@ class TrialRegisterChildForm extends React.Component{
     var init = classTimeDay.indexOf('(')
     var fin = classTimeDay.indexOf(')')
     var classDay = classTimeDay.substr(init+1, fin-init-1)
-    console.log(classDay)
     var trial = {
       id: id,
       childName: document.getElementById("childName"+id).value,

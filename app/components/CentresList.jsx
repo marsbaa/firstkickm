@@ -9,7 +9,7 @@ import CentresFilter from 'CentresFilter'
 var actions = require('actions');
 import _ from 'lodash'
 
-export var CentresList = React.createClass({
+class CentresList extends React.Component{
 
 
   renderCentre() {
@@ -21,14 +21,14 @@ export var CentresList = React.createClass({
       html.push(<Centre key={centre.id} c={centre} />);
     });
     return html;
-  },
+  }
 
   componentDidMount () {
     var {dispatch} = this.props;
     dispatch(actions.updateNavTitle("/m/centres", "Centres Profile"));
-  },
+  }
 
-  render: function () {
+  render() {
 
    return (
      <div>
@@ -44,7 +44,7 @@ export var CentresList = React.createClass({
     </div>
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(CentresList);

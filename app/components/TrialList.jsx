@@ -10,17 +10,14 @@ import moment from 'moment'
 
 class TrialList extends React.Component{
   componentDidMount () {
-    var {dispatch, selection, ageGroup} = this.props;
-    if (_.isEmpty(ageGroup)) {
-      dispatch(actions.startAgeGroup());
-    }
+    var {dispatch, selection} = this.props;
     var link = "/m/trials";
-    dispatch(actions.updateNavTitle(link, "Trial List"));
+    dispatch(actions.updateNavTitle(link, selection.name+" Trial List"));
   }
 
   render () {
     var {trials, searchText, selection} = this.props;
-    var filteredTrials = TrialsFilter.filter(trials, selection, searchText);
+    var filteredTrials = TrialsFilter.filter(trials, selection.id, searchText);
     var html=[];
 
     if (filteredTrials.length !== 0) {

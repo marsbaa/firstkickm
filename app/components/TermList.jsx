@@ -7,15 +7,15 @@ import {innerbtn} from 'styles.css'
 import TermDatesSelector from 'TermDatesSelector'
 
 
-export var TermList = React.createClass({
+class TermList extends React.Component{
   openModal(e, id) {
     e.preventDefault();
     this.props.openModal();
     this.props.handleDeleteKey(id);
     this.props.handleDeleteType("term");
-  },
+  }
 
-  render: function () {
+  render() {
      var {centres, calendars} = this.props;
      var centreKey = this.props.centreKey;
      var html = [];
@@ -61,7 +61,7 @@ export var TermList = React.createClass({
     </div>
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(TermList);

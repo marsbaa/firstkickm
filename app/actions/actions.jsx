@@ -522,10 +522,10 @@ export var updateCentre = (centre) => {
   };
 };
 
-export var updateSelectedCentre = (id) => {
+export var updateSelectedCentre = (centre) => {
   return {
     type: 'UPDATE_SELECTED_CENTRE',
-    id
+    centre
   };
 };
 
@@ -815,27 +815,29 @@ export var startPayments = () => {
   var paymentRef = firebaseRef.child('payments');
   paymentRef.once('value').then((snapshot) => {
    var payments = snapshot.val();
-   var parsedPayments = [];
+   if (payments !== null) {
+     var parsedPayments = [];
 
-   Object.keys(payments).forEach((paymentId)=> {
-     var payment = payments[paymentId]
-     parsedPayments.push({
-       key: paymentId,
-       ageGroup: payment.ageGroup,
-       centreId: payment.centreId,
-       childName: payment.childName,
-       childKey: payment.childKey,
-       date: payment.date,
-       earlyBird: payment.earlyBird,
-       email: payment.email,
-       paymentMethod: payment.paymentMethod,
-       siblingDiscount: payment.siblingDiscount,
-       chequeNumber: payment.chequeNumber === null ? '':payment.chequeNumber,
-       termsPaid: payment.termsPaid,
-       total: payment.total
+     Object.keys(payments).forEach((paymentId)=> {
+       var payment = payments[paymentId]
+       parsedPayments.push({
+         key: paymentId,
+         ageGroup: payment.ageGroup,
+         centreId: payment.centreId,
+         childName: payment.childName,
+         childKey: payment.childKey,
+         date: payment.date,
+         earlyBird: payment.earlyBird,
+         email: payment.email,
+         paymentMethod: payment.paymentMethod,
+         siblingDiscount: payment.siblingDiscount,
+         chequeNumber: payment.chequeNumber === null ? '':payment.chequeNumber,
+         termsPaid: payment.termsPaid,
+         total: payment.total
+       });
      });
-   });
-   dispatch(addPayments(parsedPayments));
+     dispatch(addPayments(parsedPayments));
+   }
  });
 };
 };

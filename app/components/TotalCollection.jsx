@@ -16,14 +16,8 @@ class TotalCollection extends React.Component {
   }
 
   componentWillMount(){
-    var {dispatch, centres, payments, selection} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-    dispatch(actions.updateNavTitle("/m/payment", centre.name+" Payment"));
+    var {dispatch, payments, selection} = this.props;
+    dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment"));
     if (_.isEmpty(payments)) {
       dispatch(actions.startPayments())
     }
@@ -68,7 +62,7 @@ class TotalCollection extends React.Component {
         return moment(p.date).format('HH') > 12
       })
     }
-    filteredPayments = _.filter(filteredPayments, ['centreId', selection])
+    filteredPayments = _.filter(filteredPayments, ['centreId', selection.id])
     if (_.size(filteredPayments) !== 0) {
       var cashPayments = _.filter(filteredPayments, ['paymentMethod', 'Cash'])
       if (_.size(cashPayments) !== 0) {

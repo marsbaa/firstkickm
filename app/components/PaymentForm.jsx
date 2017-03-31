@@ -212,16 +212,7 @@ class PaymentForm extends React.Component {
 }
 
   componentWillMount() {
-    var {students, calendars, centres, selection} = this.props;
-
-
-    var centre;
-    centres.map((c)=> {
-      if (c.id === selection) {
-        centre = c;
-      }
-    })
-
+    var {students, calendars, selection} = this.props
     //Initiate Payer
     var studentId = this.props.params.studentId;
     var contact = null;
@@ -247,8 +238,8 @@ class PaymentForm extends React.Component {
     var termKeys = [];
     payer.map((child, id) => {
       var termKey;
-      Object.keys(centre.classes).forEach((classId) => {
-          var cla = centre.classes[classId];
+      Object.keys(selection.classes).forEach((classId) => {
+          var cla = selection.classes[classId];
           if (cla.day.toLowerCase() === child.currentClassDay.toLowerCase()) {
             var classTime = cla.startTime +" - "+cla.endTime;
             if (classTime === child.currentClassTime) {
@@ -284,7 +275,7 @@ class PaymentForm extends React.Component {
 
 }
   render() {
-    var {calendars, selection, centres} = this.props;
+    var {calendars, selection} = this.props;
     //Render Tabs
     var tabs = [];
     var fees = [];

@@ -117,11 +117,6 @@ export var ClassEdit = React.createClass({
     browserHistory.push('/m/centres/'+ centreID);
   },
 
-  componentWillMount() {
-    var {dispatch} = this.props;
-    dispatch(actions.startAgeGroup());
-  },
-
   componentWillUnmount() {
     var {dispatch} = this.props;
     dispatch(actions.resetAgeGroup());

@@ -11,11 +11,17 @@ class MainMenu extends React.Component {
   handleSelect(e) {
     var {dispatch, centres} = this.props;
     e.preventDefault();
-    dispatch(actions.updateSelectedCentre(e.target.value));
+    var centre;
+    centres.map((c)=> {
+      if (e.target.value === c.id) {
+        centre = c
+      }
+    })
+    dispatch(actions.updateSelectedCentre(centre));
   }
 
     componentDidMount() {
-      var {dispatch, selection} = this.props;
+      var {dispatch} = this.props;
       dispatch(actions.updateNavTitle("/m", "Dashboard"));
 
     }
@@ -47,19 +53,19 @@ class MainMenu extends React.Component {
           var menuHTML = []
           if (user.assignedRoles === 'Administrator') {
             menuHTML.push(<div key="adminmenu">
-            <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection === '0' ? true : false}>Trials</button></Link>
-            <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection === '0' ? true : false}>Student Attendance</button></Link>
-            <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection === '0' ? true : false}>Make Payment</button></Link>
-            <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection === '0' ? true : false}>Total Collection (Today)</button></Link>
-            <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+            <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection.id === '0' ? true : false}>Trials</button></Link>
+            <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection.id === '0' ? true : false}>Student Attendance</button></Link>
+            <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Make Payment</button></Link>
+            <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
+            <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
             </div>)
           }
           else if(user.assignedRoles === 'Head Coach') {
               menuHTML.push(
                 <div key="headcoachmenu">
-                  <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+                  <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
                 <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
-                  disabled={selection === '0' ? true : false}>Coach Scheduling</button></Link>
+                  disabled={selection.id === '0' ? true : false}>Coach Scheduling</button></Link>
                 </div>
 
             )
@@ -67,15 +73,15 @@ class MainMenu extends React.Component {
           else if (user.assignedRoles === 'Manager') {
             menuHTML.push(
               <div key="managermenu">
-                <Link to="m/charts" ><button className="mainbtn" id="charts">Charts</button></Link>
-                <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection === '0' ? true : false}>Trials</button></Link>
-                <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection === '0' ? true : false}>Student Attendance</button></Link>
-                <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection === '0' ? true : false}>Make Payment</button></Link>
-                <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection === '0' ? true : false}>Total Collection (Today)</button></Link>
-                <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection === '0' ? true : false}>Coach Attendance</button></Link>
+                <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
+                <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection.id === '0' ? true : false}>Trials</button></Link>
+                <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection.id === '0' ? true : false}>Student Attendance</button></Link>
+                <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Make Payment</button></Link>
+                <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
+                <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
                   <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
-                    disabled={selection === '0' ? true : false}>Coach Scheduling</button></Link>
-                  <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection === '0' ? true : false}>Students Profile</button></Link>
+                    disabled={selection.id === '0' ? true : false}>Coach Scheduling</button></Link>
+                  <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>
                   <Link to="m/inventory" ><button className="mainbtn" id="inventory">Inventory </button></Link>
 
@@ -97,7 +103,7 @@ class MainMenu extends React.Component {
                     <ControlLabel>Select Centre</ControlLabel>
                     <FormControl
                       id="centreSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}
-                      defaultValue={selection}>
+                      defaultValue={selection.id}>
                       {centreOptions}
                     </FormControl>
                   </FormGroup>

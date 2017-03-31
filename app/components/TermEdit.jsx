@@ -6,18 +6,20 @@ var {connect} = require('react-redux');
 import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
 
-export var TermEdit = React.createClass({
-  getInitialState: function() {
-    return {
+class TermEdit extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       errorTermName: null,
       errorMessageTermName: ""
-    };
-  },
+    }
+  }
+
   goBack(e) {
     e.preventDefault();
     var centreID = this.props.params.centreID;
     browserHistory.push('/m/centres/'+ centreID);
-  },
+  }
 
   saveTerm(e, centreKey) {
     e.preventDefault();
@@ -44,12 +46,12 @@ export var TermEdit = React.createClass({
       }
       browserHistory.push('/m/centres/'+ centreID);
     }
-  },
+  }
 
   componentWillUnmount(){
     var {dispatch} = this.props;
     dispatch(actions.resetTerms());
-  },
+  }
 
   componentWillMount() {
     var {dispatch} = this.props;
@@ -60,11 +62,11 @@ export var TermEdit = React.createClass({
         var terms = calendars[calendarKey].terms;
         dispatch(actions.startTerms(terms));
       }
-  },
+  }
 
 
 
-  render: function () {
+  render() {
     var centreID = this.props.params.centreID;
     var calendarKey = this.props.params.calendarKey;
     var {centres, calendars} = this.props;
@@ -101,7 +103,7 @@ export var TermEdit = React.createClass({
                placeholder="Enter Name of Term"/>
              <HelpBlock>{this.state.errorMessageTermName}</HelpBlock>
              </FormGroup>
-             <TermDatesSelector terms={term.term} mode={calendarKey} numOfTerms={numOfTerms}/>
+             <TermDatesSelector mode={calendarKey} numOfTerms={numOfTerms}/>
              <Button onClick={this.goBack}>Cancel</Button>
              <Button onClick={(e) => this.saveTerm(e, centre.key)}>Save</Button>
           </Col>
@@ -109,7 +111,7 @@ export var TermEdit = React.createClass({
       </Grid>
      );
    }
-});
+}
 
 export default connect((state) => {return state;
 })(TermEdit);

@@ -15,6 +15,7 @@ import CentreEdit from 'CentreEdit'
 import CentresList from 'CentresList'
 import TermEdit from 'TermEdit'
 import ClassEdit from 'ClassEdit'
+
 //Components for Trials
 import TrialsApp from 'TrialsApp'
 import TrialList from 'TrialList'

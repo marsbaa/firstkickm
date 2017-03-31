@@ -43,7 +43,6 @@ class TrialRegister extends React.Component{
 
   tcCheck(e) {
     e.preventDefault()
-    console.log(this.state.value)
     if (this.state.value === false) {
       return (
         <div>
@@ -63,19 +62,14 @@ class TrialRegister extends React.Component{
   }
 
   componentWillMount() {
-    var {dispatch, trials, centres, selection, ageGroup} = this.props
+    var {dispatch, trials, selection, ageGroup} = this.props
     var key = this.props.params.trialId;
     var trial = _.find(trials, {id: key});
     var payers = _.filter(trials, {'parentId': trial.parentId})
     this.setState({selectedCentre: trial.venueId});
     this.setState({trialDate: trial.dateOfTrial});
     this.setState({payers})
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
+
     var getAge = (dob) => {
     var now = moment();
     var dateofbirth = moment(JSON.stringify(dob), "YYYY-MM-DD");
@@ -91,15 +85,15 @@ class TrialRegister extends React.Component{
           childAgeGroup = group.name;
         }
       });
-      Object.keys(centre.classes).forEach((classID) => {
-        var cla = centre.classes[classID];
+      Object.keys(selection.classes).forEach((classID) => {
+        var cla = selection.classes[classID];
         if (cla.ageGroup === childAgeGroup) {
           var classTime = cla.startTime + " - " + cla.endTime;
           var classTimeDay = classTime+ " ("+cla.day+")";
           payer.currentClassDay = cla.day
           payer.currentClassTime = classTime
           payer.ageGroup = childAgeGroup
-          payer.centre = centre.name
+          payer.centre = selection.name
         }
       });
     })

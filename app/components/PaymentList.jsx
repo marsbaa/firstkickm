@@ -14,14 +14,8 @@ class PaymentList extends React.Component {
 
 
   componentDidMount () {
-    var {dispatch, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-    dispatch(actions.updateNavTitle("/m/payment", centre.name+" Payment"));
+    var {dispatch, selection} = this.props;
+    dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment"));
   }
 
 
@@ -29,8 +23,8 @@ class PaymentList extends React.Component {
   render() {
     var {students, searchText, selection} = this.props;
     var html=[];
-    var filteredStudents = StudentsFilter.filter(students, selection, searchText);
-    var actualStudents = StudentsFilter.filter(students, selection, "");
+    var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    var actualStudents = StudentsFilter.filter(students, selection.id, "");
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
       var actualGroupTime = _.groupBy(actualStudents, 'currentClassTime')

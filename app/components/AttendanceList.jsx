@@ -14,31 +14,18 @@ export var AttendanceList = React.createClass({
 
 
   componentDidMount () {
-    var {dispatch, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-    dispatch(actions.updateNavTitle("/m/attendance", centre.name+" Attendance"));
+    var {dispatch, selection} = this.props;
+    dispatch(actions.updateNavTitle("/m/attendance", selection.name+" Attendance"));
   },
 
 
 
   render: function () {
-    var {students, searchText, selection, centres, calendars} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-
+    var {students, searchText, selection, calendars} = this.props;
     var today=-1;
     var html=[];
     calendars.map((calendar) => {
-      if (calendar.centreKey === centre.key) {
+      if (calendar.centreKey === selection.key) {
         calendar.terms.map((term) => {
           term.map ((date)=> {
             if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
@@ -50,7 +37,7 @@ export var AttendanceList = React.createClass({
     });
 
     if (today !== -1) {
-      var filteredStudents = StudentsFilter.filter(students, selection, searchText);
+      var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
       if (filteredStudents.length !== 0) {
         var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
         Object.keys(groupTime).forEach((timeSlot)=> {

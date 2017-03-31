@@ -2,9 +2,9 @@ import React from 'react';
 var actions = require('actions');
 var {connect} = require('react-redux');
 
-export var CentresProfile = React.createClass({
+class CentresProfile extends React.Component{
 
-  render: function () {
+  render() {
 
    return (
      <div>
@@ -13,6 +13,6 @@ export var CentresProfile = React.createClass({
 
    );
  }
- });
+ }
 
  export default connect ()(CentresProfile);

@@ -227,17 +227,9 @@ componentDidMount () {
 }
 
   componentWillMount() {
-    var {calendars, centres, selection, register} = this.props;
-    var payer = register;
-
-    var centre;
-    centres.map((c)=> {
-      if (c.id === selection) {
-        centre = c;
-      }
-    })
-
+    var {calendars, selection, register} = this.props;
     //Initiate Payer
+    var payer = register;
     this.setState({payer: register});
 
     //Initiate Selectable Term Dates
@@ -246,8 +238,8 @@ componentDidMount () {
     var termKeys = [];
     payer.map((child, id) => {
       var termKey;
-      Object.keys(centre.classes).forEach((classId) => {
-          var cla = centre.classes[classId];
+      Object.keys(selection.classes).forEach((classId) => {
+          var cla = selection.classes[classId];
           var classTimeDay = cla.startTime +" - "+cla.endTime+" ("+cla.day.toLowerCase()+")";
           if (classTimeDay === (child.currentClassTime+" ("+child.currentClassDay.toLowerCase()+")")) {
               termKey = cla.termKey
@@ -280,7 +272,7 @@ componentDidMount () {
 
 }
   render() {
-    var {calendars, selection, centres} = this.props;
+    var {calendars} = this.props;
     //Render Tabs
     var tabs = [];
     var fees = [];

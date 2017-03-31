@@ -402,10 +402,12 @@ export var coachScheduleReducer = (state = [], action) => {
 }
 };
 
-export var selectionReducer = (state='0', action) => {
+export var selectionReducer = (state={id: '0'}, action) => {
   switch (action.type) {
     case 'UPDATE_SELECTED_CENTRE':
-      return action.id;
+      return {
+        ...action.centre
+      }
     default:
       return state;
   }

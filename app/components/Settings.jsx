@@ -2,15 +2,9 @@ import React from 'react';
 var actions = require('actions');
 var {connect} = require('react-redux');
 
-export var Settings = React.createClass({
-  componentDidMount() {
-    var {dispatch, ageGroup} = this.props;
-    if (_.isEmpty(ageGroup)) {
-      dispatch(actions.startAgeGroup());
-    }
-  },
+class Settings extends React.Component{
 
-  render: function () {
+  render() {
 
    return (
      <div>
@@ -19,7 +13,7 @@ export var Settings = React.createClass({
 
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(Settings);

@@ -30,7 +30,7 @@ export var TrialAdd = React.createClass({
 
   componentWillMount() {
     var {selection} = this.props;
-    this.setState({selectedCentre: selection});
+    this.setState({selectedCentre: selection.id});
   },
 
 
