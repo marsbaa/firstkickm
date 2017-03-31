@@ -9,7 +9,7 @@ class MainMenu extends React.Component {
 
 
   handleSelect(e) {
-    var {dispatch} = this.props;
+    var {dispatch, centres} = this.props;
     e.preventDefault();
     dispatch(actions.updateSelectedCentre(e.target.value));
   }
@@ -67,6 +67,7 @@ class MainMenu extends React.Component {
           else if (user.assignedRoles === 'Manager') {
             menuHTML.push(
               <div key="managermenu">
+                <Link to="m/charts" ><button className="mainbtn" id="charts">Charts</button></Link>
                 <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection === '0' ? true : false}>Trials</button></Link>
                 <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection === '0' ? true : false}>Student Attendance</button></Link>
                 <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection === '0' ? true : false}>Make Payment</button></Link>
@@ -76,6 +77,8 @@ class MainMenu extends React.Component {
                     disabled={selection === '0' ? true : false}>Coach Scheduling</button></Link>
                   <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>
+                  <Link to="m/inventory" ><button className="mainbtn" id="inventory">Inventory </button></Link>
+
               </div>
 
             )

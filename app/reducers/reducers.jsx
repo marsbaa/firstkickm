@@ -466,6 +466,18 @@ export var ageGroupReducer = (state=[], action) => {
   }
 }
 
+export var inventoryReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'ADD_INVENTORIES':
+      return [
+        ...state,
+        ...action.inventories
+      ];
+    default:
+      return state;
+  }
+}
+
 
 export var registrationReducer = (state=[], action) => {
   switch(action.type) {

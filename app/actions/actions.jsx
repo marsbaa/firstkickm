@@ -847,6 +847,41 @@ export var addPayments = (payments) => {
  };
 };
 
+//Inventory Actions
+export var startInventory = () => {
+  return (dispatch) => {
+  var inventoryRef = firebaseRef.child('inventory');
+  inventoryRef.once('value').then((snapshot) => {
+   var inventory= snapshot.val();
+   if (inventory !== null) {
+     var parsedInventory = [];
+
+     Object.keys(inventory).forEach((itemId)=> {
+       parsedInventory.push({
+         key: itemId,
+         name: inventory[itemId].name,
+         qty: inventory[itemId].qty,
+         size: inventory[itemId].size,
+         minQty: inventory[itemId].minQty,
+         costPrice : inventory[itemId].costPrice,
+         sellingPrice: inventory[itemId].sellingPrice
+       });
+     });
+     dispatch(addInventories(parsedInventory));
+   }
+  });
+
+  }
+}
+
+export var addInventories = (inventories) => {
+  return {
+    type: 'ADD_INVENTORIES',
+    inventories
+  };
+};
+
+
 
 //Registration Actions
 export var addRegister = (payers) => {

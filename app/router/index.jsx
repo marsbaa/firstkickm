@@ -54,6 +54,14 @@ import StudentAdd from 'StudentAdd'
 //Total collection
 import TotalCollection from 'TotalCollection'
 
+//Inventory
+import InventoryApp from 'InventoryApp'
+import InventoryList from 'InventoryList'
+
+//Charts
+import ChartsApp from 'ChartsApp'
+import ChartsDisplay from 'ChartsDisplay'
+
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
     replace('/m');
@@ -112,6 +120,12 @@ export default (
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>
             <Route path=":coachId" component={CoachEdit} />
+          </Route>
+          <Route path="inventory" component={InventoryApp}>
+            <IndexRoute component={InventoryList} />
+          </Route>
+          <Route path="charts" component={ChartsApp}>
+            <IndexRoute component={ChartsDisplay}/>
           </Route>
           <Route path="settings" component={Settings}>
             <IndexRoute component={SettingsList}/>

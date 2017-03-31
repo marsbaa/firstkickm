@@ -10,7 +10,6 @@ import Search from 'Search'
 
 class UserList extends React.Component{
 
-
   componentDidMount () {
     var {dispatch} = this.props;
     dispatch(actions.updateNavTitle("/m/users", "Users Profile"));
