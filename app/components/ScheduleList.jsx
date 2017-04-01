@@ -42,12 +42,17 @@ class ScheduleList extends React.Component{
       this.setState({coachOptions});
   }
 
-  onUpdateList(value) {
-    var coachOptions = [];
-    if (value.length !== 0) {
+  onUpdateList(value, previousValue) {
+    var coachOptions = this.state.coachOptions
+    if (value.length > previousValue.length){
       value.map((coach) => {
-        coachOptions = _.pull(this.state.coachOptions, coach)
+          _.pull(coachOptions, coach)
       })
+    }
+    else if (value.length < previousValue.length) {
+      var deselected = _.differenceWith(previousValue, value, _.isEqual)
+      coachOptions.push(deselected[0])
+      coachOptions = _.sortBy(coachOptions, ['label'])
     }
     this.setState({coachOptions});
   }

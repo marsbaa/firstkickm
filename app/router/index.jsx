@@ -24,6 +24,11 @@ import TrialAdd from 'TrialAdd'
 import TrialRegister from 'TrialRegister'
 import TrialPaymentForm from 'TrialPaymentForm'
 
+//JerseyIssue
+import JerseyIssue from 'JerseyIssue'
+import JerseyIssueList from 'JerseyIssueList'
+import JerseyIssueForm from 'JerseyIssueForm'
+
 import PaymentApp from 'PaymentApp'
 import PaymentList from 'PaymentList'
 import PaymentForm from 'PaymentForm'
@@ -121,6 +126,10 @@ export default (
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>
             <Route path=":coachId" component={CoachEdit} />
+          </Route>
+          <Route path="jersey" component={JerseyIssue}>
+            <IndexRoute component={JerseyIssueList} />
+            <Route path=":paymentKey" component={JerseyIssueForm} />
           </Route>
           <Route path="inventory" component={InventoryApp}>
             <IndexRoute component={InventoryList} />

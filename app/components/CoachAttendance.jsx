@@ -24,32 +24,19 @@ class CoachAttendance extends React.Component{
 
 
   componentDidMount () {
-    var {dispatch, selection, centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-    dispatch(actions.updateNavTitle("/m/coachattendance", centre.name+" Coach Attendance"));
+    var {dispatch, selection} = this.props;
+    dispatch(actions.updateNavTitle("/m/coachattendance", selection.name+" Coach Attendance"));
   }
 
 
 
   render() {
-    var {coaches, searchText, selection, centres, calendars, coachSchedule} = this.props;
-    var centre;
+    var {coaches, searchText, selection, calendars, coachSchedule} = this.props;
     var filteredCoaches = CoachesFilter.filter(coaches, searchText)
-    centres.map((c) => {
-      if(c.id === selection) {
-        centre = c;
-      }
-    });
-
     var today=-1;
     var html=[];
     calendars.map((calendar) => {
-      if (calendar.centreKey === centre.key) {
+      if (calendar.centreKey === selection.key) {
         calendar.terms.map((term) => {
           term.map ((date)=> {
             if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
@@ -60,7 +47,7 @@ class CoachAttendance extends React.Component{
       }
     });
     if (today != -1) {
-      var classes = centre.classes
+      var classes = selection.classes
       Object.keys(classes).map((classId)=> {
         var {ageGroup, day, endTime, startTime} = classes[classId]
         html.push(<Row key={classId} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>

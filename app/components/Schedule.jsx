@@ -16,13 +16,26 @@ export var Schedule = React.createClass({
     };
   },
   handleSelectChange (value) {
-      var {dispatch} = this.props;
+      var {dispatch, coaches} = this.props;
       var date = this.props.date;
       var classKey = this.props.classKey;
-      dispatch(actions.toggleSchedule(classKey, date, value));
-      this.props.onUpdateList(value);
-  		this.setState({ value });
-
+      var attended = []
+      Object.keys(value).map((coachId) => {
+         var index = _.findIndex(coaches, {key : value[coachId].value});
+         if (index !== -1) {
+           var coach = coaches[index]
+           attended.push({
+             name: coach.name,
+             coachKey : coach.key,
+             paymentRate: coach.paymentRate
+           })
+         }
+      })
+      dispatch(actions.toggleSchedule(classKey, date, attended));
+      this.props.onUpdateList(value, this.state.value);
+      this.setState((prevState) => {
+          return {previousValue: prevState.value, value};
+      });
   	},
 
   componentWillMount(){

@@ -191,7 +191,8 @@ class TrialPaymentForm extends React.Component {
             termsPaid,
             paymentMethod: this.state.form,
             email: this.state.email,
-            registration : true
+            registration : true,
+            jerseyIssued : false
           }
         }
         else if (this.state.form === "Cheque") {
@@ -208,7 +209,8 @@ class TrialPaymentForm extends React.Component {
               paymentMethod: this.state.form,
               chequeNumber: document.getElementById('chequeNumber').value,
               email: this.state.email,
-              registration: true
+              registration: true,
+              jerseyIssued: false
             }
           }
         dispatch(actions.addPayment(paymentDetail))

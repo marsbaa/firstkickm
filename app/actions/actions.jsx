@@ -833,7 +833,8 @@ export var startPayments = () => {
          siblingDiscount: payment.siblingDiscount,
          chequeNumber: payment.chequeNumber === null ? '':payment.chequeNumber,
          termsPaid: payment.termsPaid,
-         total: payment.total
+         total: payment.total,
+         jerseyIssued : payment.jerseyIssued
        });
      });
      dispatch(addPayments(parsedPayments));
