@@ -14,16 +14,10 @@ class ScheduleList extends React.Component{
   }
 
   componentWillMount() {
-    var {coaches, centres, selection, coachSchedule} = this.props;
+    var {coaches, selection, coachSchedule} = this.props;
     var calendarKey = this.props.calendarKey;
     var date = this.props.date;
-    var centre;
-    centres.map((c) => {
-      if (c.id === selection) {
-        centre = c;
-      }
-    })
-    var classes = centre.classes;
+    var classes = selection.classes;
     var html = [];
     var coachOptions = [];
     coaches.map((coach) => {
@@ -59,16 +53,10 @@ class ScheduleList extends React.Component{
   }
 
   render() {
-    var {centres, selection, coachSchedule} = this.props;
+    var {selection, coachSchedule} = this.props;
     var calendarKey = this.props.calendarKey;
     var date = this.props.date;
-    var centre;
-    centres.map((c) => {
-      if (c.id === selection) {
-        centre = c;
-      }
-    })
-    var classes = centre.classes;
+    var classes = selection.classes;
     var html = [];
 
     Object.keys(classes).forEach((classId) => {

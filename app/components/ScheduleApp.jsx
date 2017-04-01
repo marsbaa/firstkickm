@@ -20,17 +20,11 @@ class ScheduleApp extends React.Component {
   }
 
   render() {
-    var {selection, centres, calendars} = this.props;
-    var centreKey;
-    centres.map((c) => {
-      if(c.id === selection) {
-        centreKey = c.key;
-      }
-    });
+    var {selection, calendars} = this.props;
     var termDates = [];
     var count=0;
     calendars.map((calendar) => {
-      if (calendar.centreKey === centreKey) {
+      if (calendar.centreKey === selection.key) {
         calendar.terms.map((term, termID) => {
           term.map((date, dateID) => {
             if (moment(date).isAfter()) {
