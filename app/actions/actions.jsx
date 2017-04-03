@@ -820,22 +820,42 @@ export var startPayments = () => {
 
      Object.keys(payments).forEach((paymentId)=> {
        var payment = payments[paymentId]
-       parsedPayments.push({
-         key: paymentId,
-         ageGroup: payment.ageGroup,
-         centreId: payment.centreId,
-         childName: payment.childName,
-         childKey: payment.childKey,
-         date: payment.date,
-         earlyBird: payment.earlyBird,
-         email: payment.email,
-         paymentMethod: payment.paymentMethod,
-         siblingDiscount: payment.siblingDiscount,
-         chequeNumber: payment.chequeNumber === null ? '':payment.chequeNumber,
-         termsPaid: payment.termsPaid,
-         total: payment.total,
-         jerseyIssued : payment.jerseyIssued
-       });
+       if (payment.paymentMethod === 'Cash') {
+         parsedPayments.push({
+           key: paymentId,
+           ageGroup: payment.ageGroup,
+           centreId: payment.centreId,
+           childName: payment.childName,
+           childKey: payment.childKey,
+           date: payment.date,
+           earlyBird: payment.earlyBird,
+           email: payment.email,
+           paymentMethod: payment.paymentMethod,
+           siblingDiscount: payment.siblingDiscount,
+           termsPaid: payment.termsPaid,
+           total: payment.total,
+           jerseyIssued : payment.jerseyIssued
+         });
+       }
+       else if (payment.paymentMethod === 'Cheque'){
+         parsedPayments.push({
+           key: paymentId,
+           ageGroup: payment.ageGroup,
+           centreId: payment.centreId,
+           childName: payment.childName,
+           childKey: payment.childKey,
+           date: payment.date,
+           earlyBird: payment.earlyBird,
+           email: payment.email,
+           paymentMethod: payment.paymentMethod,
+           siblingDiscount: payment.siblingDiscount,
+           chequeNumber: payment.chequeNumber === null || payment.chequeNumber === undefined ? '':payment.chequeNumber,
+           termsPaid: payment.termsPaid,
+           total: payment.total,
+           jerseyIssued : payment.jerseyIssued
+         });
+       }
+
      });
      dispatch(addPayments(parsedPayments));
    }
@@ -849,6 +869,16 @@ export var addPayments = (payments) => {
    payments
  };
 };
+
+export var issueJersey = (payment) => {
+  var updates={};
+  updates['/payments/'+ payment.key] = payment
+  firebase.database().ref().update(updates);
+  return {
+    type: 'ISSUE_JERSEY',
+    payment
+  };
+}
 
 //Inventory Actions
 export var startInventory = () => {

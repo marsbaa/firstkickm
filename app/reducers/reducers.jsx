@@ -123,28 +123,27 @@ export var paymentReducer = (state = [], action) => {
       return [
         ...state,
         {
-          key: payment.key,
-          centreId: payment.centreId,
-          ageGroup: payment.ageGroup,
-          childName: payment.childName,
-          childKey: payment.childKey,
-          date: payment.date,
-          total: payment.total,
-          termsPaid: payment.termsPaid,
-          siblingDiscount: payment.siblingDiscount,
-          earlyBird: payment.earlyBird,
-          paymentMethod: payment.paymentMethod,
-          chequeNumber: payment.chequeNumber !== null ? payment.chequeNumber:'',
-          email: payment.email
+          ...payment
         }
       ];
     case 'ADD_PAYMENTS':
       return [
         ...action.payments
       ]
-      default:
-        return state;
-      }
+    case 'ISSUE_JERSEY':
+      return state.map((payment)=> {
+        if (payment.key === action.payment.key) {
+          return {
+            ...action.payment
+          }
+        }
+        else {
+          return payment
+        }
+      })
+    default:
+      return state;
+    }
 }
 
 export var studentReducer = (state = [], action) => {

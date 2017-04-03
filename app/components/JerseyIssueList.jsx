@@ -19,8 +19,8 @@ class JerseyIssueList extends React.Component{
     var {payments} = this.props;
     var html = []
     var jerseyPending = _.filter(payments, {jerseyIssued: false});
-    jerseyPending.map((student, id) => {
-      html.push(<Jersey key={student.childKey} student={student} paymentKey={id} />)
+    jerseyPending.map((student) => {
+      html.push(<Jersey key={student.childKey} student={student} paymentKey={student.key} />)
     })
 
    return (

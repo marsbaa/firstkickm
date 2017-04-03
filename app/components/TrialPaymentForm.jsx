@@ -220,7 +220,7 @@ class TrialPaymentForm extends React.Component {
 
     var invoiceHTML = InvoiceTemplate.render(paymentDetails);
     SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
-    browserHistory.push('/m/payment');
+    browserHistory.push('/m/jersey/');
 
 }
 
