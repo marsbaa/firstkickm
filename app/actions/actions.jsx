@@ -219,6 +219,20 @@ export var updateTrial = (trial) => {
   };
 };
 
+export var updateTrialRegistration = (trialId) => {
+  var trialsRef = firebaseRef.child('trials/' + trialId);
+  trialsRef.once('value').then((snapshot) => {
+    var updates = snapshot.val()
+    updates.registered = true
+    updates.dateRegistered = moment().format('YYYY-MM-DD')
+    trialsRef.update(updates);
+  })
+  return {
+    type: 'UPDATE_TRIAL_REGISTRATION',
+    trialId
+  }
+}
+
 export var addTrial = (trial) => {
   var trialsRef = firebaseRef.child('trials');
   var newKey = trialsRef.push().key;

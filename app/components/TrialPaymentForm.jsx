@@ -108,6 +108,7 @@ class TrialPaymentForm extends React.Component {
     var paymentDetails = [];
     this.state.payer.map((student, id) => {
     if (student.joining) {
+      dispatch(actions.updateTrialRegistration(student.id))
       let response = dispatch(actions.addTrialStudent(student))
       if (response !== undefined) {
         console.log(response.student.key)

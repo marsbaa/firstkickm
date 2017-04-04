@@ -52,6 +52,7 @@ class PaymentDatesSelector extends React.Component {
   componentWillMount() {
     var {calendars} = this.props;
     var startDate = this.props.startDate;
+    var termDates = this.props.termDates;
     var termKey = this.props.termKey;
     var payerId = this.props.payerId;
     var selected = [];
@@ -62,7 +63,10 @@ class PaymentDatesSelector extends React.Component {
           var newTermDates = _.filter(term, (date) => {
             return moment(date) >= startDate
           });
-
+          newTermDates = _.filter(newTermDates, (date) => {
+            return _.findIndex(termDates, (d) => {
+              return moment(d).isSame(date)}) != -1
+            })
           if (newTermDates.length > 0 && count < 2) {
             selected[termId] = newTermDates;
             if (newTermDates.length > 4) {

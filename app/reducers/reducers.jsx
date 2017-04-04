@@ -97,6 +97,18 @@ export var trialsReducer = (state = [], action) => {
           return trial;
         }
       });
+    case 'UPDATE_TRIAL_REGISTRATION':
+      return state.map((trial) => {
+        if (trial.id === action.trialId) {
+          return {
+            ...trial,
+            registered : true,
+            dateRegistered : moment().format('YYYY-MM-DD')
+          };
+        } else {
+          return trial;
+        }
+      });
     case 'TOGGLE_TRIAL':
       return state.map((trial) => {
         if (trial.id === action.id) {
@@ -122,9 +134,7 @@ export var paymentReducer = (state = [], action) => {
       var payment = action.paymentDetails
       return [
         ...state,
-        {
-          ...payment
-        }
+        action.paymentDetails
       ];
     case 'ADD_PAYMENTS':
       return [
@@ -166,6 +176,45 @@ export var studentReducer = (state = [], action) => {
            ...action.student
          };
         }
+        else {
+          return student;
+        }
+      });
+    case 'ADD_STUDENT_PAYMENT':
+      return state.map((student) => {
+        if (student.key === action.paymentDetails.childKey) {
+          if (student.payments === undefined) {
+            return {
+             ...student,
+             payments : {
+               [action.key] : {
+                  date: action.paymentDetails.date,
+                  paymentKey: action.paymentDetails.key,
+                  termsPaid : action.paymentDetails.termsPaid,
+                  total : action.paymentDetails.total
+               }
+             }
+
+            }
+          }
+          else {
+            var payments = student.payments
+            return {
+             ...student,
+             payments : {
+               ...payments,
+               [action.key] : {
+                  date: action.paymentDetails.date,
+                  paymentKey: action.paymentDetails.key,
+                  termsPaid : action.paymentDetails.termsPaid,
+                  total : action.paymentDetails.total
+               }
+             }
+
+            }
+          }
+
+         }
         else {
           return student;
         }
