@@ -24,7 +24,7 @@ class Trial extends React.Component{
       registeredHTML.push(
         <Row key={id} style={{backgroundColor: '#d7d7d7', padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
           <Col xs={2} md={2}>
-            <Switch theme="rsbc-switch-button-flat-square" checked={attended.toString()} defaultChecked={attended} onChange={()=> {
+            <Switch checked={attended.toString()} onChange={()=> {
                 dispatch(actions.startToggleTrial(id));
               }} />
           </Col>
@@ -47,19 +47,16 @@ class Trial extends React.Component{
     else {
       registeredHTML.push(
         <Row key={id} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
-          <Col xs={2} md={2}>
-            <Switch theme="rsbc-switch-button-flat-square" name={id+"attended"} checked={attended.toString()} defaultChecked={attended} onChange={()=> {
-                dispatch(actions.startToggleTrial(id));
-              }} />
-          </Col>
-          <Col xs={6} md={6} >
+          <Col xs={7} md={7} onClick={()=> {
+              dispatch(actions.startToggleTrial(id));
+            }}>
             <div>
-                  <font className={trialClassName}>{truncatedChildName} </font><font className={gender}>({getAge(dateOfBirth)})</font>
+                  <input type="checkbox" checked={attended} name="attendSwitch" style={{marginRight: '5px'}} readOnly/><font className={trialClassName}>{truncatedChildName} </font><font className={gender}>({getAge(dateOfBirth)})</font>
             </div>
-            <div style={{fontSize: '10px', color: '#9a9a9a'}}>
+            <div style={{paddingLeft: '20px', fontSize: '10px', color: '#9a9a9a'}}>
               <Glyphicon style={{color: '#656565'}} glyph="envelope" /> {email.toLowerCase()}
             </div>
-            <div style={{fontSize: '10px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contact}
+            <div style={{paddingLeft: '20px', fontSize: '10px', color: '#9a9a9a'}}><Glyphicon style={{color: '#656565'}} glyph="phone" /> {contact}
             </div>
           </Col>
           <Col xs={5} md={5} style={{textAlign:'right'}}>
