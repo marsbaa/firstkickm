@@ -384,3 +384,34 @@
       margin-top: 1em;
     }
 }
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+  display: inline-block;
+  padding: 3px 12px;
+  margin: auto 5px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px;
+  background-color: #f5bb05;
+  color: white;
+}

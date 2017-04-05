@@ -64,6 +64,7 @@ export var CoachEdit = React.createClass({
     else {
       var {coaches} = this.props;
       coach = _.find(coaches, {key: coachId});
+      console.log(coach)
     }
   return (
     <Grid>
