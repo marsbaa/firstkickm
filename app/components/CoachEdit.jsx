@@ -1,13 +1,31 @@
 import React from 'react'
 var {connect} = require('react-redux')
-import {Grid, Row, Col, Glyphicon, Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap'
+import {Grid, Row, Col, Glyphicon, Form, FormGroup, FormControl, ControlLabel, Modal, Button} from 'react-bootstrap'
 var actions = require('actions')
 import moment from 'moment'
 import {Link} from 'react-router'
 import _ from 'lodash'
 import {browserHistory} from 'react-router'
 
-export var CoachEdit = React.createClass({
+class CoachEdit extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal : false
+    }
+    this.close = this.close.bind(this)
+    this.open = this.open.bind(this)
+    this.deleteCoach = this.deleteCoach.bind(this)
+  }
+
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  open() {
+    this.setState({ showModal: true });
+  }
 
   formSubmit(e) {
     e.preventDefault();
@@ -38,9 +56,17 @@ export var CoachEdit = React.createClass({
       browserHistory.push('/m/coaches');
     }
 
-  },
+  }
 
-  render: function() {
+  deleteCoach(e) {
+    e.preventDefault()
+    var {dispatch} = this.props
+    var coachId = this.props.params.coachId;
+    dispatch(actions.deleteCoach(coachId))
+    browserHistory.push('/m/coaches')
+  }
+
+  render() {
     var coachId = this.props.params.coachId;
     var coach = {}
     if (coachId === "add") {
@@ -64,10 +90,9 @@ export var CoachEdit = React.createClass({
     else {
       var {coaches} = this.props;
       coach = _.find(coaches, {key: coachId});
-      console.log(coach)
     }
   return (
-    <Grid>
+    <Grid style={{marginTop: '15px'}}>
       <Row>
         <Col md={6}>
          <FormGroup>
@@ -92,7 +117,7 @@ export var CoachEdit = React.createClass({
            id="dateOfBirth"
            type="text"
            placeholder="Enter Date of Birth"
-           defaultValue={moment(coach.dateOfBirth).format("DD/MMM/YYYY")}/>
+           defaultValue={moment(coach.dateOfBirth).format("DD/MM/YYYY")}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Occupation</ControlLabel>
@@ -185,14 +210,27 @@ export var CoachEdit = React.createClass({
                <option value="false">No</option>
              </FormControl>
           </FormGroup>
-          <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.formSubmit}>Save Coach Profile</button>
+          <button className="btn" style={{width: '100%', margin: '0', height: '40px'}} onClick={this.formSubmit}>Save Coach Profile</button>
+          <button className="btn" style={{width: '100%', margin: '10px 0px', height: '40px'}} onClick={this.open}>Delete Coach Profile</button>
         </Col>
       </Row>
+      <Modal show={this.state.showModal} onHide={this.close}>
+      <Modal.Header closeButton>
+        <b>Delete Coach</b>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to delete coach {coach.name} ?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={this.deleteCoach}>Yes</Button>
+        <Button onClick={this.close}>No</Button>
+      </Modal.Footer>
+    </Modal>
     </Grid>
 
   );
 }
-});
+}
 
 
 export default connect((state) => {return state;

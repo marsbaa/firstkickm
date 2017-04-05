@@ -443,6 +443,15 @@ export var updateCoach = (coachId, coach) => {
   };
 };
 
+export var deleteCoach = (coachId) => {
+  var coachesRef = firebaseRef.child('coaches/'+coachId);
+  coachesRef.remove();
+  return {
+    type: 'DELETE_COACH',
+    coachId
+  };
+};
+
 export var updateCoachAttendance = (date, id, classKey, paymentRate) => {
   return (dispatch) => {
     var classId = null;

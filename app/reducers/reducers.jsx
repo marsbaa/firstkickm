@@ -277,6 +277,10 @@ export var coachReducer = (state = [], action) => {
           return coach;
         }
       });
+    case 'DELETE_COACH':
+      return state.filter((coach) => {
+        return coach.key !== action.coachId;
+      });
       case 'TOGGLE_COACH_ATTENDANCE':
         return state.map((coach) => {
           if (coach.key === action.id) {
