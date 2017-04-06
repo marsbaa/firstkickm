@@ -46,7 +46,7 @@ class CoachAttendance extends React.Component{
         })
       }
     });
-    if (today != -1) {
+    if (today !== -1) {
       var classes = selection.classes
       Object.keys(classes).map((classId)=> {
         var {ageGroup, day, endTime, startTime} = classes[classId]
@@ -59,13 +59,18 @@ class CoachAttendance extends React.Component{
          if (schedule != undefined) {
            if(_.size(schedule.assigned) != 0) {
              schedule.assigned.map((c) => {
-               var coach = _.find(filteredCoaches, {'key': c.value })
+               var coach = _.find(filteredCoaches, {'key': c.coachKey })
+               console.log(coach)
                if (coach != undefined) {
-                 html.push(<CoachAttendee key={c.value} coach={coach} classKey={classId} /> )
+                 html.push(<CoachAttendee key={c.coachKey} coach={coach} classKey={classId} /> )
                }
              })
            }
+           else {
+             html.push(<h5 key={classId+"noneassigned"} style={{padding: '3px 15px'}}>None Assigned</h5>)
+           }
          }
+
       })
     }
     else {

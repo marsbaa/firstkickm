@@ -233,9 +233,23 @@ export var studentReducer = (state = [], action) => {
             };
           }
         else {
+          var attendance = student.attendance
+          if (student.attendance[action.date] === undefined){
             return {
               ...student,
               attendance: {
+                ...attendance,
+                [action.date] : {
+                  attended: true
+                }
+              }
+            }
+          }
+          else {
+            return {
+              ...student,
+              attendance: {
+                ...attendance,
                 [action.date] : {
                   attended: student.attendance[action.date].attended === true ? false:true
                 }
@@ -243,6 +257,7 @@ export var studentReducer = (state = [], action) => {
             }
           }
         }
+      }
         else {
           return student;
         }
@@ -281,13 +296,29 @@ export var coachReducer = (state = [], action) => {
       return state.filter((coach) => {
         return coach.key !== action.coachId;
       });
-      case 'TOGGLE_COACH_ATTENDANCE':
-        return state.map((coach) => {
-          if (coach.key === action.id) {
-            if (coach.attendance === undefined) {
+    case 'TOGGLE_COACH_ATTENDANCE':
+      return state.map((coach) => {
+        if (coach.key === action.id) {
+          if (coach.attendance === undefined) {
+            return {
+              ...coach,
+              attendance: {
+                [action.date] : {
+                  attended: true,
+                  classId: action.classId,
+                  sessionRate: action.sessionRate
+                }
+              }
+            };
+          }
+
+        else {
+            var attendance = coach.attendance
+            if (coach.attendance[action.date] === undefined){
               return {
                 ...coach,
                 attendance: {
+                  ...attendance,
                   [action.date] : {
                     attended: true,
                     classId: action.classId,
@@ -296,10 +327,11 @@ export var coachReducer = (state = [], action) => {
                 }
               };
             }
-          else {
+            else {
               return {
                 ...coach,
                 attendance: {
+                  ...attendance,
                   [action.date] : {
                     attended: coach.attendance[action.date].attended === true ? false:true,
                     classId: action.classId,
@@ -308,11 +340,13 @@ export var coachReducer = (state = [], action) => {
                 }
               }
             }
+
           }
-          else {
-            return coach;
-          }
-        })
+        }
+        else {
+          return coach;
+        }
+      })
     default:
       return state;
  }
