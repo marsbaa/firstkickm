@@ -84,9 +84,11 @@ class JerseyIssueForm extends React.Component{
         </Col>
       </Row>
       <Row style={{padding:'10px', marginTop: '15px'}}>
-        <Col md={12} xs={12}>
-            <button className="btn" style={{width: '50%', margin: '0'}} onClick={this.clear.bind(this)}>Clear</button>
-            <button className="btn" style={{width: '50%', margin: '0'}} onClick={this.formSubmit.bind(this)}>Issue</button>
+        <Col md={6} xs={6}>
+            <button className="submitbtn" onClick={this.clear.bind(this)}>Clear</button>
+        </Col>
+        <Col md={6} xs={6}>
+          <button className="submitbtn" onClick={this.formSubmit.bind(this)}>Issue</button>
         </Col>
       </Row>
     </div>

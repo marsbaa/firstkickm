@@ -215,7 +215,7 @@ class TrialRegisterChildForm extends React.Component{
 
           <Row style={{padding: '0px 10px', marginBottom: '30px'}}>
             <Col xs={12} md={10} lg={11}>
-              <Button style={{width: '100%', margin: '0px'}} onClick={this.onFormSubmit.bind(this)}>Update Child's Details</Button>
+              <button className='submitbtn' onClick={this.onFormSubmit.bind(this)}>Update Child's Details</button>
             </Col>
           </Row>
         </Grid>

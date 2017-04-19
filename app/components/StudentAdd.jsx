@@ -198,7 +198,7 @@ class StudentAdd extends React.Component {
               />
             </FormGroup>
 
-            <button className="btn" style={{width: '100%', margin: '0'}} onClick={this.onFormSubmit.bind(this)}>Save Child Profile</button>
+            <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Child Profile</button>
           </Col>
         </Row>
     )

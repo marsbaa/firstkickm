@@ -210,8 +210,8 @@ class CoachEdit extends React.Component{
                <option value="false">No</option>
              </FormControl>
           </FormGroup>
-          <button className="btn" style={{width: '100%', margin: '0', height: '40px'}} onClick={this.formSubmit}>Save Coach Profile</button>
-          <button className="btn" style={{width: '100%', margin: '10px 0px', height: '40px'}} onClick={this.open}>Delete Coach Profile</button>
+          <button className="submitbtn"  onClick={this.formSubmit}>Save Coach Profile</button>
+          {coachId === 'add' ? [] : <button className="submitbtn" style={{backgroundColor: 'red', marginTop: '20px'}} onClick={this.open}>Delete Coach Profile</button>}
         </Col>
       </Row>
       <Modal show={this.state.showModal} onHide={this.close}>

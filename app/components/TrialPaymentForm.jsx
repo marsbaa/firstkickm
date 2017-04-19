@@ -444,8 +444,8 @@ componentDidMount () {
           </FormGroup>
        </Col>
        <Col md={12} xs={12}>
-         <Button style={{width: '100%', margin: '20px 0px', height: '30px'}}
-           onClick={this.checkValid.bind(this)}>Payment Collected</Button>
+         <button className='submitbtn'
+           onClick={this.checkValid.bind(this)}>Payment Collected</button>
        </Col>
       </Row>)
       chequeClass = 'downbtn'
@@ -476,7 +476,7 @@ componentDidMount () {
         </Col>
         <Col md={3} xs={3}></Col>
           <Col md={12} xs={12}>
-            <Button style={{width: '100%', margin: '20px 0px', height: '30px'}} onClick={this.checkValid.bind(this)}>Payment Collected</Button>
+            <button className='submitbtn' onClick={this.checkValid.bind(this)}>Payment Collected</button>
           </Col>
       </Row>)
       cashClass = 'downbtn'

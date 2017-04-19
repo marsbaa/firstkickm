@@ -219,6 +219,7 @@
   background-color: white;
   min-height: 100%;
   overflow: auto;
+  margin-bottom: 30px;
 }
 
 .formContainer {
@@ -271,6 +272,30 @@
 
 .girl{
   color: pink;
+}
+
+.submitbtn{
+  width: 100%;
+  display: inline-block;
+  padding: 3px 12px;
+  margin: 20px 0px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.42857143;
+  height: 30px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid #f5bb05;
+  border-radius: 5px;
+  background-color: #f5bb05;
+  color: #000000;
 }
 
 .m-signature-pad {

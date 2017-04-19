@@ -192,7 +192,7 @@ class TrialRegister extends React.Component{
                     {this.tcCheck.bind(this)}
                 </FormGroup>
               </Well>
-              <button className="btn" style={{width: '100%', margin: '0'}} onClick={ () => {
+              <button className="submitbtn" onClick={ () => {
                   if(this.state.value) {
                     this.onFormSubmit()
                     //var msg = '&msg=Please%20save%20this%20number%2091010666&dstno=6590364283';
