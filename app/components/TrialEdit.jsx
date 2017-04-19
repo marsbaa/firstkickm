@@ -183,9 +183,9 @@ export var TrialEdit = React.createClass({
 
             <FormGroup>
               <ControlLabel>Medical Condition</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
+              <FormControl style={{marginBottom: '10px', height: '90px'}}
               id="medicalCondition"
-              type="text"
+              componentClass="textarea"
               placeholder="Enter Medical Condition"
               defaultValue={trial.medicalCondition}/>
             </FormGroup>

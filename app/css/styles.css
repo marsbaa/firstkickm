@@ -116,11 +116,12 @@
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  font-weight: 500;
   background-image: none;
-  border: 1px solid #9a9a9a;
-  border-radius: 5px;
-  background-color: #656565;
-  color: white;
+  border: 1px solid #ffffff;
+  border-radius: 0px;
+  background-color: #f5bb05;
+  color: #000000;
 }
 
 .datebtn:hover,
@@ -148,7 +149,7 @@
           user-select: none;
   background-image: none;
   border: 1px solid #9a9a9a;
-  border-radius: 5px;
+  border-radius: 0px;
   background-color: #656565;
   opacity: 0.6;
   color: white;

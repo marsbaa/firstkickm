@@ -1,29 +1,37 @@
 import React from 'react';
-import {Navbar, Nav, NavItem,Image, Button} from 'react-bootstrap';
+import {Navbar, Nav, NavItem,Image, Button, Grid, Row, Col} from 'react-bootstrap';
 import body from 'styles.css'
 var {connect} = require('react-redux');
 var actions = require('actions');
 import {Link, browserHistory} from 'react-router'
+import Loading from 'react-loading'
 
 class NavBar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading : true
+    }
+  }
 
   onLogout() {
     var {dispatch} = this.props;
    dispatch(actions.startLogout());
   }
 
- componentDidMount() {
+ componentWillMount() {
    var {dispatch} = this.props;
    dispatch(actions.startAddTrials());
-   dispatch(actions.startCentres());
    dispatch(actions.startCalendars());
    dispatch(actions.startAgeGroup());
    dispatch(actions.startStudents());
    dispatch(actions.startUsers());
+   dispatch(actions.startCentres());
  }
 
  render() {
-   var {users, auth, navbar} = this.props;
+   var {users, auth, navbar, dispatch, isFetching} = this.props;
    var user;
    if (auth.email === 'ray@marsbaa.com') {
      user = {
@@ -62,6 +70,21 @@ class NavBar extends React.Component {
      }
    }
 
+   var loadingHTML = []
+  loadingHTML.push(
+    <Grid key='loading' style={{paddingTop:'20px', overflow: 'hidden'}}>
+      <Row>
+        <Col xs={5} md={5} lg={5}></Col>
+        <Col xs={2} md={2} lg={2}>
+          <div styles={{margin: 'auto'}}>
+            <Loading type='cylon' color='#000000' />
+            </div>
+          </Col>
+        <Col xs={5} md={5} lg={5}></Col>
+      </Row>
+    </Grid>
+  )
+
   return (
     <div>
       <Navbar style={{backgroundColor: '#ffffff', padding: '10px', marginBottom: '0'}}>
@@ -86,7 +109,7 @@ class NavBar extends React.Component {
          </Navbar.Collapse>
       </Navbar>
       <div className="body">
-        {this.props.children}
+        {isFetching.completed? this.props.children: loadingHTML}
       </div>
     </div>
 

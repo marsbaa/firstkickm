@@ -204,9 +204,9 @@ class TrialRegisterChildForm extends React.Component{
             </FormGroup>
             <FormGroup>
               <ControlLabel>Medical Condition</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
+              <FormControl style={{marginBottom: '10px', height: '90px'}}
               id={"medicalCondition"+trial.id}
-              type="text"
+              componentClass="textarea"
               placeholder="Enter Medical Condition"
               defaultValue={trial.medicalCondition}/>
             </FormGroup>
@@ -214,7 +214,7 @@ class TrialRegisterChildForm extends React.Component{
         </Row>
 
           <Row style={{padding: '0px 10px', marginBottom: '30px'}}>
-            <Col md={12} xs={12}>
+            <Col xs={12} md={10} lg={11}>
               <Button style={{width: '100%', margin: '0px'}} onClick={this.onFormSubmit.bind(this)}>Update Child's Details</Button>
             </Col>
           </Row>

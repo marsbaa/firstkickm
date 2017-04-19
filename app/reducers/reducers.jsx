@@ -619,3 +619,12 @@ export var registrationReducer = (state=[], action) => {
       return state;
     }
   }
+
+  export var fetchingReducer = (state={completed: false}, action) => {
+    switch(action.type) {
+      case 'IS_FETCHING':
+        return {completed: true}
+      default:
+        return state;
+    }
+  }

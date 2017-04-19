@@ -7,36 +7,32 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 import {browserHistory} from 'react-router'
 
-class UserEdit extends React.Component{
+class InventoryEdit extends React.Component{
 
   constructor(props) {
     super(props);
     this.state = {
-      assignedCentres : [],
-      assignedRoles : '',
-      roles : [
-        "Administrator", "Head Coach", "Coach", "Manager"
-      ]
+
     }
   }
 
   formSubmit(e) {
     e.preventDefault();
-    var userId = this.props.params.userId
+    var itemId = this.props.params.itemId
     var {dispatch} = this.props;
-    var user = {
+    var item = {
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
       assignedCentres: this.state.assignedCentres,
       assignedRoles: this.state.assignedRoles
     };
     if (userId === "add") {
-      dispatch(actions.addUser(user));
-      browserHistory.push('/m/users');
+      dispatch(actions.addUser(item));
+      browserHistory.push('/m/inventory');
     }
     else {
-      dispatch(actions.updateUser(user, userId));
-      browserHistory.push('/m/users')
+      dispatch(actions.updateUser(item, userId));
+      browserHistory.push('/m/inventory')
     }
 
   }

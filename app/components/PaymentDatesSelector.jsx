@@ -109,7 +109,7 @@ class PaymentDatesSelector extends React.Component {
     var renderDatesButton = (dates) => {
       var html = [];
       dates.map((date) => {
-          html.push(<button className="datebtn" key={date} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleDatesChange(e, date)}}>{moment(date).format('D MMM')}</button>)
+          html.push(<button className="datebtn" key={date} style={{width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleDatesChange(e, date)}}>{moment(date).format('D MMM')}</button>)
         })
       return html;
     }

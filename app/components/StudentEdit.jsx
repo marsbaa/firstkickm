@@ -176,12 +176,11 @@ class StudentEdit extends React.Component {
               placeholder="Enter Date of Birth"
               defaultValue={student.dateOfBirth}/>
             </FormGroup>
-
             <FormGroup>
               <ControlLabel>Medical Condition</ControlLabel>
-              <FormControl style={{marginBottom: '10px'}}
+              <FormControl style={{marginBottom: '10px', height: '90px'}}
               id="medicalCondition"
-              type="text"
+              componentClass="textarea"
               placeholder="Enter Medical Condition"
               defaultValue={student.medicalCondition}/>
             </FormGroup>

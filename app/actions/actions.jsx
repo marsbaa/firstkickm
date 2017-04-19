@@ -509,9 +509,16 @@ export var startCentres = () => {
         classes: centres[centreId].classes
       });
     });
+    dispatch(isFetching());
     dispatch(addCentres(parsedCentres));
   });
 };
+};
+
+export var isFetching = () => {
+  return {
+    type: 'IS_FETCHING'
+  };
 };
 
 export var addCentres = (centres) => {

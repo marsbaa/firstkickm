@@ -54,9 +54,9 @@ class MainMenu extends React.Component {
           if (user.assignedRoles === 'Administrator') {
             menuHTML.push(<div key="adminmenu">
             <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection.id === '0' ? true : false}>Trials</button></Link>
-            <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
             <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection.id === '0' ? true : false}>Student Attendance</button></Link>
-            <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Make Payment</button></Link>
+            <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Payment</button></Link>
+            <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
             <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
             <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
             </div>)
@@ -74,15 +74,15 @@ class MainMenu extends React.Component {
           else if (user.assignedRoles === 'Manager') {
             menuHTML.push(
               <div key="managermenu">
-                <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
                 <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection.id === '0' ? true : false}>Trials</button></Link>
                 <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
                 <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection.id === '0' ? true : false}>Student Attendance</button></Link>
-                <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Make Payment</button></Link>
+                <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Payment</button></Link>
                 <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
                 <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
                   <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
                     disabled={selection.id === '0' ? true : false}>Coach Scheduling</button></Link>
+                  <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
                   <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>
                   <Link to="m/inventory" ><button className="mainbtn" id="inventory">Inventory </button></Link>
