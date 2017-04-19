@@ -32,6 +32,7 @@ class CoachEdit extends React.Component{
     var {dispatch} = this.props;
     var coachId = this.props.params.coachId;
     var coach = {
+      shortName: document.getElementById('shortName').value,
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
       dateOfBirth: document.getElementById('dateOfBirth').value,
@@ -71,6 +72,7 @@ class CoachEdit extends React.Component{
     var coach = {}
     if (coachId === "add") {
       coach = {
+        shortName: "",
         name: "",
         email: "",
         contact: "",
@@ -95,8 +97,16 @@ class CoachEdit extends React.Component{
     <Grid style={{marginTop: '15px'}}>
       <Row>
         <Col md={6}>
+          <FormGroup>
+            <ControlLabel>Short Name</ControlLabel>
+            <FormControl style={{marginBottom: '10px'}}
+            id="shortName"
+            type="text"
+            placeholder="Coach Short Name"
+            defaultValue={coach.shortName}/>
+          </FormGroup>
          <FormGroup>
-           <ControlLabel>Name</ControlLabel>
+           <ControlLabel>Full Name</ControlLabel>
            <FormControl style={{marginBottom: '10px'}}
            id="name"
            type="text"

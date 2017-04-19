@@ -21,7 +21,7 @@ class ScheduleList extends React.Component{
     var html = [];
     var coachOptions = [];
     coaches.map((coach) => {
-      coachOptions.push({label: coach.name , value: coach.key});
+      coachOptions.push({label: coach.shortName , value: coach.key});
     });
 
     Object.keys(classes).forEach((classId) => {
