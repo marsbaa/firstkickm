@@ -4,20 +4,20 @@ var {connect} = require('react-redux');
 var actions = require('actions');
 import btn from 'styles.css'
 
-export var Login = React.createClass({
+class Login extends React.Component{
   onLogin(e) {
     e.preventDefault();
     var {dispatch} = this.props;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     dispatch(actions.startLogin(email, password));
-  },
+  }
 
   onKeyPress(e) {
     if (e.key === 'Enter') {
       this.onLogin(e);
     }
-  },
+  }
 
   render() {
     return (
@@ -48,6 +48,6 @@ export var Login = React.createClass({
       </Grid>
   );
   }
-});
+}
 
 export default connect()(Login);

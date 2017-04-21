@@ -10,8 +10,8 @@ module.exports = {
   }
 }
 
-var Root = React.createClass({
-  render: function () {
+class Root extends React.Component{
+  render() {
     var html = []
     var chequeHTML = []
     var paymentMethod = this.props[0].paymentMethod;
@@ -162,4 +162,4 @@ var Root = React.createClass({
       </html>
     )
   }
-})
+}

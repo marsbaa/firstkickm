@@ -4,8 +4,8 @@ import {Grid,Row, Col, Image, Table} from 'react-bootstrap'
 import moment from 'moment'
 
 
-export var Root = React.createClass({
-  render: function () {
+class Root extends React.Component{
+  render() {
     return (
       <div style={{marginTop: '15px'}}>
         <Grid style={{padding: '20px 30px', border: '1px solid #eee', color: '#555', maxWidth: '800px', margin: 'auto',boxShadow:'0 0 10px rgba(0, 0, 0, .15)'}}>
@@ -55,6 +55,6 @@ export var Root = React.createClass({
       </div>
     )
   }
-})
+}
 
 export default Root;

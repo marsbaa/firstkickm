@@ -6,7 +6,7 @@ import {btn} from 'styles.css'
 import AgeGroup from 'AgeGroup'
 var actions = require('actions');
 
-export var SettingsList = React.createClass({
+class SettingsList extends React.Component{
 
   renderAgeGroup() {
     var {ageGroup} = this.props;
@@ -18,14 +18,14 @@ export var SettingsList = React.createClass({
     }
     return html;
 
-  },
+  }
 
   componentDidMount () {
     var {dispatch} = this.props;
     dispatch(actions.updateNavTitle("/m/settings", "Settings"));
-  },
+  }
 
-  render: function () {
+  render() {
 
    return (
      <div>
@@ -41,7 +41,7 @@ export var SettingsList = React.createClass({
     </div>
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(SettingsList);

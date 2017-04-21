@@ -19,6 +19,11 @@ class ScheduleApp extends React.Component {
     }
   }
 
+  componentDidMount() {
+    var {dispatch} = this.props;
+    dispatch(actions.updateNavTitle("/m/coachschedule", "Coach Scheduling"));
+  }
+
   render() {
     var {selection, calendars} = this.props;
     var termDates = [];

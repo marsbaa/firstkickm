@@ -5,16 +5,18 @@ import {connect} from 'react-redux';
 var actions = require('actions');
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import moment from 'moment'
 
 
-export var Schedule = React.createClass({
-  getInitialState: function() {
-    return {
-      value: [],
-      previousValue: [],
-      options : []
-    };
-  },
+class Schedule extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: []
+    }
+  }
+
   handleSelectChange (value) {
       var {dispatch, coaches} = this.props;
       var date = this.props.date;
@@ -32,24 +34,91 @@ export var Schedule = React.createClass({
          }
       })
       dispatch(actions.toggleSchedule(classKey, date, attended));
-      this.props.onUpdateList(value, this.state.value);
-      this.setState((prevState) => {
-          return {previousValue: prevState.value, value};
-      });
-  	},
+      this.setState({value})
+  	}
 
-  componentWillMount(){
-    this.setState({value: this.props.assigned});
-  },
+  componentWillMount() {
+    var {coachSchedule} = this.props;
+    var date = this.props.date;
+    var assignedCoaches = []
+    var classKey = this.props.classKey
+    coachSchedule.map((schedule) => {
+      if (schedule.scheduleKey === classKey+date) {
+          var assigned = schedule.assigned;
+          if (assigned.length !== 0) {
+            assigned.map((coach)=>{
+              assignedCoaches.push(coach.coachKey)
+            })
+          }
 
-  componentDidMount() {
-    var {dispatch} = this.props;
-    dispatch(actions.updateNavTitle("/m/coachschedule", "Coach Scheduling"));
-  },
+        }
+      })
+    this.setState({value: assignedCoaches})
+  }
 
-  render: function () {
-      var cla = this.props.cla;
-      var className = cla.ageGroup + " " + cla.startTime + " " + cla.endTime;
+
+  render() {
+    var {coaches, coachSchedule} = this.props;
+    var date = this.props.date;
+    var assignedCoaches = []
+    var classKey = this.props.classKey
+    var coachOptions = []
+
+    var classTimingClash = (classKey1, classKey2) => {
+      var {centres} = this.props
+      var class1, class2;
+      centres.map((centre) => {
+        if(centre.classes !== undefined) {
+          Object.keys(centre.classes).forEach((classId) => {
+            if (classId === classKey1) {
+              class1 = centre.classes[classId]
+            }
+            if (classId === classKey2) {
+              class2 = centre.classes[classId]
+            }
+          })
+        }
+      })
+
+      var st1 = class1.startTime.split(':')
+      var et1 = class1.endTime.split(':')
+      var st2 = class2.startTime.split(':')
+      var et2 = class2.endTime.split(':')
+      if (st1[1].endsWith('pm')) {
+        st1[0] = st1[0] + 12
+      }
+      if (st2[1].endsWith('pm')) {
+        st2[0] = st2[0] + 12
+      }
+      if (et1[1].endsWith('pm')) {
+        et1[0] = et1[0] + 12
+      }
+      if (et2[1].endsWith('pm')) {
+        et2[0] = et2[0] + 12
+      }
+      if (st2[0] === st1[0]) {
+        return true
+      }
+      else {
+        return false
+      }
+
+    }
+    coaches.map((coach) => {
+      coachOptions.push({label: coach.shortName , value: coach.key});
+    })
+    coachSchedule.map((schedule) => {
+      if (schedule.date === date) {
+        if (classTimingClash(schedule.classKey, classKey) && schedule.classKey !== classKey) {
+          schedule.assigned.map((coach) => {
+            var index = _.findIndex(coachOptions, {value: coach.coachKey})
+            coachOptions.splice(index, 1)
+          })
+        }
+      }
+    })
+    var cla = this.props.cla;
+    var className = cla.ageGroup + " " + cla.startTime + " - " + cla.endTime;
    return (
            <FormGroup>
              <ControlLabel>{className}</ControlLabel>
@@ -57,14 +126,14 @@ export var Schedule = React.createClass({
                    name="form-field-name"
                    multi={true}
                    value={this.state.value}
-                   options={this.props.coachOptions}
-                   onChange={this.handleSelectChange}
+                   options={coachOptions}
+                   onChange={this.handleSelectChange.bind(this)}
                />
            </FormGroup>
 
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(Schedule);

@@ -3,15 +3,15 @@ import _ from 'lodash'
 var actions = require('actions')
 var {connect} = require('react-redux')
 
-export var CoachesApp = React.createClass({
+class CoachesApp extends React.Component{
   componentDidMount() {
     var {dispatch, coaches} = this.props;
     if (_.isEmpty(coaches)) {
       dispatch(actions.startCoaches());
     }
-  },
+  }
 
-  render: function () {
+  render() {
 
    return (
      <div>
@@ -20,7 +20,7 @@ export var CoachesApp = React.createClass({
 
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(CoachesApp);

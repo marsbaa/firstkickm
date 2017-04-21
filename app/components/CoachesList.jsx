@@ -57,10 +57,11 @@ class CoachesList extends React.Component{
   render() {
     var {coaches, searchText} = this.props;
     var filteredCoaches = CoachesFilter.filter(coaches, searchText);
+    var sortedCoaches = _.sortBy(filteredCoaches, ['shortName'])
     var html=[];
-    if (filteredCoaches.length !== 0) {
-      Object.keys(filteredCoaches).forEach((coachId) => {
-        html.push(<Coach key={coachId} coach={filteredCoaches[coachId]} />);
+    if (sortedCoaches.length !== 0) {
+      Object.keys(sortedCoaches).forEach((coachId) => {
+        html.push(<Coach key={coachId} coach={sortedCoaches[coachId]} />);
       });
     }
     var coachHTML = [];

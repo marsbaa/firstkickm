@@ -4,18 +4,19 @@ import TermDatesSelector from 'TermDatesSelector'
 var actions = require('actions');
 var {connect} = require('react-redux');
 
-export var DeleteTermModal = React.createClass({
-  getInitialState: function() {
-    return {
+class DeleteTermModal extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       errorTermName: null,
       errorMessageTermName: ""
-    };
-  },
+    }
+  }
 
   close(e) {
     e.preventDefault();
     this.props.closeModal();
-  },
+  }
 
   delete(e) {
     e.preventDefault();
@@ -27,10 +28,10 @@ export var DeleteTermModal = React.createClass({
       dispatch(actions.deleteTerm(this.props.deleteKey));
     }
     this.props.closeModal();
-  },
+  }
 
 
-  render: function () {
+  render() {
      var type = this.props.type;
 
      return (
@@ -48,7 +49,7 @@ export var DeleteTermModal = React.createClass({
        </Modal>
      );
    }
-});
+}
 
 export default connect((state) => {return state;
 })(DeleteTermModal);

@@ -8,37 +8,40 @@ import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
 import 'react-timepicker/timepicker.css';
 
-export var ClassEdit = React.createClass({
-  getInitialState() {
-   return {
-     startTime: '',
-     endTime: '',
-     ageGroup: '',
-     day: '',
-     term: ''
-   };
- },
+class ClassEdit extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state = {
+      startTime: '',
+      endTime: '',
+      ageGroup: '',
+      day: '',
+      term: ''
+    }
+  }
+
 
  handleChange(e) {
    e.preventDefault();
    this.setState({
      ageGroup: e.target.value
    })
- },
+ }
 
  handleDayChange(e) {
    e.preventDefault();
    this.setState({
      day: e.target.value
    })
- },
+ }
 
  handleTermChange(e) {
    e.preventDefault();
    this.setState({
      term: e.target.value
    })
- },
+ }
 
   onChangeStartTime(hours,minutes) {
     var formattedHours, formattedMinutes, amPm;
@@ -63,7 +66,7 @@ export var ClassEdit = React.createClass({
     }
      var time = formattedHours+":"+formattedMinutes+amPm;
     this.setState({startTime: time});
-  },
+  }
 
   onChangeEndTime(hours,minutes) {
     var formattedHours, formattedMinutes, amPm;
@@ -88,13 +91,13 @@ export var ClassEdit = React.createClass({
     }
      var time = formattedHours+":"+formattedMinutes+amPm;
     this.setState({endTime: time});
-  },
+  }
 
   goBack(e) {
     e.preventDefault();
     var centreID = this.props.params.centreID;
     browserHistory.push('/m/centres/'+ centreID);
-  },
+  }
 
   saveClass(e) {
     e.preventDefault();
@@ -115,12 +118,12 @@ export var ClassEdit = React.createClass({
     };
     dispatch(actions.addClass(cla, centre.key));
     browserHistory.push('/m/centres/'+ centreID);
-  },
+  }
 
   componentWillUnmount() {
     var {dispatch} = this.props;
     dispatch(actions.resetAgeGroup());
-  },
+  }
 
   generateAgeGroups() {
     var {ageGroup} = this.props;
@@ -130,9 +133,9 @@ export var ClassEdit = React.createClass({
       html.push(<option key={age.key} value={age.name}>{age.name}</option>)
     })
     return html;
-  },
+  }
 
-  render: function () {
+  render() {
      var {centres, calendars} = this.props;
      var centreID = this.props.params.centreID;
      var centre;
@@ -194,7 +197,7 @@ export var ClassEdit = React.createClass({
       </Grid>
      );
    }
-});
+}
 
 export default connect((state) => {return state;
 })(ClassEdit);

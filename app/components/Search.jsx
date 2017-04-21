@@ -4,15 +4,15 @@ var actions = require('actions');
 import {Row, Col, FormGroup, FormControl, InputGroup, Glyphicon} from 'react-bootstrap'
 import search from 'styles.css'
 
-export var Search = React.createClass({
+class Search extends React.Component{
   updateSearchText(e){
     e.preventDefault();
     var {dispatch} = this.props;
     dispatch(actions.setSearchText(e.target.value.toLowerCase()));
-  },
+  }
 
 
-  render: function () {
+  render() {
     var {searchText} = this.props;
     var type = this.props.type;
 
@@ -29,7 +29,7 @@ export var Search = React.createClass({
         </Row>
     );
   }
-});
+}
 
 export default connect(
   (state) => {

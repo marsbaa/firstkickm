@@ -4,9 +4,9 @@ import button from 'styles.css'
 import _ from 'lodash'
 import {Link} from 'react-router'
 
-export var Centre = React.createClass({
+class Centre extends React.Component{
 
-render: function() {
+render() {
   const centre = this.props.c;
   return (
       <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
@@ -19,6 +19,6 @@ render: function() {
       </Row>
   )
 }
-});
+}
 
 export default (Centre);

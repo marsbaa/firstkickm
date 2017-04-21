@@ -76,7 +76,7 @@ class NavBar extends React.Component {
       <Row>
         <Col xs={5} md={5} lg={5}></Col>
         <Col xs={2} md={2} lg={2}>
-          <div styles={{margin: 'auto'}}>
+          <div style={{margin: 'auto'}}>
             <Loading type='cylon' color='#000000' />
             </div>
           </Col>

@@ -10,17 +10,17 @@ import Search from 'Search'
 import _ from 'lodash'
 import moment from 'moment'
 
-export var AttendanceList = React.createClass({
+class AttendanceList extends React.Component{
 
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
     dispatch(actions.updateNavTitle("/m/attendance", selection.name+" Attendance"));
-  },
+  }
 
 
 
-  render: function () {
+  render() {
     var {students, searchText, selection, calendars} = this.props;
     var today=-1;
     var html=[];
@@ -94,7 +94,7 @@ export var AttendanceList = React.createClass({
     </div>
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(AttendanceList);

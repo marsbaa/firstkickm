@@ -7,15 +7,15 @@ import {innerbtn} from 'styles.css'
 import TermDatesSelector from 'TermDatesSelector'
 
 
-export var ClassList = React.createClass({
+class ClassList extends React.Component{
   openModal(e, id) {
     e.preventDefault();
     this.props.openModal();
     this.props.handleDeleteKey(id);
     this.props.handleDeleteType("class");
-  },
+  }
 
-  render: function () {
+  render() {
      var {centres} = this.props;
      var centreID = this.props.centreId;
      var html = [];
@@ -45,7 +45,7 @@ export var ClassList = React.createClass({
     </div>
    );
  }
- });
+ }
 
  export default connect((state) => {return state;
 })(ClassList);

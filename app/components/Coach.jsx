@@ -5,8 +5,8 @@ var actions = require('actions')
 import {Link} from 'react-router'
 import _ from 'lodash'
 
-export var Coach = React.createClass({
-  render: function() {
+class Coach extends React.Component{
+  render() {
     var {name, key} = this.props.coach;
     var truncatedName = _.truncate(name, {
   'length': 28});
@@ -23,7 +23,7 @@ export var Coach = React.createClass({
 
   );
 }
-});
+}
 
 
 export default connect((state) => {return state;

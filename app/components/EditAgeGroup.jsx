@@ -6,13 +6,15 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 import {browserHistory} from 'react-router'
 
-export var EditAgeGroup = React.createClass({
-  getInitialState: function() {
-    return {
+class EditAgeGroup extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
       errorName: null,
       errorMessageName: ""
-    };
-  },
+    }
+  }
 
   formSubmit(e) {
     e.preventDefault();
@@ -65,9 +67,9 @@ export var EditAgeGroup = React.createClass({
     }
 
 
-  },
+  }
 
-  render: function() {
+  render() {
     var ageGroupName = this.props.params.name;
     var ageG = {}
     if (ageGroupName === "add") {
@@ -114,7 +116,7 @@ export var EditAgeGroup = React.createClass({
   </Grid>
   );
 }
-});
+}
 
 
 export default connect((state) => {return state;

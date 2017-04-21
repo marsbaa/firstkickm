@@ -5,8 +5,8 @@ var actions = require('actions')
 import {Link} from 'react-router'
 import _ from 'lodash'
 
-export var AgeGroup = React.createClass({
-  render: function() {
+class AgeGroup extends React.Component{
+  render() {
     var {name, minAge, maxAge} = this.props.a;
 
   return (
@@ -25,7 +25,7 @@ export var AgeGroup = React.createClass({
 
   );
 }
-});
+}
 
 
 export default connect((state) => {return state;
