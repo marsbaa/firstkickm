@@ -18,8 +18,6 @@ class PaymentList extends React.Component {
     dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment"));
   }
 
-
-
   render() {
     var {students, searchText, selection} = this.props;
     var html=[];

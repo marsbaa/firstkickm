@@ -5,8 +5,8 @@ import {Row, Col, FormGroup, FormControl, InputGroup, Glyphicon} from 'react-boo
 import search from 'styles.css'
 
 class Search extends React.Component{
+
   updateSearchText(e){
-    e.preventDefault();
     var {dispatch} = this.props;
     dispatch(actions.setSearchText(e.target.value.toLowerCase()));
   }
@@ -21,7 +21,7 @@ class Search extends React.Component{
           <Col xs={12} md={12}>
             <FormGroup style={{marginBottom: '0px'}}>
               <InputGroup>
-                <FormControl type="text" placeholder={"Search for " + type} value={searchText} onChange={this.updateSearchText}/>
+                <FormControl type="text" placeholder={"Search for " + type} value={searchText} onChange={this.updateSearchText.bind(this)}/>
                     <InputGroup.Addon style={{backgroundColor: '#f5bb05', color: 'white'}}><Glyphicon glyph="search" /></InputGroup.Addon>
               </InputGroup>
             </FormGroup>

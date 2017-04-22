@@ -130,6 +130,7 @@ class TrialPaymentForm extends React.Component {
               payerTerm[termId] = paymentTerm
             }
           })
+          var totalSession = 0
          payerTerm.map((term, termId) => {
           var cost = 0
           switch (_.size(term)) {
@@ -154,6 +155,7 @@ class TrialPaymentForm extends React.Component {
               perSession = 45;
               break;
           }
+          totalSession += _.size(term)
           total += cost
           var actualTerm;
           calendars.map((calendar) => {
@@ -165,7 +167,7 @@ class TrialPaymentForm extends React.Component {
             earlyBird= true
             total -= 20
           }
-          if (id > 0) {
+          if (id > 0 && totalSession !== 0) {
             siblingDiscount=true
             total -= 20
           }
@@ -333,6 +335,7 @@ componentDidMount () {
         }
 
         if (payerTerm !== undefined) {
+          var totalSession = 0
           payerTerm.forEach((term, termId) => {
             var cost;
             switch (term.length) {
@@ -352,6 +355,7 @@ componentDidMount () {
                 cost = term.length * 45;
                 break;
             }
+            totalSession += term.length
             var datehtml = []
             term.map((date, dateId) => {
               if (dateId === 0) {
@@ -396,7 +400,7 @@ componentDidMount () {
         </Row>)
         totalFee += 80;
         //Sibling Discount
-        if (id >= 1) {
+        if (id >= 1 && totalSession !== 0) {
           fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
             <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
             <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>($20)</p></Col>

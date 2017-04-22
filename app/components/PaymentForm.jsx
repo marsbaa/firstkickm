@@ -267,14 +267,16 @@ class PaymentForm extends React.Component {
       if (child.payments !== undefined) {
         Object.keys(child.payments).map((paymentId) => {
           var payment = child.payments[paymentId]
-          Object.keys(payment.termsPaid).map((termId) => {
-            var term = payment.termsPaid[termId]
-            term.map((session) => {
-              var index = _.findIndex(termDate, (d) => {
-                return moment(d).isSame(session.date)})
-              termDate.splice(index, 1)
+          if(payment.termsPaid !== undefined) {
+            Object.keys(payment.termsPaid).map((termId) => {
+              var term = payment.termsPaid[termId]
+              term.map((session) => {
+                var index = _.findIndex(termDate, (d) => {
+                  return moment(d).isSame(session.date)})
+                termDate.splice(index, 1)
+              })
             })
-          })
+          }
       })
     }
       startDates[id] = startDate;
@@ -343,6 +345,7 @@ class PaymentForm extends React.Component {
       }
 
       if (payerTerm !== undefined) {
+        var totalSession = 0
         payerTerm.forEach((term, termId) => {
           var cost;
           switch (term.length) {
@@ -362,6 +365,7 @@ class PaymentForm extends React.Component {
               cost = term.length * 45;
               break;
           }
+          totalSession += term.length
           var datehtml = []
           term.map((date, dateId) => {
             if (dateId === 0) {

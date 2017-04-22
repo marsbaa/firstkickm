@@ -27,9 +27,11 @@ class Payer extends React.Component {
     if (payments !== undefined) {
       Object.keys(payments).map((paymentId) => {
         var payment = payments[paymentId]
-        Object.keys(payment.termsPaid).map((termId) => {
-          termsPaidHTML.push(<Button style={{padding: '2px' ,fontSize:'8px', backgroundColor: '#ffc600', color: '#656565'}} key={paymentId+termId} bsSize="xsmall">T{termId}<Glyphicon glyph="ok" /></Button>)
-        })
+        if (payment.termsPaid !== undefined) {
+          Object.keys(payment.termsPaid).map((termId) => {
+            termsPaidHTML.push(<Button style={{padding: '2px' ,fontSize:'8px', backgroundColor: '#ffc600', color: '#656565'}} key={paymentId+termId} bsSize="xsmall">T{termId}<Glyphicon glyph="ok" /></Button>)
+          })
+        }
       })
     }
 
