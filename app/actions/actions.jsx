@@ -853,42 +853,13 @@ export var startPayments = () => {
        if (payment.paymentMethod === 'Cash') {
          parsedPayments.push({
            key: paymentId,
-           ageGroup: payment.ageGroup,
-           centreId: payment.centreId,
-           childName: payment.childName,
-           childKey: payment.childKey,
-           date: payment.date,
-           earlyBird: payment.earlyBird,
-           email: payment.email,
-           paymentMethod: payment.paymentMethod,
-           siblingDiscount: payment.siblingDiscount,
-           termsPaid: payment.termsPaid,
-           total: payment.total,
-           jerseyIssued : payment.jerseyIssued,
-           jerseySize: payment.jerseySize,
-           signature: payment.signature,
-           issuedDate: payment.issuedDate
+           ...payment
          });
        }
        else if (payment.paymentMethod === 'Cheque'){
          parsedPayments.push({
            key: paymentId,
-           ageGroup: payment.ageGroup,
-           centreId: payment.centreId,
-           childName: payment.childName,
-           childKey: payment.childKey,
-           date: payment.date,
-           earlyBird: payment.earlyBird,
-           email: payment.email,
-           paymentMethod: payment.paymentMethod,
-           siblingDiscount: payment.siblingDiscount,
-           chequeNumber: payment.chequeNumber === null || payment.chequeNumber === undefined ? '':payment.chequeNumber,
-           termsPaid: payment.termsPaid,
-           total: payment.total,
-           jerseyIssued : payment.jerseyIssued,
-           jerseySize: payment.jerseySize,
-           signature: payment.signature,
-           issuedDate: payment.issuedDate
+           ...payment
          });
        }
 

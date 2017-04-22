@@ -18,7 +18,7 @@ class Jersey extends React.Component{
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
-          <Link to={"/m/jersey/"+ paymentKey}><button className="innerbtn">Issue </button></Link>
+          <Link to={"/m/jersey/issue/"+ paymentKey}><button className="innerbtn">Issue </button></Link>
         </Col>
       </Row>
 
