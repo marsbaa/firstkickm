@@ -25,19 +25,6 @@ class JerseyIssueForm extends React.Component{
     signature.clear()
   }
 
-  componentDidMount(){
-    var {payments} = this.props
-    var paymentKey = this.props.params.paymentKey
-    var payment = _.find(payments, {key: paymentKey})
-    if (payment.jerseySize !== undefined) {
-      this.setState({size: payment.jerseySize})
-    }
-    var signature = this.refs.mySignature
-    if (payment.signature !== undefined) {
-      signature.fromDataURL(payment.signature)
-    }
-  }
-
   formSubmit(e) {
     var {dispatch, payments} = this.props
     var paymentKey = this.props.params.paymentKey
@@ -56,6 +43,13 @@ class JerseyIssueForm extends React.Component{
 
   }
 
+  componentWillMount(){
+    var {payments} = this.props
+    var paymentKey = this.props.params.paymentKey
+    var payment = _.find(payments, {key: paymentKey})
+    this.setState({size: payment.size})
+  }
+
   render() {
     var {payments} = this.props
     var paymentKey = this.props.params.paymentKey
@@ -64,6 +58,7 @@ class JerseyIssueForm extends React.Component{
       '6', '8', '10', '14', '16', 'YS'
 , 'S','YM', 'M', 'L', 'YL']
     var html = []
+
     jerseySize.map((size) => {
       html.push(<Button key={size} className="datebtn" active={this.state.size === size}  style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => {this.handleSizeSelect(e, size)}}>{size}</Button>)
     })

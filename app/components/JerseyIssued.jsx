@@ -8,7 +8,7 @@ import moment from 'moment'
 
 class JerseyIssued extends React.Component{
   render() {
-    var {childName, childKey, jerseySize, issuedDate} = this.props.student;
+    var {childName, childKey, jerseySize, issuedDate, key} = this.props.student;
     var truncatedName = _.truncate(childName, {
   'length': 28});
 
@@ -17,9 +17,12 @@ class JerseyIssued extends React.Component{
         <Col xs={6} md={6} style={{fontSize: '14px'}}>
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
-        <Col xs={6} md={6} style={{textAlign:'right'}}>
+        <Col xs={4} md={4} style={{textAlign:'right'}}>
           <b>Jersey Size : {jerseySize} </b>
           <p style={{fontSize: '8px', marginTop: '0px'}}>issued on {moment(issuedDate).format("DD MMM YYYY")}</p>
+        </Col>
+        <Col xs={2} md={2}>
+          <Link to={"/m/jersey/issue/"+key}><button className="innerbtn"><Glyphicon glyph="pencil" /> </button></Link>
         </Col>
       </Row>
 
