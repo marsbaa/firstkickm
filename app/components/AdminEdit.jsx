@@ -7,7 +7,7 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 import {browserHistory} from 'react-router'
 
-class CoachEdit extends React.Component{
+class AdminEdit extends React.Component{
 
   constructor(props) {
     super(props);
@@ -16,7 +16,7 @@ class CoachEdit extends React.Component{
     }
     this.close = this.close.bind(this)
     this.open = this.open.bind(this)
-    this.deleteCoach = this.deleteCoach.bind(this)
+    this.deleteAdmin = this.deleteAdmin.bind(this)
   }
 
   close() {
@@ -30,8 +30,8 @@ class CoachEdit extends React.Component{
   formSubmit(e) {
     e.preventDefault();
     var {dispatch} = this.props;
-    var coachId = this.props.params.coachId;
-    var coach = {
+    var adminId = this.props.params.adminId;
+    var admin = {
       shortName: document.getElementById('shortName').value,
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
@@ -41,37 +41,35 @@ class CoachEdit extends React.Component{
       address: document.getElementById('address').value,
       bank: document.getElementById('bank').value,
       accountNumber: document.getElementById('accountNumber').value,
-      qualification: document.getElementById('qualification').value,
-      firstAid: document.getElementById('firstAid').value,
       startDate: document.getElementById('startDate').value,
       nric: document.getElementById('nric').value,
       education: document.getElementById('education').value,
       paymentRate: document.getElementById('paymentRate').value
     };
-    if (coachId === "add") {
-      dispatch(actions.addCoach(coach));
-      browserHistory.push('/m/coaches');
+    if (adminId === "add") {
+      dispatch(actions.addAdmin(admin));
+      browserHistory.push('/m/admins');
     }
     else {
-      dispatch(actions.updateCoach(coachId, coach));
-      browserHistory.push('/m/coaches');
+      dispatch(actions.updateAdmin(adminId, admin));
+      browserHistory.push('/m/admins');
     }
 
   }
 
-  deleteCoach(e) {
+  deleteAdmin(e) {
     e.preventDefault()
     var {dispatch} = this.props
-    var coachId = this.props.params.coachId;
-    dispatch(actions.deleteCoach(coachId))
-    browserHistory.push('/m/coaches')
+    var adminId = this.props.params.adminId;
+    dispatch(actions.deleteAdmin(adminId))
+    browserHistory.push('/m/admins')
   }
 
   render() {
-    var coachId = this.props.params.coachId;
-    var coach = {}
-    if (coachId === "add") {
-      coach = {
+    var adminId = this.props.params.adminId;
+    var admin = {}
+    if (adminId === "add") {
+      admin = {
         shortName: "",
         name: "",
         email: "",
@@ -81,8 +79,6 @@ class CoachEdit extends React.Component{
         address: "",
         bank: "select",
         accountNumber: "",
-        qualification: "",
-        firstAid: false,
         startDate: "",
         nric: "",
         education: "",
@@ -90,8 +86,8 @@ class CoachEdit extends React.Component{
       }
     }
     else {
-      var {coaches} = this.props;
-      coach = _.find(coaches, {key: coachId});
+      var {admins} = this.props;
+      admin = _.find(admins, {key: adminId});
     }
   return (
     <Grid style={{marginTop: '15px'}}>
@@ -102,16 +98,16 @@ class CoachEdit extends React.Component{
             <FormControl style={{marginBottom: '10px'}}
             id="shortName"
             type="text"
-            placeholder="Coach Short Name"
-            defaultValue={coach.shortName}/>
+            placeholder="Admin Short Name"
+            defaultValue={admin.shortName}/>
           </FormGroup>
          <FormGroup>
            <ControlLabel>Full Name</ControlLabel>
            <FormControl style={{marginBottom: '10px'}}
            id="name"
            type="text"
-           placeholder="Coach Name"
-           defaultValue={coach.name}/>
+           placeholder="Admin Name"
+           defaultValue={admin.name}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Email</ControlLabel>
@@ -119,7 +115,7 @@ class CoachEdit extends React.Component{
            id="email"
            type="text"
            placeholder="Enter Email"
-           defaultValue={coach.email}/>
+           defaultValue={admin.email}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Date of Birth</ControlLabel>
@@ -127,7 +123,7 @@ class CoachEdit extends React.Component{
            id="dateOfBirth"
            type="text"
            placeholder="Enter Date of Birth"
-           defaultValue={moment(coach.dateOfBirth).format("DD/MM/YYYY")}/>
+           defaultValue={moment(admin.dateOfBirth).format("DD/MM/YYYY")}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Occupation</ControlLabel>
@@ -135,7 +131,7 @@ class CoachEdit extends React.Component{
            id="occupation"
            type="text"
            placeholder="Enter Occupation"
-           defaultValue={coach.occupation}/>
+           defaultValue={admin.occupation}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Address</ControlLabel>
@@ -143,18 +139,18 @@ class CoachEdit extends React.Component{
            id="address"
            componentClass="textarea"
            placeholder="Enter Address"
-           defaultValue={coach.address}/>
+           defaultValue={admin.address}/>
          </FormGroup>
            <FormGroup>
              <ControlLabel>Bank</ControlLabel>
-              <FormControl id="bank" componentClass="select" defaultValue={coach.bank}>
+              <FormControl id="bank" componentClass="select" defaultValue={admin.bank}>
                 <option value="select">Select</option>
                 <option value="DBS">DBS</option>
                 <option value="POSB">POSB</option>
                 <option value="OCBC">OCBC</option>
                 <option value="UOB">UOB</option>
               </FormControl>
-              <FormControl id="accountNumber" type="text" placeholder="Enter Account Number" defaultValue={coach.accountNumber} />
+              <FormControl id="accountNumber" type="text" placeholder="Enter Account Number" defaultValue={admin.accountNumber} />
            </FormGroup>
 
 
@@ -166,7 +162,7 @@ class CoachEdit extends React.Component{
             id="nric"
             type="text"
             placeholder="Enter NRIC"
-            defaultValue={coach.nric}/>
+            defaultValue={admin.nric}/>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Contact Number</ControlLabel>
@@ -174,7 +170,7 @@ class CoachEdit extends React.Component{
             id="contact"
             type="text"
             placeholder="Enter Contact Number"
-            defaultValue={coach.contact}/>
+            defaultValue={admin.contact}/>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Education Level</ControlLabel>
@@ -182,15 +178,7 @@ class CoachEdit extends React.Component{
             id="education"
             type="text"
             placeholder="Enter Education Level"
-            defaultValue={coach.education}/>
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>Coaching Qualification</ControlLabel>
-            <FormControl style={{marginBottom: '10px'}}
-            id="qualification"
-            type="text"
-            placeholder="Enter Coaching Qualification"
-            defaultValue={coach.qualification}/>
+            defaultValue={admin.education}/>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Start Date</ControlLabel>
@@ -203,36 +191,27 @@ class CoachEdit extends React.Component{
           </FormGroup>
           <FormGroup>
             <ControlLabel>Payment Rate</ControlLabel>
-             <FormControl id="paymentRate" componentClass="select" defaultValue={coach.paymentRate}>
+             <FormControl id="paymentRate" componentClass="select" defaultValue={admin.paymentRate}>
                <option value="select">Select</option>
-               <option value="OJT">OJT</option>
-               <option value="30">30</option>
-               <option value="40">40</option>
+               <option value="35">35</option>
+               <option value="40">30</option>
+               <option value="45">40</option>
                <option value="50">50</option>
-               <option value="60">60</option>
-               <option value="70">70</option>
              </FormControl>
           </FormGroup>
-          <FormGroup>
-            <ControlLabel>First Aid Trained</ControlLabel>
-             <FormControl id="firstAid" componentClass="select" defaultValue={coach.firstAid}>
-               <option value="true">Yes</option>
-               <option value="false">No</option>
-             </FormControl>
-          </FormGroup>
-          <button className="submitbtn"  onClick={this.formSubmit.bind(this)}>Save Coach Profile</button>
-          {coachId === 'add' ? [] : <button className="submitbtn" style={{backgroundColor: 'red', marginTop: '20px'}} onClick={this.open}>Delete Coach Profile</button>}
+          <button className="submitbtn"  onClick={this.formSubmit.bind(this)}>Save Admin Profile</button>
+          {adminId === 'add' ? [] : <button className="submitbtn" style={{backgroundColor: 'red', marginTop: '20px'}} onClick={this.open}>Delete Admin Profile</button>}
         </Col>
       </Row>
       <Modal show={this.state.showModal} onHide={this.close}>
       <Modal.Header closeButton>
-        <b>Delete Coach</b>
+        <b>Delete Administrator</b>
       </Modal.Header>
       <Modal.Body>
-        Are you sure you want to delete coach {coach.name} ?
+        Are you sure you want to delete administrator {admin.name} ?
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={this.deleteCoach}>Yes</Button>
+        <Button onClick={this.deleteAdmin}>Yes</Button>
         <Button onClick={this.close}>No</Button>
       </Modal.Footer>
     </Modal>
@@ -244,4 +223,4 @@ class CoachEdit extends React.Component{
 
 
 export default connect((state) => {return state;
-})(CoachEdit);
+})(AdminEdit);

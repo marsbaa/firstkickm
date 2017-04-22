@@ -11,6 +11,8 @@ class DeleteTermModal extends React.Component{
       errorTermName: null,
       errorMessageTermName: ""
     }
+    this.close = this.close.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   close(e) {

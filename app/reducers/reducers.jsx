@@ -352,6 +352,38 @@ export var coachReducer = (state = [], action) => {
  }
 };
 
+export var adminReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_ADMINS':
+      return [
+        ...state,
+        ...action.admins
+      ];
+    case 'ADD_ADMIN':
+      return [
+        ...state,
+        {...action.admin}
+      ];
+    case 'UPDATE_ADMIN':
+      return state.map((admin) => {
+        if ((admin.key) === action.adminId) {
+          return {
+           ...admin,
+           ...action.admin
+         };
+        }
+        else {
+          return admin;
+        }
+      });
+    case 'DELETE_ADMIN':
+      return state.filter((admin) => {
+        return admin.key !== action.adminId;
+      });
+      default:
+        return state;
+   }
+  };
 
 export var centreReducer = (state = [], action) => {
   switch (action.type) {

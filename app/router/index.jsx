@@ -40,6 +40,11 @@ import CoachesList from 'CoachesList'
 import CoachEdit from 'CoachEdit'
 import CoachAttendance from 'CoachAttendance'
 
+//Components for Admins
+import AdminApp from 'AdminApp'
+import AdminList from 'AdminList'
+import AdminEdit from 'AdminEdit'
+
 import Settings from 'Settings'
 import SettingsList from 'SettingsList'
 import EditAgeGroup from 'EditAgeGroup'
@@ -129,6 +134,10 @@ export default (
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>
             <Route path=":coachId" component={CoachEdit} />
+          </Route>
+          <Route path="admins" component={AdminApp}>
+            <IndexRoute component={AdminList}/>
+            <Route path=":adminId" component={AdminEdit} />
           </Route>
           <Route path="jersey" component={JerseyIssue}>
             <IndexRoute component={JerseyIssueList} />

@@ -491,6 +491,67 @@ export var toggleCoachAttendance = (date, id, classId, sessionRate) => {
   };
 };
 
+//Admin Profile
+export var startAdmins = () => {
+   return (dispatch) => {
+   var adminsRef = firebaseRef.child('admins');
+   adminsRef.once('value').then((snapshot) => {
+    var admins = snapshot.val();
+    if (admins !== undefined && admins !== null) {
+      var parsedAdmins = [];
+
+      Object.keys(admins).forEach((adminId)=> {
+        parsedAdmins.push({
+          key: adminId,
+          ...admins[adminId]
+        });
+      });
+      dispatch(addAdmins(parsedAdmins));
+  }
+})
+
+};
+};
+
+export var addAdmins = (admins) => {
+  return {
+    type: 'ADD_ADMINS',
+    admins
+  };
+};
+
+export var addAdmin = (admin) => {
+  var adminsRef = firebaseRef.child('admins');
+  var newKey = adminsRef.push().key;
+  var updates = {};
+  updates[newKey] = admin;
+  adminsRef.update(updates);
+  admin.key = newKey;
+  return {
+    type: 'ADD_ADMIN',
+    admin
+  };
+};
+
+export var updateAdmin = (adminId, admin) => {
+  var updates=  {};
+  updates['/admins/'+ adminId] = admin;
+  firebase.database().ref().update(updates);
+  return {
+    type: 'UPDATE_ADMIN',
+    adminId,
+    admin
+  };
+};
+
+export var deleteAdmin = (adminId) => {
+  var adminsRef = firebaseRef.child('admins/'+adminId);
+  adminsRef.remove();
+  return {
+    type: 'DELETE_ADMIN',
+    adminId
+  };
+};
 
 //Centre Profile
 export var startCentres = () => {

@@ -85,6 +85,7 @@ class MainMenu extends React.Component {
                   <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
                   <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>
+                <Link to="m/admins" ><button className="mainbtn">Admin Profile</button></Link>
                   <Link to="m/inventory" ><button className="mainbtn" id="inventory">Inventory </button></Link>
 
               </div>

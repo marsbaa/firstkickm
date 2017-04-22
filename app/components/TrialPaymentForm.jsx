@@ -250,7 +250,7 @@ componentDidMount () {
               termKey = cla.termKey
             }
       })
-
+      console.log(termKey)
       var startDate;
       var count = 0;
       var termDate = [];
@@ -270,7 +270,10 @@ componentDidMount () {
       startDates[id] = startDate;
       termDates[id] = termDate;
       termKeys[id] = termKey;
+      console.log(startDate)
+      console.log(termDate)
     })
+
     this.setState({termKeys})
     this.setState({termDates})
     this.setState({startDate : startDates});
