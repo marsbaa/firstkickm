@@ -864,7 +864,10 @@ export var startPayments = () => {
            siblingDiscount: payment.siblingDiscount,
            termsPaid: payment.termsPaid,
            total: payment.total,
-           jerseyIssued : payment.jerseyIssued
+           jerseyIssued : payment.jerseyIssued,
+           jerseySize: payment.jerseySize,
+           signature: payment.signature,
+           issuedDate: payment.issuedDate
          });
        }
        else if (payment.paymentMethod === 'Cheque'){
@@ -882,7 +885,10 @@ export var startPayments = () => {
            chequeNumber: payment.chequeNumber === null || payment.chequeNumber === undefined ? '':payment.chequeNumber,
            termsPaid: payment.termsPaid,
            total: payment.total,
-           jerseyIssued : payment.jerseyIssued
+           jerseyIssued : payment.jerseyIssued,
+           jerseySize: payment.jerseySize,
+           signature: payment.signature,
+           issuedDate: payment.issuedDate
          });
        }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 
 const SwitchButton = React.createClass( {
 
@@ -12,17 +13,17 @@ const SwitchButton = React.createClass( {
    * The props types.
    */
   propTypes : {
-    id             : React.PropTypes.string,
-    name           : React.PropTypes.string,
-    title          : React.PropTypes.string,
-    label          : React.PropTypes.string,
-    labelRight     : React.PropTypes.string,
-    defaultChecked : React.PropTypes.bool,
-    disabled       : React.PropTypes.bool,
-    theme          : React.PropTypes.string,
-    checked        : React.PropTypes.string,
-    mode           : React.PropTypes.string,
-    onChange       : React.PropTypes.func
+    id             : PropTypes.string,
+    name           : PropTypes.string,
+    title          : PropTypes.string,
+    label          : PropTypes.string,
+    labelRight     : PropTypes.string,
+    defaultChecked : PropTypes.bool,
+    disabled       : PropTypes.bool,
+    theme          : PropTypes.string,
+    checked        : PropTypes.string,
+    mode           : PropTypes.string,
+    onChange       : PropTypes.func
   },
 
 

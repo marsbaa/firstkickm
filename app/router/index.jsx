@@ -28,6 +28,7 @@ import TrialPaymentForm from 'TrialPaymentForm'
 import JerseyIssue from 'JerseyIssue'
 import JerseyIssueList from 'JerseyIssueList'
 import JerseyIssueForm from 'JerseyIssueForm'
+import JerseyIssuedList from 'JerseyIssuedList'
 
 import PaymentApp from 'PaymentApp'
 import PaymentList from 'PaymentList'
@@ -50,6 +51,7 @@ import ScheduleMain from 'ScheduleMain'
 //Student Attendance
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
+import AttendanceEdit from 'AttendeeEdit'
 
 //Student Profile
 import StudentApp from 'StudentApp'
@@ -66,7 +68,7 @@ import InventoryList from 'InventoryList'
 
 //Charts
 import ChartsApp from 'ChartsApp'
-import ChartsDisplay from 'ChartsDisplay'
+import ChartsList from 'ChartsList'
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
@@ -109,6 +111,7 @@ export default (
           <Route path="coachattendance" component={CoachAttendance} />
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
+            <Route path="edit/:studentId" component={AttendanceEdit} />
           </Route>
           <Route path="students" component={StudentApp}>
             <IndexRoute component={StudentList}/>
@@ -129,13 +132,14 @@ export default (
           </Route>
           <Route path="jersey" component={JerseyIssue}>
             <IndexRoute component={JerseyIssueList} />
-            <Route path=":paymentKey" component={JerseyIssueForm} />
+            <Route path="issue/:paymentKey" component={JerseyIssueForm} />
+            <Route path="issued" component={JerseyIssuedList} />
           </Route>
           <Route path="inventory" component={InventoryApp}>
             <IndexRoute component={InventoryList} />
           </Route>
           <Route path="charts" component={ChartsApp}>
-            <IndexRoute component={ChartsDisplay}/>
+            <IndexRoute component={ChartsList}/>
           </Route>
           <Route path="settings" component={Settings}>
             <IndexRoute component={SettingsList}/>

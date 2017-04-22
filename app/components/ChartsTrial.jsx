@@ -9,18 +9,13 @@ import moment from 'moment'
 import TrialsFilter from 'TrialsFilter'
 
 
-class ChartsDisplay extends React.Component{
+class ChartsTrial extends React.Component{
 
   constructor(props){
     super(props);
     this.state = {
       selectedTerm : ''
     }
-  }
-
-  componentDidMount () {
-    var {dispatch} = this.props;
-    dispatch(actions.updateNavTitle("/m/charts", "Charts"));
   }
 
   handleSelect(e) {
@@ -110,4 +105,4 @@ class ChartsDisplay extends React.Component{
 
 
  export default connect((state) => {return state;
-})(ChartsDisplay);
+})(ChartsTrial);

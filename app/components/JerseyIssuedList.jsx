@@ -6,9 +6,9 @@ import {btn} from 'styles.css'
 var actions = require('actions');
 import Search from 'Search'
 import _ from 'lodash'
-import Jersey from 'Jersey'
+import JerseyIssued from 'JerseyIssued'
 
-class JerseyIssueList extends React.Component{
+class JerseyIssuedList extends React.Component{
 
   componentDidMount () {
     var {dispatch} = this.props;
@@ -18,19 +18,16 @@ class JerseyIssueList extends React.Component{
   render() {
     var {payments} = this.props;
     var html = []
-    var jerseyPending = _.filter(payments, {jerseyIssued: false});
+    var jerseyPending = _.filter(payments, {jerseyIssued: true});
     jerseyPending.map((student) => {
-      html.push(<Jersey key={student.childKey} student={student} paymentKey={student.key} />)
+      html.push(<JerseyIssued key={student.childKey} student={student} />)
     })
 
    return (
      <div>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
-         <Col xs={8} md={8}>
+         <Col xs={12} md={12}>
            <Search type="student" />
-         </Col>
-         <Col xs={4} md={4}>
-         <Link to="/m/jersey/issued"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}}>History</button></Link>
          </Col>
        </Row>
       {html}
@@ -41,4 +38,4 @@ class JerseyIssueList extends React.Component{
 
 
  export default connect((state) => {return state;
-})(JerseyIssueList);
+})(JerseyIssuedList);

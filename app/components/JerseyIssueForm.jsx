@@ -18,7 +18,6 @@ class JerseyIssueForm extends React.Component{
 
   handleSizeSelect(e, size) {
     this.setState({size})
-    console.log(size)
   }
 
   clear() {
@@ -31,7 +30,6 @@ class JerseyIssueForm extends React.Component{
     var paymentKey = this.props.params.paymentKey
     var signature = this.refs.mySignature;
     var payment = _.find(payments, {key: paymentKey})
-    console.log(payment)
     if (!signature.isEmpty()) {
       var signed = signature.toDataURL();
       payment.signature = signed
