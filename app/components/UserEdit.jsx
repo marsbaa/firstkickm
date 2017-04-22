@@ -104,7 +104,7 @@ class UserEdit extends React.Component{
       if (user.assignedRoles === role) {
        rolesBtnClass = "downbtn"
       }
-      roleshtml.push(<Button className="datebtn" key={role} active={this.state.assignedRoles === role}style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</Button>)
+      roleshtml.push(<Button className="datebtn" key={role} active={this.state.assignedRoles === role} style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</Button>)
     })
 
 

@@ -53,7 +53,7 @@ class JerseyIssueForm extends React.Component{
     var html = []
     var btnClass = "datebtn"
     jerseySize.map((size) => {
-      html.push(<Button key={size} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px', backgroundColor: '#f5bb05', color: '#000000', border: '1px solid #ffffff', textShadow: 'none', fontWeight: '500'}} onClick={(e) => {this.handleSizeSelect(e, size)}}>{size}</Button>)
+      html.push(<Button key={size} className="datebtn" active={this.state.size === size}  style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => {this.handleSizeSelect(e, size)}}>{size}</Button>)
     })
 
   return (
