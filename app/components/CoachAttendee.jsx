@@ -14,7 +14,7 @@ class CoachAttendee extends React.Component {
     var classKey = this.props.classKey;
     var truncatedName = _.truncate(name, {
   'length': 20});
-    var date = moment().format("YYYY-MM-DD");
+    var date = moment("2017-04-12").format("YYYY-MM-DD");
     var attended=false;
     if (attendance !== undefined) {
       if (attendance[date] !== undefined) {

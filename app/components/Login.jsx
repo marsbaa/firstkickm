@@ -23,7 +23,7 @@ class Login extends React.Component{
     return (
       <Grid style={{paddingTop:'40px'}}>
         <Row>
-            <form onKeyPress={this.onKeyPress}>
+            <form onKeyPress={this.onKeyPress.bind(this)}>
               <Col xs={2} md={4} />
               <Col xs={8} md={4} >
                       <Image src="images/logo.png" height="80px" style={{paddingBottom:'10px', margin: '0 auto', display:'block'}} rounded />
@@ -40,7 +40,7 @@ class Login extends React.Component{
                     placeholder="Password"
                     />
                   <button className="btn" style={{width: '100%', margin: '0'}}
-                       onClick={this.onLogin}>Login</button>
+                       onClick={this.onLogin.bind(this)}>Login</button>
               </Col>
             <Col xs={2} md={4} />
             </form>

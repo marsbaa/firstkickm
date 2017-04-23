@@ -452,6 +452,54 @@ export var deleteCoach = (coachId) => {
   };
 };
 
+export var updateCoachDate = () => {
+  return (dispatch) => {
+  var coachesRef = firebaseRef.child('coaches');
+  var updates = {}
+  updates['/-Ki9uPBf2g8vmkAVmcr1/attendance/'] = {
+    "2017-04-22" :
+      {
+        attended: true,
+        classId: "-Ke7pOCCob3ZzXDoeRHE",
+        sessionRate: "40"
+      }
+  }
+  updates['/-Ki9uPBqhbVSckDgMCQM/attendance/'] = {
+    "2017-04-22" :
+      {
+        attended: true,
+        classId: "-Ke7pJoE2XfUra23Zjye",
+        sessionRate: "40"
+      }
+  }
+  updates['/-Ki9uPCcT8YYR8fcyP_u/attendance/'] = {
+    "2017-04-22" :
+      {
+        attended: true,
+        classId: "-Ke7p_oT0J_pSq4hfyAz",
+        sessionRate: "50"
+      }
+  }
+  updates['/-Ki9uPHNU9GKyVb4NTtI/attendance/'] = {
+    "2017-04-22" :
+      {
+        attended: true,
+        classId: "-Ke7pJoE2XfUra23Zjye",
+        sessionRate: "70"
+      }
+  }
+  updates['/-Ki9uPIQssySbHb_lN7J/attendance/'] = {
+    "2017-04-22" :
+      {
+        attended: true,
+        classId: "-Ke7pJoE2XfUra23Zjye",
+        sessionRate: "30"
+      }
+  }
+  coachesRef.update(updates)
+}
+}
+
 export var updateCoachAttendance = (date, id, classKey, paymentRate) => {
   return (dispatch) => {
     var classId = null;

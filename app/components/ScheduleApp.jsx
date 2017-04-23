@@ -32,7 +32,8 @@ class ScheduleApp extends React.Component {
       if (calendar.centreKey === selection.key) {
         calendar.terms.map((term, termID) => {
           term.map((date, dateID) => {
-            if (moment(date).isAfter()) {
+            var today = moment().format("YYYYMMDD")
+            if (moment(date).isSameOrAfter(today,'day')) {
               termDates.push({
                 term: termID,
                 session: parseInt(dateID)+1,
