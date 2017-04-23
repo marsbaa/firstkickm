@@ -451,7 +451,7 @@ export var deleteCoach = (coachId) => {
     coachId
   };
 };
-
+/*
 export var updateCoachDate = () => {
   return (dispatch) => {
   var coachesRef = firebaseRef.child('coaches');
@@ -498,7 +498,7 @@ export var updateCoachDate = () => {
   }
   coachesRef.update(updates)
 }
-}
+}*/
 
 export var updateCoachAttendance = (date, id, classKey, paymentRate) => {
   return (dispatch) => {
