@@ -24,7 +24,7 @@ class Trial extends React.Component{
       registeredHTML.push(
         <Row key={id} style={{backgroundColor: '#d7d7d7', padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
           <Col xs={2} md={2}>
-            <Switch checked={attended.toString()} defaultChecked={attended} onChange={()=> {
+            <Switch name={id+"attended"} checked={attended.toString()} defaultChecked={attended} onChange={()=> {
                 dispatch(actions.startToggleTrial(id));
               }} />
           </Col>
