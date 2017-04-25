@@ -90,7 +90,7 @@ class NavBar extends React.Component {
     <div>
       <Navbar style={{backgroundColor: '#ffffff', padding: '10px', marginBottom: '0'}}>
         <Navbar.Header>
-          <Navbar.Brand>
+          <Navbar.Brand style={{fontSize: '16px'}}>
              <Link to="/m">
               <Image src="/images/logo.png" height="40px" rounded />
              </Link>

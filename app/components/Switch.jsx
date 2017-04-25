@@ -1,66 +1,18 @@
 import React from "react";
 import PropTypes from 'prop-types'
 
-const SwitchButton = React.createClass( {
-
-  // Display name
-  displayName : 'Switch Button',
-
-  // Version
-  version : '2.2.1',
-
-  /**
-   * The props types.
-   */
-  propTypes : {
-    id             : PropTypes.string,
-    name           : PropTypes.string,
-    title          : PropTypes.string,
-    label          : PropTypes.string,
-    labelRight     : PropTypes.string,
-    defaultChecked : PropTypes.bool,
-    disabled       : PropTypes.bool,
-    theme          : PropTypes.string,
-    checked        : PropTypes.string,
-    mode           : PropTypes.string,
-    onChange       : PropTypes.func
-  },
 
 
-  /**
-   * Default props.
-   *
-   * @returns {{id: string, name: string, title: string, label: string, labelRight: string, defaultChecked: string, theme: string, checked: null, onChange: *}}
-   */
-  getDefaultProps : function()
-  {
-    return {
-      id             : '',
-      name           : 'switch-button',
-      title          : '',
-      label          : '',
-      labelRight     : '',
-      disabled       : false,
-      defaultChecked : false,
-      theme          : 'rsbc-switch-button-flat-round',
-      checked        : null,
-      mode           : "switch",
-      onChange       : this.handleChange
-    };
-  },
+class SwitchButton extends React.Component{
+
 
   // Handle change
-  handleChange : function()
+  handleChange()
   {
     // Override
-  },
+  }
 
-  /**
-   * Render Switch Button control
-   *
-   * @returns {XML}
-   */
-  render : function()
+  render()
   {
     let id, label, labelRight,
         mode = this.props.mode || "switch";
@@ -100,7 +52,34 @@ const SwitchButton = React.createClass( {
       </div>
     );
   }
+}
 
-} );
+SwitchButton.propTypes = {
+  id             : PropTypes.string,
+  name           : PropTypes.string,
+  title          : PropTypes.string,
+  label          : PropTypes.string,
+  labelRight     : PropTypes.string,
+  defaultChecked : PropTypes.bool,
+  disabled       : PropTypes.bool,
+  theme          : PropTypes.string,
+  checked        : PropTypes.string,
+  mode           : PropTypes.string,
+  onChange       : PropTypes.func
+}
+
+SwitchButton.defaultProps = {
+  id             : '',
+  name           : 'switch-button',
+  title          : '',
+  label          : '',
+  labelRight     : '',
+  disabled       : false,
+  defaultChecked : false,
+  theme          : 'rsbc-switch-button-flat-round',
+  checked        : null,
+  mode           : "switch",
+  onChange       : SwitchButton.prototype.handleChange
+}
 
 export default SwitchButton;

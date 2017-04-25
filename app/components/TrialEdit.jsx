@@ -5,28 +5,33 @@ var {connect} = require('react-redux')
 var actions = require('actions')
 import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
 
-export var TrialEdit = React.createClass({
+class TrialEdit extends React.Component{
 
-  getInitialState(){
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       selectedCentre : "",
       trialDate : ''
     }
-  },
+    this.centreSelect = this.centreSelect.bind(this)
+    this.trialDateSelect = this.trialDateSelect.bind(this)
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+  }
+
 
   centreSelect(e) {
     e.preventDefault();
     this.setState({
       selectedCentre: e.target.value
     });
-  },
+  }
 
   trialDateSelect(e) {
     e.preventDefault();
     this.setState({
       trialDate : e.target.value
     });
-  },
+  }
 
   componentWillMount() {
     var key = this.props.params.trialId;
@@ -34,7 +39,7 @@ export var TrialEdit = React.createClass({
     var trial = _.find(trials, {id: key});
     this.setState({selectedCentre: trial.venueId});
     this.setState({trialDate: trial.dateOfTrial});
-  },
+  }
 
   componentDidMount() {
     var key = this.props.params.trialId;
@@ -42,9 +47,9 @@ export var TrialEdit = React.createClass({
     var trial = _.find(trials, {id: key});
     document.getElementById("boy").checked = trial.gender==="boy" ? true: false;
     document.getElementById("girl").checked = trial.gender==="girl" ? true: false;
-  },
+  }
 
-  onFormSubmit: function (e) {
+  onFormSubmit(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
     var key = this.props.params.trialId;
@@ -63,9 +68,9 @@ export var TrialEdit = React.createClass({
     };
     dispatch(actions.updateTrial(trial));
     browserHistory.push(`/m/trials`);
-  },
+  }
 
-  render: function () {
+  render() {
     var key = this.props.params.trialId;
     var {trials,centres, ageGroup, calendars} = this.props;
     var trial = _.find(trials, {id: key});
@@ -219,7 +224,7 @@ export var TrialEdit = React.createClass({
         </Row>
     );
   }
-});
+}
 
 export default connect(
   (state) => {

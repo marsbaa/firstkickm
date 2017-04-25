@@ -303,7 +303,7 @@ class PaymentForm extends React.Component {
            <Col xs={12} md={12}>
              <FormGroup style={{marginBottom: '0'}}>
                <ControlLabel>Start Date</ControlLabel>
-                 <DatePicker style={{border: '1px solid black', fontWeight: 'normal'}}
+                 <DatePicker 
                    id = {"datePicker"+ id}
                    dateFormat="YYYY-MM-DD"
                    selected={this.state.startDate[id]}

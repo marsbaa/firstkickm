@@ -5,36 +5,41 @@ var {connect} = require('react-redux')
 var actions = require('actions')
 import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
 
-export var TrialAdd = React.createClass({
+class TrialAdd extends React.Component{
 
-  getInitialState(){
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       selectedCentre : "",
       trialDate : ''
     }
-  },
+    this.centreSelect = this.centreSelect.bind(this)
+    this.trialDateSelect = this.trialDateSelect.bind(this)
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+  }
+
 
   centreSelect(e) {
     e.preventDefault();
     this.setState({
       selectedCentre: e.target.value
     });
-  },
+  }
 
   trialDateSelect(e) {
     e.preventDefault();
     this.setState({
       trialDate : e.target.value
     });
-  },
+  }
 
   componentWillMount() {
     var {selection} = this.props;
     this.setState({selectedCentre: selection.id});
-  },
+  }
 
 
-  onFormSubmit: function (e) {
+  onFormSubmit(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
     var trial = {
@@ -51,9 +56,9 @@ export var TrialAdd = React.createClass({
     };
     dispatch(actions.addTrial(trial));
     browserHistory.push(`/m/trials`);
-  },
+  }
 
-  render: function () {
+  render() {
     var key = this.props.params.studentId;
     var {trials, centres, ageGroup, calendars} = this.props;
 
@@ -191,7 +196,7 @@ export var TrialAdd = React.createClass({
         </Row>
     );
   }
-});
+}
 
 export default connect(
   (state) => {

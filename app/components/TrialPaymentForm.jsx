@@ -250,7 +250,6 @@ componentDidMount () {
               termKey = cla.termKey
             }
       })
-      console.log(termKey)
       var startDate;
       var count = 0;
       var termDate = [];
@@ -270,8 +269,6 @@ componentDidMount () {
       startDates[id] = startDate;
       termDates[id] = termDate;
       termKeys[id] = termKey;
-      console.log(startDate)
-      console.log(termDate)
     })
 
     this.setState({termKeys})
@@ -295,7 +292,7 @@ componentDidMount () {
              <Col xs={12} md={12}>
                <FormGroup style={{marginBottom: '0'}}>
                  <ControlLabel>Start Date</ControlLabel>
-                   <DatePicker style={{border: '1px solid black', fontWeight: 'normal'}}
+                   <DatePicker
                      id = {"datePicker"+ id}
                      dateFormat="YYYY-MM-DD"
                      selected={this.state.startDate[id]}

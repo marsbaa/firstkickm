@@ -4,21 +4,24 @@ import {Link} from 'react-router'
 import moment from 'moment'
 
 
-export var TermButton = React.createClass({
-  getInitialState(){
-    return {
-      topColor: 'orange'
+class TermButton extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      topColor: '#f5bb05'
     }
-  },
+    this.handleSelect = this.handleSelect.bind(this)
+  }
 
   handleSelect(e) {
     e.preventDefault()
     this.setState({
       topColor: '#5bc0de'
     })
-  },
+  }
 
-  render: function() {
+  render() {
     var title = this.props.title;
     var date = this.props.date;
     var displayDate = this.props.displayDate;
@@ -44,7 +47,7 @@ export var TermButton = React.createClass({
     </Link>
   );
 }
-});
+}
 
 
 export default (TermButton);

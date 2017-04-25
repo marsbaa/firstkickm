@@ -40,6 +40,7 @@ import CoachesApp from 'CoachesApp'
 import CoachesList from 'CoachesList'
 import CoachEdit from 'CoachEdit'
 import CoachAttendance from 'CoachAttendance'
+import CoachAttendanceHQ from 'CoachAttendanceHQ'
 
 //Components for Admins
 import AdminApp from 'AdminApp'
@@ -67,6 +68,7 @@ import StudentAdd from 'StudentAdd'
 
 //Total collection
 import TotalCollection from 'TotalCollection'
+import TotalCollectionHQ from 'TotalCollectionHQ'
 
 //Inventory
 import InventoryApp from 'InventoryApp'
@@ -101,6 +103,7 @@ export default (
             <Route path=":userId" component={UserEdit} />
           </Route>
           <Route path="total" component={TotalCollection}/>
+          <Route path="totalhq" component={TotalCollectionHQ}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={CentreEdit}/>
@@ -115,6 +118,7 @@ export default (
             <Route path="payment" component={TrialPaymentForm} />
           </Route>
           <Route path="coachattendance" component={CoachAttendance} />
+          <Route path="coachattendanceHQ" component={CoachAttendanceHQ} />
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
             <Route path="edit/:studentId" component={AttendanceEdit} />
