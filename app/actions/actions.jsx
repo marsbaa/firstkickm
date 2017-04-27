@@ -284,6 +284,23 @@ export var toggleTrial = (id) => {
   };
 };
 
+export var addDeposit = (deposit, id) => {
+  var trialsRef = firebaseRef.child('trials/'+id);
+  var date = moment().format()
+  trialsRef.once('value').then((snapshot) => {
+    var updates = snapshot.val()
+    updates.deposit = deposit
+    updates.depositCollected = date
+    updates.depositCleared = false
+    trialsRef.update(updates);
+  })
+  return {
+    type: 'ADD_DEPOSIT',
+    deposit,
+    date,
+    id
+  }
+}
 
 
 //Students Profile

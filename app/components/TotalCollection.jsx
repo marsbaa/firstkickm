@@ -7,7 +7,6 @@ import moment from 'moment'
 import {normalbtn, selectedbtn} from 'styles.css'
 import {Creatable} from 'react-select'
 import 'react-select/dist/react-select.css';
-import {browserHistory} from 'react-router'
 
 class TotalCollection extends React.Component {
 
@@ -238,7 +237,6 @@ class TotalCollection extends React.Component {
 
 
     let close = () => this.setState({show:false})
-    var modalMessage = []
 
    return (
      <div>

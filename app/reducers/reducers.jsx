@@ -123,6 +123,19 @@ export var trialsReducer = (state = [], action) => {
           return trial;
         }
       });
+    case 'ADD_DEPOSIT':
+      return state.map((trial) => {
+        if (trial.id === action.id) {
+          return {
+            ...trial,
+            deposit: action.deposit,
+            depositCollected: action.date,
+            depositCleared: false
+          };
+        } else {
+          return trial;
+        }
+      });
     default:
       return state;
   }

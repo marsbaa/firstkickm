@@ -393,12 +393,23 @@ componentDidMount () {
           })
 
         }
+        //Deposit
+        if (student.deposit !== undefined) {
+          fees.push(<Row key={"deposit"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
+            <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Deposit</b></Col>
+            <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>(${student.deposit})</p></Col>
+          </Row>)
+          totalFee -= student.deposit;
+        }
         //Registration Fee
         fees.push(<Row key={"registration"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
           <Col xs={8} md={8}><b>Registration Fee</b></Col>
           <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>$80</p></Col>
         </Row>)
         totalFee += 80;
+
+
+
         //Sibling Discount
         if (id >= 1 && totalSession !== 0) {
           fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
