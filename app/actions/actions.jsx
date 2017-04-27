@@ -1060,3 +1060,44 @@ export var updateParentDetails = (parentDetails) => {
     parentDetails
   }
 }
+
+
+//Expense Actions
+export var addExpense = (expense) => {
+  var expensesRef = firebaseRef.child('expenses');
+  var newKey = expensesRef.push().key;
+  var updates = {};
+  updates[newKey] = expense;
+  expensesRef.update(updates);
+  expense.key = newKey;
+  return {
+    type: 'ADD_EXPENSE',
+    expense
+  }
+}
+
+export var startExpenses = () => {
+   return (dispatch) => {
+   var expensesRef = firebaseRef.child('expenses');
+   expensesRef.once('value').then((snapshot) => {
+    var expense = snapshot.val();
+    if (expense !== null){
+    var parsedExpense = [];
+
+    Object.keys(expense).forEach((expenseId)=> {
+      parsedExpense.push({
+        key: expenseId,
+        ...expense[expenseId]
+      });
+    });
+    dispatch(addExpenses(parsedExpense));}
+  });
+};
+};
+
+export var addExpenses = (expenses) => {
+  return {
+    type: 'ADD_EXPENSES',
+    expenses
+  };
+};

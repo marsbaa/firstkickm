@@ -660,3 +660,20 @@ export var registrationReducer = (state=[], action) => {
         return state;
     }
   }
+
+  export var expenseReducer = (state=[], action) => {
+    switch(action.type) {
+      case 'ADD_EXPENSES':
+        return [
+          ...state,
+          ...action.expenses
+        ];
+      case 'ADD_EXPENSE':
+        return [
+          ...state,
+        {...action.expense}
+      ];
+      default:
+        return state;
+    }
+  }
