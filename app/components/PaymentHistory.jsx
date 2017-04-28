@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 var actions = require('actions')
 import moment from 'moment'
 import PaymentDetails from 'PaymentDetails'
-import InvoiceTemplate from 'InvoiceTemplate'
 import {Grid, Col, Row, PanelGroup, Panel} from 'react-bootstrap'
 
 class PaymentHistory extends React.Component {
@@ -43,7 +42,6 @@ class PaymentHistory extends React.Component {
            {html}
          </Col>
        </Row>
-       {invoiceHTML}
      </Grid>
    );
  }
