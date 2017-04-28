@@ -31,8 +31,19 @@ class PaymentForm extends React.Component {
       errorMessage: null,
       emailError: null,
       emailErrorMessage: null,
-      email: ''
+      email: '',
+      prorateAmount : []
     };
+  }
+
+  componentWillMount() {
+    window.scrollTo(0,0)
+  }
+
+  handleProrate(e, count) {
+    var prorateAmount = this.state.prorateAmount
+    prorateAmount[count] = e.target.value
+    this.setState({prorateAmount})
   }
 
   handleChange(date, count) {
@@ -108,7 +119,7 @@ class PaymentForm extends React.Component {
     this.state.payer.map((student, id) => {
     //Term Id
     var termsPaid = []
-    var cost = 0
+    var total = 0
     var earlyBird = false
     var perSession;
     var siblingDiscount = false
@@ -126,6 +137,7 @@ class PaymentForm extends React.Component {
         }
       })
      payerTerm.map((term, termId) => {
+       var cost = 0
       switch (_.size(term)) {
         case 8:
           cost = 300;
@@ -148,6 +160,7 @@ class PaymentForm extends React.Component {
           perSession = 45;
           break;
       }
+      total += cost
       var actualTerm;
       calendars.map((calendar) => {
         if(calendar.key === this.state.termKeys[id]) {
@@ -156,12 +169,9 @@ class PaymentForm extends React.Component {
       })
       if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
         earlyBird= true
-        cost -= 20
+        total -= 20
       }
-      if (id > 0) {
-        siblingDiscount=true
-        cost -= 20
-      }
+
       var datesPaid = []
       term.map((date) => {
         datesPaid.push({
@@ -171,6 +181,14 @@ class PaymentForm extends React.Component {
       })
       termsPaid[termId] = datesPaid
     })
+    if (id > 0) {
+      siblingDiscount=true
+      total -= 20
+    }
+    if (this.state.prorateAmount[id] !== undefined) {
+      total -= this.state.prorateAmount[id]
+    }
+    console.log(total)
     if (this.state.form === 'Cash') {
       var paymentDetail = {
         centreId : student.venueId.toString(),
@@ -180,7 +198,8 @@ class PaymentForm extends React.Component {
         earlyBird,
         date: moment().format(),
         siblingDiscount,
-        total : cost,
+        total : total,
+        prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
         termsPaid,
         paymentMethod: this.state.form,
         email: this.state.email
@@ -195,7 +214,8 @@ class PaymentForm extends React.Component {
           earlyBird,
           date: moment().format(),
           siblingDiscount,
-          total : cost,
+          total : total,
+          prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
           termsPaid,
           paymentMethod: this.state.form,
           chequeNumber: document.getElementById('chequeNumber').value,
@@ -303,7 +323,7 @@ class PaymentForm extends React.Component {
            <Col xs={12} md={12}>
              <FormGroup style={{marginBottom: '0'}}>
                <ControlLabel>Start Date</ControlLabel>
-                 <DatePicker 
+                 <DatePicker
                    id = {"datePicker"+ id}
                    dateFormat="YYYY-MM-DD"
                    selected={this.state.startDate[id]}
@@ -323,6 +343,20 @@ class PaymentForm extends React.Component {
               onChange={this.handleDatesChange.bind(this)}
               onDeselect={this.handleDeSelected.bind(this)}
               payerId = {id} />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} xs={12}>
+            <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Pro-rate from Last Term</font>}>
+              <FormGroup>
+                <ControlLabel>Amount</ControlLabel>
+                  <FormControl style={{marginBottom: '10px'}}
+                  id={"prorateAmount"+student.key}
+                  type="text"
+                  placeholder="Enter Amount" onChange={(e) => {
+                        this.handleProrate(e, id)}}/>
+              </FormGroup>
+            </Panel>
           </Col>
         </Row>
       </Tab>)
@@ -393,11 +427,21 @@ class PaymentForm extends React.Component {
             </Row>)
             totalFee -= 20;
           }
-
           totalFee += cost;
         })
 
       }
+      if (this.state.prorateAmount[id] !== undefined) {
+        if (this.state.prorateAmount[id] !== "") {
+           fees.push(<Row key={"prorate"+id} style={{padding: '0px 15px', marginTop: '5px'}}>
+            <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Pro-rate</b></Col>
+            <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>(${this.state.prorateAmount[id]})</p></Col>
+          </Row>)
+          totalFee -= this.state.prorateAmount[id]
+        }
+      }
+
+
       if (id >= 1) {
         fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
           <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>

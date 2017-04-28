@@ -43,7 +43,7 @@ class PaymentDetails extends React.Component {
    return (
      <ListGroup fill>
        <ListGroupItem>Centre : {centre.name}</ListGroupItem>
-       <ListGroupItem>{termspaidhtml}</ListGroupItem>
+       <ListGroupItem>Terms Paid : {termspaidhtml}</ListGroupItem>
      <ListGroupItem>{
            payment.termsPaid !== undefined ?
              Object.keys(payment.termsPaid).map((termId) => {

@@ -25,7 +25,7 @@ class PaymentHistory extends React.Component {
       html.push(<PanelGroup key="accordion" accordion>
         {Object.keys(student.payments).map((paymentId) => {
           var payment = _.find(payments, {key: student.payments[paymentId].paymentKey})
-          return <Panel header={moment(payment.date).format('DD MMM YYYY')} eventKey={payment.key} key={payment.key}>
+          return <Panel header={moment(payment.date).format('DD MMM YYYY') +" - Total : $" + payment.total } eventKey={payment.key} key={payment.key}>
             <PaymentDetails payment={payment} />
           </Panel>
 
