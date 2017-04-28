@@ -221,7 +221,9 @@ export var updateTrial = (trial) => {
     dateOfTrial: trial.dateOfTrial,
     timeOfTrial: trial.timeOfTrial,
     parentName: trial.parentName,
-    medicalCondition: trial.medicalCondition
+    medicalCondition: trial.medicalCondition,
+    attended: trial.attended,
+    attendedOn: trial.attendedOn
   });
   return {
     type: 'UPDATE_TRIAL',

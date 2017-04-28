@@ -51,6 +51,8 @@ class TrialEdit extends React.Component{
 
   onFormSubmit(e) {
     e.preventDefault();
+    var {trials} = this.props;
+    var trial = _.find(trials, {id: key});
     var {dispatch, centres} = this.props;
     var key = this.props.params.trialId;
     var trial = {
@@ -64,7 +66,9 @@ class TrialEdit extends React.Component{
       venueId: document.getElementById("centreSelect").value.toString(),
       timeOfTrial: document.getElementById("timeSlotSelect").value,
       parentName: document.getElementById("parentName").value,
-      medicalCondition: document.getElementById("medicalCondition").value
+      medicalCondition: document.getElementById("medicalCondition").value,
+      attended: trial.attended,
+      attendedOn: trial.attendedOn
     };
     dispatch(actions.updateTrial(trial));
     browserHistory.push(`/m/trials`);
