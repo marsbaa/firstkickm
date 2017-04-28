@@ -182,10 +182,20 @@ export var startAddTrials = () => {
       var parsedTrials = [];
 
       Object.keys(trials).forEach((trialId) => {
-        parsedTrials.push({
-          id: trialId,
-          ...trials[trialId]
-        });
+        if (trials[trialId].attended === undefined) {
+          parsedTrials.push({
+            id: trialId,
+            attended: false,
+            attendedOn: null,
+            ...trials[trialId]
+          });
+        }
+        else {
+          parsedTrials.push({
+            id: trialId,
+            ...trials[trialId]
+          });
+        }
       });
       dispatch(addTrials(parsedTrials));
     });
@@ -248,7 +258,9 @@ export var addTrial = (trial) => {
     dateOfTrial: trial.dateOfTrial,
     timeOfTrial: trial.timeOfTrial,
     parentName: trial.parentName,
-    medicalCondition: trial.medicalCondition
+    medicalCondition: trial.medicalCondition,
+    attended: false,
+    attendedOn: null
   };
   trialsRef.update(updates);
   trial.id = newKey;
