@@ -56,6 +56,8 @@ class PaymentDetails extends React.Component {
      <ListGroupItem>{termsamounthtml}</ListGroupItem>
      {payment.earlyBird ? <ListGroupItem>Early Bird: ($20)</ListGroupItem> : null}
      {payment.registration ? <ListGroupItem>Registration: $80</ListGroupItem> : null}
+     {payment.prorate !== undefined ? <ListGroupItem>Pro-rate: (${payment.prorate})</ListGroupItem> : null}
+     {payment.siblingDiscount ? <ListGroupItem>Sibling Discount: (${payment.siblingDiscountAmount})</ListGroupItem> : null}
      <ListGroupItem>Total : ${payment.total}</ListGroupItem>
      </ListGroup>
 

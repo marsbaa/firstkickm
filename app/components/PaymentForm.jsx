@@ -124,6 +124,7 @@ class PaymentForm extends React.Component {
     var perSession;
     var siblingDiscount = false
     var payerTerm = []
+    var siblingDiscountAmount = 0
     this.state.selectedTermDates[id].map((term,termId) => {
         var paymentTerm = [];
         term.map((date) => {
@@ -172,6 +173,12 @@ class PaymentForm extends React.Component {
         total -= 20
       }
 
+      if (id > 0 && term.length > 5) {
+        siblingDiscount=true
+        siblingDiscountAmount += 20
+        total -= 20
+      }
+
       var datesPaid = []
       term.map((date) => {
         datesPaid.push({
@@ -181,10 +188,7 @@ class PaymentForm extends React.Component {
       })
       termsPaid[termId] = datesPaid
     })
-    if (id > 0) {
-      siblingDiscount=true
-      total -= 20
-    }
+
     if (this.state.prorateAmount[id] !== undefined) {
       total -= this.state.prorateAmount[id]
     }
@@ -198,6 +202,7 @@ class PaymentForm extends React.Component {
         earlyBird,
         date: moment().format(),
         siblingDiscount,
+        siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
         total : total,
         prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
         termsPaid,
@@ -214,6 +219,7 @@ class PaymentForm extends React.Component {
           earlyBird,
           date: moment().format(),
           siblingDiscount,
+          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total : total,
           prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
           termsPaid,

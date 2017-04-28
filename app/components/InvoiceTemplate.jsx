@@ -78,12 +78,20 @@ class Root extends React.Component{
            </Row>
          )
        }
+       if (paymentDetail.prorateAmount !== undefined) {
+         html.push(
+           <Row key={'prorate'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>
+             <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Pro-rate</b></Col>
+             <Col xs={4} md={4} style={{textAlign: 'right'}}>$({paymentDetail.prorateAmount})</Col>
+           </Row>
+         )
+       }
        if (paymentDetail.siblingDiscount) {
 
          html.push(
            <Row key={'siblingdiscount'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>
              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
-             <Col xs={4} md={4} style={{textAlign: 'right'}}>$(20)</Col>
+             <Col xs={4} md={4} style={{textAlign: 'right'}}>$(paymentDetail.siblingDiscountAmount)</Col>
            </Row>
            )
        }
