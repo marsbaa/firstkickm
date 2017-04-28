@@ -80,7 +80,7 @@ class TotalCollection extends React.Component {
     var {payments, selection, expenses} = this.props;
     var html = []
     var filteredPayments = _.filter(payments, (p) => {
-      return moment(p.date).format('YYYY-MM-DD') === moment('2017-04-22').format('YYYY-MM-DD')
+      return moment(p.date).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')
     })
     var filteredExpenses = _.filter(expenses, ['centreId', selection.id])
     if (this.state.filter === 'am') {
