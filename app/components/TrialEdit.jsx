@@ -67,8 +67,8 @@ class TrialEdit extends React.Component{
       timeOfTrial: document.getElementById("timeSlotSelect").value,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
-      attended: trial.attended,
-      attendedOn: trial.attendedOn
+      attended: trial.attended === undefined ? false : trial.attended,
+      attendedOn: trial.attended === undefined ? null : trial.attended
     };
     dispatch(actions.updateTrial(trial));
     browserHistory.push(`/m/trials`);
