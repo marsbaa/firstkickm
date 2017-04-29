@@ -19,6 +19,14 @@ class ClassEdit extends React.Component{
       day: '',
       term: ''
     }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleDayChange = this.handleDayChange.bind(this)
+    this.handleTermChange = this.handleTermChange.bind(this)
+    this.onChangeStartTime = this.onChangeStartTime.bind(this)
+    this.onChangeEndTime = this.onChangeEndTime.bind(this)
+    this.goBack = this.goBack.bind(this)
+    this.saveClass = this.saveClass.bind(this)
+    this.generateAgeGroups = this.generateAgeGroups.bind(this)
   }
 
 
