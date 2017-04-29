@@ -15,13 +15,7 @@ class MultipleDayPicker extends React.Component{
     }
   }
 
-  isDaySelected(day) {
-    return this.state.selectedDays.some(selectedDay =>
-      DateUtils.isSameDay(selectedDay, day));
-  }
-
-  handleDayClick(e, day, { selected }) {
-    e.preventDefault();
+  handleDayClick(day, { selected }) {
     var {dispatch} = this.props;
     var id = this.props.tab;
     const { selectedDays } = this.state;
@@ -60,7 +54,7 @@ class MultipleDayPicker extends React.Component{
    return (
      <DayPicker
          initialMonth={ this.state.selectedDays[0]}
-         selectedDays={this.isDaySelected.bind(this)}
+         selectedDays={this.state.selectedDays}
           onDayClick={ this.handleDayClick.bind(this) }
           numberOfMonths={ 2 }
         />
