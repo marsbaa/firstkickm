@@ -7,7 +7,7 @@ import moment from 'moment'
 export var startLogin = (email, password) => {
   return (dispatch, getState) => {
     return firebase.auth().signInWithEmailAndPassword(email, password).then((result) => {
-      console.log('Auth worked!', result);
+      console.log('Auth worked!');
     }, (error) => {
       console.log('Unable to auth', error);
     });
@@ -957,10 +957,8 @@ export var addPayment = (paymentDetails) => {
 
 export var removePayment = (paymentKey, childKey) => {
   return (dispatch) => {
-    var paymentRef = firebaseRef.child('payments');
-    var updates = {}
-    updates[paymentKey] = null
-    paymentRef.update(updates);
+    var paymentRef = firebaseRef.child('payments/'+paymentKey);
+    paymentRef.remove()
     var childPaymentRef = firebaseRef.child('students/'+childKey+'/payments')
     childPaymentRef.once('value').then((snapshot) => {
       var payments = snapshot.val();
@@ -1173,3 +1171,12 @@ export var addExpenses = (expenses) => {
     expenses
   };
 };
+
+export var deleteExpense = (key) => {
+  var expensesRef = firebaseRef.child('expenses/'+key);
+  expensesRef.remove()
+  return {
+    type: 'REMOVE_EXPENSE',
+    key
+  }
+}

@@ -17,7 +17,8 @@ class TotalCollection extends React.Component {
       show: false,
       value: ''
     }
-  }
+    this.removeExpense = this.removeExpense.bind(this)
+    }
 
   componentWillMount(){
     var {dispatch, payments, selection, expenses} = this.props;
@@ -28,6 +29,11 @@ class TotalCollection extends React.Component {
     if (_.isEmpty(expenses)) {
       dispatch(actions.startExpenses())
     }
+  }
+
+  removeExpense(key) {
+    var {dispatch} = this.props;
+    dispatch(actions.deleteExpense(key))
   }
 
   handleShow() {
@@ -45,8 +51,8 @@ class TotalCollection extends React.Component {
       date : moment().format(),
       centreId : selection.id
     }
-    dispatch(actions.addExpense(expense))
     this.setState({show: false})
+    dispatch(actions.addExpense(expense))
   }
 
   handleChange(value) {
@@ -194,7 +200,8 @@ class TotalCollection extends React.Component {
           expenseshtml.push(
             <Row key= {expense.key} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
               <Col xs={8} md={8} style={{fontSize: '14px'}}>
-                <Glyphicon glyph="minus" /> {expense.name}  <Glyphicon style={{color: 'red'}} glyph="remove-circle" />
+                <Glyphicon glyph="minus" /> {expense.name}  <button className="innerbtn" onClick={(e)=> {
+                    e.preventDefault();this.removeExpense(expense.key)}}>X</button>
               </Col>
               <Col xs={4} md={4} style={{textAlign:'right'}}>
                 ${expense.amount}

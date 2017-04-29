@@ -709,6 +709,8 @@ export var registrationReducer = (state=[], action) => {
           ...state,
         {...action.expense}
       ];
+      case 'REMOVE_EXPENSE':
+        return state.filter(({key})=> key !== action.key )
       default:
         return state;
     }
