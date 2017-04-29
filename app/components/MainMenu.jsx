@@ -26,6 +26,10 @@ class MainMenu extends React.Component {
 
     }
 
+    componentWillUnMount() {
+
+    }
+
     render() {
         var {selection, centres, users, auth} = this.props;
         var user;
@@ -59,6 +63,7 @@ class MainMenu extends React.Component {
             <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
             <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
             <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
+            <Link to="m/notes" ><button className="mainbtn" id="notes" disabled={selection.id === '0' ? true : false}>Notes to HQ</button></Link>
             <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
             </div>)
           }
@@ -85,6 +90,7 @@ class MainMenu extends React.Component {
                 <Link to="m/coachattendancehq" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance (HQ)</button></Link>
                   <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
                     disabled={selection.id === '0' ? true : false}>Coach Scheduling</button></Link>
+                  <Link to="m/notes" ><button className="mainbtn" id="notes" disabled={selection.id === '0' ? true : false}>Notes to HQ</button></Link>
                   <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
                   <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>

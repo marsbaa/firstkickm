@@ -1180,3 +1180,54 @@ export var deleteExpense = (key) => {
     key
   }
 }
+
+
+
+//Notes
+export var startNotes = () => {
+   return (dispatch) => {
+   var notesRef = firebaseRef.child('notes');
+   notesRef.once('value').then((snapshot) => {
+    var notes = snapshot.val();
+    if (notes !== null){
+    var parsedNotes = [];
+
+    Object.keys(notes).forEach((noteId)=> {
+      parsedNotes.push({
+        key: noteId,
+        ...notes[noteId]
+      });
+    });
+    dispatch(addNotes(parsedNotes));}
+  });
+};
+};
+
+export var addNotes = (notes) => {
+  return {
+    type: 'ADD_NOTES',
+    notes
+  };
+};
+
+export var addNote = (note) => {
+  var notesRef = firebaseRef.child('notes');
+  var newKey = notesRef.push().key;
+  var updates = {};
+  updates[newKey] = note
+  notesRef.update(updates);
+  note.key = newKey;
+  return {
+    type: 'ADD_NOTE',
+    note
+  }
+}
+
+export var deleteNote = (key) => {
+  var notesRef = firebaseRef.child('notes/'+key);
+  notesRef.remove()
+  return {
+    type: 'REMOVE_NOTE',
+    key
+  }
+}

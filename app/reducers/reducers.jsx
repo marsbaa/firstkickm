@@ -715,3 +715,23 @@ export var registrationReducer = (state=[], action) => {
         return state;
     }
   }
+
+
+  export var notesReducer = (state=[], action) => {
+    switch(action.type) {
+      case 'ADD_NOTES':
+        return [
+          ...state,
+          ...action.notes
+        ];
+      case 'ADD_NOTE':
+        return [
+          ...state,
+        {...action.note}
+      ];
+      case 'REMOVE_NOTE':
+        return state.filter(({key})=> key !== action.key )
+      default:
+        return state;
+      }
+    }
