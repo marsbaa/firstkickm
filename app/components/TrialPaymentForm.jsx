@@ -118,6 +118,7 @@ class TrialPaymentForm extends React.Component {
         var perSession;
         var siblingDiscount = false
         var payerTerm = []
+        var siblingDiscountAmount = 0
         this.state.selectedTermDates[id].map((term,termId) => {
             var paymentTerm = [];
             term.map((date) => {
@@ -167,8 +168,9 @@ class TrialPaymentForm extends React.Component {
             earlyBird= true
             total -= 20
           }
-          if (id > 0 && totalSession !== 0) {
+          if (id > 0 && term.length > 5) {
             siblingDiscount=true
+            siblingDiscountAmount += 20
             total -= 20
           }
           var datesPaid = []
@@ -190,6 +192,7 @@ class TrialPaymentForm extends React.Component {
             earlyBird,
             date: moment().format(),
             siblingDiscount,
+            siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
             total : total,
             termsPaid,
             paymentMethod: this.state.form,
@@ -207,6 +210,7 @@ class TrialPaymentForm extends React.Component {
               earlyBird,
               date: moment().format(),
               siblingDiscount,
+              siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
               total : total,
               termsPaid,
               paymentMethod: this.state.form,

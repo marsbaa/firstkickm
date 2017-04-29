@@ -150,14 +150,7 @@ export var paymentReducer = (state = [], action) => {
         action.paymentDetails
       ];
     case 'REMOVE_PAYMENT':
-      return state.map((payment)=> {
-        if (payment.key === action.paymentkey) {
-          return {}
-        }
-        else {
-          return payment
-        }
-      })
+      return state.filter(({key})=> key !== action.paymentKey)
     case 'ADD_PAYMENTS':
       return [
         ...action.payments
@@ -205,15 +198,19 @@ export var studentReducer = (state = [], action) => {
     case 'REMOVE_STUDENT_PAYMENT':
       return state.map((student) => {
         if (student.key === action.childKey) {
-          var index = _.findIndex(student.payments, {paymentKey : action.paymentKey})
-          if (index !== -1) {
-            return {
-              ...student,
-              payments: {
-                [index] : {}
-              }
+          var id = Object.keys(student.payments).map((id) =>{
+            if (student.payments[id].paymentKey === action.paymentKey) {
+              return id
             }
+          })
+          student.payments = _.omit(student.payments, id)
+          if (_.isEmpty(student.payments)) {
+            student.payments = undefined
           }
+          return {
+            ...student
+          }
+
         }
         else {
           return student

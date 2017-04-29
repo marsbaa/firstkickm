@@ -32,14 +32,28 @@ class PaymentHistory extends React.Component {
   formSubmit() {
     var {dispatch} = this.props
     dispatch(actions.removePayment(this.state.paymentKey, this.state.childKey))
-    browserHistory.push('/m/payments')
+    this.setState({show: false})
   }
 
   render() {
-    var {payments, students} = this.props
+    var {payments, students, users, auth} = this.props
+    var user;
+    if (auth.email === 'ray@marsbaa.com') {
+      user = {
+        name: 'Ray Yee',
+        email: 'ray@marsbaa.com',
+        assignedRoles : 'Manager',
+        assignedCentres : { 0 : 'all'}
+      }
+    }
+    else {
+      user = _.find(users, ['email', auth.email])
+    }
     var studentId = this.props.params.studentId
     var student = _.find(students, {key: studentId})
     var html = []
+    let close = () => this.setState({show:false})
+
     if (student.payments === undefined) {
       html.push(<p style={{textAlign: 'center'}} key="nohistory">No payment history</p>)
     }
@@ -54,11 +68,11 @@ class PaymentHistory extends React.Component {
                     {moment(payment.date).format('DD MMM YYYY') +" - Total : $" + payment.total}
                   </ControlLabel>
                 </Col>
-                <Col xs={5} md={5} style={{textAlign: 'right'}}>
+                {user.assignedRoles === 'Manager' ? <Col xs={5} md={5} style={{textAlign: 'right'}}>
                   <button className="btn" style={{float:'right'}} onClick={(e) => {
                       e.preventDefault();
                       this.handleSelect(payment.key, payment.childKey)}}>Remove</button>
-                </Col>
+                  </Col> : null}
               </Row>}
                eventKey={payment.key} key={payment.key}>
               <PaymentDetails payment={payment} />
@@ -84,7 +98,7 @@ class PaymentHistory extends React.Component {
           })}
         </PanelGroup>)
     }
-  let close = () => this.setState({show:false})
+
 
    return (
      <Grid style={{paddingTop: '20px', paddingBottom: '200px'}}>

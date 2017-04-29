@@ -192,7 +192,6 @@ class PaymentForm extends React.Component {
     if (this.state.prorateAmount[id] !== undefined) {
       total -= this.state.prorateAmount[id]
     }
-    console.log(total)
     if (this.state.form === 'Cash') {
       var paymentDetail = {
         centreId : student.venueId.toString(),
@@ -232,7 +231,7 @@ class PaymentForm extends React.Component {
     paymentDetails.push(paymentDetail)
   })
 
-  var invoiceHTML = InvoiceTemplate.render(paymentDetails);
+  var invoiceHTML = InvoiceTemplate.render(paymentDetails)
   SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
   browserHistory.push('/m/payment');
 }
