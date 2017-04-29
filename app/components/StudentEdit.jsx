@@ -74,7 +74,7 @@ class StudentEdit extends React.Component {
 
   render() {
     var key = this.props.params.studentId;
-    var {students, centres, ageGroups, calendars} = this.props;
+    var {students, centres, ageGroup, calendars} = this.props;
     var student = _.find(students, {key: key});
 
     //Age Group List
