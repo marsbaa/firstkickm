@@ -10,6 +10,7 @@ import moment from 'moment'
 import PaymentDatesSelector from 'PaymentDatesSelector'
 import SendMail from 'SendMail'
 import InvoiceTemplate from 'InvoiceTemplate'
+import {firebaseRef} from 'app/firebase'
 import {browserHistory} from 'react-router'
 
 class PaymentForm extends React.Component {
@@ -116,6 +117,8 @@ class PaymentForm extends React.Component {
     e.preventDefault()
     var {dispatch, calendars} = this.props;
     var paymentDetails = [];
+    var invoiceRef = firebaseRef.child('invoices')
+    var newKey = invoiceRef.push().key;
     this.state.payer.map((student, id) => {
     //Term Id
     var termsPaid = []
@@ -206,7 +209,8 @@ class PaymentForm extends React.Component {
         prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
         termsPaid,
         paymentMethod: this.state.form,
-        email: this.state.email
+        email: this.state.email,
+        invoiceKey: newKey
       }
     }
     else if (this.state.form === "Cheque") {
@@ -224,14 +228,17 @@ class PaymentForm extends React.Component {
           termsPaid,
           paymentMethod: this.state.form,
           chequeNumber: document.getElementById('chequeNumber').value,
-          email: this.state.email
+          email: this.state.email,
+          invoiceKey: newKey
         }
       }
     dispatch(actions.addPayment(paymentDetail))
     paymentDetails.push(paymentDetail)
   })
-
   var invoiceHTML = InvoiceTemplate.render(paymentDetails)
+  var updates = {}
+  updates[newKey] = {invoiceHTML}
+  invoiceRef.update(updates)
   SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
   browserHistory.push('/m/payment');
 }

@@ -1,11 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
 import {connect} from 'react-redux'
+import {firebaseRef} from 'app/firebase';
 var actions = require('actions')
 import moment from 'moment'
 import PaymentDetails from 'PaymentDetails'
-import {Grid, Col, Row, PanelGroup, Panel, ControlLabel, Modal, Button} from 'react-bootstrap'
+import {Grid, Col, Row, PanelGroup, Panel, ControlLabel, Modal, Button, FormGroup, FormControl} from 'react-bootstrap'
 import {browserHistory} from 'react-router'
+import SendMail from 'SendMail'
 
 class PaymentHistory extends React.Component {
 
@@ -13,10 +15,12 @@ class PaymentHistory extends React.Component {
     super(props)
     this.state = {
       show: false,
+      showR: false,
       paymentKey : '',
       childKey : ''
     }
     this.handleSelect = this.handleSelect.bind(this)
+    this.resendReceipt = this.resendReceipt.bind(this)
   }
   componentDidMount () {
     var {dispatch} = this.props;
@@ -34,6 +38,17 @@ class PaymentHistory extends React.Component {
     dispatch(actions.removePayment(this.state.paymentKey, this.state.childKey))
     this.setState({show: false})
   }
+
+  resendReceipt(e, key) {
+    e.preventDefault()
+    var email = document.getElementById('email').value
+    var invoiceRef = firebaseRef.child('invoices/'+key)
+    invoiceRef.once('value').then((snapshot) => {
+      var invoice = snapshot.val()
+      SendMail.mail(email, 'First Kick Academy - Payment Receipt', invoice.invoiceHTML)
+  })
+  this.setState({showR: false})
+}
 
   render() {
     var {payments, students, users, auth} = this.props
@@ -53,7 +68,7 @@ class PaymentHistory extends React.Component {
     var student = _.find(students, {key: studentId})
     var html = []
     let close = () => this.setState({show:false})
-
+    let closeR = () => this.setState({showR :false})
     if (student.payments === undefined) {
       html.push(<p style={{textAlign: 'center'}} key="nohistory">No payment history</p>)
     }
@@ -74,8 +89,38 @@ class PaymentHistory extends React.Component {
                       this.handleSelect(payment.key, payment.childKey)}}>Remove</button>
                   </Col> : null}
               </Row>}
+               footer={payment.invoiceKey !== undefined ?
+                <p style={{textAlign: 'right'}}><button className="btn" onClick={()=>this.setState({showR: true})}>Resend Receipt</button>
+                  </p> : ""
+               }
                eventKey={payment.key} key={payment.key}>
               <PaymentDetails payment={payment} />
+                <Modal
+                   show={this.state.showR}
+                   onHide={closeR}
+                   container={this}
+                   aria-labelledby="contained-modal-title1"
+                 >
+                   <Modal.Header closeButton>
+                     <Modal.Title id="contained-modal-title1">Resend Receipt</Modal.Title>
+                   </Modal.Header>
+                   <Modal.Body>
+                     Are you sure you want to resend a copy of receipt?
+                     <FormGroup>
+                     <ControlLabel>Email</ControlLabel>
+                          <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+                          id="email"
+                          type="text"
+                          placeholder="Enter Email"
+                          defaultValue={payment.email}
+                          />
+                      </FormGroup>
+                   </Modal.Body>
+                   <Modal.Footer>
+                     <Button bsSize='large' onClick={(e)=> this.resendReceipt(e, payment.invoiceKey, payment.email)}>Yes</Button>
+                     <Button bsSize='large' onClick={close}>No</Button>
+                   </Modal.Footer>
+                </Modal>
                 <Modal
                    show={this.state.show}
                    onHide={close}
