@@ -43,17 +43,17 @@ class PaymentDetails extends React.Component {
    return (
      <ListGroup fill>
        <ListGroupItem>Centre : {centre.name}</ListGroupItem>
-       <ListGroupItem>Terms Paid : {termspaidhtml}</ListGroupItem>
-     <ListGroupItem>{
+       {_.isEmpty(termspaidhtml)? null : <ListGroupItem>Terms Paid : {termspaidhtml}</ListGroupItem> }
+       {
            payment.termsPaid !== undefined ?
-             Object.keys(payment.termsPaid).map((termId) => {
+             <ListGroupItem>{Object.keys(payment.termsPaid).map((termId) => {
                var term = payment.termsPaid[termId]
                return <p key={"TermDates"+termId} style={{fontSize: '9px', margin: '0px'}}>T{termId} ({_.size(term)} sessions): {Object.keys(term).map((id)=>{
                  return id < _.size(term)-1 ? <i key={term[id].date}>{moment(term[id].date).format("DD MMM YY")}, </i> : <i key={term[id].date}>{moment(term[id].date).format("DD MMM YY")}</i>
                })}</p>
-             }) : ""
-       }</ListGroupItem>
-     <ListGroupItem>{termsamounthtml}</ListGroupItem>
+           })}</ListGroupItem> : ""
+       }
+     {_.isEmpty(termsamounthtml) ? null : <ListGroupItem>{termsamounthtml}</ListGroupItem> }
      {payment.earlyBird ? <ListGroupItem>Early Bird: ($20)</ListGroupItem> : null}
      {payment.registration ? <ListGroupItem>Registration: $80</ListGroupItem> : null}
      {payment.prorate !== undefined ? <ListGroupItem>Pro-rate: (${payment.prorate})</ListGroupItem> : null}

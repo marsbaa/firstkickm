@@ -955,10 +955,51 @@ export var addPayment = (paymentDetails) => {
   }
 }
 
+export var removePayment = (paymentKey, childKey) => {
+  return (dispatch) => {
+    var paymentRef = firebaseRef.child('payments');
+    var updates = {}
+    updates[paymentKey] = null
+    paymentRef.update(updates);
+    var childPaymentRef = firebaseRef.child('students/'+childKey+'/payments')
+    childPaymentRef.once('value').then((snapshot) => {
+      var payments = snapshot.val();
+      var childPaymentKey = ""
+      Object.keys(payments).map((key)=> {
+        if (payments[key].paymentKey === paymentKey) {
+          childPaymentKey = key
+        }
+      })
+      var childUpdates = {}
+      childUpdates[childPaymentKey] = null
+      childPaymentRef.update(childUpdates)
+    })
+    dispatch(removePaymentRecord(paymentKey))
+    dispatch(removeStudentPayment(paymentKey, childKey))
+  }
+}
+
+
+
 export var addPaymentRecord = (paymentDetails) => {
   return {
     type: 'ADD_PAYMENT',
     paymentDetails
+  }
+}
+
+export var removePaymentRecord = (paymentKey) => {
+  return {
+    type: 'REMOVE_PAYMENT',
+    paymentKey
+  }
+}
+
+export var removeStudentPayment = (paymentKey, childKey) => {
+  return {
+    type: 'REMOVE_STUDENT_PAYMENT',
+    childKey,
+    paymentKey
   }
 }
 

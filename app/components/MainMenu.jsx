@@ -59,6 +59,7 @@ class MainMenu extends React.Component {
             <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
             <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
             <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
+            <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
             </div>)
           }
           else if(user.assignedRoles === 'Head Coach') {
