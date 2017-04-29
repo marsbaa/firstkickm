@@ -36,6 +36,7 @@ class CoachAttendanceHQ extends React.Component{
       if(calendar.centreKey === selection.key) {
         calendar.terms.map((term, termId) => {
           term.map((date) => {
+            date = moment(date).format("YYYYMMDD")
             if(moment(date).isSameOrBefore()) {
               termDates.push(moment(date));
             }
