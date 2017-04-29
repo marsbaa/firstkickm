@@ -91,6 +91,7 @@ class MainMenu extends React.Component {
                   <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
                     disabled={selection.id === '0' ? true : false}>Coach Scheduling</button></Link>
                   <Link to="m/notes" ><button className="mainbtn" id="notes" disabled={selection.id === '0' ? true : false}>Notes to HQ</button></Link>
+                  <Link to="m/notes/all" ><button className="mainbtn" id="notesall">Notes Inbox</button></Link>
                   <Link to="m/charts" ><button className="mainbtn" id="charts" disabled={selection.id === '0' ? true : false}>Charts</button></Link>
                   <Link to="m/students" ><button className="mainbtn" id="student" disabled={selection.id === '0' ? true : false}>Students Profile</button></Link>
                 <Link to="m/coaches" ><button className="mainbtn">Coaches Profile</button></Link>

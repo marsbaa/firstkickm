@@ -81,6 +81,7 @@ import ChartsList from 'ChartsList'
 //Notes
 import NotesApp from 'NotesApp'
 import NotesList from 'NotesList'
+import NotesAll from 'NotesAll'
 
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
@@ -162,6 +163,7 @@ export default (
           </Route>
           <Route path="notes" component={NotesApp}>
             <IndexRoute component={NotesList}/>
+            <Route path="all" component={NotesAll}/>
           </Route>
           <Route path="settings" component={Settings}>
             <IndexRoute component={SettingsList}/>
