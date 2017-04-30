@@ -22,7 +22,7 @@ class TotalCollection extends React.Component {
 
   componentWillMount(){
     var {dispatch, payments, selection, expenses} = this.props;
-    dispatch(actions.updateNavTitle("/m/payment", selection.name+" Collections"));
+    dispatch(actions.updateNavTitle("/m/total", selection.name+" Collections"));
     if (_.isEmpty(payments)) {
       dispatch(actions.startPayments())
     }

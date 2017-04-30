@@ -55,7 +55,7 @@ class CoachAttendanceHQ extends React.Component{
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/coachattendance", selection.name+" Coach Attendance"));
+    dispatch(actions.updateNavTitle("/m/coachattendanceHQ", selection.name+" Coach Attendance"));
     window.scrollTo(0, 0)
   }
 
@@ -78,9 +78,8 @@ class CoachAttendanceHQ extends React.Component{
          if(_.size(schedule.assigned) != 0) {
            schedule.assigned.map((c) => {
              var coach = _.find(filteredCoaches, {'key': c.coachKey })
-             console.log(coach)
              if (coach != undefined) {
-               html.push(<CoachAttendee key={c.coachKey} coach={coach} classKey={classId} date={this.state.startDate} /> )
+               html.push(<CoachAttendee key={c.coachKey+this.state.startDate+startTime} coach={coach} classKey={classId} date={this.state.startDate} /> )
              }
            })
          }

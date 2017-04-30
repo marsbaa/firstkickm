@@ -8,24 +8,31 @@ import moment from 'moment'
 import Switch from 'Switch'
 
 class Attendee extends React.Component {
+
   render() {
-    var {dispatch} = this.props;
+    var {dispatch, date} = this.props;
+    date = moment(date).format("YYYY-MM-DD")
     var {childName, key, attendance} = this.props.student;
     var truncatedName = _.truncate(childName, {
   'length': 28});
-    var date = moment().format("YYYY-MM-DD");
-    var attended=false;
+    var attended;
     if (attendance !== undefined) {
       if (attendance[date] !== undefined) {
         attended = attendance[date].attended;
       }
+      else {
+        attended = false
+      }
+    }
+    else {
+      attended = false
     }
 
 
   return (
       <Row key= {key} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
         <Col xs={2} md={2}>
-          <Switch name={key+"attended"} checked={attended.toString()} defaultChecked={attended} onChange={()=> {
+          <Switch name={key+"attended"+date} checked={attended} onChange={()=> {
             dispatch(actions.updateAttendance(date, key))
             }} />
         </Col>

@@ -66,7 +66,7 @@ class AttendanceList extends React.Component{
              </Row>);
 
              Object.keys(group).forEach((studentId) => {
-                 html.push(<Attendee key={group[studentId].key} student={group[studentId]}/>);
+                 html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date}/>);
 
              });
           })

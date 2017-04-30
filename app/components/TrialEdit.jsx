@@ -51,10 +51,10 @@ class TrialEdit extends React.Component{
 
   onFormSubmit(e) {
     e.preventDefault();
+    var key = this.props.params.trialId;
     var {trials} = this.props;
     var trial = _.find(trials, {id: key});
     var {dispatch, centres} = this.props;
-    var key = this.props.params.trialId;
     var trial = {
       id: key,
       childName: document.getElementById("childName").value,

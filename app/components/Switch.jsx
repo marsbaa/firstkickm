@@ -45,6 +45,7 @@ class SwitchButton extends React.Component{
                disabled={this.props.disabled}
                id={id} name={this.props.name}
                type="checkbox"
+               checked={this.props.checked}
                value="1"/>
         <label htmlFor={id}>
         </label>
@@ -63,7 +64,7 @@ SwitchButton.propTypes = {
   defaultChecked : PropTypes.bool,
   disabled       : PropTypes.bool,
   theme          : PropTypes.string,
-  checked        : PropTypes.string,
+  checked        : PropTypes.bool,
   mode           : PropTypes.string,
   onChange       : PropTypes.func
 }

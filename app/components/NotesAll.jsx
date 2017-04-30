@@ -14,7 +14,7 @@ class NotesAll extends React.Component {
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/notes",  "Notes Inbox"));
+    dispatch(actions.updateNavTitle("/m/notes/all",  "Notes Inbox"));
     window.scrollTo(0,0)
   }
 
