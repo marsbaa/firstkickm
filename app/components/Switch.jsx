@@ -41,7 +41,6 @@ class SwitchButton extends React.Component{
       <div className={'rsbc-switch-button rsbc-mode-' + mode + ' ' + this.props.theme + ( this.props.disabled ? " disabled" : "") }>
         {label}
         <input onChange={this.props.onChange}
-               defaultChecked={this.props.defaultChecked}
                disabled={this.props.disabled}
                id={id} name={this.props.name}
                type="checkbox"

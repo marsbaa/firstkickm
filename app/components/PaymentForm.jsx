@@ -176,7 +176,7 @@ class PaymentForm extends React.Component {
         total -= 20
       }
 
-      if (id > 0 && term.length > 5) {
+      if (id > 0 && term.length >= 5) {
         siblingDiscount=true
         siblingDiscountAmount += 20
         total -= 20
@@ -439,6 +439,14 @@ class PaymentForm extends React.Component {
             </Row>)
             totalFee -= 20;
           }
+          console.log(term.length)
+          if (id >= 1 & term.length >= 5) {
+            fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
+              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
+              <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
+            </Row>)
+            totalFee -= 20;
+          }
           totalFee += cost;
         })
 
@@ -451,15 +459,6 @@ class PaymentForm extends React.Component {
           </Row>)
           totalFee -= this.state.prorateAmount[id]
         }
-      }
-
-
-      if (id >= 1) {
-        fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
-          <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
-          <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
-        </Row>)
-        totalFee -= 20;
       }
 
     })

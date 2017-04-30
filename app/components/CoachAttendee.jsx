@@ -26,7 +26,7 @@ class CoachAttendee extends React.Component {
   return (
       <Row key= {key} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
         <Col xs={2} md={2}>
-          <Switch name={key+"attended"} checked={attended.toString()} defaultChecked={attended} onChange={()=> {
+          <Switch name={key+"attended"} checked={attended}  onChange={()=> {
               dispatch(actions.updateCoachAttendance(date, key, classKey, paymentRate))
             }} />
         </Col>
