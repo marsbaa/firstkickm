@@ -23,7 +23,7 @@ class AttendanceTable extends React.Component {
         header: <b style={{fontSize: '8px'}}>{moment(date).format("DD/MM")}</b>,
         accessor: "termDates["+id+"]",
         maxWidth: 35,
-        style: {fontSize: '8px', textAlign: 'center', alignItems: 'center', color: 'white'}
+        style: {fontSize: '10px', textAlign: 'center', alignItems: 'center', color: 'white'}
       }
     })
     var data = [
@@ -54,6 +54,7 @@ class AttendanceTable extends React.Component {
          <ReactTable
            showPagination={false}
            data ={data}
+           resizable = {false}
            columns={columns}
            />
        </div>
