@@ -30,8 +30,11 @@ class AttendanceTable extends React.Component {
       {
         childName: 'Ray Yee',
         termDates : [
-          <div style={{width: '25px', height: '20px', backgroundColor: 'green'}}><Glyphicon glyph="ok-sign"/></div>
-          , 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+          <div style={{width: '25px', height: '15px', backgroundColor: 'green'}}><Glyphicon glyph="ok-sign"/></div>,
+          <div style={{width: '25px', height: '15px', backgroundColor: 'red'}}><Glyphicon glyph="ok-sign"/></div>,
+          <div style={{width: '25px', height: '15px', backgroundColor: 'green'}}><Glyphicon glyph="remove-sign"/></div>,
+          <div style={{width: '25px', height: '15px', backgroundColor: 'orange'}}><b>M</b></div>,
+          'E', 'F', 'G', 'H']
       }
     ]
 
@@ -40,7 +43,7 @@ class AttendanceTable extends React.Component {
       columns: [{
         header: <b style={{fontSize: '8px'}}>Child Name</b>,
         accessor: 'childName',
-        maxWidth: 100,
+        maxWidth: 70,
         style: {fontSize: '8px'}
       }, ...termColumns
       ]
