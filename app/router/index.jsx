@@ -61,6 +61,7 @@ import AttendanceList from 'AttendanceList'
 import AttendanceEdit from 'AttendeeEdit'
 import AttendanceListHQ from 'AttendanceListHQ'
 import AttendanceSummary from 'AttendanceSummary'
+import AttendanceMakeUp from 'AttendanceMakeUp'
 
 //Student Profile
 import StudentApp from 'StudentApp'
@@ -131,6 +132,7 @@ export default (
             <Route path="summary" component={AttendanceSummary} />
             <Route path="HQ" component={AttendanceListHQ} />
             <Route path="edit/:studentId" component={AttendanceEdit} />
+            <Route path="makeup/:studentId" component={AttendanceMakeUp} />
           </Route>
           <Route path="students" component={StudentApp}>
             <IndexRoute component={StudentList}/>

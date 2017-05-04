@@ -36,10 +36,11 @@ class Attendee extends React.Component {
             dispatch(actions.updateAttendance(date, key))
             }} />
         </Col>
-        <Col xs={7} md={7} style={{fontSize: '14px'}}>
+        <Col xs={6} md={6} style={{fontSize: '14px'}}>
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
-        <Col xs={3} md={3} style={{textAlign:'right'}}>
+        <Col xs={4} md={4} style={{textAlign:'right'}}>
+          <Link to={"m/attendance/makeup/"+ key}><button className="innerbtn">Make Up</button></Link>
           <Link to={"m/attendance/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>

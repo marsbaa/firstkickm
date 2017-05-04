@@ -49,7 +49,7 @@ class AttendanceListHQ extends React.Component{
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/attendanceHQ", selection.name+" Attendance"));
+    dispatch(actions.updateNavTitle("/m/attendance/HQ", selection.name+" Attendance"));
   }
 
 

@@ -48,7 +48,6 @@ class AttendanceTable extends React.Component {
       }, ...termColumns
       ]
     }]
-    console.log(columns)
      return (
        <div>
          <ReactTable
