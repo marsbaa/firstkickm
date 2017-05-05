@@ -270,30 +270,17 @@ export var studentReducer = (state = [], action) => {
           }
         else {
           var attendance = student.attendance
-          if (student.attendance[action.date] === undefined){
             return {
               ...student,
               attendance: {
                 ...attendance,
                 [action.date] : {
-                  attended: true
-                }
-              }
-            }
-          }
-          else {
-            return {
-              ...student,
-              attendance: {
-                ...attendance,
-                [action.date] : {
-                  attended: student.attendance[action.date].attended === true ? false:true
+                  attended: false
                 }
               }
             }
           }
         }
-      }
         else {
           return student;
         }
@@ -735,3 +722,22 @@ export var registrationReducer = (state=[], action) => {
         return state;
       }
     }
+
+export var makeUpReducer = (state=[], action) => {
+  switch(action.type) {
+    case 'ADD_MAKEUPS':
+      return [
+        ...state,
+        ...action.makeUps
+      ];
+    case 'ADD_MAKEUP':
+      return [
+        ...state,
+      {...action.makeUp}
+    ];
+    case 'REMOVE_MAKEUP':
+      return state.filter(({key})=> key !== action.key )
+    default:
+      return state;
+    }
+  }

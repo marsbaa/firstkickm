@@ -30,9 +30,9 @@ class AttendanceListHQ extends React.Component{
         calendar.terms.map((term, termId) => {
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
-            if(moment(date).isSameOrBefore()) {
+
               termDates.push(moment(date));
-            }
+
           })
         })
       }
@@ -48,16 +48,21 @@ class AttendanceListHQ extends React.Component{
   }
 
   componentDidMount () {
-    var {dispatch, selection} = this.props;
+    var {dispatch, selection, makeUps} = this.props;
+    if(_.isEmpty(makeUps)){
+      dispatch(actions.startMakeUps())
+    }
     dispatch(actions.updateNavTitle("/m/attendance/HQ", selection.name+" Attendance"));
   }
 
 
 
   render() {
-    var {students, searchText, selection, calendars} = this.props;
+    var {students, searchText, selection, calendars, makeUps} = this.props;
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment(this.state.startDate).format('YYYY-MM-DD')})
+    console.log(filteredMakeUps)
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
       Object.keys(groupTime).forEach((timeSlot)=> {
@@ -85,9 +90,14 @@ class AttendanceListHQ extends React.Component{
              </Col>
            </Row>);
            Object.keys(group).forEach((studentId) => {
-               html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date}/>);
+               html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date} type='normal'/>);
 
            });
+           Object.keys(filteredMakeUps).forEach((makeUpId)=> {
+             var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
+             html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
+           })
+
         })
       });
     }

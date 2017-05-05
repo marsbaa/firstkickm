@@ -13,6 +13,7 @@ class Attendee extends React.Component {
     var {dispatch, date} = this.props;
     date = moment(date).format("YYYY-MM-DD")
     var {childName, key, attendance} = this.props.student;
+    var type = this.props.type
     var truncatedName = _.truncate(childName, {
   'length': 28});
     var attended;
@@ -27,10 +28,16 @@ class Attendee extends React.Component {
     else {
       attended = false
     }
+    var backgroundColor;
+    if (type==='normal') {
+      backgroundColor = 'none';
+    } else if (type==='makeup') {
+      backgroundColor = '#ffecb9';
+    }
 
 
   return (
-      <Row key= {key} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+      <Row key= {key} style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center', backgroundColor}}>
         <Col xs={2} md={2}>
           <Switch name={key+"attended"+date} checked={attended} onChange={()=> {
             dispatch(actions.updateAttendance(date, key))
@@ -40,8 +47,8 @@ class Attendee extends React.Component {
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
         <Col xs={4} md={4} style={{textAlign:'right'}}>
-          <Link to={"m/attendance/makeup/"+ key}><button className="innerbtn">Make Up</button></Link>
-          <Link to={"m/attendance/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
+          {type==='makeup'? null:<Link to={"/m/attendance/makeup/"+ key}><button className="innerbtn">Make Up</button></Link>}
+          <Link to={"/m/attendance/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>
 

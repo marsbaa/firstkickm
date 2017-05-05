@@ -402,13 +402,13 @@ export var updateAttendance = (date, id) => {
     attendanceRef.once('value').then((snapshot) => {
       var attendance = snapshot.val();
       if (attendance === null) {
-        attendance = {}
+        return attendanceRef.update({
+          attended : true
+        });
       }
-          attendance.attended = (attendance.attended === undefined) || (attendance.attended === false) ? true : false;
-
-      return attendanceRef.update({
-        attended : attendance.attended
-      });
+      else if (attendance.attended === true){
+        return attendanceRef.remove()
+      }
     }).then(() => {
       dispatch(toggleAttendance(date, id));
     });
@@ -1229,5 +1229,46 @@ export var deleteNote = (key) => {
   return {
     type: 'REMOVE_NOTE',
     key
+  }
+}
+
+//Make Up Actions
+
+export var startMakeUps = () => {
+   return (dispatch) => {
+   var makeUpsRef = firebaseRef.child('makeUps');
+   makeUpsRef.once('value').then((snapshot) => {
+    var makeUps = snapshot.val();
+    if (makeUps !== null){
+    var parsedMakeUps = [];
+
+    Object.keys(makeUps).forEach((makeUpId)=> {
+      parsedMakeUps.push({
+        key: makeUpId,
+        ...makeUps[makeUpId]
+      });
+    });
+    dispatch(addMakeUps(parsedMakeUps));}
+  });
+};
+};
+
+export var addMakeUps = (makeUps) => {
+  return {
+    type: 'ADD_MAKEUPS',
+    makeUps
+  };
+};
+
+export var addMakeUp = (makeUp) => {
+  var makeUpRef = firebaseRef.child('makeUps');
+  var newKey = makeUpRef.push().key;
+  var updates = {};
+  updates[newKey] = makeUp
+  makeUpRef.update(updates);
+  makeUp.key = newKey;
+  return {
+    type: 'ADD_MAKEUP',
+    makeUp
   }
 }

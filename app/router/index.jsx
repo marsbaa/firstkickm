@@ -86,6 +86,10 @@ import NotesApp from 'NotesApp'
 import NotesList from 'NotesList'
 import NotesAll from 'NotesAll'
 
+//Make Up
+import MakeUpApp from 'MakeUpApp'
+import MakeUpList from 'MakeUpList'
+
 var redirectIfLoggedIn = (nextState, replace, next) => {
   if (firebase.auth().currentUser) {
     replace('/m');
@@ -138,6 +142,9 @@ export default (
             <IndexRoute component={StudentList}/>
             <Route path="edit/:studentId" component={StudentEdit} />
             <Route path="add" component={StudentAdd} />
+          </Route>
+          <Route path="makeup" component={MakeUpApp}>
+            <IndexRoute component={MakeUpList}/>
           </Route>
           <Route path="payment" component={PaymentApp}>
             <IndexRoute component={PaymentList}/>
