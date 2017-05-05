@@ -130,6 +130,7 @@ class PaymentForm extends React.Component {
     var siblingDiscountAmount = 0
     this.state.selectedTermDates[id].map((term,termId) => {
         var paymentTerm = [];
+        var paidSessions = 0;
         term.map((date) => {
           var index = _.findIndex(this.state.deselectedTermDates[id], (d) => { return moment(d).isSame(date)});
           if (index === -1) {
@@ -138,6 +139,7 @@ class PaymentForm extends React.Component {
         })
         if (paymentTerm.length !== 0) {
           payerTerm[termId] = paymentTerm
+          paidSessions += paymentTerm.length
         }
       })
      payerTerm.map((term, termId) => {
@@ -157,11 +159,11 @@ class PaymentForm extends React.Component {
           break;
         case 5:
           cost = 220;
-          perSession = 22;
+          perSession = 44;
           break;
         default:
-          cost = term.length * 45;
-          perSession = 45;
+          cost = term.length * (paidSessions > 8 ? 35 : 45);
+          perSession = paidSessions > 8 ? 35 : 45;
           break;
       }
       total += cost
@@ -375,6 +377,7 @@ class PaymentForm extends React.Component {
       fees.push(<Row key={"Name"+id} style={{paddingLeft: '10px'}}>
         <Col xs={8} md={8}><p style={{fontWeight: '800', textDecoration: 'underline'}}>{student.childName}</p></Col></Row>)
       var payerTerm = []
+      var paidSessions = 0
       if (this.state.selectedTermDates[id] !== undefined) {
         this.state.selectedTermDates[id].map((term,termId) => {
           var paymentTerm = [];
@@ -385,6 +388,7 @@ class PaymentForm extends React.Component {
             }
           })
           if (paymentTerm.length !== 0) {
+            paidSessions += paymentTerm.length
             payerTerm[termId] = paymentTerm
           }
         })
@@ -408,7 +412,7 @@ class PaymentForm extends React.Component {
               cost = 220;
               break;
             default:
-              cost = term.length * 45;
+              cost = term.length * (paidSessions > 8 ? 35 : 45);
               break;
           }
           totalSession += term.length
