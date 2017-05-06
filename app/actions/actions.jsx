@@ -1029,18 +1029,12 @@ export var startPayments = () => {
 
      Object.keys(payments).forEach((paymentId)=> {
        var payment = payments[paymentId]
-       if (payment.paymentMethod === 'Cash') {
-         parsedPayments.push({
+
+      parsedPayments.push({
            key: paymentId,
            ...payment
          });
-       }
-       else if (payment.paymentMethod === 'Cheque'){
-         parsedPayments.push({
-           key: paymentId,
-           ...payment
-         });
-       }
+
 
      });
      dispatch(addPayments(parsedPayments));

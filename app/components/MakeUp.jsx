@@ -23,7 +23,7 @@ class MakeUp extends React.Component{
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
-          <Link to={"/m/makeup/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
+          <Link to={"/m/makeup/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="trash" /> </button></Link>
         </Col>
       </Row>
       <Row style={{padding: '3px 20px', borderBottom: '1px solid #cccccc', fontSize: '8px'}}>

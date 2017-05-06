@@ -96,6 +96,59 @@ class TotalCollectionHQ extends React.Component {
         )
         grandTotal += total
       }
+      var bankTransferPayments = _.filter(filteredPayments, ['paymentMethod', 'Bank Transfer'])
+      console.log(bankTransferPayments)
+      if (_.size(bankTransferPayments) !== 0) {
+        var total = 0;
+        html.push(
+          <Row key='banktransferpayments' style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+             <Col xs={12} md={12}>
+               <h5>Bank Transfers</h5>
+            </Col>
+           </Row>
+          )
+        var groupBankTransferPayments = _.groupBy(bankTransferPayments, function (p) {
+          return moment(p.date).format('DD MMM YYYY')})
+        Object.keys(groupBankTransferPayments).forEach((date) => {
+          var subTotal = _.reduce(groupBankTransferPayments[date], function(sum, n) {
+              return sum + n.total;
+            }, 0);
+          html.push(
+            <Row key= {"banktransfer"+date} style={{backgroundColor: '#f5f5f5', padding: '8px 15px', borderBottom: '1px solid #cccccc'}}>
+              <Col xs={6} md={6} style={{fontSize: '14px', fontWeight: '800'}}>
+                {date}
+              </Col>
+              <Col xs={6} md={6} style={{textAlign:'right'}}>
+                Bank Transfer Total : ${subTotal}
+              </Col>
+            </Row>
+          )
+          groupBankTransferPayments[date].map((payment) => {
+            html.push(
+              <Row key= {payment.childKey} style={{padding: '8px 18px', borderBottom: '1px solid #cccccc'}}>
+                <Col xs={8} md={8} style={{fontSize: '12px'}}>
+                  <Glyphicon glyph="user" /> {payment.childName}
+                </Col>
+                <Col xs={4} md={4} style={{textAlign:'right', fontSize: '12px'}}>
+                  ${payment.total}
+                </Col>
+              </Row>
+              )
+            total += payment.total
+
+          })
+        })
+        html.push(
+          <Row key= 'totalBankTransferPayment' style={{padding: '8px 15px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+            <Col xs={6} md={6}>
+            </Col>
+            <Col xs={6} md={6} style={{fontWeight: 'bold',textAlign:'right', fontSize: '14px'}}>
+              Month Total Bank Transfer: ${total}
+            </Col>
+          </Row>
+        )
+        grandTotal += total
+      }
       var chequePayments = _.filter(filteredPayments, ['paymentMethod', 'Cheque'])
       if (_.size(chequePayments) !== 0) {
         var total = 0;

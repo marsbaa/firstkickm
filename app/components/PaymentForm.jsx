@@ -20,6 +20,7 @@ class PaymentForm extends React.Component {
     this.state = {
       payer : [],
       startDate: [],
+      bankTransferDate: moment(),
       termDates: [],
       termKeys: [],
       numOfSession: [],
@@ -52,6 +53,13 @@ class PaymentForm extends React.Component {
     dates[count] = date;
     this.setState({
       startDate: dates
+    });
+  }
+
+  handleBankTransferDate(date) {
+    console.log(date)
+    this.setState({
+      bankTransferDate: date
     });
   }
 
@@ -101,6 +109,17 @@ class PaymentForm extends React.Component {
       }
     }
     else if (this.state.form === 'Cash') {
+      email = document.getElementById('email').value
+      if (email === '') {
+        this.setState({emailError: 'error'})
+        this.setState({emailErrorMessage: 'Please enter a valid email address'})
+      }
+      else {
+        this.setState({show: true})
+        this.setState({email: email})
+      }
+    }
+    else if (this.state.form === 'Bank Transfer') {
       email = document.getElementById('email').value
       if (email === '') {
         this.setState({emailError: 'error'})
@@ -235,6 +254,25 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         }
       }
+      else if (this.state.form === "Bank Transfer") {
+          var paymentDetail = {
+            centreId : student.venueId.toString(),
+            childKey : student.key,
+            childName : student.childName,
+            ageGroup : student.ageGroup,
+            earlyBird,
+            date: moment(this.state.bankTransferDate).format(),
+            siblingDiscount,
+            siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
+            total : total,
+            prorate : this.state.prorateAmount[id] !== undefined ? this.state.prorateAmount[id] : null,
+            termsPaid,
+            paymentMethod: this.state.form,
+            email: this.state.email,
+            invoiceKey: newKey
+          }
+        }
+        console.log(paymentDetail)
     dispatch(actions.addPayment(paymentDetail))
     paymentDetails.push(paymentDetail)
   })
@@ -444,7 +482,6 @@ class PaymentForm extends React.Component {
             </Row>)
             totalFee -= 20;
           }
-          console.log(term.length)
           if (id >= 1 & term.length >= 5) {
             fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
               <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
@@ -471,6 +508,7 @@ class PaymentForm extends React.Component {
     var formhtml = []
     var chequeClass = 'datebtn'
     var cashClass = 'datebtn'
+    var bankTransferClass = 'datebtn'
     if (this.state.form === 'Cheque') {
       formhtml.push(<Row key={'cheque'} style={{marginTop: '15px', textAlign: 'center'}}>
        <Col md={6} xs={6}>
@@ -509,6 +547,49 @@ class PaymentForm extends React.Component {
        </Col>
       </Row>)
       chequeClass = 'downbtn'
+
+    }
+    else if (this.state.form === 'Bank Transfer') {
+      formhtml.push(<Row key={'banktransfer'} style={{marginTop: '15px', textAlign: 'center'}}>
+       <Col md={6} xs={6}>
+         <ControlLabel>Amount Collected</ControlLabel>
+         <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+         id="collectedAmount"
+         type="text"
+         placeholder="Enter amount collected (SGD$)"
+         defaultValue={totalFee}
+         />
+       </Col>
+       <Col md={6} xs={6}>
+         <FormGroup>
+           <ControlLabel>Date Received</ControlLabel>
+             <DatePicker
+               className="form-control"
+               style={{textAlign: 'center'}}
+               id = "btdatePicker"
+               dateFormat="DD-MM-YYYY"
+               selected={this.state.bankTransferDate}
+               onChange={(e) => {
+                     this.handleBankTransferDate(moment(e))}}
+               />
+         </FormGroup>
+         <FormGroup validationState={this.state.emailError}>
+         <ControlLabel>Email</ControlLabel>
+              <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+              id="email"
+              type="text"
+              placeholder="Enter Email"
+              defaultValue={email}
+              />
+            <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+          </FormGroup>
+       </Col>
+       <Col md={12} xs={12}>
+         <button className='submitbtn'
+           onClick={this.checkValid.bind(this)}>Payment Collected</button>
+       </Col>
+      </Row>)
+      bankTransferClass = 'downbtn'
 
     }
     else if (this.state.form === 'Cash') {
@@ -550,7 +631,16 @@ class PaymentForm extends React.Component {
         if (document.getElementById('chequeNumber') !== null) {
           chequeNumber = document.getElementById('chequeNumber').value
         }
-        modalMessage = this.state.form === 'Cash' ? 'Did you receive cash payment of $'+totalFee+' ?':'Did you receive cheque payment of $'+totalFee+' with cheque #' +chequeNumber + ' ?';
+        if (this.state.form === 'Cash') {
+          modalMessage = 'Did you receive cash payment of $'+totalFee+' ?'
+        }
+        else if (this.state.form === 'Bank Transfer') {
+          modalMessage = 'Did you receive bank transfer of $'+totalFee+' ?'
+        }
+        else {
+          modalMessage = 'Did you receive cheque payment of $'+totalFee+' with cheque #' +chequeNumber + ' ?'
+        }
+
     }
 
    return (
@@ -592,8 +682,9 @@ class PaymentForm extends React.Component {
        <Row>
          <Col md={12} xs={12}>
            <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Payment Method</font>}>
-             <button className={cashClass} onClick={(e) => { this.handleForm(e, "Cash")}} style={{width: "45%", height: "50px"}}>Cash</button>
-             <button className={chequeClass} onClick={(e) => { this.handleForm(e, "Cheque")}} style={{width: "45%", height: "50px"}}>Cheque</button>
+             <button className={cashClass} onClick={(e) => { this.handleForm(e, "Cash")}} style={{width: "30%", height: "50px"}}>Cash</button>
+             <button className={chequeClass} onClick={(e) => { this.handleForm(e, "Cheque")}} style={{width: "30%", height: "50px"}}>Cheque</button>
+             <button className={bankTransferClass} onClick={(e) => { this.handleForm(e, "Bank Transfer")}} style={{width: "30%", height: "50px"}}>Bank Transfer</button>
            </Panel>
          </Col>
          <Col md={12} xs={12}>
