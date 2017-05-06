@@ -30,14 +30,11 @@ class AttendanceListHQ extends React.Component{
         calendar.terms.map((term, termId) => {
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
-            if (moment(date).isSameOrBefore()) {
-              termDates.push(moment(date));
-            }
+            termDates.push(moment(date));
           })
         })
       }
     })
-    this.setState({startDate: termDates[termDates.length-1]})
     this.setState({termDates})
   }
 
