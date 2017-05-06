@@ -128,10 +128,6 @@ class ClassEdit extends React.Component{
     browserHistory.push('/m/centres/'+ centreID);
   }
 
-  componentWillUnmount() {
-    var {dispatch} = this.props;
-    dispatch(actions.resetAgeGroup());
-  }
 
   generateAgeGroups() {
     var {ageGroup} = this.props;
