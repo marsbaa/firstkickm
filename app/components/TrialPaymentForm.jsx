@@ -119,6 +119,7 @@ class TrialPaymentForm extends React.Component {
         var siblingDiscount = false
         var payerTerm = []
         var siblingDiscountAmount = 0
+        var paidSessions = 0
         this.state.selectedTermDates[id].map((term,termId) => {
             var paymentTerm = [];
             term.map((date) => {
@@ -129,6 +130,7 @@ class TrialPaymentForm extends React.Component {
             })
             if (paymentTerm.length !== 0) {
               payerTerm[termId] = paymentTerm
+              paidSessions += paymentTerm.length
             }
           })
           var totalSession = 0
@@ -152,8 +154,8 @@ class TrialPaymentForm extends React.Component {
               perSession = 22;
               break;
             default:
-              cost = term.length * 45;
-              perSession = 45;
+              cost = term.length * (paidSessions > 8 ? 35 : 45);
+              perSession = paidSessions > 8 ? 35 : 45;
               break;
           }
           totalSession += _.size(term)
@@ -324,6 +326,7 @@ componentDidMount () {
         fees.push(<Row key={"Name"+id} style={{padding: '0px 15px', marginTop: '15px'}}>
           <Col xs={12} md={12} style={{borderBottom: '1px solid #bcbcbc'}}><p style={{fontWeight: '800', marginBottom: '0px'}}><Glyphicon glyph="user" /> {student.childName}</p></Col></Row>)
         var payerTerm = []
+        var paidSessions = 0
         if (this.state.selectedTermDates[id] !== undefined) {
           this.state.selectedTermDates[id].map((term,termId) => {
             var paymentTerm = [];
@@ -334,6 +337,7 @@ componentDidMount () {
               }
             })
             if (paymentTerm.length !== 0) {
+              paidSessions += paymentTerm.length
               payerTerm[termId] = paymentTerm
             }
           })
@@ -357,7 +361,7 @@ componentDidMount () {
                 cost = 220;
                 break;
               default:
-                cost = term.length * 45;
+                cost = term.length * (paidSessions > 8? 35: 45);
                 break;
             }
             totalSession += term.length
