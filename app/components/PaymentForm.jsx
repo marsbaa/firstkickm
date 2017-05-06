@@ -128,9 +128,10 @@ class PaymentForm extends React.Component {
     var siblingDiscount = false
     var payerTerm = []
     var siblingDiscountAmount = 0
+    var paidSessions = 0;
     this.state.selectedTermDates[id].map((term,termId) => {
         var paymentTerm = [];
-        var paidSessions = 0;
+
         term.map((date) => {
           var index = _.findIndex(this.state.deselectedTermDates[id], (d) => { return moment(d).isSame(date)});
           if (index === -1) {
