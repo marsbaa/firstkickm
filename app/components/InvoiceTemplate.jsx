@@ -25,6 +25,10 @@ class Root extends React.Component{
       html.push(<Row key={paymentDetail.childKey} style={{marginLeft: '30px'}}>
         <Col xs={8} md={8}><p style={{fontWeight: '800', textDecoration: 'underline'}}>{paymentDetail.childName}</p></Col></Row>)
       var cost = 0;
+      var paidSessions = 0
+      paymentDetail.termsPaid.map((term, termId) => {
+        paidSessions += _.size(term)
+      })
       paymentDetail.termsPaid.map((term, termId) => {
        switch (_.size(term)) {
          case 8:
@@ -40,7 +44,7 @@ class Root extends React.Component{
            cost = 220;
            break;
          default:
-           cost = _.size(term) * 45;
+           cost = _.size(term) * (paidSessions > 8 ? 35:45);
            break;
          }
          var datehtml = []
@@ -91,7 +95,7 @@ class Root extends React.Component{
          html.push(
            <Row key={'siblingdiscount'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>
              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
-             <Col xs={4} md={4} style={{textAlign: 'right'}}>$(paymentDetail.siblingDiscountAmount)</Col>
+             <Col xs={4} md={4} style={{textAlign: 'right'}}>$({paymentDetail.siblingDiscountAmount})</Col>
            </Row>
            )
        }
@@ -161,6 +165,7 @@ class Root extends React.Component{
               <li>Please keep this receipt for future reference </li>
               <li>Term Fees are non refundable unless for Long Term Injury (3 weeks or more)</li>
               <li>Term Fees are non transferable</li>
+              <li>If you have not paid for a session but would wish to attend it, please do make a payment of $45 cash to our administrator at the centre.</li>
               <li>If there are any dispute of the receipt please email to contact@fka.sg</li>
             </ul>
             </Well>
