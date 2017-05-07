@@ -44,6 +44,7 @@ class AttendanceList extends React.Component{
           var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
           Object.keys(groupAge).forEach((age)=> {
             var group = groupAge[age];
+            group = _.sortBy(group, ['childName'])
             var attended = 0;
             var date = moment().format("YYYY-MM-DD");
             Object.keys(group).forEach((studentId) => {

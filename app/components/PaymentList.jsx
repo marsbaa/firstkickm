@@ -31,6 +31,7 @@ class PaymentList extends React.Component {
         var actualGroupAge = _.groupBy(actualGroupTime[timeSlot], 'ageGroup');
         Object.keys(groupAge).forEach((age)=> {
           var group = groupAge[age];
+          group = _.sortBy(group, ['childName'])
           var actualGroup = actualGroupAge[age];
           html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
              <Col xs={8} md={8}>

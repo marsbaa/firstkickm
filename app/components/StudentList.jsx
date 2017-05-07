@@ -67,6 +67,7 @@ class StudentList extends React.Component {
         var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
         Object.keys(groupAge).forEach((age)=> {
           var group = groupAge[age];
+          group = _.sortBy(group, ['childName'])
           html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
              <Col xs={8} md={8}>
                <h5>{age} {timeSlot}</h5>

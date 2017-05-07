@@ -29,7 +29,9 @@ class ChartsTrial extends React.Component{
       if (calendar.centreKey === selection.key) {
         var terms = calendar.terms;
         terms.map((term, id) => {
-          if(moment().isBetween(term[0], term[term.length-1])) {
+          console.log(term[0])
+          console.log(term[term.length-1])
+          if(moment().isBetween(term[0], term[term.length-1], null, '[]')) {
             document.getElementById('termSelect').value = id
             this.setState({selectedTerm: id})
           }
