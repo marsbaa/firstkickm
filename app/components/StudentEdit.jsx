@@ -42,6 +42,7 @@ class StudentEdit extends React.Component {
     var student = _.find(students, {key: key});
     document.getElementById("boy").checked = student.gender==="boy" ? true: false;
     document.getElementById("girl").checked = student.gender==="girl" ? true: false;
+    this.setState({ageGroup : student.ageGroup})
   }
 
   onFormSubmit(e) {
@@ -102,9 +103,12 @@ class StudentEdit extends React.Component {
 
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
-      if (cla.ageGroup === student.ageGroup) {
+      console.log(cla.ageGroup)
+      console.log(student.ageGroup)
+      if (cla.ageGroup === this.state.ageGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+cla.day+")";
+        console.log(classTimeDay)
         classTimeSlots.push(<option key={classTimeDay} value={classTime}>{classTimeDay}</option>);
       }
     });
