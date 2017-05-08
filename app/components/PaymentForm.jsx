@@ -298,7 +298,7 @@ class PaymentForm extends React.Component {
     })
     students.map((student) => {
         if (student.contact === contact && student.key!== studentId){
-          if (contact !== undefined) {
+          if (contact !== undefined && contact !== "") {
             payer.push(student)
           }
         }

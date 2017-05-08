@@ -61,6 +61,10 @@ class StudentList extends React.Component {
 
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    var inActiveStudents = _.filter(filteredStudents, {status: 'Not Active'})
+    filteredStudents = _.filter(filteredStudents, (o) => {
+      return !(o.status==='Not Active')
+    })
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
       Object.keys(groupTime).forEach((timeSlot)=> {
@@ -73,7 +77,7 @@ class StudentList extends React.Component {
                <h5>{age} {timeSlot}</h5>
              </Col>
                <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                 <h5>Class Size: {_.size(group)}</h5>
+                 <h5>Class Size : {_.size(group)}</h5>
              </Col>
            </Row>);
 
@@ -83,6 +87,21 @@ class StudentList extends React.Component {
            })
         })
       })
+    }
+    if (inActiveStudents.length !== 0) {
+      html.push( <Row key='inactive' style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+         <Col xs={8} md={8}>
+           <h5>Not Active</h5>
+         </Col>
+           <Col xs={4} md={4} style={{textAlign: 'center'}}>
+             <h5>Count : {_.size(inActiveStudents)}</h5>
+         </Col>
+       </Row>);
+       Object.keys(inActiveStudents).forEach((studentId) => {
+           html.push(<Student key={inActiveStudents[studentId].key} student={inActiveStudents[studentId]}/>);
+
+       })
+
     }
     var studentHTML = [];
     this.state.studentsName.map((name) => {

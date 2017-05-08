@@ -56,7 +56,7 @@ class NotesAll extends React.Component {
                  <InputGroup.Addon>
                   <input type="checkbox" aria-label="..." />
                 </InputGroup.Addon>
-                 <FormControl id='message' componentClass="textarea" style={{height: '50px'}} disabled value={note.message}/>
+                 <FormControl id='message' componentClass="textarea" style={{height: note.message.split(/\r\n|\r|\n/).length*25, minHeight: '50px'}} disabled value={note.message}/>
                </InputGroup>
                <InputGroup.Addon>{_.find(centres, {key: note.centreKey}).name}</InputGroup.Addon>
                <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();

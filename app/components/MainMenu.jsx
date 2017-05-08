@@ -26,9 +26,6 @@ class MainMenu extends React.Component {
 
     }
 
-    componentWillUnMount() {
-
-    }
 
     render() {
         var {selection, centres, users, auth} = this.props;

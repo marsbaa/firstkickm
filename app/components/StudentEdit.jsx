@@ -67,10 +67,11 @@ class StudentEdit extends React.Component {
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
       address: document.getElementById("address").value,
-      ageGroup: document.getElementById("ageGroup").value
+      ageGroup: document.getElementById("ageGroup").value,
+      status : document.getElementById("status").value
     };
     dispatch(actions.updateStudent(key, student));
-    browserHistory.push(`/m/students`);
+    browserHistory.goBack();
   }
 
   render() {
@@ -103,12 +104,9 @@ class StudentEdit extends React.Component {
 
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
-      console.log(cla.ageGroup)
-      console.log(student.ageGroup)
       if (cla.ageGroup === this.state.ageGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+cla.day+")";
-        console.log(classTimeDay)
         classTimeSlots.push(<option key={classTimeDay} value={classTime}>{classTimeDay}</option>);
       }
     });
@@ -220,6 +218,13 @@ class StudentEdit extends React.Component {
               <Radio id="girl" value="girl" name="gender" inline>
                 Girl
               </Radio>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Student Status</ControlLabel>
+              <FormControl componentClass="select" placeholder="select" id="status" defaultValue={student.status === undefined? 'Active' : 'Not Active'}>
+                <option value="Active">Active</option>
+                <option value="Not Active">Not Active</option>
+              </FormControl>
             </FormGroup>
             <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Child Profile</button>
           </Col>

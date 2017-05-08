@@ -48,7 +48,7 @@ class Attendee extends React.Component {
         </Col>
         <Col xs={4} md={4} style={{textAlign:'right'}}>
           {type==='makeup'? null:<Link to={"/m/attendance/makeup/"+ key}><button className="innerbtn">Make Up</button></Link>}
-          <Link to={"/m/attendance/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
+          <Link to={"/m/students/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>
 

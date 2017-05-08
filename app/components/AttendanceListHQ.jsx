@@ -58,8 +58,9 @@ class AttendanceListHQ extends React.Component{
     var {students, searchText, selection, calendars, makeUps} = this.props;
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    filteredStudents = _.filter(filteredStudents, (o) => {
+      return !(o.status==='Not Active')})
     var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment(this.state.startDate).format('YYYY-MM-DD')})
-    console.log(filteredMakeUps)
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
       Object.keys(groupTime).forEach((timeSlot)=> {
