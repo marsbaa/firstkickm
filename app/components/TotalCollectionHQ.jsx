@@ -72,7 +72,7 @@ class TotalCollectionHQ extends React.Component {
           )
           groupCashPayments[date].map((payment) => {
             html.push(
-              <Row key= {payment.childKey} style={{padding: '8px 18px', borderBottom: '1px solid #cccccc'}}>
+              <Row key= {payment.key} style={{padding: '8px 18px', borderBottom: '1px solid #cccccc'}}>
                 <Col xs={8} md={8} style={{fontSize: '12px'}}>
                   <Glyphicon glyph="user" /> {payment.childName}
                 </Col>
