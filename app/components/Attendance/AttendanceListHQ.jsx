@@ -28,7 +28,8 @@ class AttendanceListHQ extends React.Component{
     Object.keys(calendars).map((calendarKey) => {
       var calendar = calendars[calendarKey]
       if(calendar.centreKey === selection.key) {
-        calendar.terms.map((term, termId) => {
+        Object.keys(calendar.terms).map( (termId) => {
+          var term = calendar.terms[termId]
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
             termDates.push(moment(date));

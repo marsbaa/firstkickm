@@ -31,12 +31,13 @@ class ScheduleApp extends React.Component {
     Object.keys(calendars).map((calendarKey) => {
       var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
-        calendar.terms.map((term, termID) => {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           term.map((date, dateID) => {
             var today = moment().format("YYYYMMDD")
             if (moment(date).isSameOrAfter(today,'day')) {
               termDates.push({
-                term: termID,
+                term: termIs,
                 session: parseInt(dateID)+1,
                 date,
                 calendarKey: calendar.key

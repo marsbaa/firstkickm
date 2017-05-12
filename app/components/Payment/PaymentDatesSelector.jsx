@@ -27,7 +27,8 @@ class PaymentDatesSelector extends React.Component {
         var calendar = calendars[calendarKey]
         if (calendar.key === termKey) {
           var count = 0;
-          calendar.terms.map((term, termId)=> {
+          Object.keys(calendar.terms).map((termId) => {
+            var term = calendar.terms[termId]
             var newTermDates = _.filter(term, (date) => {
               return moment(date) >= startDate
             });
@@ -61,7 +62,8 @@ class PaymentDatesSelector extends React.Component {
       var calendar = calendars[calendarKey]
       if (calendar.key === termKey) {
         var count = 0;
-        calendar.terms.map((term, termId)=> {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           var newTermDates = _.filter(term, (date) => {
             return moment(date) >= startDate
           });

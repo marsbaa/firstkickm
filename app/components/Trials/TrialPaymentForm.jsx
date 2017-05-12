@@ -264,7 +264,8 @@ componentDidMount () {
       Object.keys(calendars).map((calendarKey) => {
         var calendar = calendars[calendarKey]
         if(calendar.key === termKey) {
-          calendar.terms.map((term, termId) => {
+          Object.keys(calendar.terms).map((termId) => {
+            var term = calendar.terms[termId]
             term.map((date) => {
               if (moment(date) > moment() && count === 0) {
                 startDate = moment(date);

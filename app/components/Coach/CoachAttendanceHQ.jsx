@@ -32,9 +32,11 @@ class CoachAttendanceHQ extends React.Component{
       dispatch(actions.startCoachSchedule());
     }
     var termDates = [];
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if(calendar.centreKey === selection.key) {
-        calendar.terms.map((term, termId) => {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
             if(moment(date).isSameOrBefore()) {

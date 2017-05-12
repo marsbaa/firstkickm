@@ -34,7 +34,8 @@ class AttendanceMakeUp extends React.Component {
      var termDates = [];
      calendars.map((calendar) => {
        if(calendar.centreKey === selection.key) {
-         calendar.terms.map((term, termId) => {
+         Object.keys(calendar.terms).map((termId) => {
+           var term = calendar.terms[termId]
            term.map((date) => {
              date = moment(date).format("YYYYMMDD")
              if(moment(date).isSameOrAfter()) {
@@ -70,7 +71,8 @@ class AttendanceMakeUp extends React.Component {
     calendars.map((calendar) => {
 
       if(calendar.centreKey === e.target.value) {
-        calendar.terms.map((term, termId) => {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
             if(moment(date).isSameOrAfter()) {

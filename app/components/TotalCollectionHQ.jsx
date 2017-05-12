@@ -97,7 +97,6 @@ class TotalCollectionHQ extends React.Component {
         grandTotal += total
       }
       var bankTransferPayments = _.filter(filteredPayments, ['paymentMethod', 'Bank Transfer'])
-      console.log(bankTransferPayments)
       if (_.size(bankTransferPayments) !== 0) {
         var total = 0;
         html.push(

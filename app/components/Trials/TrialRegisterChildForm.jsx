@@ -137,7 +137,8 @@ class TrialRegisterChildForm extends React.Component{
     Object.keys(calendars).map((calendarKey) => {
       var calendar = calendars[calendarKey]
       if (centre.key === calendar.centreKey) {
-        calendar.terms.map((term) => {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           term.map((dates) => {
             var formattedDate = moment(dates).format("YYYY-MM-DD");
             trialDateOptions.push(<option key={formattedDate} value={formattedDate}>{formattedDate}</option>);
