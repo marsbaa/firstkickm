@@ -32,7 +32,8 @@ class AttendanceMakeUp extends React.Component {
    componentWillMount() {
      var {selection, calendars} = this.props;
      var termDates = [];
-     calendars.map((calendar) => {
+     Object.keys(calendars).map((calendarKey) => {
+       var calendar = calendars[calendarKey]
        if(calendar.centreKey === selection.key) {
          Object.keys(calendar.terms).map((termId) => {
            var term = calendar.terms[termId]
@@ -68,7 +69,8 @@ class AttendanceMakeUp extends React.Component {
     e.preventDefault();
     var termDates = [];
     var {calendars} = this.props
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
 
       if(calendar.centreKey === e.target.value) {
         Object.keys(calendar.terms).map((termId) => {

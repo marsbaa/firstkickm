@@ -325,7 +325,8 @@ class PaymentForm extends React.Component {
       var startDate;
       var count = 0;
       var termDate = [];
-      calendars.map((calendar) => {
+      Object.keys(calendars).map((calendarKey) => {
+        var calendar = calendars[calendarKey]
         if(calendar.key === termKey) {
           Object.keys(calendar.terms).map((termId) => {
             var term = calendar.terms[termId]
