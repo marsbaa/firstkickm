@@ -48,11 +48,11 @@ class ScheduleApp extends React.Component {
       }
     })
 
-    var termDates = _.orderBy(termDates, ['term', 'session'], ['asc', 'asc']);
+    var termDates = _.orderBy(termDates, ['date','term', 'session'], ['asc', 'asc', 'asc']);
     termDates = _.slice(termDates, 0, 8);
     var html = [];
     termDates.map((dateInfo) => {
-        html.push(<TermButton key={dateInfo.date} title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}
+        html.push(<TermButton key={dateInfo.date+dateInfo.calendarKey} title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}
         calendarKey = {dateInfo.calendarKey}
         />)
     })
