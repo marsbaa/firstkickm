@@ -291,19 +291,15 @@ class PaymentForm extends React.Component {
     var studentId = this.props.params.studentId;
     var contact = null;
     var payer = [];
-    students.map((student) => {
-      if (student.key === studentId) {
-        contact = student.contact
-        payer.push(student)
-      }
-    })
-    students.map((student) => {
-        if (student.contact === contact && student.key!== studentId){
-          if (contact !== undefined && contact !== "") {
-            payer.push(student)
-          }
-        }
-      })
+    var student = _.find(students, {key: studentId})
+    console.log(student)
+    if (student.contact !== null){
+      payer = _.filter(students, {contact: student.contact})
+    }
+    else {
+      payer.push(student)
+    }
+    console.log(payer)
     this.setState({payer});
 
     //Initiate Selectable Term Dates

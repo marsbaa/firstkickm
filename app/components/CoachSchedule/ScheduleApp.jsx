@@ -37,7 +37,7 @@ class ScheduleApp extends React.Component {
             var today = moment().format("YYYYMMDD")
             if (moment(date).isSameOrAfter(today,'day')) {
               termDates.push({
-                term: termIs,
+                term: termId,
                 session: parseInt(dateID)+1,
                 date,
                 calendarKey: calendar.key
