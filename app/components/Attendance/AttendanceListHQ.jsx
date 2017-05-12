@@ -64,43 +64,49 @@ class AttendanceListHQ extends React.Component{
       return !(o.status==='Not Active')})
     var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment(this.state.startDate).format('YYYY-MM-DD')})
     if (filteredStudents.length !== 0) {
-      var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
-      Object.keys(groupTime).forEach((timeSlot)=> {
-        var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
-        Object.keys(groupAge).forEach((age)=> {
-          var group = groupAge[age];
-          group = _.sortBy(group, ['childName'])
-          var attended = 0;
-          var date = this.state.startDate
-          Object.keys(group).forEach((studentId) => {
-            if (group[studentId].attendance !== undefined) {
-              if (group[studentId].attendance[date] !== undefined) {
-                if (group[studentId].attendance[date].attended) {
-                  attended = attended + 1;
+      var groupDay = _.groupBy(filteredStudents, 'currentClassDay');
+      Object.keys(groupDay).forEach((day) => {
+        if (_.capitalize(day) === moment(this.state.startDate).format("dddd")){
+          var groupTime = _.groupBy(groupDay[day], 'currentClassTime');
+          Object.keys(groupTime).forEach((timeSlot)=> {
+            var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
+            Object.keys(groupAge).forEach((age)=> {
+              var group = groupAge[age];
+              group = _.sortBy(group, ['childName'])
+              var attended = 0;
+              var date = this.state.startDate
+              Object.keys(group).forEach((studentId) => {
+                if (group[studentId].attendance !== undefined) {
+                  if (group[studentId].attendance[date] !== undefined) {
+                    if (group[studentId].attendance[date].attended) {
+                      attended = attended + 1;
+                    }
+                  }
                 }
-              }
-            }
+              });
+              html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+                 <Col xs={9} md={9}>
+                   <h5>{age} {timeSlot}</h5>
+                 </Col>
+                   <Col xs={3} md={3} style={{textAlign: 'center'}}>
+                     <h5><font style={{color: 'white'}}>{attended}</font> / {_.size(group)}
+                     </h5>
+                 </Col>
+               </Row>);
+               Object.keys(group).forEach((studentId) => {
+                   html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date} type='normal'/>);
+
+               });
+               Object.keys(filteredMakeUps).forEach((makeUpId)=> {
+                 var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
+                 html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
+               })
+
+            })
           });
-          html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-             <Col xs={9} md={9}>
-               <h5>{age} {timeSlot}</h5>
-             </Col>
-               <Col xs={3} md={3} style={{textAlign: 'center'}}>
-                 <h5><font style={{color: 'white'}}>{attended}</font> / {_.size(group)}
-                 </h5>
-             </Col>
-           </Row>);
-           Object.keys(group).forEach((studentId) => {
-               html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date} type='normal'/>);
+        }
+      })
 
-           });
-           Object.keys(filteredMakeUps).forEach((makeUpId)=> {
-             var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
-             html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
-           })
-
-        })
-      });
     }
     else {
       html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)

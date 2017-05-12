@@ -66,27 +66,31 @@ class StudentList extends React.Component {
       return !(o.status==='Not Active')
     })
     if (filteredStudents.length !== 0) {
-      var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
-      Object.keys(groupTime).forEach((timeSlot)=> {
-        var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
-        Object.keys(groupAge).forEach((age)=> {
-          var group = groupAge[age];
-          group = _.sortBy(group, ['childName'])
-          html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-             <Col xs={8} md={8}>
-               <h5>{age} {timeSlot}</h5>
-             </Col>
-               <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                 <h5>Class Size : {_.size(group)}</h5>
-             </Col>
-           </Row>);
+      var groupDay = _.groupBy(filteredStudents, 'currentClassDay');
+      Object.keys(groupDay).forEach((day)=> {
+        var groupTime = _.groupBy(groupDay[day], 'currentClassTime');
+        Object.keys(groupTime).forEach((timeSlot)=> {
+          var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
+          Object.keys(groupAge).forEach((age)=> {
+            var group = groupAge[age];
+            group = _.sortBy(group, ['childName'])
+            html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+               <Col xs={8} md={8}>
+                 <h5>{age} {timeSlot} ({_.capitalize(day)})</h5>
+               </Col>
+                 <Col xs={4} md={4} style={{textAlign: 'center'}}>
+                   <h5>Class Size : {_.size(group)}</h5>
+               </Col>
+             </Row>);
 
-           Object.keys(group).forEach((studentId) => {
-               html.push(<Student key={group[studentId].key} student={group[studentId]}/>);
+             Object.keys(group).forEach((studentId) => {
+                 html.push(<Student key={group[studentId].key} student={group[studentId]}/>);
 
-           })
+             })
+          })
         })
       })
+
     }
     if (inActiveStudents.length !== 0) {
       html.push( <Row key='inactive' style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
