@@ -106,7 +106,6 @@ class AttendanceListHQ extends React.Component{
           });
         }
       })
-
     }
     else {
       html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)
