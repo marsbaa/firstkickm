@@ -17,7 +17,7 @@ class CoachAttendanceHQ extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      startDate : "",
+      startDate : moment(),
       termDates : []
     }
     this.handleChange = this.handleChange.bind(this)
@@ -39,14 +39,11 @@ class CoachAttendanceHQ extends React.Component{
           var term = calendar.terms[termId]
           term.map((date) => {
             date = moment(date).format("YYYYMMDD")
-            if(moment(date).isSameOrBefore()) {
-              termDates.push(moment(date));
-            }
+            termDates.push(moment(date));
           })
         })
       }
     })
-    this.setState({startDate: termDates[termDates.length-1]})
     this.setState({termDates})
   }
   handleChange(date) {
