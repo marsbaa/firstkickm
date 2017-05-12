@@ -35,9 +35,11 @@ class CoachAttendance extends React.Component{
     var filteredCoaches = CoachesFilter.filter(coaches, searchText)
     var today=-1;
     var html=[];
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
-        calendar.terms.map((term) => {
+        Object.keys(calendar.terms).map((termId) => {
+          var term = calendar.terms[termId]
           term.map ((date)=> {
             if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
               today = 1;
