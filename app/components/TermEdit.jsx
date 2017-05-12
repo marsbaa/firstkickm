@@ -83,7 +83,7 @@ class TermEdit extends React.Component{
     if (calendarKey !== 'add') {
       term = calendars[calendarKey];
       if (term !== undefined) {
-        term.terms.map((termID) => {
+        Object.keys(term.terms).map((termID) => {
           count++;
         })
           numOfTerms = count;

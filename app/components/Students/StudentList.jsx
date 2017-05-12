@@ -46,6 +46,7 @@ class StudentList extends React.Component {
         complete: function(results, file) {
 	         Object.keys(results.data).map((id)=> {
              var student = results.data[id]
+             console.log(student)
              studentsName.push(student.childName)
              dispatch(actions.addStudent(student))
            })

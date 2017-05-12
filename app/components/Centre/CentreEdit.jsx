@@ -165,7 +165,7 @@ class CentreEdit extends React.Component{
 
    return (
      <div>
-       <Grid>
+       <Grid style={{marginTop: '20px'}}>
          <Row>
            <Col md={6}>
             <FormGroup validationState={this.state.errorID}>
@@ -214,7 +214,7 @@ class CentreEdit extends React.Component{
               <DeleteModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} deleteKey={this.state.delete} type={this.state.type}/>
               <TermList centreKey={centre.key} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
              </div>
-             <button className="btn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
+             <button className="submitbtn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>
          </Row>
        </Grid>

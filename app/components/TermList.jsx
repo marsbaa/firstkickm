@@ -46,8 +46,8 @@ class TermList extends React.Component{
 
             </div>
           );
-            term.terms.map((dates, id) => {
-              html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+id}><b>Term {id} <font style={{color:'orange'}}>({_.size(term.terms[id])} sessions)</font></b><br/> {generateDates(term.terms[id])}</div>);
+            Object.keys(term.terms).map((termId) => {
+              html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={term.name+termId}><b>Term {termId} <font style={{color:'orange'}}>({_.size(term.terms[termId])} sessions)</font></b><br/> {generateDates(term.terms[termId])}</div>);
             });
           }
         });

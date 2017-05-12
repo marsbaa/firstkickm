@@ -6,10 +6,21 @@ export var authReducer = (state = {}, action) => {
     case 'LOGIN':
       return {
           uid: action.uid,
-          email : action.email
+          email : action.email,
+          loggedIn : true
         };
     case 'LOGOUT':
       return {};
+    default:
+      return state;
+  };
+};
+
+
+export var redirectReducer = (state = '', action) => {
+  switch (action.type) {
+    case 'REDIRECT_URL':
+      return action.url
     default:
       return state;
   };

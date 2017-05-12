@@ -39,6 +39,13 @@ export var logout = () => {
   };
 };
 
+//Redirect Reducer
+export var setRedirectUrl = (url) => {
+  return {
+    type: 'REDIRECT_URL',
+    url
+  }
+}
 //Navbar
 export var updateNavTitle = (link, title) => {
   return {

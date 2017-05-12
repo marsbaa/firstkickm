@@ -28,6 +28,7 @@ class ClassList extends React.Component{
 
      if (centre.classes !== undefined) {
        html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px', height: '20px'}} key='Class'/>);
+       centre.classes = _.sortBy(centre.classes, ['ageGroup'])
        Object.keys(centre.classes).forEach((classId)=> {
          var classes = centre.classes[classId];
          html.push(<div style={{border: '1px solid #9a9a9a', padding: '10px'}} key={classId}>

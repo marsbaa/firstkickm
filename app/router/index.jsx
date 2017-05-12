@@ -89,18 +89,14 @@ import NotesAll from 'NotesAll'
 import MakeUpApp from 'MakeUpApp'
 import MakeUpList from 'MakeUpList'
 
-var redirectIfLoggedIn = (nextState, replace, next) => {
-  if (firebase.auth().currentUser) {
-    replace('/m');
-  }
-  next();
-};
+import EnsureLoggedIn from 'EnsureLoggedIn'
+
 
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
     replace('/');
   }
-  next();
+  next()
 };
 
 export default (

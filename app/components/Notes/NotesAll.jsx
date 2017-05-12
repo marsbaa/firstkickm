@@ -46,6 +46,7 @@ class NotesAll extends React.Component {
 
   render() {
     var {notes, auth, selection, centres} = this.props
+    notes = _.sortBy(notes, ['date']);
    return (
      <Grid style={{marginTop : '20px'}}>
        <Row>
