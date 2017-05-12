@@ -485,7 +485,8 @@ export var calendarReducer = (state={}, action) => {
     case 'UPDATE_TERM':
     return {
       ...state,
-      [action.calendarKey]: {...action.calendar}
+      [action.calendarKey]: {...action.calendar,
+      key: action.calendarKey}
     }
     case 'DELETE_TERM':
       return state.filter((term) => {
