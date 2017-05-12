@@ -23,7 +23,8 @@ class PaymentDatesSelector extends React.Component {
       var termKey = nextProps.termKey;
       var payerId = this.props.payerId;
       var selected = [];
-      calendars.map((calendar) => {
+      Object.keys(calendars).map((calendarKey) => {
+        var calendar = calendars[calendarKey]
         if (calendar.key === termKey) {
           var count = 0;
           calendar.terms.map((term, termId)=> {
@@ -56,7 +57,8 @@ class PaymentDatesSelector extends React.Component {
     var termKey = this.props.termKey;
     var payerId = this.props.payerId;
     var selected = [];
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (calendar.key === termKey) {
         var count = 0;
         calendar.terms.map((term, termId)=> {

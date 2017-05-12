@@ -149,7 +149,8 @@ class ClassEdit extends React.Component{
        }
      });
      var termhtml = [];
-     calendars.map((term) => {
+     Object.keys(calendars).map((calendarKey) => {
+       var term = calendars[calendarKey]
        if (centre.key === term.centreKey) {
           termhtml.push(<option key={term.key} value={term.key}>{term.name}</option>);
        }

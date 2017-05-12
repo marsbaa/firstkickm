@@ -25,7 +25,8 @@ class AttendanceListHQ extends React.Component{
   componentWillMount() {
     var {selection, calendars} = this.props;
     var termDates = [];
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if(calendar.centreKey === selection.key) {
         calendar.terms.map((term, termId) => {
           term.map((date) => {

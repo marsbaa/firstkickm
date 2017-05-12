@@ -736,17 +736,17 @@ export var deleteClass = (centreKey, classKey) => {
 export var startCalendars = () => {
   return (dispatch) => {
   var CalendarRef = firebaseRef.child('calendars');
-  var parsedCalendars = [];
+  var parsedCalendars = {};
   return CalendarRef.once('value').then((snapshot) => {
     var value = snapshot.val();
     if (value !== null){
       Object.keys(value).forEach((termKey) => {
-        parsedCalendars.push({
+        parsedCalendars[termKey] = {
           key: termKey,
           name: value[termKey].name,
           terms: value[termKey].terms,
           centreKey: value[termKey].centreKey
-        });
+        }
       });
       dispatch(addCalendars(parsedCalendars));
     }
@@ -761,49 +761,37 @@ export var addCalendars = (calendars) => {
   }
 };
 
-export var addTerm = (centreKey, terms, termName) => {
+export var addTerm = (calendar) => {
   var CalendarRef = firebase.database().ref('calendars');
   var termKey = CalendarRef.push().key;
   var updates = {};
-  updates[termKey] = {
-    centreKey,
-    name: termName,
-    terms: terms
-  };
+  updates[termKey] = calendar
   CalendarRef.update(updates);
+  calendar.key=termKey
   return {
     type: 'ADD_TERM',
-    centreKey,
-    terms,
-    termKey,
-    name: termName
+    calendar
   };
 };
 
-export var updateTerm = (centreKey, terms, termName, calendarKey) => {
+export var updateTerm = (calendar, calendarKey) => {
   var CalendarRef = firebase.database().ref('calendars');
   var updates = {};
-  updates[calendarKey] = {
-    centreKey,
-    name: termName,
-    terms: terms
-  };
+  updates[calendarKey] = calendar
   CalendarRef.update(updates);
   return {
     type: 'UPDATE_TERM',
-    centreKey,
-    terms,
-    calendarKey,
-    name: termName
+    calendar,
+    calendarKey
   };
 };
 
-export var deleteTerm = (termKey) => {
-  var CalendarRef = firebase.database().ref('calendars/' + termKey);
+export var deleteTerm = (calendarKey) => {
+  var CalendarRef = firebase.database().ref('calendars/' + calendarKey);
   CalendarRef.remove();
   return {
     type: 'DELETE_TERM',
-    termKey
+    calendarKey
   }
 };
 

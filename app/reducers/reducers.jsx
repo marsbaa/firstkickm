@@ -473,41 +473,24 @@ export var centreReducer = (state = [], action) => {
   }
 };
 
-export var calendarReducer = (state=[], action) => {
+export var calendarReducer = (state={}, action) => {
   switch (action.type) {
     case 'ADD_CALENDARS':
-      return [
-        ...action.calendars
-      ];
+      return action.calendars
     case 'ADD_TERM':
-    return [
+    return {
       ...state,
-      { key: action.termKey,
-        centreKey: action.centreKey,
-        name: action.name,
-        terms: action.terms
-      }
-    ];
+      [action.calendarKey]: {...action.calendar}
+    }
     case 'UPDATE_TERM':
-    return state.map((term) => {
-      if (term.key === action.termKey) {
-        return {
-          key: action.termKey,
-          centreKey: action.centreKey,
-          name: action.name,
-          terms: action.terms
-        }
-      }
-      else {
-        return term;
-      }
-    });
+    return {
+      ...state,
+      [action.calendarKey]: {...action.calendar}
+    }
     case 'DELETE_TERM':
       return state.filter((term) => {
         return term.key !== action.termKey;
       });
-
-
     default:
       return state;
   }

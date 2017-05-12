@@ -122,7 +122,7 @@ class CentreEdit extends React.Component{
           id: centreID,
           name: centreName,
           logoURL: logoURL,
-          calendars: selectedCentre.calendars
+          classes: selectedCentre.classes
         };
         dispatch(actions.updateCentre(centre));
         browserHistory.push('/m/centres');

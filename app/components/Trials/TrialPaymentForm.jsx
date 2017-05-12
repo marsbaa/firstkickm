@@ -161,7 +161,8 @@ class TrialPaymentForm extends React.Component {
           totalSession += _.size(term)
           total += cost
           var actualTerm;
-          calendars.map((calendar) => {
+          Object.keys(calendars).map((calendarKey) => {
+            var calendar = calendars[calendarKey]
             if(calendar.key === this.state.termKeys[id]) {
               actualTerm = calendar.terms[termId]
             }
@@ -260,7 +261,8 @@ componentDidMount () {
       var startDate;
       var count = 0;
       var termDate = [];
-      calendars.map((calendar) => {
+      Object.keys(calendars).map((calendarKey) => {
+        var calendar = calendars[calendarKey]
         if(calendar.key === termKey) {
           calendar.terms.map((term, termId) => {
             term.map((date) => {
@@ -385,7 +387,8 @@ componentDidMount () {
 
             //Early Bird Discount
             var actualTerm;
-            calendars.map((calendar) => {
+            Object.keys(calendars).map((calendarKey) => {
+              var calendar = calendars[calendarKey]
               if(calendar.key === this.state.termKeys[id]) {
                 actualTerm = calendar.terms[termId]
               }

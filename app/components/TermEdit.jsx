@@ -39,10 +39,20 @@ class TermEdit extends React.Component{
         errorMessageTermName: ''
       });
       if (calendarKey === 'add') {
-        dispatch(actions.addTerm(centreKey, terms, termName));
+        var calendar = {
+          name: termName,
+          centreKey,
+          terms
+        }
+        dispatch(actions.addTerm(calendar));
       }
       else {
-        dispatch(actions.updateTerm(centreKey, terms, termName, calendars[calendarKey].key));
+        var calendar = {
+          name: termName,
+          centreKey,
+          terms,
+        }
+        dispatch(actions.updateTerm(calendar, calendarKey));
       }
       browserHistory.push('/m/centres/'+ centreID);
     }
@@ -83,10 +93,9 @@ class TermEdit extends React.Component{
     if (calendarKey !== 'add') {
       term = calendars[calendarKey];
       if (term !== undefined) {
-        Object.keys(term.terms).map((termID) => {
-          count++;
-        })
-          numOfTerms = count;
+        numOfTerms = Object.keys(term.terms)[Object.keys(term.terms).length-1];
+
+
       }
     }
 

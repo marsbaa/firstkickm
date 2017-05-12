@@ -188,7 +188,8 @@ class PaymentForm extends React.Component {
       }
       total += cost
       var actualTerm;
-      calendars.map((calendar) => {
+      Object.keys(calendars).map((calendarKey) => {
+        var calendar = calendars[calendarKey]
         if(calendar.key === this.state.termKeys[id]) {
           actualTerm = calendar.terms[termId]
         }
@@ -470,7 +471,8 @@ class PaymentForm extends React.Component {
             <Col xs={12} md={12} style={{marginTop: '0px'}}>{datehtml}</Col>
           </Row>)
           var actualTerm;
-          calendars.map((calendar) => {
+          Object.keys(calendars).map((calendarKey) => {
+            var calendar = calendars[calendarKey]
             if(calendar.key === this.state.termKeys[id]) {
               actualTerm = calendar.terms[termId]
             }

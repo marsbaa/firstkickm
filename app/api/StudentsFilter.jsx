@@ -5,7 +5,7 @@ module.exports = {
 
     // Filter by centreId
     filteredStudents = filteredStudents.filter((student) => {
-      return student.venueId.toString() === centreId.toString();
+      return student.venueId === centreId;
     });
 
 

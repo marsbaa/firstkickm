@@ -25,7 +25,8 @@ class ChartsTrial extends React.Component{
 
   componentDidMount() {
     var {trials, calendars, selection} = this.props;
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
         var terms = calendar.terms;
         terms.map((term, id) => {
@@ -47,7 +48,8 @@ class ChartsTrial extends React.Component{
     var data = []
     var termId = this.state.selectedTerm
     var terms;
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
         terms = calendar.terms;
         terms.map((term, id) => {

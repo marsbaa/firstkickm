@@ -24,8 +24,9 @@ class AttendanceList extends React.Component{
     var {students, searchText, selection, calendars} = this.props;
     var today=-1;
     var html=[];
-    calendars.map((calendar) => {
-      if (calendar.centreKey === selection.key) {
+    Object.keys(calendars).map((calendarKey) => {
+      if (calendars[calendarKey].centreKey === selection.key) {
+        var calendar = calendars[calendarKey]
         calendar.terms.map((term) => {
           term.map ((date)=> {
             if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {

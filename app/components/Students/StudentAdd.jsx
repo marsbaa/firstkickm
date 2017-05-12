@@ -62,7 +62,7 @@ class StudentAdd extends React.Component {
   }
 
   render() {
-    var {centres, ageGroup, calendars, selection} = this.props;
+    var {centres, ageGroup, selection} = this.props;
 
     //Age Group List
     var ageGroups = []

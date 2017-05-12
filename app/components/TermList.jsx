@@ -35,14 +35,15 @@ class TermList extends React.Component{
       return dates;
      };
      if (calendars.length !== 0) {
-         calendars.map((term, id) => {
+         Object.keys(calendars).map((id) => {
+           var term = calendars[id]
           if (term.centreKey === centreKey) {
             html.push(<div style={{backgroundColor: '#9a9a9a', padding: '10px', color:'white', borderRadius: '5px 5px 0px 0px', marginTop: '5px'}} key={term.name}>
               {term.name}
               <button className="innerbtn" style={{float: 'right' }} onClick={(e) => this.openModal(e, term.key)}><Glyphicon glyph="trash" /> </button>
 
               <Link to={"/m/centres/"+centre.id+
-                  "/"+id} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
+                  "/"+term.key} activeClassName="active"><button className="innerbtn" style={{float: 'right'}}><Glyphicon glyph="pencil" /> </button></Link>
 
             </div>
           );

@@ -28,7 +28,8 @@ class ScheduleApp extends React.Component {
     var {selection, calendars} = this.props;
     var termDates = [];
     var count=0;
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
         calendar.terms.map((term, termID) => {
           term.map((date, dateID) => {

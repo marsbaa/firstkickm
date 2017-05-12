@@ -121,7 +121,8 @@ class TrialEdit extends React.Component{
     //Trial dates
     var trialDateOptions = [];
     trialDateOptions.push(<option key="0" value="0">select</option>);
-    calendars.map((calendar) => {
+    Object.keys(calendars).map((calendarKey) => {
+      var calendar = calendars[calendarKey]
       if (centre.key === calendar.centreKey) {
         calendar.terms.map((term) => {
           term.map((dates) => {
