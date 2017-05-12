@@ -293,7 +293,7 @@ class PaymentForm extends React.Component {
     var payer = [];
     var student = _.find(students, {key: studentId})
     console.log(student)
-    if (student.contact !== null){
+    if (student.contact !== ""){
       payer = _.filter(students, {contact: student.contact})
     }
     else {

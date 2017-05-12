@@ -117,7 +117,6 @@ class CentreEdit extends React.Component{
 
     else if (count === 0) {
         var selectedCentre = _.find(centres, {id: centreID});
-        console.log(selectedCentre)
         var centre = {
           key: selectedCentre.key,
           id: centreID,

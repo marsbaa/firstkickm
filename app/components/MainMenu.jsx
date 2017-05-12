@@ -23,7 +23,7 @@ class MainMenu extends React.Component {
     componentDidMount() {
       var {dispatch} = this.props;
       dispatch(actions.updateNavTitle("/m", "Dashboard"));
-
+      //dispatch(actions.deleteDuplicateStudent())
     }
 
 

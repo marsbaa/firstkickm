@@ -363,6 +363,19 @@ export var addStudent = (student) => {
   };
 }
 
+/*export var deleteDuplicateStudent = () => {
+  return (dispatch) => {
+    var studentRef = firebaseRef.child('students');
+    var newStudents = {}
+    studentRef.once('value').then((snapshot) => {
+      var students = snapshot.val();
+      newStudents = _.omitBy(students, {'venueId': undefined})
+      studentRef.set(newStudents)
+    })
+
+  }
+};*/
+
 export var addTrialStudent = (student) => {
   var studentRef = firebaseRef.child('students');
   var newKey = studentRef.push().key;
