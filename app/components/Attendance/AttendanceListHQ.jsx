@@ -68,13 +68,18 @@ class AttendanceListHQ extends React.Component{
       Object.keys(groupDay).forEach((day) => {
         if (_.capitalize(day) === moment(this.state.startDate).format("dddd")){
           var groupTime = _.orderBy(groupDay[day], (o) => {
-            var timeSplit = o.currentClassTime.split(' - ')
-            var endTime = timeSplit[1].split(':')
-            if (endTime[1].endsWith('pm')){
-              endTime[0] = endTime[0]+12
-            }
-            endTime = endTime[0]+":"+endTime[1]
-            return endTime
+              var timeSplit = o.currentClassTime.split(' - ')
+              var endTime = timeSplit[1].split(':')
+              if (endTime[1] === undefined) {
+                endTime = timeSplit[1].split('.')
+              }
+              if (endTime[1].endsWith('pm')){
+                endTime[0] = endTime[0]+12
+              }
+              endTime = endTime[0]+":"+endTime[1]
+              return endTime
+
+
           } )
           groupTime = _.groupBy(groupTime, 'currentClassTime');
           Object.keys(groupTime).forEach((timeSlot)=> {

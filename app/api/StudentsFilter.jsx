@@ -5,7 +5,13 @@ module.exports = {
 
     // Filter by centreId
     filteredStudents = filteredStudents.filter((student) => {
-      return student.venueId === centreId;
+      if (student.venueId !== undefined){
+        return student.venueId.toString() === centreId;
+      }
+      else {
+        return student.venueId === centreId
+      }
+
     });
 
 
