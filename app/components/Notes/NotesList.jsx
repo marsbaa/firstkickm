@@ -46,6 +46,7 @@ class NotesList extends React.Component {
 
   render() {
     var {notes, auth, selection} = this.props
+    notes = _.sortBy(notes, ['date']);
     var filteredNotes = _.filter(notes, {centreKey : selection.key})
    return (
      <Grid style={{marginTop : '20px'}}>

@@ -30,7 +30,7 @@ class MakeUpList extends React.Component{
       });
     }
     else {
-      html.push(<p key="">No Make Ups</p>)
+      html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No MakeUps Planned</div>)
     }
    return (
      <div>
