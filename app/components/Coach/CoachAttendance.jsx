@@ -52,14 +52,14 @@ class CoachAttendance extends React.Component{
       var classes = selection.classes
       Object.keys(classes).map((classId)=> {
         var {ageGroup, day, endTime, startTime} = classes[classId]
-        html.push(<Row key={classId} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-           <Col xs={12} md={12}>
-             <h5>{ageGroup} {startTime} - {endTime} ({day})</h5>
-           </Col>
-         </Row>)
-         var schedule = _.find(coachSchedule, {'classKey' : classId, 'date': moment().format('YYYYMMDD')})
-         if (schedule != undefined) {
-           if(_.size(schedule.assigned) != 0) {
+        var schedule = _.find(coachSchedule, {'classKey' : classId, 'date': moment().format('YYYYMMDD')})
+        if (schedule != undefined) {
+          if(_.size(schedule.assigned) != 0) {
+            html.push(<Row key={classId} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+               <Col xs={12} md={12}>
+                 <h5>{ageGroup} {startTime} - {endTime} ({day})</h5>
+               </Col>
+             </Row>)
              schedule.assigned.map((c) => {
                var coach = _.find(filteredCoaches, {'key': c.coachKey })
                console.log(coach)
@@ -68,11 +68,7 @@ class CoachAttendance extends React.Component{
                }
              })
            }
-           else {
-             html.push(<h5 key={classId+"noneassigned"} style={{padding: '3px 15px'}}>None Assigned</h5>)
-           }
          }
-
       })
     }
     else {
