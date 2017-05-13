@@ -164,10 +164,8 @@ class TrialRegisterChildForm extends React.Component{
     if (this.state.termKey !== '' ) {
       termKey = this.state.termKey
     }
-    console.log(this.state.termKey)
-    console.log(termKey)
+
     var calendar = calendars[termKey]
-    console.log(calendar)
     Object.keys(calendar.terms).map((termId) => {
       var term = calendar.terms[termId]
       term.map((dates) => {

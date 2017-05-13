@@ -65,7 +65,7 @@ class TrialRegister extends React.Component{
     var {dispatch, trials, selection, ageGroup} = this.props
     var key = this.props.params.trialId;
     var trial = _.find(trials, {id: key});
-    var payers = _.filter(trials, {'parentId': trial.parentId})
+    var payers = _.filter(trials, {'contact': trial.contact})
     payers = _.uniqBy(payers, 'childName')
     this.setState({selectedCentre: trial.venueId});
     this.setState({trialDate: trial.dateOfTrial});
