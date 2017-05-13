@@ -67,9 +67,19 @@ class AttendanceListHQ extends React.Component{
       var groupDay = _.groupBy(filteredStudents, 'currentClassDay');
       Object.keys(groupDay).forEach((day) => {
         if (_.capitalize(day) === moment(this.state.startDate).format("dddd")){
-          var groupTime = _.groupBy(groupDay[day], 'currentClassTime');
+          var groupTime = _.orderBy(groupDay[day], (o) => {
+            var timeSplit = o.currentClassTime.split(' - ')
+            var endTime = timeSplit[1].split(':')
+            if (endTime[1].endsWith('pm')){
+              endTime[0] = endTime[0]+12
+            }
+            endTime = endTime[0]+":"+endTime[1]
+            return endTime
+          } )
+          groupTime = _.groupBy(groupTime, 'currentClassTime');
           Object.keys(groupTime).forEach((timeSlot)=> {
-            var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
+            var groupAge = _.orderBy(groupTime[timeSlot], ['asc'])
+            groupAge = _.groupBy(groupAge, 'ageGroup');
             Object.keys(groupAge).forEach((age)=> {
               var group = groupAge[age];
               group = _.sortBy(group, ['childName'])
