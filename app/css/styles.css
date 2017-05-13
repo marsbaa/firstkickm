@@ -89,7 +89,7 @@
       -ms-user-select: none;
           user-select: none;
   background-image: none;
-  background-color: #b4b4b4;
+  background-color: #f5bb05;
   color: white;
 }
 
@@ -98,7 +98,7 @@
 .selectedbtn:active,
 .selectedbtn.active,
 .open .dropdown-toggle.selectedbtn {
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .datebtn {

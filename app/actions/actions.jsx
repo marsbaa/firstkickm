@@ -1191,8 +1191,15 @@ export var startNotes = () => {
    var notesRef = firebaseRef.child('notes');
    notesRef.once('value').then((snapshot) => {
     var notes = snapshot.val();
+    var parsedNotes = {}
     if (notes !== null){
-      dispatch(addNotes(notes));}
+      Object.keys(notes).map((key) => {
+        parsedNotes[key] = {
+          key,
+          ...notes[key]
+        }
+      })
+      dispatch(addNotes(parsedNotes));}
   });
 };
 };
@@ -1210,22 +1217,42 @@ export var addNote = (note) => {
   var updates = {};
   updates[newKey] = note
   notesRef.update(updates);
-  note.key = newKey;
   return {
     type: 'ADD_NOTE',
-    note
+    note,
+    key
   }
 }
 
 export var noteArchive = (key, email, name) => {
+  return (dispatch) => {
   var notesRef = firebaseRef.child('notes/'+key);
-  var updates = {
-    completed: true,
-    completedEmail: email,
-    completedName : name,
-    completedDate: moment()
-  };
-  notesRef.update(updates);
+  notesRef.once('value').then((snapshot) => {
+   var notes = snapshot.val();
+   var updates ={}
+   if (notes.completed) {
+      updates = {
+       completed: null,
+       completedEmail: null,
+       completedName : null,
+       completedDate: null
+     }
+   }
+   else {
+     updates = {
+       completed: true,
+       completedEmail: email,
+       completedName : name,
+       completedDate: moment().format('YYYY-MM-DD')
+     }
+   }
+   notesRef.update(updates);
+   dispatch(toggleArchive(updates,key))
+ });
+};
+}
+
+export var toggleArchive= (updates, key) => {
   return {
     type: 'NOTE_ARCHIVE',
     updates,

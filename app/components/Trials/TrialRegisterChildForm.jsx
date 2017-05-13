@@ -148,10 +148,12 @@ class TrialRegisterChildForm extends React.Component{
       if (cla.ageGroup === childAgeGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
+        console.log(classTimeDay)
+        console.log(trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')')
         if (classTimeDay === trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')'){
           termKey = cla.termKey
         }
-        classTimeSlots.push(<option key={cla.key} value={classTimeDay}>{classTimeDay}</option>);
+        classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
       }
 
     });
@@ -162,7 +164,10 @@ class TrialRegisterChildForm extends React.Component{
     if (this.state.termKey !== '' ) {
       termKey = this.state.termKey
     }
+    console.log(this.state.termKey)
+    console.log(termKey)
     var calendar = calendars[termKey]
+    console.log(calendar)
     Object.keys(calendar.terms).map((termId) => {
       var term = calendar.terms[termId]
       term.map((dates) => {

@@ -719,7 +719,11 @@ export var registrationReducer = (state=[], action) => {
           [action.key]: {...action.note}
         }
       case 'NOTE_ARCHIVE':
-        return
+        var note = state[action.key]
+        return {
+          ...state,
+          [action.key]: {...note, ...action.updates}
+        }
       case 'REMOVE_NOTE':
         return state.filter((note) => {
           return note.key !== action.key;

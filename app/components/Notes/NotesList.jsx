@@ -2,13 +2,16 @@ import React from 'react'
 import _ from 'lodash'
 var actions = require('actions')
 var {connect} = require('react-redux')
-import {Grid, Row, Col,FormGroup, InputGroup, FormControl, Button, HelpBlock} from 'react-bootstrap'
+import {Grid, Row, Col,FormGroup, InputGroup, FormControl, Button, HelpBlock, ButtonGroup} from 'react-bootstrap'
 import moment from 'moment'
 
 class NotesList extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      filter: 'current'
+    }
     this.deleteNote = this.deleteNote.bind(this)
   }
 
@@ -16,6 +19,22 @@ class NotesList extends React.Component {
     var {dispatch, selection} = this.props;
     dispatch(actions.updateNavTitle("/m/notes", selection.name+" Notes"));
     window.scrollTo(0,0)
+  }
+
+  handleSelect(e) {
+    e.preventDefault()
+    var id = e.target.id
+    var className = e.target.className
+    if (id === 'current' && className === 'normalbtn btn btn-default'){
+      e.target.className = 'selectedbtn btn btn-default'
+      document.getElementById('archived').className = 'normalbtn btn btn-default'
+      this.setState({filter: 'current'})
+    }
+    else if (id === 'archived' && className === 'normalbtn btn btn-default') {
+      e.target.className = 'selectedbtn btn btn-default'
+      document.getElementById('current').className = 'normalbtn btn btn-default'
+      this.setState({filter: 'archived'})
+    }
   }
 
   handleSend(e) {
@@ -47,6 +66,7 @@ class NotesList extends React.Component {
   render() {
     var {dispatch, notes, auth, users, selection} = this.props
     var user = _.find(users, ['email', auth.email])
+    notes = _.filter(notes, {centreKey: selection.key})
     notes = _.sortBy(notes, ['date']);
    return (
      <Grid style={{marginTop : '20px'}}>
@@ -64,23 +84,49 @@ class NotesList extends React.Component {
            </FormGroup>
          </Col>
        </Row>
-       <Row>
+       <Row style={{textAlign: 'center', margin: '10px 10px'}}>
+         <Col xs={12} md={12}>
+           <ButtonGroup>
+              <Button id='current' style={{margin: '0px'}} className="selectedbtn" onClick={this.handleSelect.bind(this)}>Current</Button>
+              <Button id='archived' style={{margin: '0px'}}  className="normalbtn" onClick={this.handleSelect.bind(this)}>Archived</Button>
+           </ButtonGroup>
+         </Col>
+       </Row>
+       <Row style={{marginTop: '20px'}}>
          <Col xs={12} md={12} lg={12}>
            {Object.keys(notes).map((key) => {
              var note = notes[key]
-             if (note.centreKey === selection.key) {
-               return <FormGroup key={key}>
-                 <InputGroup>
-                   <InputGroup.Addon>
-                    <input type="checkbox" aria-label="..." checked={note.completed} onChange={()=> {
-                      dispatch(actions.noteArchive(key,auth.email,user.name))
-                      }} />
-                  </InputGroup.Addon>
-                   <FormControl id='message' componentClass="textarea" style={{height: '50px'}} disabled value={note.message}/>
-                 </InputGroup>
-                 <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();
-                   this.deleteNote(note.key)}}>Delete</button> : null}</i></HelpBlock>
-               </FormGroup>
+             if (!note.completed) {
+               if (this.state.filter === 'current') {
+                 return <FormGroup key={note.key}>
+                   <InputGroup>
+                     <InputGroup.Addon>
+                      <input type="checkbox" checked={false} onChange={()=> {
+                        dispatch(actions.noteArchive(note.key,auth.email,user.name))
+                        }}  />
+                    </InputGroup.Addon>
+                     <FormControl id='message' componentClass="textarea" style={{height: note.message.split(/\r\n|\r|\n/).length*25, minHeight: '50px'}} disabled value={note.message}/>
+                   </InputGroup>
+                   <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();
+                     this.deleteNote(note.key)}}>Delete</button> : null}</i></HelpBlock>
+                 </FormGroup>
+               }
+             }
+             else {
+               if (this.state.filter === 'archived') {
+                 return <FormGroup key={note.key}>
+                   <InputGroup>
+                     <InputGroup.Addon>
+                      <input type="checkbox" checked={true} onChange={()=> {
+                        dispatch(actions.noteArchive(note.key,auth.email,user.name))
+                        }}  />
+                    </InputGroup.Addon>
+                     <FormControl id='message' componentClass="textarea" style={{height: note.message.split(/\r\n|\r|\n/).length*25, minHeight: '50px'}} disabled value={note.message}/>
+                   </InputGroup>
+                   <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();
+                     this.deleteNote(note.key)}}>Delete</button> : null}</i></HelpBlock>
+                 </FormGroup>
+               }
              }
            })}
          </Col>
