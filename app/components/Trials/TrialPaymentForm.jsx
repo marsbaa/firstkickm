@@ -111,7 +111,6 @@ class TrialPaymentForm extends React.Component {
       dispatch(actions.updateTrialRegistration(student.id))
       let response = dispatch(actions.addTrialStudent(student))
       if (response !== undefined) {
-        console.log(response.student.key)
         var termsPaid = []
         var total = 0
         var earlyBird = false

@@ -20,7 +20,7 @@ class Student extends React.Component {
           <Glyphicon glyph="user" /> <font className={gender}>{truncatedName}</font>
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
-          <Link to={"m/students/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
+          <Link to={"/m/students/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>
 

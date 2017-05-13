@@ -45,9 +45,9 @@ class NotesList extends React.Component {
   }
 
   render() {
-    var {notes, auth, selection} = this.props
+    var {dispatch, notes, auth, users, selection} = this.props
+    var user = _.find(users, ['email', auth.email])
     notes = _.sortBy(notes, ['date']);
-    var filteredNotes = _.filter(notes, {centreKey : selection.key})
    return (
      <Grid style={{marginTop : '20px'}}>
        <Row>
@@ -66,17 +66,22 @@ class NotesList extends React.Component {
        </Row>
        <Row>
          <Col xs={12} md={12} lg={12}>
-           {filteredNotes.map((note) => {
-             return <FormGroup key={note.key}>
-               <InputGroup>
-                 <InputGroup.Addon>
-                  <input type="checkbox" aria-label="..." />
-                </InputGroup.Addon>
-                 <FormControl id='message' componentClass="textarea" style={{height: '50px'}} disabled value={note.message}/>
-               </InputGroup>
-               <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();
-                 this.deleteNote(note.key)}}>Delete</button> : null}</i></HelpBlock>
-             </FormGroup>
+           {Object.keys(notes).map((key) => {
+             var note = notes[key]
+             if (note.centreKey === selection.key) {
+               return <FormGroup key={key}>
+                 <InputGroup>
+                   <InputGroup.Addon>
+                    <input type="checkbox" aria-label="..." checked={note.completed} onChange={()=> {
+                      dispatch(actions.noteArchive(key,auth.email,user.name))
+                      }} />
+                  </InputGroup.Addon>
+                   <FormControl id='message' componentClass="textarea" style={{height: '50px'}} disabled value={note.message}/>
+                 </InputGroup>
+                 <HelpBlock style={{textAlign: 'right', fontSize: '10px'}}><i>- by {note.name} on {note.date} {note.email === auth.email ? <button className="btn" onClick={(e) => {e.preventDefault();
+                   this.deleteNote(note.key)}}>Delete</button> : null}</i></HelpBlock>
+               </FormGroup>
+             }
            })}
          </Col>
        </Row>

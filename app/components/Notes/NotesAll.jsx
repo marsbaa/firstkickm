@@ -51,11 +51,12 @@ class NotesAll extends React.Component {
      <Grid style={{marginTop : '20px'}}>
        <Row>
          <Col xs={12} md={12} lg={12}>
-           {notes.map((note) => {
-             return <FormGroup key={note.key}>
+           {Object.keys(notes).map((key) => {
+             var note = notes[key]
+             return <FormGroup key={key}>
                <InputGroup>
                  <InputGroup.Addon>
-                  <input type="checkbox" aria-label="..." />
+                  <input type="checkbox" aria-label="..."  />
                 </InputGroup.Addon>
                  <FormControl id='message' componentClass="textarea" style={{height: note.message.split(/\r\n|\r|\n/).length*25, minHeight: '50px'}} disabled value={note.message}/>
                </InputGroup>

@@ -1192,15 +1192,7 @@ export var startNotes = () => {
    notesRef.once('value').then((snapshot) => {
     var notes = snapshot.val();
     if (notes !== null){
-    var parsedNotes = [];
-
-    Object.keys(notes).forEach((noteId)=> {
-      parsedNotes.push({
-        key: noteId,
-        ...notes[noteId]
-      });
-    });
-    dispatch(addNotes(parsedNotes));}
+      dispatch(addNotes(notes));}
   });
 };
 };
@@ -1222,6 +1214,22 @@ export var addNote = (note) => {
   return {
     type: 'ADD_NOTE',
     note
+  }
+}
+
+export var noteArchive = (key, email, name) => {
+  var notesRef = firebaseRef.child('notes/'+key);
+  var updates = {
+    completed: true,
+    completedEmail: email,
+    completedName : name,
+    completedDate: moment()
+  };
+  notesRef.update(updates);
+  return {
+    type: 'NOTE_ARCHIVE',
+    updates,
+    key
   }
 }
 

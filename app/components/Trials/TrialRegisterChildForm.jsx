@@ -13,7 +13,8 @@ class TrialRegisterChildForm extends React.Component{
       selectedCentre : '',
       trialDate : '',
       notJoining: false,
-      showModal: false
+      showModal: false,
+      termKey: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.close = this.close.bind(this)
@@ -43,6 +44,26 @@ class TrialRegisterChildForm extends React.Component{
     this.setState({
       selectedCentre: e.target.value
     });
+  }
+
+  timeSelect(e) {
+    e.preventDefault();
+    var {centres} = this.props;
+    centres.map((c) => {
+      if(c.id === this.state.selectedCentre.toString()) {
+        centre = c;
+      }
+    });
+
+    Object.keys(centre.classes).forEach((classID) => {
+      var cla = centre.classes[classID];
+      var classTime = cla.startTime + " - " + cla.endTime;
+      var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
+      if (classTimeDay === e.target.value){
+        this.setState({termKey : cla.termKey})
+      }
+    });
+
   }
 
   trialDateSelect(e) {
@@ -112,6 +133,7 @@ class TrialRegisterChildForm extends React.Component{
     });
 
     //Class TimeSlots
+    var termKey;
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
     var centre = {};
@@ -125,8 +147,11 @@ class TrialRegisterChildForm extends React.Component{
       var cla = centre.classes[classID];
       if (cla.ageGroup === childAgeGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
-        var classTimeDay = classTime+ " ("+cla.day+")";
-        classTimeSlots.push(<option key={classTimeDay} value={classTime}>{classTimeDay}</option>);
+        var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
+        if (classTimeDay === trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')'){
+          termKey = cla.termKey
+        }
+        classTimeSlots.push(<option key={cla.key} value={classTimeDay}>{classTimeDay}</option>);
       }
 
     });
@@ -134,18 +159,18 @@ class TrialRegisterChildForm extends React.Component{
     //Trial dates
     var trialDateOptions = [];
     trialDateOptions.push(<option key="0" value="0">select</option>);
-    Object.keys(calendars).map((calendarKey) => {
-      var calendar = calendars[calendarKey]
-      if (centre.key === calendar.centreKey) {
-        Object.keys(calendar.terms).map((termId) => {
-          var term = calendar.terms[termId]
-          term.map((dates) => {
-            var formattedDate = moment(dates).format("YYYY-MM-DD");
-            trialDateOptions.push(<option key={formattedDate} value={formattedDate}>{formattedDate}</option>);
-          })
-        })
-      }
+    if (this.state.termKey !== '' ) {
+      termKey = this.state.termKey
+    }
+    var calendar = calendars[termKey]
+    Object.keys(calendar.terms).map((termId) => {
+      var term = calendar.terms[termId]
+      term.map((dates) => {
+        var formattedDate = moment(dates).format("YYYY-MM-DD");
+        trialDateOptions.push(<option key={formattedDate} value={formattedDate}>{formattedDate}</option>);
+      })
     })
+
 
     var formHTML = []
     if (!this.state.notJoining) {
@@ -191,7 +216,9 @@ class TrialRegisterChildForm extends React.Component{
               <ControlLabel>Selected Class Time</ControlLabel>
               <FormControl
                 id={"timeSlotSelect"+trial.id} componentClass="select" placeholder="select"
-                defaultValue={trial.timeOfTrial}>
+                defaultValue={trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')'}
+                onChange={this.timeSelect.bind(this)}
+                >
                 {classTimeSlots}
               </FormControl>
             </FormGroup>
