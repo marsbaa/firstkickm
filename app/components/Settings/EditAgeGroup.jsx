@@ -14,6 +14,7 @@ class EditAgeGroup extends React.Component{
       errorName: null,
       errorMessageName: ""
     }
+    this.formSubmit = this.formSubmit.bind(this)
   }
 
   formSubmit(e) {
