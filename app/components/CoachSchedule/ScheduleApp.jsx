@@ -34,7 +34,7 @@ class ScheduleApp extends React.Component {
         Object.keys(calendar.terms).map((termId) => {
           var term = calendar.terms[termId]
           term.map((date, dateID) => {
-            var today = moment().format("YYYYMMDD")
+            var today = moment().subtract(2,'week').format("YYYYMMDD")
             if (moment(date).isSameOrAfter(today,'day')) {
               termDates.push({
                 term: termId,
