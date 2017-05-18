@@ -13,7 +13,7 @@ class PaymentReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTerm: ''
+      selectedTerm: 3
     }
   }
 
@@ -75,7 +75,6 @@ class PaymentReport extends React.Component {
 
           } )
           groupTime = _.groupBy(groupTime, 'currentClassTime');
-          console.log(groupTime)
           Object.keys(groupTime).forEach((timeSlot)=> {
             var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
             Object.keys(groupAge).forEach((age)=> {
@@ -86,9 +85,13 @@ class PaymentReport extends React.Component {
               Object.keys(group).map((studentId) => {
                 var student = group[studentId]
                 var paidStudent = _.find(student.payments, (t) => {
-                  if (t.termsPaid[this.state.selectedTerm] !== undefined) {return true}
-                  else {return false}
-                })
+                    if (t.termsPaid !== undefined) {
+                      if (t.termsPaid[this.state.selectedTerm] !== undefined) {return true}
+                      else {return false}
+                    }
+                  })
+
+
                 if (paidStudent === undefined) {
                   unpaid.push(student)
                 }
