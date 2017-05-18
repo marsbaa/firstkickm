@@ -26,7 +26,7 @@ class PayerReport extends React.Component {
   'length': 28});
 
   return (
-     <Grid key= {key}>
+     <Grid>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
          <Col xs={8} md={8} style={{fontSize: '14px'}}>
            <Link to={"/m/payment/history/" + key} style={{color: 'black'}}><Glyphicon glyph="user" /> <font className={gender}>{truncatedName}</font></Link>

@@ -106,7 +106,7 @@ class PaymentReport extends React.Component {
                   }, 0)
                 html.push( <Row key={"paidlist"+age+timeSlot} style={{backgroundColor: 'Green', padding: '0px 15px', color: '#ffc600'}}>
                    <Col xs={8} md={8}>
-                     <h5>PAID - {age} {timeSlot}</h5>
+                     <h5>PAID - {age} {timeSlot} ({day})</h5>
                    </Col>
                      <Col xs={4} md={4} style={{textAlign: 'center'}}>
                        <h5>{_.size(paid)} Paid: ${amount}</h5>
@@ -121,7 +121,7 @@ class PaymentReport extends React.Component {
               if (_.size(unpaid) !== 0) {
                 html.push( <Row key={"unpaidlist"+age+timeSlot} style={{backgroundColor: 'Red', padding: '0px 15px', color: '#ffc600'}}>
                    <Col xs={8} md={8}>
-                     <h5>UNPAID - {age} {timeSlot}</h5>
+                     <h5>UNPAID - {age} {timeSlot} ({day})</h5>
                    </Col>
                      <Col xs={4} md={4} style={{textAlign: 'center'}}>
                        <h5>{_.size(unpaid)} Unpaid</h5>

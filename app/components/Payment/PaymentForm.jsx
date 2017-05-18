@@ -58,7 +58,6 @@ class PaymentForm extends React.Component {
   }
 
   handleBankTransferDate(date) {
-    console.log(date)
     this.setState({
       bankTransferDate: date
     });
@@ -221,6 +220,7 @@ class PaymentForm extends React.Component {
         })
       })
       termsPaid[termId] = datesPaid
+      total += cost
     })
 
     if (this.state.prorateAmount[id] !== undefined) {
@@ -284,7 +284,6 @@ class PaymentForm extends React.Component {
             invoiceKey: newKey
           }
         }
-        console.log(paymentDetail)
     dispatch(actions.addPayment(paymentDetail))
     paymentDetails.push(paymentDetail)
   })
@@ -292,7 +291,6 @@ class PaymentForm extends React.Component {
   var updates = {}
   updates[newKey] = {invoiceHTML}
   invoiceRef.update(updates)
-  console.log(invoiceHTML)
   SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
   browserHistory.push('/m/payment');
 }
@@ -306,10 +304,12 @@ class PaymentForm extends React.Component {
     var filteredStudents = _.filter(students, (o) => {
       return !(o.status==='Not Active')})
     var student = _.find(filteredStudents, {key: studentId})
-    if (_.findIndex(coaches, {'email': student.email}) !== -1) {
-      console.log("Coach Discount")
-      this.setState({coachDiscount: true})
+    if (student.email !== '') {
+      if (_.findIndex(coaches, {'email': student.email}) !== -1) {
+        this.setState({coachDiscount: true})
+      }
     }
+
     if (student.contact !== ""){
       payer = _.filter(filteredStudents, {contact: student.contact})
     }

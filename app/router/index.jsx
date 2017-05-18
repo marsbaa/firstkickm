@@ -35,6 +35,7 @@ import PaymentList from 'PaymentList'
 import PaymentForm from 'PaymentForm'
 import PaymentHistory from 'PaymentHistory'
 import PaymentReport from 'PaymentReport'
+import PaymentCheck from 'PaymentCheck'
 
 //Components for Coaches
 import CoachesApp from 'CoachesApp'
@@ -147,6 +148,7 @@ export default (
             <Route path="report" component={PaymentReport} />
             <Route path="collection/:studentId" component={PaymentForm}/>
             <Route path="history/:studentId" component={PaymentHistory}/>
+            <Route path="check" component={PaymentCheck} />
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />

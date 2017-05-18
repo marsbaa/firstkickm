@@ -1037,7 +1037,7 @@ export var addStudentPayment = (paymentDetails) => {
    updates[newKey] = {
      paymentKey: paymentDetails.key,
      date: paymentDetails.date,
-     termsPaid: paymentDetails.termsPaid,
+     termsPaid: paymentDetails.termsPaid===undefined? null :paymentDetails.termsPaid ,
      total: paymentDetails.total
    }
    studentRef.update(updates);
