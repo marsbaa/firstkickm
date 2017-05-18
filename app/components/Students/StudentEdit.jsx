@@ -45,6 +45,14 @@ class StudentEdit extends React.Component {
     this.setState({ageGroup : student.ageGroup})
   }
 
+  deleteStudent(e) {
+    e.preventDefault();
+    var {dispatch} = this.props;
+    var key = this.props.params.studentId;
+    dispatch(actions.deleteStudent(key));
+    browserHistory.goBack();
+  }
+
   onFormSubmit(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
@@ -226,7 +234,8 @@ class StudentEdit extends React.Component {
                 <option value="Not Active">Not Active</option>
               </FormControl>
             </FormGroup>
-            <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Child Profile</button>
+            <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Student Profile</button>
+            <button className="submitbtn" style={{backgroundColor: 'red'}} onClick={this.deleteStudent.bind(this)}>Delete Student Profile</button>
           </Col>
         </Row>
     )

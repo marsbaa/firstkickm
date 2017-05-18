@@ -22,6 +22,8 @@ class PaymentList extends React.Component {
     var {students, searchText, selection} = this.props;
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    filteredStudents = _.filter(filteredStudents, (o) => {
+      return !(o.status==='Not Active')})
     var actualStudents = StudentsFilter.filter(students, selection.id, "");
     if (filteredStudents.length !== 0) {
       var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
@@ -33,7 +35,7 @@ class PaymentList extends React.Component {
           var group = groupAge[age];
           group = _.sortBy(group, ['childName'])
           var actualGroup = actualGroupAge[age];
-          html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+          html.push( <Row key={"paymentlist"+age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
              <Col xs={8} md={8}>
                <h5>{age} {timeSlot}</h5>
              </Col>

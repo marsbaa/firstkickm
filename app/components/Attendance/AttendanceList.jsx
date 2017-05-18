@@ -79,7 +79,7 @@ class AttendanceList extends React.Component{
                     }
                   }
                 });
-                html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+                html.push( <Row key={"attendancelist"+age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
                    <Col xs={9} md={9}>
                      <h5>{age} {timeSlot}</h5>
                    </Col>

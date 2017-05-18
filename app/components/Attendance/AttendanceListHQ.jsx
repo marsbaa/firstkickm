@@ -64,7 +64,9 @@ class AttendanceListHQ extends React.Component{
       return !(o.status==='Not Active')})
     var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment(this.state.startDate).format('YYYY-MM-DD')})
     if (filteredStudents.length !== 0) {
-      var groupDay = _.groupBy(filteredStudents, 'currentClassDay');
+      var groupDay = _.groupBy(filteredStudents, (o) => {
+        return o.currentClassDay.toLowerCase()
+      });
       Object.keys(groupDay).forEach((day) => {
         if (_.capitalize(day) === moment(this.state.startDate).format("dddd")){
           var groupTime = _.orderBy(groupDay[day], (o) => {
@@ -88,6 +90,7 @@ class AttendanceListHQ extends React.Component{
             Object.keys(groupAge).forEach((age)=> {
               var group = groupAge[age];
               group = _.sortBy(group, ['childName'])
+              console.log(group)
               var attended = 0;
               var date = this.state.startDate
               Object.keys(group).forEach((studentId) => {

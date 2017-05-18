@@ -194,6 +194,10 @@ export var studentReducer = (state = [], action) => {
         ...state,
         {...action.student}
       ];
+    case 'DELETE_STUDENT':
+      return state.filter((student) => {
+        return student.key !== action.key;
+      });
     case 'UPDATE_STUDENT':
       return state.map((student) => {
         if ((student.key) === action.studentId) {

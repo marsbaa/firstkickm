@@ -363,6 +363,15 @@ export var addStudent = (student) => {
   };
 }
 
+export var deleteStudent = (key) => {
+  var studentRef = firebaseRef.child('students/'+key);
+  studentRef.remove();
+  return {
+    type: 'DELETE_STUDENT',
+    key
+  };
+};
+
 /*export var deleteDuplicateStudent = () => {
   return (dispatch) => {
     var studentRef = firebaseRef.child('students');
