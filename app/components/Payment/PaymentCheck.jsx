@@ -24,7 +24,7 @@ class PaymentCheck extends React.Component {
       if (student !== undefined) {
         var record = _.find(student.payments, {'paymentKey':payment.key})
         if (record === undefined) {
-           //dispatch(actions.addStudentPayment(payment))
+           dispatch(actions.addStudentPayment(payment))
            console.log("UnRecorded"+payment)
         }
         else{
