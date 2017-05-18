@@ -221,7 +221,7 @@ class StudentEdit extends React.Component {
             </FormGroup>
             <FormGroup>
               <ControlLabel>Student Status</ControlLabel>
-              <FormControl componentClass="select" placeholder="select" id="status" defaultValue={student.status === undefined? 'Active' : 'Not Active'}>
+              <FormControl componentClass="select" placeholder="select" id="status" defaultValue={student.status === 'Not Active' ? 'Not Active' : 'Active'}>
                 <option value="Active">Active</option>
                 <option value="Not Active">Not Active</option>
               </FormControl>

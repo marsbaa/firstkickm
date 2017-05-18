@@ -41,10 +41,8 @@ class AdminEdit extends React.Component{
       address: document.getElementById('address').value,
       bank: document.getElementById('bank').value,
       accountNumber: document.getElementById('accountNumber').value,
-      startDate: document.getElementById('startDate').value,
       nric: document.getElementById('nric').value,
-      education: document.getElementById('education').value,
-      paymentRate: document.getElementById('paymentRate').value
+      education: document.getElementById('education').value
     };
     if (adminId === "add") {
       dispatch(actions.addAdmin(admin));
@@ -79,10 +77,8 @@ class AdminEdit extends React.Component{
         address: "",
         bank: "select",
         accountNumber: "",
-        startDate: "",
         nric: "",
-        education: "",
-        paymentRate: "select"
+        education: ""
       }
     }
     else {
@@ -123,7 +119,7 @@ class AdminEdit extends React.Component{
            id="dateOfBirth"
            type="text"
            placeholder="Enter Date of Birth"
-           defaultValue={moment(admin.dateOfBirth).format("DD/MM/YYYY")}/>
+           defaultValue={admin.dateOfBirth? moment(admin.dateOfBirth).format("DD/MM/YYYY"):''}/>
          </FormGroup>
          <FormGroup>
            <ControlLabel>Occupation</ControlLabel>
@@ -179,25 +175,6 @@ class AdminEdit extends React.Component{
             type="text"
             placeholder="Enter Education Level"
             defaultValue={admin.education}/>
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>Start Date</ControlLabel>
-            <FormControl style={{marginBottom: '10px'}}
-            id="startDate"
-            type="text"
-            placeholder="Enter Start Date"
-            defaultValue=""
-           />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>Payment Rate</ControlLabel>
-             <FormControl id="paymentRate" componentClass="select" defaultValue={admin.paymentRate}>
-               <option value="select">Select</option>
-               <option value="35">35</option>
-               <option value="40">30</option>
-               <option value="45">40</option>
-               <option value="50">50</option>
-             </FormControl>
           </FormGroup>
           <button className="submitbtn"  onClick={this.formSubmit.bind(this)}>Save Admin Profile</button>
           {adminId === 'add' ? [] : <button className="submitbtn" style={{backgroundColor: 'red', marginTop: '20px'}} onClick={this.open}>Delete Admin Profile</button>}

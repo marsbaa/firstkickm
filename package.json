@@ -51,6 +51,7 @@
     "recharts": "^0.21.2",
     "redux": "^3.6.0",
     "redux-devtools-extension": "^2.13.0",
+    "redux-form": "^6.7.0",
     "redux-thunk": "^2.2.0",
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.2",

@@ -396,30 +396,20 @@ export var coachReducer = (state = [], action) => {
  }
 };
 
-export var adminReducer = (state = [], action) => {
+export var adminReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_ADMINS':
-      return [
-        ...state,
-        ...action.admins
-      ];
+      return action.admins
     case 'ADD_ADMIN':
-      return [
+      return {
         ...state,
-        {...action.admin}
-      ];
+        [action.admin.key] : {...action.admin}
+      }
     case 'UPDATE_ADMIN':
-      return state.map((admin) => {
-        if ((admin.key) === action.adminId) {
-          return {
-           ...admin,
-           ...action.admin
-         };
-        }
-        else {
-          return admin;
-        }
-      });
+      return {
+        ...state,
+        [action.admin.key] : {...action.admin}
+      }
     case 'DELETE_ADMIN':
       return state.filter((admin) => {
         return admin.key !== action.adminId;

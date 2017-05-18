@@ -46,6 +46,7 @@ import CoachAttendanceHQ from 'CoachAttendanceHQ'
 import AdminApp from 'AdminApp'
 import AdminList from 'AdminList'
 import AdminEdit from 'AdminEdit'
+import AdminAdd from 'AdminAdd'
 
 import Settings from 'Settings'
 import SettingsList from 'SettingsList'
@@ -155,7 +156,8 @@ export default (
           </Route>
           <Route path="admins" component={AdminApp}>
             <IndexRoute component={AdminList}/>
-            <Route path=":adminId" component={AdminEdit} />
+            <Route path="add" component={AdminAdd} />
+            <Route path="edit/:adminId" component={AdminEdit} />
           </Route>
           <Route path="jersey" component={JerseyIssue}>
             <IndexRoute component={JerseyIssueList} />

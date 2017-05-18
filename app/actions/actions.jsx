@@ -596,14 +596,11 @@ export var startAdmins = () => {
    var adminsRef = firebaseRef.child('admins');
    adminsRef.once('value').then((snapshot) => {
     var admins = snapshot.val();
-    if (admins !== undefined && admins !== null) {
-      var parsedAdmins = [];
+    if (admins !== null) {
+      var parsedAdmins = {};
 
       Object.keys(admins).forEach((adminId)=> {
-        parsedAdmins.push({
-          key: adminId,
-          ...admins[adminId]
-        });
+        parsedAdmins[adminId] = admins[adminId]
       });
       dispatch(addAdmins(parsedAdmins));
   }
@@ -612,14 +609,14 @@ export var startAdmins = () => {
 };
 };
 
-export var addAdmins = (admins) => {
-  return {
-    type: 'ADD_ADMINS',
-    admins
-  };
-};
-
-export var addAdmin = (admin) => {
+export var addNewAdmin = (admin) => {
+    firebase.auth().createUserWithEmailAndPassword(admin.email, admin.password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode+errorMessage)
+    // ...
+  });
   var adminsRef = firebaseRef.child('admins');
   var newKey = adminsRef.push().key;
   var updates = {};
@@ -629,6 +626,14 @@ export var addAdmin = (admin) => {
   return {
     type: 'ADD_ADMIN',
     admin
+  };
+
+}
+
+export var addAdmins = (admins) => {
+  return {
+    type: 'ADD_ADMINS',
+    admins
   };
 };
 
