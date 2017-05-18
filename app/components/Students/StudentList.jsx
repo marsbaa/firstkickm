@@ -66,7 +66,9 @@ class StudentList extends React.Component {
       return !(o.status==='Not Active')
     })
     if (filteredStudents.length !== 0) {
-      var groupDay = _.groupBy(filteredStudents, 'currentClassDay');
+      var groupDay = _.groupBy(filteredStudents, (o) => {
+        return o.currentClassDay.toLowerCase()
+      });
       Object.keys(groupDay).forEach((day)=> {
         var groupTime = _.groupBy(groupDay[day], 'currentClassTime');
         Object.keys(groupTime).forEach((timeSlot)=> {

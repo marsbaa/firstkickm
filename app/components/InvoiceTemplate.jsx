@@ -74,6 +74,14 @@ class Root extends React.Component{
             </Row>
             )
         }
+       if (paymentDetail.coachDiscount) {
+         html.push(
+           <Row key={'coachDiscount'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>
+             <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Coach Discount</b></Col>
+             <Col xs={4} md={4} style={{textAlign: 'right'}}>$({cost * 0.5})</Col>
+           </Row>
+         )
+       }
        if (paymentDetail.earlyBird) {
          html.push(
            <Row key={'early'+paymentDetail.childName} style={{lineHeight: '12px', margin: '15px 30px'}}>

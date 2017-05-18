@@ -13,7 +13,7 @@ class PaymentDetails extends React.Component {
     var termspaidhtml = []
     var termsamounthtml = []
     var paidSessions = 0
-
+    var cost = 0
 
     if (payment.termsPaid !== undefined) {
       Object.keys(payment.termsPaid).map((termId) => {
@@ -21,7 +21,7 @@ class PaymentDetails extends React.Component {
       })
       Object.keys(payment.termsPaid).map((termId) => {
         termspaidhtml.push(<Button style={{padding: '2px' ,fontSize:'8px', backgroundColor: '#ffc600', color: '#656565'}} key={payment.key+termId} bsSize="xsmall">T{termId}<Glyphicon glyph="ok" /></Button>)
-        var cost = 0
+
         var term = payment.termsPaid[termId]
         switch (_.size(term)) {
           case 8:
@@ -40,6 +40,7 @@ class PaymentDetails extends React.Component {
             cost = term.length * (paidSessions > 8 ? 35:45);
             break;
         }
+
         termsamounthtml.push(<p key={"amount"+termId} style={{margin : '0px'}}>Term {termId} Fees : ${cost}</p>)
     })
   }
@@ -60,6 +61,7 @@ class PaymentDetails extends React.Component {
            })}</ListGroupItem> : ""
        }
      {_.isEmpty(termsamounthtml) ? null : <ListGroupItem>{termsamounthtml}</ListGroupItem> }
+     {payment.coachDiscount ? <ListGroupItem>Coach Discount: (${cost * 0.5})</ListGroupItem> : null}
      {payment.earlyBird ? <ListGroupItem>Early Bird: ($20)</ListGroupItem> : null}
      {payment.registration ? <ListGroupItem>Registration: $80</ListGroupItem> : null}
      {payment.prorate !== undefined ? <ListGroupItem>Pro-rate: (${payment.prorate})</ListGroupItem> : null}

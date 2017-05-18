@@ -34,7 +34,8 @@ class PaymentForm extends React.Component {
       emailError: null,
       emailErrorMessage: null,
       email: '',
-      prorateAmount : []
+      prorateAmount : [],
+      coachDiscount : false
     };
   }
 
@@ -186,24 +187,31 @@ class PaymentForm extends React.Component {
           perSession = paidSessions > 8 ? 35 : 45;
           break;
       }
-      total += cost
       var actualTerm;
+
       Object.keys(calendars).map((calendarKey) => {
         var calendar = calendars[calendarKey]
         if(calendar.key === this.state.termKeys[id]) {
           actualTerm = calendar.terms[termId]
         }
       })
-      if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
-        earlyBird= true
-        total -= 20
+      if (this.state.coachDiscount) {
+        total += cost * 0.5
+        perSession = 18
+      }
+      else {
+        if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
+          earlyBird= true
+          total -= 20
+        }
+
+        if (id > 0 && term.length >= 5) {
+          siblingDiscount=true
+          siblingDiscountAmount += 20
+          total -= 20
+        }
       }
 
-      if (id > 0 && term.length >= 5) {
-        siblingDiscount=true
-        siblingDiscountAmount += 20
-        total -= 20
-      }
 
       var datesPaid = []
       term.map((date) => {
@@ -225,6 +233,7 @@ class PaymentForm extends React.Component {
         childName : student.childName,
         ageGroup : student.ageGroup,
         earlyBird,
+        coachDiscount: this.state.coachDiscount,
         date: moment().format(),
         siblingDiscount,
         siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
@@ -244,6 +253,7 @@ class PaymentForm extends React.Component {
           ageGroup : student.ageGroup,
           earlyBird,
           date: moment().format(),
+          coachDiscount: this.state.coachDiscount,
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total : total,
@@ -262,6 +272,7 @@ class PaymentForm extends React.Component {
             childName : student.childName,
             ageGroup : student.ageGroup,
             earlyBird,
+            coachDiscount: this.state.coachDiscount,
             date: moment(this.state.bankTransferDate).format(),
             siblingDiscount,
             siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
@@ -281,12 +292,13 @@ class PaymentForm extends React.Component {
   var updates = {}
   updates[newKey] = {invoiceHTML}
   invoiceRef.update(updates)
+  console.log(invoiceHTML)
   SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
   browserHistory.push('/m/payment');
 }
 
   componentWillMount() {
-    var {students, calendars, selection} = this.props
+    var {students, calendars, selection, coaches} = this.props
     //Initiate Payer
     var studentId = this.props.params.studentId;
     var contact = null;
@@ -294,6 +306,10 @@ class PaymentForm extends React.Component {
     var filteredStudents = _.filter(students, (o) => {
       return !(o.status==='Not Active')})
     var student = _.find(filteredStudents, {key: studentId})
+    if (_.findIndex(coaches, {'email': student.email}) !== -1) {
+      console.log("Coach Discount")
+      this.setState({coachDiscount: true})
+    }
     if (student.contact !== ""){
       payer = _.filter(filteredStudents, {contact: student.contact})
     }
@@ -475,20 +491,31 @@ class PaymentForm extends React.Component {
               actualTerm = calendar.terms[termId]
             }
           })
-          if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
-            fees.push(<Row key={"earlybird"+termId+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
-              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Early Bird Discount</b></Col>
-              <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
+          if (this.state.coachDiscount) {
+            var coachdiscount = cost * 0.5
+            cost = cost - coachdiscount
+            fees.push(<Row key={"coachDiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
+              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Coach Discount</b></Col>
+              <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>(${coachdiscount})</p></Col>
             </Row>)
-            totalFee -= 20;
           }
-          if (id >= 1 & term.length >= 5) {
-            fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
-              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
-              <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
-            </Row>)
-            totalFee -= 20;
+          else {
+            if (term.length === actualTerm.length && moment().isBefore(actualTerm[0])) {
+              fees.push(<Row key={"earlybird"+termId+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
+                <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Early Bird Discount</b></Col>
+                <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
+              </Row>)
+              totalFee -= 20;
+            }
+            if (id >= 1 & term.length >= 5) {
+              fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
+                <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
+                <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
+              </Row>)
+              totalFee -= 20;
+            }
           }
+
           totalFee += cost;
         })
 

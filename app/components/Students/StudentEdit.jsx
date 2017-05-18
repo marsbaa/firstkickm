@@ -84,7 +84,19 @@ class StudentEdit extends React.Component {
 
   render() {
     var key = this.props.params.studentId;
-    var {students, centres, ageGroup} = this.props;
+    var {students, centres, ageGroup, users, auth} = this.props;
+    var user;
+    if (auth.email === 'ray@marsbaa.com') {
+      user = {
+        name: 'Ray Yee',
+        email: 'ray@marsbaa.com',
+        assignedRoles : 'Manager',
+        assignedCentres : { 0 : 'all'}
+      }
+    }
+    else {
+      user = _.find(users, ['email', auth.email])
+    }
     var student = _.find(students, {key: key});
 
     //Age Group List
@@ -235,7 +247,9 @@ class StudentEdit extends React.Component {
               </FormControl>
             </FormGroup>
             <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Student Profile</button>
-            <button className="submitbtn" style={{backgroundColor: 'red'}} onClick={this.deleteStudent.bind(this)}>Delete Student Profile</button>
+            { user.assignedRoles === 'Manager' ?
+              <button className="submitbtn" style={{backgroundColor: 'red'}} onClick={this.deleteStudent.bind(this)}>Delete Student Profile</button> : null
+            }
           </Col>
         </Row>
     )

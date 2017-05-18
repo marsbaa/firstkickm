@@ -19,11 +19,18 @@ export var startLogout = () => {
     return firebase.auth().signOut().then(function() {
   // Sign-out successful.
       console.log('Logged out!');
+      dispatch(resetState())
 }, function(error) {
   // An error happened.
 });
   };
 };
+
+export var resetState = () =>{
+  return {
+    type: 'RESET'
+  }
+}
 
 export var login = (uid, email) => {
   return{

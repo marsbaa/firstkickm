@@ -84,6 +84,7 @@ class MainMenu extends React.Component {
                 <Link to="m/attendance/HQ" ><button className="mainbtn" id="attendanceHQ" disabled={selection.id === '0' ? true : false}>Student Attendance (HQ)</button></Link>
                 <Link to="m/makeup" ><button className="mainbtn" id="makeUp" disabled={selection.id === '0' ? true : false}>Make Up List</button></Link>
                 <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Payment</button></Link>
+                <Link to="m/payment/report" ><button className="mainbtn" id="paymentReport" disabled={selection.id === '0' ? true : false}>Payment Report (HQ)</button></Link>
                 <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
                 <Link to="m/totalhq" ><button className="mainbtn" id="totalCollectionHQ" disabled={selection.id === '0' ? true : false}>Total Collection (HQ)</button></Link>
                 <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
