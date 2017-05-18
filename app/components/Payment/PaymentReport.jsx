@@ -90,8 +90,6 @@ class PaymentReport extends React.Component {
                       else {return false}
                     }
                   })
-
-
                 if (paidStudent === undefined) {
                   unpaid.push(student)
                 }
@@ -104,7 +102,7 @@ class PaymentReport extends React.Component {
                 var amount =_.reduce(paidDetails, (sum, n) => {
                   return sum + parseInt(n.total);
                   }, 0)
-                html.push( <Row key={"paidlist"+age+timeSlot} style={{backgroundColor: 'Green', padding: '0px 15px', color: '#ffc600'}}>
+                html.push( <Row key={"paidlist"+age+timeSlot} style={{backgroundColor: 'Green', padding: '0px 15px', color: 'white'}}>
                    <Col xs={8} md={8}>
                      <h5>PAID - {age} {timeSlot} ({day})</h5>
                    </Col>
@@ -113,13 +111,13 @@ class PaymentReport extends React.Component {
                    </Col>
                  </Row>);
                  Object.keys(paid).forEach((paidId) => {
-                     html.push(<PayerReport key={paid[paidId].key} student={paid[paidId]}/>);
+                     html.push(<PayerReport key={paid[paidId].key} student={paid[paidId]} selectedTerm={this.state.selectedTerm}/>);
                  })
                  studentsPaid += _.size(paid)
                  amountPaid += amount
               }
               if (_.size(unpaid) !== 0) {
-                html.push( <Row key={"unpaidlist"+age+timeSlot} style={{backgroundColor: 'Red', padding: '0px 15px', color: '#ffc600'}}>
+                html.push( <Row key={"unpaidlist"+age+timeSlot} style={{backgroundColor: 'Red', padding: '0px 15px', color: 'white'}}>
                    <Col xs={8} md={8}>
                      <h5>UNPAID - {age} {timeSlot} ({day})</h5>
                    </Col>
@@ -128,7 +126,7 @@ class PaymentReport extends React.Component {
                    </Col>
                  </Row>);
                  Object.keys(unpaid).forEach((unpaidId) => {
-                     html.push(<PayerReport key={unpaid[unpaidId].key} student={unpaid[unpaidId]}/>);
+                     html.push(<PayerReport key={unpaid[unpaidId].key} student={unpaid[unpaidId]} selectedTerm={this.state.selectedTerm}/>);
                  })
                  studentsUnPaid += _.size(unpaid)
                  amountUnPaid += _.size(unpaid) * 280
