@@ -24,8 +24,6 @@ class DeleteTermModal extends React.Component{
     e.preventDefault();
     var {dispatch} = this.props;
     if (this.props.type === "class") {
-      console.log(this.props.centreKey)
-      console.log(this.props.deleteKey)
       dispatch(actions.deleteClass(this.props.centreKey, this.props.deleteKey));
     }
     else if (this.props.type === "term") {

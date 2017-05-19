@@ -21,7 +21,6 @@ class ChartsCollectionPieChart extends React.Component{
   }
 
   handleSelect(e) {
-    console.log(e.target.value)
     this.setState({selectedTerm : e.target.value})
   }
 

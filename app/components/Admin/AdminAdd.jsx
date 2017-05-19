@@ -6,6 +6,7 @@ var actions = require('actions')
 import _ from 'lodash'
 import {browserHistory, Link} from 'react-router'
 
+
 class AdminAdd extends React.Component{
   renderField(field) {
     const {meta : {touched, error}} = field
@@ -49,7 +50,7 @@ class AdminAdd extends React.Component{
   }
 
   render() {
-    const {handleSubmit} = this.props
+    const {handleSubmit, admins} = this.props
     return(
       <div style={{marginTop: '20px'}}>
         <Row style={{padding: '25px'}}>
@@ -60,6 +61,7 @@ class AdminAdd extends React.Component{
                 className="form-control"
                 type="text"
                 name="name"
+                validate={(value) => (value ? undefined : 'Required')}
                 component={this.renderField}
                 />
               <Field
@@ -67,6 +69,10 @@ class AdminAdd extends React.Component{
                   className="form-control"
                   type="text"
                   name="email"
+                  validate={ (value) =>
+                        (_.find(admins, {'email': value}) === undefined ? undefined : 'Email already taken. Try using another email.'
+                      )
+                    }
                   component={this.renderField}
                   />
 
@@ -90,12 +96,14 @@ function validate(values) {
   return errors
 }
 
+
+
 AdminAdd = reduxForm({
-  validate,
   form: 'AdminAdd'
 })(AdminAdd)
 
 const selector = formValueSelector('AdminAdd')
+
 
 AdminAdd = connect(
   state => {
@@ -103,7 +111,8 @@ AdminAdd = connect(
     const emailValue = selector(state, 'email')
     return {
       nameValue,
-      emailValue
+      emailValue,
+      admins: state.admins
     }
   }
 )(AdminAdd)

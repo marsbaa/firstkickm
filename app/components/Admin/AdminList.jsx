@@ -60,7 +60,6 @@ class AdminList extends React.Component{
     var filteredAdmins = AdminsFilter.filter(admins, searchText);
     var html=[];
     if (filteredAdmins.length !== 0) {
-      console.log(filteredAdmins)
       Object.keys(filteredAdmins).forEach((adminId) => {
         html.push(<Admin key={adminId} admin={filteredAdmins[adminId]} />);
       });

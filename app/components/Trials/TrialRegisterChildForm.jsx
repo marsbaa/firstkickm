@@ -148,8 +148,6 @@ class TrialRegisterChildForm extends React.Component{
       if (cla.ageGroup === childAgeGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
-        console.log(classTimeDay)
-        console.log(trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')')
         if (classTimeDay === trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')'){
           termKey = cla.termKey
         }

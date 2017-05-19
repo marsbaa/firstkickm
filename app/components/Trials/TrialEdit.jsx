@@ -85,9 +85,13 @@ class TrialEdit extends React.Component{
   };
     var childAgeGroup;
     ageGroup.map((group) => {
+      console.log(group)
       var age = getAge(trial.dateOfBirth);
       if (age >= group.minAge && age <= group.maxAge) {
         childAgeGroup = group.name;
+        if (childAgeGroup === 'U8B') {
+          childAgeGroup = 'U8'
+        }
       }
     });
 
@@ -107,7 +111,6 @@ class TrialEdit extends React.Component{
         centre = c;
       }
     });
-
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       if (cla.ageGroup === childAgeGroup) {

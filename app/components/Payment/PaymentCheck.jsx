@@ -17,7 +17,6 @@ class PaymentCheck extends React.Component {
     dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment Check"));
 
     var filteredStudents = StudentsFilter.filter(students, selection.id, '');
-    console.log(filteredStudents)
     Object.keys(payments).map((paymentId) => {
       var payment = payments[paymentId]
       var student = _.find(filteredStudents, {'key': payment.childKey})
@@ -25,7 +24,6 @@ class PaymentCheck extends React.Component {
         var record = _.find(student.payments, {'paymentKey':payment.key})
         if (record === undefined) {
            dispatch(actions.addStudentPayment(payment))
-           console.log("UnRecorded"+payment)
         }
         else{
           console.log(record)

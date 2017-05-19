@@ -40,6 +40,7 @@ class MainMenu extends React.Component {
         }
         else {
           user = _.find(users, ['email', auth.email])
+
         }
         //Centre List
         var centreOptions = [];

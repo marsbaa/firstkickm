@@ -62,7 +62,6 @@ class CoachAttendance extends React.Component{
              </Row>)
              schedule.assigned.map((c) => {
                var coach = _.find(filteredCoaches, {'key': c.coachKey })
-               console.log(coach)
                if (coach != undefined) {
                  html.push(<CoachAttendee key={c.coachKey} coach={coach} classKey={classId} date={moment().format("YYYYMMDD")}/> )
                }

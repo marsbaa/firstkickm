@@ -617,6 +617,7 @@ export var startAdmins = () => {
 
       Object.keys(admins).forEach((adminId)=> {
         parsedAdmins[adminId] = admins[adminId]
+        parsedAdmins[adminId].key = adminId
       });
       dispatch(addAdmins(parsedAdmins));
   }
@@ -627,20 +628,22 @@ export var startAdmins = () => {
 
 export var addNewAdmin = (admin) => {
 
-  firebase.auth().createUserWithEmailAndPassword(admin.email, admin.password).catch(function(error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode+errorMessage)
-    // ...
-  });
-  var user = firebase.auth().currentUser;
-  user.sendEmailVerification().then(function() {
-  // Email sent.
-  console.log("Email Sent")
+  firebase.auth().createUserWithEmailAndPassword(admin.email, admin.password).then(function() {
+      // Update successful.
+      var user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(function() {
+      // Email sent.
+      console.log("Email Sent")
+    }, function(error) {
+      console.log(error)
+    });
 }, function(error) {
-  console.log(error)
+  // An error happened.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  console.log(errorCode+errorMessage)
 });
+
   var adminsRef = firebaseRef.child('admins');
   var newKey = adminsRef.push().key;
   var updates = {};
