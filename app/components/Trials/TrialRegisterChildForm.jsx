@@ -122,6 +122,9 @@ class TrialRegisterChildForm extends React.Component{
       var age = getAge(trial.dateOfBirth);
       if (age >= group.minAge && age <= group.maxAge) {
         childAgeGroup = group.name;
+        if (childAgeGroup === 'U8B') {
+          childAgeGroup = 'U8'
+        }
       }
     });
 

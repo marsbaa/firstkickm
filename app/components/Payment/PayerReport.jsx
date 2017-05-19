@@ -42,10 +42,10 @@ class PayerReport extends React.Component {
   return (
      <Grid>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
-         <Col xs={8} md={8} style={{fontSize: '14px'}}>
+         <Col xs={8} md={8} lg={8} style={{fontSize: '14px'}}>
            <Link to={"/m/payment/history/" + key} style={{color: 'black'}}><Glyphicon glyph="user" /> <font className={gender}>{truncatedName}</font></Link>
          </Col>
-         <Col xs={4} md={4} style={{textAlign:'right'}}>
+         <Col xs={4} md={4} lg={4} style={{textAlign:'right'}}>
            {amount === 0 ? <p>Not Paid</p> : <p>${amount}</p>}
        </Col>
        </Row>

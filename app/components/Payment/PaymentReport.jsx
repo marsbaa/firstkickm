@@ -211,7 +211,7 @@ class PaymentReport extends React.Component {
             </FormControl>
           </FormGroup>
          </Col>
-         <Col xs={4} md={8} lg={8}>
+         <Col xs={4} md={4} lg={4}>
            <button className="btn" style={{float: 'right', height: '34px'}}>Send Reminder</button>
          </Col>
        </Row>
