@@ -111,7 +111,6 @@ class TrialRegisterChildForm extends React.Component{
   render() {
     var {centres, ageGroup, calendars} = this.props;
     var trial = this.props.trial
-
     var getAge = (dob) => {
     var now = moment();
     var dateofbirth = moment(JSON.stringify(dob), "YYYY-MM-DD");
@@ -151,7 +150,7 @@ class TrialRegisterChildForm extends React.Component{
       if (cla.ageGroup === childAgeGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
-        if (classTimeDay === trial.timeOfTrial+' ('+moment(trial.dateOfTrial).format('dddd')+')'){
+        if (classTimeDay === trial.currentClassTime+' ('+trial.currentClassDay+')'){
           termKey = cla.termKey
         }
         classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);

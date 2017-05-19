@@ -84,6 +84,9 @@ class TrialRegister extends React.Component{
         var age = getAge(payer.dateOfBirth);
         if (age >= group.minAge && age <= group.maxAge) {
           childAgeGroup = group.name;
+          if (childAgeGroup === 'U8B') {
+            childAgeGroup = 'U8'
+          }
         }
       });
       Object.keys(selection.classes).forEach((classID) => {
@@ -91,7 +94,7 @@ class TrialRegister extends React.Component{
         if (cla.ageGroup === childAgeGroup) {
           var classTime = cla.startTime + " - " + cla.endTime;
           var classTimeDay = classTime+ " ("+cla.day+")";
-          payer.currentClassDay = cla.day
+          payer.currentClassDay = _.capitalize(cla.day)
           payer.currentClassTime = classTime
           payer.ageGroup = childAgeGroup
           payer.centre = selection.name

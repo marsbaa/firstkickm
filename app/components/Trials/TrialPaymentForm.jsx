@@ -258,8 +258,8 @@ componentDidMount () {
       var termKey;
       Object.keys(selection.classes).forEach((classId) => {
           var cla = selection.classes[classId];
-          var classTimeDay = cla.startTime +" - "+cla.endTime+" ("+cla.day.toLowerCase()+")";
-          if (classTimeDay === (child.timeOfTrial+" ("+moment(child.dateOfTrial).format("dddd").toLowerCase()+")")) {
+          var classTimeDay = cla.startTime +" - "+cla.endTime+" ("+_.capitalize(cla.day)+")";
+          if (classTimeDay === child.currentClassTime+' ('+child.currentClassDay+')'){
               termKey = cla.termKey
             }
       })
