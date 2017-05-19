@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {Grid, Row, Col, FormGroup, ControlLabel, FormControl} from 'react-bootstrap'
+import {Grid, Row, Col, FormGroup, ControlLabel, FormControl, ButtonGroup, Button} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import Attendee from 'Attendee'
 var actions = require('actions');
@@ -17,7 +17,8 @@ class AttendanceListHQ extends React.Component{
     super(props);
     this.state = {
       startDate : moment(),
-      termDates : []
+      termDates : [],
+      filter: ''
     }
     this.handleChange = this.handleChange.bind(this)
   }
@@ -39,6 +40,31 @@ class AttendanceListHQ extends React.Component{
     })
     this.setState({termDates})
   }
+
+  handleSelect(e) {
+    e.preventDefault()
+    var id = e.target.id
+    var className = e.target.className
+    if (id === 'all' && className === 'normalbtn btn btn-default'){
+      e.target.className = 'selectedbtn btn btn-default'
+      document.getElementById('am').className = 'normalbtn btn btn-default'
+      document.getElementById('pm').className = 'normalbtn btn btn-default'
+      this.setState({filter: ''})
+    }
+    else if (id === 'am' && className === 'normalbtn btn btn-default') {
+      e.target.className = 'selectedbtn btn btn-default'
+      document.getElementById('all').className = 'normalbtn btn btn-default'
+      document.getElementById('pm').className = 'normalbtn btn btn-default'
+      this.setState({filter: 'am'})
+    }
+    else if (id === 'pm' && className === 'normalbtn btn btn-default') {
+      e.target.className = 'selectedbtn btn btn-default'
+      document.getElementById('all').className = 'normalbtn btn btn-default'
+      document.getElementById('am').className = 'normalbtn btn btn-default'
+      this.setState({filter: 'pm'})
+    }
+  }
+
 
   handleChange(date) {
     this.setState({
@@ -69,7 +95,20 @@ class AttendanceListHQ extends React.Component{
       });
       Object.keys(groupDay).forEach((day) => {
         if (_.capitalize(day) === moment(this.state.startDate).format("dddd")){
-          var groupTime = _.orderBy(groupDay[day], (o) => {
+          var groupTime = groupDay[day]
+          if (this.state.filter !== '') {
+            groupTime = _.filter(groupDay[day], (o) => {
+            var timeSplit = o.currentClassTime.split(' - ')
+            var startTime = timeSplit[0].split(':')
+            if (startTime[1].endsWith(this.state.filter)){
+              return true
+            }
+            else {
+              false
+            }
+            })
+         }
+          groupTime = _.orderBy(groupTime, (o) => {
               var timeSplit = o.currentClassTime.split(' - ')
               var endTime = timeSplit[1].split(':')
               if (endTime[1] === undefined) {
@@ -132,8 +171,15 @@ class AttendanceListHQ extends React.Component{
    return (
      <Grid style={{padding: '10px 0px'}}>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
-         <Col xs={12} md={12}>
+         <Col xs={7} md={7}>
            <Search type="student" />
+         </Col>
+         <Col xs={5} md={5}>
+           <ButtonGroup>
+              <Button id='all' style={{margin: '0px'}} className="selectedbtn" onClick={this.handleSelect.bind(this)}>All</Button>
+              <Button id='am' style={{margin: '0px'}}  className="normalbtn" onClick={this.handleSelect.bind(this)}>AM</Button>
+              <Button id='pm' style={{margin: '0px'}} className="normalbtn" onClick={this.handleSelect.bind(this)}>PM</Button>
+           </ButtonGroup>
          </Col>
        </Row>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>

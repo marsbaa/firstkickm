@@ -82,8 +82,8 @@ class AttendanceList extends React.Component{
             if (this.state.filter !== '') {
               groupTime = _.filter(groupDay[day], (o) => {
               var timeSplit = o.currentClassTime.split(' - ')
-              var endTime = timeSplit[1].split(':')
-              if (endTime[1].endsWith(this.state.filter)){
+              var startTime = timeSplit[0].split(':')
+              if (startTime[1].endsWith(this.state.filter)){
                 return true
               }
               else {
