@@ -25,7 +25,6 @@ class PayerReport extends React.Component {
     if (payments !== undefined) {
       var payment = _.find(payments, (o) => {
          if (o.termsPaid !== undefined) {
-           console.log(o.termsPaid[this.props.selectedTerm])
            return o.termsPaid[this.props.selectedTerm] !== undefined
          }
          else {

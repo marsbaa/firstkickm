@@ -26,7 +26,23 @@ class PaymentList extends React.Component {
       return !(o.status==='Not Active')})
     var actualStudents = StudentsFilter.filter(students, selection.id, "");
     if (filteredStudents.length !== 0) {
-      var groupTime = _.groupBy(filteredStudents, 'currentClassTime');
+      var groupDay = _.groupBy(filteredStudents, (o) => {
+        return o.currentClassDay.toLowerCase()
+      });
+      Object.keys(groupDay).forEach((day) => {
+          var groupTime = _.orderBy(groupDay[day], (o) => {
+              var timeSplit = o.currentClassTime.split(' - ')
+              var endTime = timeSplit[1].split(':')
+              if (endTime[1] === undefined) {
+                endTime = timeSplit[1].split('.')
+              }
+              if (endTime[1].endsWith('pm')){
+                endTime[0] = endTime[0]+12
+              }
+              endTime = endTime[0]+":"+endTime[1]
+              return endTime
+          })
+      var groupTime = _.groupBy(groupTime, 'currentClassTime');
       var actualGroupTime = _.groupBy(actualStudents, 'currentClassTime')
       Object.keys(groupTime).forEach((timeSlot)=> {
         var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
@@ -50,6 +66,7 @@ class PaymentList extends React.Component {
            })
         })
       })
+    })
     }
 
 

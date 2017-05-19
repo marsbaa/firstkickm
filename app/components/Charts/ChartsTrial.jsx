@@ -24,14 +24,12 @@ class ChartsTrial extends React.Component{
   }
 
   componentDidMount() {
-    var {trials, calendars, selection} = this.props;
+    var {calendars, selection} = this.props;
     Object.keys(calendars).map((calendarKey) => {
       var calendar = calendars[calendarKey]
       if (calendar.centreKey === selection.key) {
         var terms = calendar.terms;
         terms.map((term, id) => {
-          console.log(term[0])
-          console.log(term[term.length-1])
           if(moment().isBetween(term[0], term[term.length-1], null, '[]')) {
             document.getElementById('termSelect').value = id
             this.setState({selectedTerm: id})

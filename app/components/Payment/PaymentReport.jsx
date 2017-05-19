@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {Row, Col, FormGroup, FormControl} from 'react-bootstrap'
+import {Row, Col, FormGroup, FormControl, Badge, ProgressBar,Label} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import PayerReport from 'PayerReport'
 var actions = require('actions');
@@ -82,6 +82,13 @@ class PaymentReport extends React.Component {
               var paid = [];
               var unpaid = [];
               var paidDetails = []
+              html.push(
+                <Row key={age+timeSlot+day} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+                   <Col xs={12} md={12}>
+                     <h5>{age} {timeSlot} ({_.capitalize(day)})</h5>
+                  </Col>
+                 </Row>
+                )
               Object.keys(group).map((studentId) => {
                 var student = group[studentId]
                 var paidStudent = _.find(student.payments, (t) => {
@@ -98,18 +105,22 @@ class PaymentReport extends React.Component {
                   paidDetails.push(paidStudent)
                 }
               })
+              const now = Math.round(_.size(paid) / _.size(group) * 100)
+
               if (_.size(paid) !== 0) {
                 var amount =_.reduce(paidDetails, (sum, n) => {
                   return sum + parseInt(n.total);
                   }, 0)
-                html.push( <Row key={"paidlist"+age+timeSlot} style={{backgroundColor: 'Green', padding: '0px 15px', color: 'white'}}>
-                   <Col xs={8} md={8}>
-                     <h5>PAID - {age} {timeSlot} ({day})</h5>
-                   </Col>
-                     <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                       <h5>{_.size(paid)} Paid: ${amount}</h5>
-                   </Col>
-                 </Row>);
+
+                html.push(  <Row key= {"paidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '14px', fontWeight: '800'}}>
+                    <Col xs={6} md={6}>
+                      Paid <Badge>{_.size(paid)}</Badge>  Amount <Badge>${amount}</Badge>
+                    </Col>
+                    <Col xs={6} md={6}>
+                      <ProgressBar striped active bsStyle="success" now={now} label={`${now}%`} style={{marginBottom: '0'}} />
+                    </Col>
+                  </Row> )
+
                  Object.keys(paid).forEach((paidId) => {
                      html.push(<PayerReport key={paid[paidId].key} student={paid[paidId]} selectedTerm={this.state.selectedTerm}/>);
                  })
@@ -117,13 +128,14 @@ class PaymentReport extends React.Component {
                  amountPaid += amount
               }
               if (_.size(unpaid) !== 0) {
-                html.push( <Row key={"unpaidlist"+age+timeSlot} style={{backgroundColor: 'Red', padding: '0px 15px', color: 'white'}}>
-                   <Col xs={8} md={8}>
-                     <h5>UNPAID - {age} {timeSlot} ({day})</h5>
-                   </Col>
-                     <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                       <h5>{_.size(unpaid)} Unpaid</h5>
-                   </Col>
+                html.push( <Row key= {"unpaidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '14px', fontWeight: '800'}}>
+                  <Col xs={6} md={6}>
+                    Unpaid <Badge>{_.size(unpaid)}</Badge>
+                  </Col>
+                  <Col xs={6} md={6} style={{textAlign: 'right'}}>
+
+                  </Col>
+
                  </Row>);
                  Object.keys(unpaid).forEach((unpaidId) => {
                      html.push(<PayerReport key={unpaid[unpaidId].key} student={unpaid[unpaidId]} selectedTerm={this.state.selectedTerm}/>);
@@ -135,38 +147,47 @@ class PaymentReport extends React.Component {
           })
         })
       }
-    html.push( <Row key={"studentsPaid"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-       <Col xs={8} md={8}>
-         <h4>No. of Students Paid</h4>
-       </Col>
-         <Col xs={4} md={4} style={{textAlign: 'center'}}>
-           <h4>{studentsPaid}</h4>
-       </Col>
-     </Row>);
-     html.push( <Row key={"amountPaid"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-        <Col xs={8} md={8}>
-          <h4>Total Amount Paid</h4>
+
+    html.push(
+      <Row key={"studentsPaid"} style={{padding: '8px 20px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+        <Col xs={12} md={12} lg={12}  style={{fontWeight: 'bold',textAlign:'right', fontSize: '16px'}}>
+          <h4>Students (Paid) <Label>{studentsPaid}</Label></h4>
         </Col>
-          <Col xs={4} md={4} style={{textAlign: 'center'}}>
-            <h4>${amountPaid}</h4>
+      </Row>
+      )
+    html.push(
+      <Row key={"amountPaid"} style={{padding: '8px 20px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+        <Col xs={12} md={12} lg={12} style={{fontWeight: 'bold',textAlign:'right', fontSize: '16px'}}>
+          <h4>Total (Paid) <Label>${amountPaid}</Label></h4>
         </Col>
-      </Row>);
-     html.push( <Row key={"studentsUnPaid"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-        <Col xs={8} md={8}>
-          <h4>No. of Students Not Paid</h4>
-        </Col>
-          <Col xs={4} md={4} style={{textAlign: 'center'}}>
-            <h4>{studentsUnPaid}</h4>
-        </Col>
-      </Row>);
-      html.push( <Row key={"amountUnPaid"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-         <Col xs={8} md={8}>
-           <h4>Potential Amount from Unpaid</h4>
-         </Col>
-           <Col xs={4} md={4} style={{textAlign: 'center'}}>
-             <h4>${amountUnPaid}</h4>
-         </Col>
-       </Row>);
+      </Row>
+      )
+      html.push(
+        <Row key={"studentsUnPaid"} style={{padding: '8px 20px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+          <Col xs={12} md={12} lg={12} style={{fontWeight: 'bold',textAlign:'right', fontSize: '16px'}}>
+            <h4>Students (Unpaid) <Label>{studentsUnPaid}</Label></h4>
+          </Col>
+        </Row>
+        )
+      html.push(
+        <Row key={"amountUnPaid"} style={{padding: '8px 20px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+          <Col xs={12} md={12} lg={12}  style={{fontWeight: 'bold',textAlign:'right', fontSize: '16px'}}>
+            <h4>Potential Total (Unpaid) <Label>${amountUnPaid}</Label></h4>
+          </Col>
+        </Row>
+        )
+        const nowPaid = Math.round(studentsPaid / (studentsPaid+studentsUnPaid) * 100)
+        const nowUnPaid = Math.round(studentsUnPaid / (studentsPaid+studentsUnPaid) * 100)
+        html.push(
+          <Row key={"progressBar"} style={{padding: '8px 20px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
+            <Col xs={12} md={12} lg={12}  style={{fontWeight: 'bold',textAlign:'right', fontSize: '16px'}}>
+              <ProgressBar style={{marginBottom: '0'}}>
+                <ProgressBar striped active bsStyle="success" now={nowPaid} label={`${nowPaid}%`} style={{marginBottom: '0'}} key={1}/>
+                <ProgressBar striped active bsStyle="danger" now={nowUnPaid} label={`${nowUnPaid}%`} style={{marginBottom: '0'}} key={2} />
+              </ProgressBar>
+            </Col>
+          </Row>
+          )
     var termOptions = []
     var terms;
     Object.keys(calendars).map((calendarKey) => {
@@ -182,14 +203,17 @@ class PaymentReport extends React.Component {
 
    return (
      <div>
-       <Row>
-         <Col xs={12} md={12}>
+        <Row style={{backgroundColor: '#ffc600', color: '#656565', padding: '15px 15px 5px 15px'}}>
+         <Col xs={8} md={8} lg={8}>
            <FormGroup>
             <FormControl id="termSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}>
               <option value="select">select</option>
               {termOptions}
             </FormControl>
           </FormGroup>
+         </Col>
+         <Col xs={4} md={8} lg={8}>
+           <button className="btn" style={{float: 'right', height: '34px'}}>Send Reminder</button>
          </Col>
        </Row>
       {html}
