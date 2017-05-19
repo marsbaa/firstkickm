@@ -106,6 +106,12 @@ class TrialPaymentForm extends React.Component {
     e.preventDefault()
     var {dispatch, calendars} = this.props;
     var paymentDetails = [];
+    var siblingCount = 0
+    this.state.payer.map((student, id) => {
+      if (student.joining) {
+        siblingCount += 1
+      }
+    })
     this.state.payer.map((student, id) => {
     if (student.joining) {
       dispatch(actions.updateTrialRegistration(student.id))
@@ -171,7 +177,7 @@ class TrialPaymentForm extends React.Component {
             total -= 20
           }
 
-          if (id > 0 && term.length >= 5) {
+          if (id > 0 && term.length >= 5 && siblingCount >= 2) {
             siblingDiscount=true
             siblingDiscountAmount += 20
             total -= 20
@@ -253,7 +259,7 @@ componentDidMount () {
       Object.keys(selection.classes).forEach((classId) => {
           var cla = selection.classes[classId];
           var classTimeDay = cla.startTime +" - "+cla.endTime+" ("+cla.day.toLowerCase()+")";
-          if (classTimeDay === (child.currentClassTime+" ("+child.currentClassDay.toLowerCase()+")")) {
+          if (classTimeDay === (child.timeOfTrial+" ("+moment(child.dateOfTrial).format("dddd").toLowerCase()+")")) {
               termKey = cla.termKey
             }
       })
@@ -293,6 +299,12 @@ componentDidMount () {
     var totalFee = 0;
     var email = ''
     var count = 0
+    var siblingCount = 0
+    this.state.payer.map((student,id) => {
+      if (student.joining) {
+        siblingCount += 1
+      }
+    })
     this.state.payer.map((student, id) => {
       if (student.joining) {
         email = student.email
@@ -401,7 +413,7 @@ componentDidMount () {
               totalFee -= 20;
             }
             //Sibling Discount
-            if (id >= 1 && term.length >= 5) {
+            if (id >= 1 && term.length >= 5 && siblingCount >= 2) {
               fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
                 <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
                 <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>($20)</p></Col>
