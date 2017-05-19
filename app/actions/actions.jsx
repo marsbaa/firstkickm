@@ -626,13 +626,21 @@ export var startAdmins = () => {
 };
 
 export var addNewAdmin = (admin) => {
-    firebase.auth().createUserWithEmailAndPassword(admin.email, admin.password).catch(function(error) {
+
+  firebase.auth().createUserWithEmailAndPassword(admin.email, admin.password).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     console.log(errorCode+errorMessage)
     // ...
   });
+  var user = firebase.auth().currentUser;
+  user.sendEmailVerification().then(function() {
+  // Email sent.
+  console.log("Email Sent")
+}, function(error) {
+  console.log(error)
+});
   var adminsRef = firebaseRef.child('admins');
   var newKey = adminsRef.push().key;
   var updates = {};

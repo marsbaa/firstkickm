@@ -56,12 +56,13 @@ class AdminList extends React.Component{
 
   render() {
     var {admins, searchText} = this.props;
+
     var filteredAdmins = AdminsFilter.filter(admins, searchText);
-    var sortedAdmins = _.sortBy(filteredAdmins, ['shortName'])
     var html=[];
-    if (sortedAdmins.length !== 0) {
-      Object.keys(sortedAdmins).forEach((adminId) => {
-        html.push(<Admin key={adminId} admin={sortedAdmins[adminId]} />);
+    if (filteredAdmins.length !== 0) {
+      console.log(filteredAdmins)
+      Object.keys(filteredAdmins).forEach((adminId) => {
+        html.push(<Admin key={adminId} admin={filteredAdmins[adminId]} />);
       });
     }
     var adminHTML = [];

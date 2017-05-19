@@ -404,6 +404,7 @@ export var adminReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_ADMINS':
       return action.admins
+
     case 'ADD_ADMIN':
       return {
         ...state,

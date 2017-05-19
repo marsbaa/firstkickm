@@ -34,7 +34,10 @@ class PaymentHistory extends React.Component {
   }
 
   formSubmit() {
-    var {dispatch} = this.props
+    var {dispatch, payments} = this.props
+    var key = _.find(payments, {'key': this.state.paymentKey}).invoiceKey
+    var invoiceRef = firebaseRef.child('invoices/'+key);
+    invoiceRef.remove()
     dispatch(actions.removePayment(this.state.paymentKey, this.state.childKey))
     this.setState({show: false})
   }
