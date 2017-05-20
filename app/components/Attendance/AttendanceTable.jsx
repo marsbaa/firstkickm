@@ -8,6 +8,7 @@ import moment from 'moment'
 import {Glyphicon} from 'react-bootstrap'
 import StudentsFilter from 'StudentsFilter'
 
+
 class AttendanceTable extends React.Component {
 
   render() {
@@ -19,15 +20,14 @@ class AttendanceTable extends React.Component {
     calendar.terms[this.props.selectedTerm].map((date) => {
       termDates.push(date)
     })
+    var data = []
     var termColumns = termDates.map((date, id) => {
       return {
         header: <b style={{fontSize: '8px'}}>{moment(date).format("DD/MM")}</b>,
-        accessor: "termDates["+id+"]",
-        maxWidth: 35,
-        style: {fontSize: '10px', textAlign: 'center', alignItems: 'center', color: 'white'}
+        accessor: "status["+id+"]",
+        maxWidth: 35
       }
     })
-    var data = []
     var filteredStudents = StudentsFilter.filter(students, selection.id, '')
     filteredStudents = _.filter(filteredStudents, {'ageGroup': ageGroup})
     filteredStudents = _.filter(filteredStudents, (o) => {return o.currentClassDay.toLowerCase() === day.toLowerCase()})
@@ -35,22 +35,45 @@ class AttendanceTable extends React.Component {
     Object.keys(filteredStudents).map((studentId) => {
       var termData = []
       var student = filteredStudents[studentId]
-      if (student.attendance !== undefined) {
-        termDates.map((date) => {
-          var dateId = moment(date).format("YYYY-MM-DD")
+      termDates.map((date) => {
+        var dateId = moment(date).format("YYYY-MM-DD")
+        var attended = ''
+        var paid = false
+        if (student.attendance !== undefined) {
           if (student.attendance[dateId] !== undefined) {
             if (student.attendance[dateId].attended) {
-              termData.push(<div style={{width: '25px', height: '15px', backgroundColor: 'green'}}><Glyphicon glyph="ok-sign"/></div>)
+              attended = 'attended'
             }
           }
-          else {
-            termData.push(<div></div>)
-          }
+        }
+        var payment = _.find(student.payments, (o) => {
+          if (o.termsPaid !== undefined) {
+            return o.termsPaid[this.props.selectedTerm] !== undefined }
+          return false
         })
-      }
+        if (payment !== undefined) {
+          if (_.find(payment.termsPaid[this.props.selectedTerm], (o) => {return moment(o.date).isSame(dateId, 'day')}) !== undefined) {
+            paid = true
+          }
+        }
+        if (moment().isAfter(dateId)) {
+          if (paid & attended !== 'attended') {
+            attended = 'notattended'
+          }
+        }
+        termData.push(<div style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: paid ? 'green' : 'none',
+            textAlign: 'center',
+            color: 'white'
+          }}>
+          {attended === 'attended'? <Glyphicon glyph="ok" style={{color: !paid? 'red': 'white'}}/> : attended === 'notattended' ? <Glyphicon glyph="remove" /> : null}
+        </div>)
+      })
       data.push({
         childName: student.childName,
-        termDates : termData
+        status : termData
       })
     })
 
