@@ -29,7 +29,11 @@ class MainMenu extends React.Component {
 
     render() {
         var {selection, centres, users, auth} = this.props;
-        var user;
+        var superAdminUser = [
+          'ray@fka.sg',
+          'jimmybeh@fka.sg'
+        ]
+        var user, superAdmin;
         if (auth.email === 'ray@marsbaa.com') {
           user = {
             name: 'Ray Yee',
@@ -41,6 +45,12 @@ class MainMenu extends React.Component {
         else {
           user = _.find(users, ['email', auth.email])
 
+        }
+        if (superAdminUser.indexOf(user.email)!== -1){
+          superAdmin = true
+        }
+        else {
+          superAdmin = false
         }
         //Centre List
         var centreOptions = [];
@@ -87,7 +97,7 @@ class MainMenu extends React.Component {
                 <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Payment</button></Link>
                 <Link to="m/payment/report" ><button className="mainbtn" id="paymentReport" disabled={selection.id === '0' ? true : false}>Payment Report (HQ)</button></Link>
                 <Link to="m/total" ><button className="mainbtn" id="totalCollection" disabled={selection.id === '0' ? true : false}>Total Collection (Today)</button></Link>
-                <Link to="m/totalhq" ><button className="mainbtn" id="totalCollectionHQ" disabled={selection.id === '0' ? true : false}>Total Collection (HQ)</button></Link>
+                {superAdmin?<Link to="m/totalhq" ><button className="mainbtn" id="totalCollectionHQ" disabled={selection.id === '0' ? true : false}>Total Collection (HQ)</button></Link>: null}
                 <Link to="m/coachattendance" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance</button></Link>
                 <Link to="m/coachattendancehq" ><button className="mainbtn" id="coach" disabled={selection.id === '0' ? true : false}>Coach Attendance (HQ)</button></Link>
                   <Link to="m/coachschedule" ><button className="mainbtn" id="coachSchedule"
