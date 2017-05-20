@@ -9,8 +9,9 @@ import moment from 'moment'
 
 class Student extends React.Component {
   render() {
-    var {dispatch} = this.props;
-    var {childName, key, gender} = this.props.student;
+    var {dispatch, users, auth} = this.props;
+    var user = _.find(users, ['email', auth.email])
+    var {childName, key, gender, contact} = this.props.student;
     var truncatedName = _.truncate(childName, {
   'length': 28});
 
@@ -20,6 +21,7 @@ class Student extends React.Component {
           <Glyphicon glyph="user" /> <font className={gender}>{truncatedName}</font>
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
+          {user.assignedRoles==='Manager'?<a className="innerbtn" href={"tel:+65"+contact}><Glyphicon glyph="earphone" /> </a>:null}
           <Link to={"/m/students/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>
