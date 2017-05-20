@@ -20,7 +20,7 @@ class PaymentForm extends React.Component {
     this.state = {
       payer : [],
       startDate: [],
-      bankTransferDate: moment(),
+      receivedDate: moment(),
       termDates: [],
       termKeys: [],
       numOfSession: [],
@@ -60,6 +60,12 @@ class PaymentForm extends React.Component {
   handleBankTransferDate(date) {
     this.setState({
       bankTransferDate: date
+    });
+  }
+
+  handleReceivedDate(date) {
+    this.setState({
+      receivedDate: date
     });
   }
 
@@ -147,7 +153,7 @@ class PaymentForm extends React.Component {
     var siblingDiscount = false
     var payerTerm = []
     var siblingDiscountAmount = 0
-    var paidSessions = 0;
+    var paidSessions = 0
     this.state.selectedTermDates[id].map((term,termId) => {
         var paymentTerm = [];
 
@@ -203,6 +209,10 @@ class PaymentForm extends React.Component {
           earlyBird= true
           total -= 20
         }
+        else if (term.length === actualTerm.length && moment(this.state.receivedDate).isBefore(actualTerm[0])) {
+          earlyBird= true
+          total -= 20
+        }
 
         if (id > 0 && term.length >= 5) {
           siblingDiscount=true
@@ -234,7 +244,7 @@ class PaymentForm extends React.Component {
         ageGroup : student.ageGroup,
         earlyBird,
         coachDiscount: this.state.coachDiscount,
-        date: moment().format(),
+        date: moment(this.state.receivedDate).format(),
         siblingDiscount,
         siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
         total : total,
@@ -252,7 +262,7 @@ class PaymentForm extends React.Component {
           childName : student.childName,
           ageGroup : student.ageGroup,
           earlyBird,
-          date: moment().format(),
+          date: moment(this.state.receivedDate).format(),
           coachDiscount: this.state.coachDiscount,
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
@@ -273,7 +283,7 @@ class PaymentForm extends React.Component {
             ageGroup : student.ageGroup,
             earlyBird,
             coachDiscount: this.state.coachDiscount,
-            date: moment(this.state.bankTransferDate).format(),
+            date: moment(this.state.receivedDate).format(),
             siblingDiscount,
             siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
             total : total,
@@ -507,6 +517,13 @@ class PaymentForm extends React.Component {
               </Row>)
               totalFee -= 20;
             }
+            else if (term.length === actualTerm.length && moment(this.state.receivedDate).isBefore(actualTerm[0])) {
+              fees.push(<Row key={"earlybird"+termId+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
+                <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Early Bird Discount</b></Col>
+                <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right'}}>($20)</p></Col>
+              </Row>)
+              totalFee -= 20;
+            }
             if (id >= 1 & term.length >= 5) {
               fees.push(<Row key={"siblingdiscount"+student.childName} style={{padding: '0px 15px', marginTop: '5px'}}>
                 <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Sibling Discount</b></Col>
@@ -544,8 +561,21 @@ class PaymentForm extends React.Component {
          id="collectedAmount"
          type="text"
          placeholder="Enter amount collected (SGD$)"
-         defaultValue={totalFee}
+         value={totalFee}
+         disabled
          />
+         <FormGroup>
+           <ControlLabel>Date Received</ControlLabel>
+             <DatePicker
+               className="form-control"
+               style={{textAlign: 'center'}}
+               id = "paymentDatePicker"
+               dateFormat="DD-MM-YYYY"
+               selected={this.state.receivedDate}
+               onChange={(e) => {
+                     this.handleReceivedDate(moment(e))}}
+               />
+         </FormGroup>
        </Col>
        <Col md={6} xs={6}>
          <FormGroup validationState={this.state.errorID}>
@@ -584,7 +614,8 @@ class PaymentForm extends React.Component {
          id="collectedAmount"
          type="text"
          placeholder="Enter amount collected (SGD$)"
-         defaultValue={totalFee}
+         value={totalFee}
+         disabled
          />
        </Col>
        <Col md={6} xs={6}>
@@ -593,11 +624,11 @@ class PaymentForm extends React.Component {
              <DatePicker
                className="form-control"
                style={{textAlign: 'center'}}
-               id = "btdatePicker"
+               id = "paymentDatePicker"
                dateFormat="DD-MM-YYYY"
-               selected={this.state.bankTransferDate}
+               selected={this.state.receivedDate}
                onChange={(e) => {
-                     this.handleBankTransferDate(moment(e))}}
+                     this.handleReceivedDate(moment(e))}}
                />
          </FormGroup>
          <FormGroup validationState={this.state.emailError}>
@@ -621,7 +652,6 @@ class PaymentForm extends React.Component {
     }
     else if (this.state.form === 'Cash') {
       formhtml.push(<Row key={'amount'} style={{marginTop: '15px', textAlign: 'center'}}>
-        <Col md={3} xs={3}></Col>
         <Col md={6} xs={6}>
           <ControlLabel>Amount Collected</ControlLabel>
              <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
@@ -629,9 +659,24 @@ class PaymentForm extends React.Component {
              type="text"
              autoFocus
              placeholder="Enter amount collected (SGD$)"
-             defaultValue={totalFee}
+             value={totalFee}
+             disabled
              />
-             <FormGroup validationState={this.state.emailError}>
+        </Col>
+        <Col md={6} xs={6}>
+          <FormGroup>
+            <ControlLabel>Date Received</ControlLabel>
+              <DatePicker
+                className="form-control"
+                style={{textAlign: 'center'}}
+                id = "paymentDatePicker"
+                dateFormat="DD-MM-YYYY"
+                selected={this.state.receivedDate}
+                onChange={(e) => {
+                      this.handleReceivedDate(moment(e))}}
+                />
+          </FormGroup>
+            <FormGroup validationState={this.state.emailError}>
              <ControlLabel>Email</ControlLabel>
                   <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
                   id="email"
@@ -642,7 +687,6 @@ class PaymentForm extends React.Component {
                 <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
               </FormGroup>
         </Col>
-        <Col md={3} xs={3}></Col>
           <Col md={12} xs={12}>
             <button className='submitbtn' onClick={this.checkValid.bind(this)}>Payment Collected</button>
           </Col>
