@@ -23,9 +23,9 @@ class AttendanceTable extends React.Component {
     var data = []
     var termColumns = termDates.map((date, id) => {
       return {
-        header: <b style={{fontSize: '8px'}}>{moment(date).format("DD/MM")}</b>,
+        header: <b style={{fontSize: '7px'}}>{moment(date).format("DD/MM")}</b>,
         accessor: "status["+id+"]",
-        maxWidth: 35
+        maxWidth: 33
       }
     })
     var filteredStudents = StudentsFilter.filter(students, selection.id, '')
@@ -66,9 +66,10 @@ class AttendanceTable extends React.Component {
             height: '100%',
             backgroundColor: paid ? 'green' : 'none',
             textAlign: 'center',
-            color: 'white'
+            color: 'white',
+            fontSize: '8px'
           }}>
-          {attended === 'attended'? <Glyphicon glyph="ok" style={{color: !paid? 'red': 'white'}}/> : attended === 'notattended' ? <Glyphicon glyph="remove" /> : null}
+          { attended === 'attended' ? <Glyphicon glyph="ok" style={{color: !paid? 'red': 'white'}}/> : attended === 'notattended' ? <Glyphicon glyph="remove" /> : <Glyphicon glyph="minus" />}
         </div>)
       })
       data.push({
