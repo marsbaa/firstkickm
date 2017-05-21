@@ -20,20 +20,11 @@ class PayerReport extends React.Component {
 
   render() {
     var {dispatch} = this.props;
-    var {childName, key, gender, payments} = this.props.student;
+    var {childName, key, gender} = this.props.student;
+    var {total} = this.props.paymentDetails
     var amount = 0
-    if (payments !== undefined) {
-      var payment = _.find(payments, (o) => {
-         if (o.termsPaid !== undefined) {
-           return o.termsPaid[this.props.selectedTerm] !== undefined
-         }
-         else {
-           return false
-         }
-      })
-      if (payment !== undefined) {
-        amount = payment.total
-      }
+    if (total !== undefined) {
+      amount += total
     }
 
     var truncatedName = _.truncate(childName, {

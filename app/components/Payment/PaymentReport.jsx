@@ -13,7 +13,8 @@ class PaymentReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTerm: 3
+      selectedTerm: 3,
+      selectedYear : moment().year()
     }
   }
 
@@ -21,6 +22,10 @@ class PaymentReport extends React.Component {
     this.setState({selectedTerm : e.target.value})
   }
 
+  handleSelectYear(e) {
+    e.preventDefault()
+    this.setState({year : e.target.value})
+  }
 
   componentDidMount () {
     var {dispatch, selection, calendars} = this.props;
@@ -90,18 +95,24 @@ class PaymentReport extends React.Component {
                 )
               Object.keys(group).map((studentId) => {
                 var student = group[studentId]
-                var paidStudent = _.find(student.payments, (t) => {
-                    if (t.termsPaid !== undefined) {
-                      if (t.termsPaid[this.state.selectedTerm] !== undefined) {return true}
-                      else {return false}
+                var paidStudent = 0
+                if (student.payments !== undefined) {
+                  Object.keys(student.payments).map((pId) => {
+                    var pDetails = student.payments[pId]
+                    if (moment(pDetails.date).year() === this.state.selectedYear) {
+                      if (pDetails.termsPaid !== undefined) {
+                        if (pDetails.termsPaid[this.state.selectedTerm] !== undefined) {
+                          paid.push(student)
+                          paidDetails.push(pDetails)
+                          paidStudent += 1
+                        }
+                      }
                     }
                   })
-                if (paidStudent === undefined) {
-                  unpaid.push(student)
                 }
-                else {
-                  paid.push(student)
-                  paidDetails.push(paidStudent)
+
+                if (paidStudent === 0) {
+                  unpaid.push(student)
                 }
               })
               const now = Math.round(_.size(paid) / _.size(group) * 100)
@@ -121,8 +132,11 @@ class PaymentReport extends React.Component {
                   </Row> )
 
                  Object.keys(paid).forEach((paidId) => {
-                     html.push(<PayerReport key={paid[paidId].key} student={paid[paidId]} selectedTerm={this.state.selectedTerm}/>);
+                     html.push(<PayerReport key={paidDetails[paidId].paymentKey} student={paid[paidId]}
+                      paymentDetails={paidDetails[paidId]}
+                        selectedTerm={this.state.selectedTerm}/>);
                  })
+                 paid = _.uniqBy(paid, 'childName')
                  studentsPaid += _.size(paid)
                  amountPaid += amount
               }
@@ -137,7 +151,8 @@ class PaymentReport extends React.Component {
 
                  </Row>);
                  Object.keys(unpaid).forEach((unpaidId) => {
-                     html.push(<PayerReport key={unpaid[unpaidId].key} student={unpaid[unpaidId]} selectedTerm={this.state.selectedTerm}/>);
+                     html.push(<PayerReport key={unpaid[unpaidId].key} student={unpaid[unpaidId]}
+                       paymentDetails='none' selectedTerm={this.state.selectedTerm}/>);
                  })
                  studentsUnPaid += _.size(unpaid)
                  amountUnPaid += _.size(unpaid) * 280
@@ -198,12 +213,22 @@ class PaymentReport extends React.Component {
         })
       }
     })
-
+    var yearOptions = [];
+    yearOptions.push(<option key={moment().year()} value={moment().year()}>{moment().year()}</option>);
+    yearOptions.push(<option key={moment().year()-1} value={moment().year()-1}>{moment().year()-1}</option>);
 
    return (
      <div>
         <Row style={{backgroundColor: '#ffc600', color: '#656565', padding: '15px 15px 5px 15px'}}>
-         <Col xs={8} md={8} lg={8}>
+          <Col xs={3} md={3}>
+          <FormGroup>
+            <FormControl style={{padding: '6px 6px 5px 2px'}}
+              id="yearSelect" componentClass="select" placeholder="select" defaultValue={this.state.selectedYear} onChange={this.handleSelectYear.bind(this)}>
+              {yearOptions}
+            </FormControl>
+          </FormGroup>
+        </Col>
+         <Col xs={4} md={4} lg={4} style={{paddingLeft: '0px'}}>
            <FormGroup>
             <FormControl id="termSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}>
               <option value="select">select</option>
@@ -211,7 +236,7 @@ class PaymentReport extends React.Component {
             </FormControl>
           </FormGroup>
          </Col>
-         <Col xs={4} md={4} lg={4}>
+         <Col xs={5} md={5} lg={5}>
            <button className="btn" style={{float: 'right', height: '34px'}}>Send Reminder</button>
          </Col>
        </Row>
