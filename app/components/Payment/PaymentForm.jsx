@@ -353,7 +353,7 @@ class PaymentForm extends React.Component {
           Object.keys(calendar.terms).map((termId) => {
             var term = calendar.terms[termId]
             term.map((date) => {
-              if (moment(date) > moment() && count === 0) {
+              if (moment().isSameOrBefore(date, 'day') && count === 0) {
                 startDate = moment(date);
                 count += 1;
               }
