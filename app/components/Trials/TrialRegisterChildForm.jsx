@@ -54,7 +54,7 @@ class TrialRegisterChildForm extends React.Component{
         centre = c;
       }
     });
-
+    console.log(centre)
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       var classTime = cla.startTime + " - " + cla.endTime;
@@ -144,7 +144,6 @@ class TrialRegisterChildForm extends React.Component{
         centre = c;
       }
     });
-
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       if (cla.ageGroup === childAgeGroup) {

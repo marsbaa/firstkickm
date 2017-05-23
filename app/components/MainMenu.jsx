@@ -31,7 +31,8 @@ class MainMenu extends React.Component {
         var {selection, centres, users, auth} = this.props;
         var superAdminUser = [
           'ray@fka.sg',
-          'jimmybeh@fka.sg'
+          'jimmybeh@fka.sg',
+          'helmy@fka.sg'
         ]
         var user, superAdmin;
         if (auth.email === 'ray@marsbaa.com') {

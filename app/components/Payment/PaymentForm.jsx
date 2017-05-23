@@ -219,6 +219,8 @@ class PaymentForm extends React.Component {
           siblingDiscountAmount += 20
           total -= 20
         }
+
+        total += cost
       }
 
 
@@ -230,7 +232,7 @@ class PaymentForm extends React.Component {
         })
       })
       termsPaid[termId] = datesPaid
-      total += cost
+
     })
 
     if (this.state.prorateAmount[id] !== undefined) {

@@ -1,10 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {Row, Col} from 'react-bootstrap'
+import {Row, Col, Modal, FormGroup, ControlLabel, FormControl, Button, Radio} from 'react-bootstrap'
 import {connect} from 'react-redux';
-import {btn} from 'styles.css'
 import Payer from 'Payer'
 var actions = require('actions');
+import DatePicker from 'react-datepicker'
+require('react-datepicker/dist/react-datepicker.css')
 import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
 import _ from 'lodash'
@@ -12,10 +13,48 @@ import moment from 'moment'
 
 class PaymentList extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      childKey : '',
+      childName: '',
+      paymentMethod: '',
+      receivedDate: moment()
+    }
+  }
+
+  handleReceivedDate(date) {
+    this.setState({
+      receivedDate: date
+    });
+  }
+
+
+  formSubmit() {
+    var {dispatch, users, auth, selection, students} = this.props
+    var user = _.find(users, ['email', auth.email])
+    var payment = {
+      paymentDescription: document.getElementById('paymentDescription').value,
+      total: parseInt(document.getElementById('amount').value),
+      date : moment(this.state.receivedDate),
+      centreId : selection.id,
+      childKey: this.state.childKey,
+      childName: this.state.childName,
+      paymentMethod: this.state.paymentMethod
+    }
+    this.setState({show: false})
+    dispatch(actions.addExpense(expense))
+  }
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
     dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment"));
+  }
+
+  onShow(e, key, childName) {
+    e.preventDefault()
+    this.setState({show: true, childKey: key, childName})
   }
 
   render() {
@@ -61,7 +100,7 @@ class PaymentList extends React.Component {
            </Row>);
 
            Object.keys(group).forEach((studentId) => {
-               html.push(<Payer key={group[studentId].key} student={group[studentId]}/>);
+               html.push(<Payer key={group[studentId].key} student={group[studentId]} onShow= {this.onShow.bind(this)}/>);
 
            })
         })
@@ -69,11 +108,52 @@ class PaymentList extends React.Component {
     })
     }
 
-
+    let close = () => this.setState({show:false})
 
    return (
      <div>
-
+       <Modal
+          show={this.state.show}
+          onHide={close}
+          container={this}
+          aria-labelledby="contained-modal-title"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Collect Payment</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <FormGroup>
+              <FormGroup>
+                <ControlLabel>Date Received</ControlLabel>
+                  <DatePicker
+                    className="form-control"
+                    style={{textAlign: 'center'}}
+                    id = "paymentDatePicker"
+                    dateFormat="DD-MM-YYYY"
+                    selected={this.state.receivedDate}
+                    onChange={(e) => {
+                          this.handleReceivedDate(moment(e))}}
+                    />
+              </FormGroup>
+              <ControlLabel>Payment Description</ControlLabel>
+              <FormControl style={{marginBottom: '10px'}}
+                id="description"
+                type="text"
+                placeholder="Enter Payment Description"/>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>Amount</ControlLabel>
+                <FormControl style={{marginBottom: '10px'}}
+                id="amount"
+                type="text"
+                placeholder="Enter Amount"/>
+            </FormGroup>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsSize='large' onClick={this.formSubmit.bind(this)}>Yes</Button>
+            <Button bsSize='large' onClick={close}>No</Button>
+          </Modal.Footer>
+       </Modal>
        <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
          <Col xs={12} md={12}>
            <Search type="student" />
