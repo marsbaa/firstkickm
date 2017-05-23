@@ -34,6 +34,9 @@ class Attendee extends React.Component {
     } else if (type==='makeup') {
       backgroundColor = '#ffecb9';
     }
+    else if (type==='makeUpFrom') {
+      backgroundColor = '#ffbed0';
+    }
 
 
   return (
