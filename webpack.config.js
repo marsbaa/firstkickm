@@ -27,7 +27,8 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin(),
-    new CompressionPlugin({   
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new CompressionPlugin({
       asset: "[path].gz[query]",
       algorithm: "gzip",
       test: /\.js$|\.css$|\.html$/,
