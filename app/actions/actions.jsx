@@ -1329,6 +1329,15 @@ export var addMakeUps = (makeUps) => {
   };
 };
 
+export var deleteMakeUp = (key) => {
+  var makeUpRef = firebaseRef.child('makeUps/'+key);
+  makeUpRef.remove()
+  return {
+    type: 'REMOVE_MAKEUP',
+    key
+  }
+}
+
 export var addMakeUp = (makeUp) => {
   var makeUpRef = firebaseRef.child('makeUps');
   var newKey = makeUpRef.push().key;

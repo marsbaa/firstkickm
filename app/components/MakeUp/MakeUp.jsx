@@ -7,6 +7,13 @@ import _ from 'lodash'
 import moment from 'moment'
 
 class MakeUp extends React.Component{
+
+  handleDelete () {
+    var {dispatch} = this.props
+    var {key} = this.props.makeUp
+    dispatch(actions.deleteMakeUp(key))
+  }
+
   render() {
     var {centres} = this.props
     var {fromDate, key, toDate, fromCentre, toCentre, fromClassTimeDay, toClassTimeDay} = this.props.makeUp;
@@ -23,7 +30,7 @@ class MakeUp extends React.Component{
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
-          <Link to={"/m/makeup/edit/"+ key}><button className="innerbtn"><Glyphicon glyph="trash" /> </button></Link>
+          <button className="innerbtn" onClick={this.handleDelete.bind(this)}><Glyphicon glyph="trash" /> </button>
         </Col>
       </Row>
       <Row style={{padding: '3px 20px', borderBottom: '1px solid #cccccc', fontSize: '8px'}}>
