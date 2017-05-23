@@ -55,15 +55,16 @@ class StudentEdit extends React.Component {
 
   onFormSubmit(e) {
     e.preventDefault();
-    var {dispatch, centres} = this.props;
+    var {dispatch, centres, students} = this.props;
     var key = this.props.params.studentId;
+    var student = _.find(students, {'key': key})
     var selected = document.getElementById("timeSlotSelect");
     var classTimeDay = selected.options[selected.selectedIndex].text;
     var a = _.split(classTimeDay, '(');
     var b = _.split(a[1], ')');
     var classDay = b[0];
-    var student = {
-      key,
+    student = {
+      ...student,
       childName: document.getElementById("childName").value,
       contact: document.getElementById("contactNumber").value,
       email: document.getElementById("email").value,

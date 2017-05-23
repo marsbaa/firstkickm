@@ -1,12 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {Row, Col, Modal, FormGroup, ControlLabel, FormControl, Button, Radio} from 'react-bootstrap'
+import {Row, Col, Modal, FormGroup, ControlLabel, FormControl, Button} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import Payer from 'Payer'
 var actions = require('actions');
+import {RadioGroup, Radio} from 'react-radio-group'
 import DatePicker from 'react-datepicker'
 require('react-datepicker/dist/react-datepicker.css')
 import StudentsFilter from 'StudentsFilter'
+import InvoiceTemplateOthers from 'InvoiceTemplateOthers'
+import {firebaseRef} from 'app/firebase'
 import Search from 'Search'
 import _ from 'lodash'
 import moment from 'moment'
@@ -19,9 +22,14 @@ class PaymentList extends React.Component {
       show: false,
       childKey : '',
       childName: '',
-      paymentMethod: '',
+      email: '',
+      paymentMethod: 'Cash',
       receivedDate: moment()
     }
+  }
+
+  handleChange(value) {
+    this.setState({paymentMethod: value})
   }
 
   handleReceivedDate(date) {
@@ -30,21 +38,30 @@ class PaymentList extends React.Component {
     });
   }
 
-
   formSubmit() {
     var {dispatch, users, auth, selection, students} = this.props
     var user = _.find(users, ['email', auth.email])
+    var invoiceRef = firebaseRef.child('invoices')
+    var newKey = invoiceRef.push().key;
     var payment = {
-      paymentDescription: document.getElementById('paymentDescription').value,
+      paymentDescription: document.getElementById('description').value,
       total: parseInt(document.getElementById('amount').value),
-      date : moment(this.state.receivedDate),
+      date : moment(this.state.receivedDate).format(),
       centreId : selection.id,
       childKey: this.state.childKey,
       childName: this.state.childName,
-      paymentMethod: this.state.paymentMethod
+      paymentMethod: this.state.paymentMethod,
+      invoiceKey: newKey
     }
+    console.log(payment)
+    dispatch(actions.addPayment(payment))
+    var invoiceHTML = InvoiceTemplateOthers.render(payment)
+    var updates = {}
+    updates[newKey] = {invoiceHTML}
+    invoiceRef.update(updates)
+    SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
     this.setState({show: false})
-    dispatch(actions.addExpense(expense))
+
   }
 
   componentDidMount () {
@@ -52,9 +69,9 @@ class PaymentList extends React.Component {
     dispatch(actions.updateNavTitle("/m/payment", selection.name+" Payment"));
   }
 
-  onShow(e, key, childName) {
+  onShow(e, key, childName, email) {
     e.preventDefault()
-    this.setState({show: true, childKey: key, childName})
+    this.setState({show: true, childKey: key, childName, email})
   }
 
   render() {
@@ -147,6 +164,26 @@ class PaymentList extends React.Component {
                 id="amount"
                 type="text"
                 placeholder="Enter Amount"/>
+            </FormGroup>
+            <RadioGroup name="fruit"
+              style={{marginBottom: '10px'}} selectedValue={this.state.paymentMethod} onChange={this.handleChange.bind(this)}>
+              <label style={{marginLeft: '5px'}}>
+                <Radio value="Cash" />Cash
+              </label>
+              <label style={{marginLeft: '5px'}}>
+                <Radio value="Cheque" />Cheque
+              </label>
+              <label style={{marginLeft: '5px'}}>
+                <Radio value="Bank Transfer" />Bank Transfer
+              </label>
+            </RadioGroup>
+            <FormGroup>
+              <ControlLabel>Email for Receipt</ControlLabel>
+                <FormControl style={{marginBottom: '10px'}}
+                id="email"
+                type="text"
+                placeholder="Enter Email"
+                defaultValue={this.state.email}/>
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>

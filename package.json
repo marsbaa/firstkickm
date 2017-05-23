@@ -42,6 +42,7 @@
     "react-day-picker": "^5.2.3",
     "react-dom": "^15.5.4",
     "react-loading": "0.0.9",
+    "react-radio-group": "^3.0.1",
     "react-redux": "^4.4.8",
     "react-router": "^2.8.1",
     "react-select": "^1.0.0-rc.3",

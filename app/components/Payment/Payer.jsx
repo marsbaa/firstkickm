@@ -20,7 +20,7 @@ class Payer extends React.Component {
 
   render() {
     var {dispatch} = this.props;
-    var {childName, key, gender, payments} = this.props.student;
+    var {childName, key, gender, payments, email} = this.props.student;
     var truncatedName = _.truncate(childName, {
   'length': 28});
     var termsPaidHTML = []
@@ -46,7 +46,7 @@ class Payer extends React.Component {
            {termsPaidHTML}
          </Col>
          <Col xs={5} md={5} lg={5} style={{textAlign:'right'}}>
-           <button className="innerbtn" onClick={(e) => this.props.onShow(e, key, childName)}><Glyphicon glyph="shopping-cart" /> </button>
+           <button className="innerbtn" onClick={(e) => this.props.onShow(e, key, childName, email)}><Glyphicon glyph="shopping-cart" /> </button>
            <Link to={"/m/payment/collection/" + key}><button className="innerbtn"><Glyphicon glyph="usd" /> </button></Link>
             <Link to={"/m/payment/history/" + key}><button className="innerbtn"><Glyphicon glyph="list-alt" /> </button></Link>
         </Col>
