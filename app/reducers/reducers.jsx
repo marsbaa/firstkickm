@@ -284,9 +284,11 @@ export var studentReducer = (state = [], action) => {
             };
           }
          else if (student.attendance[action.date] === undefined) {
+           var attendance = student.attendance
            return {
              ...student,
              attendance: {
+               ...attendance,
                [action.date] : {
                  attended: true
                }
