@@ -89,12 +89,9 @@ class Root extends React.Component{
             </Row>
             {html}
             <Well style={{marginTop: '20px', fontSize: '12px'}}>
-              <b style={{textAlign: 'center', fontSize: '14px'}}>Thank you for joining First Kick Academy!</b><br/>
+              <b style={{textAlign: 'center', fontSize: '14px'}}>Thank you!</b><br/>
             <ul style={{marginTop: '10px'}}>
               <li>Please keep this receipt for future reference </li>
-              <li>Term Fees are non refundable unless for Long Term Injury (3 weeks or more)</li>
-              <li>Term Fees are non transferable</li>
-              <li>If you have not paid for a session but would wish to attend it, please do make a payment of $45 cash to our administrator at the centre.</li>
               <li>If there are any dispute of the receipt please email to contact@fka.sg</li>
             </ul>
             </Well>

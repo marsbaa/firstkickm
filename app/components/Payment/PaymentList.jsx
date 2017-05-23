@@ -10,6 +10,7 @@ require('react-datepicker/dist/react-datepicker.css')
 import StudentsFilter from 'StudentsFilter'
 import InvoiceTemplateOthers from 'InvoiceTemplateOthers'
 import {firebaseRef} from 'app/firebase'
+import SendMail from 'SendMail'
 import Search from 'Search'
 import _ from 'lodash'
 import moment from 'moment'
@@ -51,7 +52,8 @@ class PaymentList extends React.Component {
       childKey: this.state.childKey,
       childName: this.state.childName,
       paymentMethod: this.state.paymentMethod,
-      invoiceKey: newKey
+      invoiceKey: newKey,
+      email: document.getElementById('email').value
     }
     console.log(payment)
     dispatch(actions.addPayment(payment))
@@ -59,7 +61,7 @@ class PaymentList extends React.Component {
     var updates = {}
     updates[newKey] = {invoiceHTML}
     invoiceRef.update(updates)
-    SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML)
+    SendMail.mail(document.getElementById('email').value, 'First Kick Academy - Payment Receipt', invoiceHTML)
     this.setState({show: false})
 
   }

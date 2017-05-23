@@ -34,6 +34,11 @@ app.use(function(req, res, next) {
 app.get('*', function (request, res){
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 });
+app.get('*.js', function (req, res, next) {
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
 
 app.post('/send',function(req,res){
     var mailOptions={
