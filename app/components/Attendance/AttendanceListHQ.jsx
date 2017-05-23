@@ -131,7 +131,6 @@ class AttendanceListHQ extends React.Component{
               group = _.sortBy(group, ['childName'])
               var attended = 0;
               var date = this.state.startDate
-              console.log(group)
               Object.keys(group).forEach((studentId) => {
                 if (group[studentId].attendance !== undefined) {
                   if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")] !== undefined) {
@@ -163,7 +162,10 @@ class AttendanceListHQ extends React.Component{
                });
                Object.keys(filteredMakeUps).forEach((makeUpId)=> {
                  var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
-                 html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
+
+                 if ( timeSlot+" ("+_.capitalize(day)+")" === filteredMakeUps[makeUpId].toClassTimeDay) {
+                   html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
+                 }
                })
 
             })
