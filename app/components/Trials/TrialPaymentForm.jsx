@@ -10,6 +10,7 @@ import moment from 'moment'
 import PaymentDatesSelector from 'PaymentDatesSelector'
 import SendMail from 'SendMail'
 import InvoiceTemplate from 'InvoiceTemplate'
+import {firebaseRef} from 'app/firebase'
 import {browserHistory} from 'react-router'
 
 class TrialPaymentForm extends React.Component {
@@ -19,6 +20,7 @@ class TrialPaymentForm extends React.Component {
     this.state = {
       payer : [],
       startDate: [],
+      receivedDate: moment(),
       termDates: [],
       termKeys: [],
       numOfSession: [],
@@ -48,6 +50,13 @@ class TrialPaymentForm extends React.Component {
     this.setState({form : type})
   }
 
+  handleReceivedDate(date) {
+    this.setState({
+      receivedDate: date
+    });
+  }
+
+
   handleDatesChange(selected, payerId) {
     var selectedTermDates = this.state.selectedTermDates;
     selectedTermDates[payerId] = selected
@@ -62,9 +71,9 @@ class TrialPaymentForm extends React.Component {
 
   checkValid(e) {
     var email = ''
+    var count = 0
     if (this.state.form === 'Cheque') {
       var chequeNumber = document.getElementById('chequeNumber').value
-      var count = 0
       if (chequeNumber === '' || chequeNumber.length < 6) {
         this.setState({errorID : 'error'})
         this.setState({errorMessage: 'Please enter 6 digit cheque number'})
@@ -74,8 +83,9 @@ class TrialPaymentForm extends React.Component {
         this.setState({errorID : null})
         this.setState({errorMessage: null})
       }
-      email = document.getElementById('chequeemail').value
-      if (email === '') {
+    }
+    email = document.getElementById('email').value
+    if (email === '') {
         this.setState({emailError: 'error'})
         this.setState({emailErrorMessage: 'Please enter a valid email address'})
         count = 2
@@ -86,20 +96,8 @@ class TrialPaymentForm extends React.Component {
       }
       if (count === 0) {
         this.setState({show: true})
-        this.setState({email: email})
       }
-    }
-    else if (this.state.form === 'Cash') {
-      email = document.getElementById('cashemail').value
-      if (email === '') {
-        this.setState({emailError: 'error'})
-        this.setState({emailErrorMessage: 'Please enter a valid email address'})
-      }
-      else {
-        this.setState({show: true})
-        this.setState({email: email})
-      }
-    }
+
   }
 
   formSubmit(e) {
@@ -107,6 +105,8 @@ class TrialPaymentForm extends React.Component {
     var {dispatch, calendars} = this.props;
     var paymentDetails = [];
     var siblingCount = 0
+    var invoiceRef = firebaseRef.child('invoices')
+    var newKey = invoiceRef.push().key;
     this.state.payer.map((student, id) => {
       if (student.joining) {
         siblingCount += 1
@@ -199,7 +199,7 @@ class TrialPaymentForm extends React.Component {
             childName : student.childName,
             ageGroup : student.ageGroup,
             earlyBird,
-            date: moment().format(),
+            date: moment(this.state.receivedDate).format(),
             siblingDiscount,
             siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
             total : total,
@@ -207,7 +207,8 @@ class TrialPaymentForm extends React.Component {
             paymentMethod: this.state.form,
             email: this.state.email,
             registration : true,
-            jerseyIssued : false
+            jerseyIssued : false,
+            invoiceKey: newKey
           }
         }
         else if (this.state.form === "Cheque") {
@@ -217,7 +218,7 @@ class TrialPaymentForm extends React.Component {
               childName : student.childName,
               ageGroup : student.ageGroup,
               earlyBird,
-              date: moment().format(),
+              date: moment(this.state.receivedDate).format(),
               siblingDiscount,
               siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
               total : total,
@@ -226,9 +227,29 @@ class TrialPaymentForm extends React.Component {
               chequeNumber: document.getElementById('chequeNumber').value,
               email: this.state.email,
               registration: true,
-              jerseyIssued: false
+              jerseyIssued: false,
+              invoiceKey: newKey
             }
           }
+          else if (this.state.form === "Bank Transfer") {
+              var paymentDetail = {
+                centreId : student.venueId.toString(),
+                childKey : response.student.key,
+                childName : student.childName,
+                ageGroup : student.ageGroup,
+                earlyBird,
+                date: moment(this.state.receivedDate).format(),
+                siblingDiscount,
+                siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
+                total : total,
+                termsPaid,
+                paymentMethod: this.state.form,
+                email: this.state.email,
+                registration: true,
+                jerseyIssued: false,
+                invoiceKey: newKey
+              }
+            }
         dispatch(actions.addPayment(paymentDetail))
         paymentDetails.push(paymentDetail)
       }}
@@ -427,11 +448,14 @@ componentDidMount () {
         }
         //Deposit
         if (student.deposit !== undefined) {
-          fees.push(<Row key={"deposit"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
-            <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Deposit</b></Col>
-            <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>(${student.deposit})</p></Col>
-          </Row>)
-          totalFee -= student.deposit;
+          if (student.deposit !== "0"){
+            fees.push(<Row key={"deposit"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
+              <Col xs={8} md={8}><b style={{color: '#1796d3'}}>Deposit</b></Col>
+              <Col xs={4} md={4} style={{float: 'right'}}><p style={{textAlign:'right', marginBottom: '0px'}}>(${student.deposit})</p></Col>
+            </Row>)
+            totalFee -= student.deposit;
+          }
+
         }
         //Registration Fee
         fees.push(<Row key={"registration"+student.childName} style={{padding: '0px 15px', marginBottom: '5px'}}>
@@ -449,6 +473,7 @@ componentDidMount () {
     var formhtml = []
     var chequeClass = 'datebtn'
     var cashClass = 'datebtn'
+    var bankTransferClass = 'datebtn'
     if (this.state.form === 'Cheque') {
       formhtml.push(<Row key={'cheque'} style={{marginTop: '15px', textAlign: 'center'}}>
        <Col md={6} xs={6}>
@@ -457,8 +482,21 @@ componentDidMount () {
          id="collectedAmount"
          type="text"
          placeholder="Enter amount collected (SGD$)"
-         defaultValue={totalFee}
+         value={totalFee}
+         disabled
          />
+         <FormGroup>
+           <ControlLabel>Date Received</ControlLabel>
+             <DatePicker
+               className="form-control"
+               style={{textAlign: 'center'}}
+               id = "paymentDatePicker"
+               dateFormat="DD-MM-YYYY"
+               selected={this.state.receivedDate}
+               onChange={(e) => {
+                     this.handleReceivedDate(moment(e))}}
+               />
+         </FormGroup>
        </Col>
        <Col md={6} xs={6}>
          <FormGroup validationState={this.state.errorID}>
@@ -473,7 +511,7 @@ componentDidMount () {
          <FormGroup validationState={this.state.emailError}>
          <ControlLabel>Email</ControlLabel>
               <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
-              id="chequeemail"
+              id="email"
               type="text"
               placeholder="Enter Email"
               defaultValue={email}
@@ -489,9 +527,52 @@ componentDidMount () {
       chequeClass = 'downbtn'
 
     }
+    else if (this.state.form === 'Bank Transfer') {
+      formhtml.push(<Row key={'banktransfer'} style={{marginTop: '15px', textAlign: 'center'}}>
+       <Col md={6} xs={6}>
+         <ControlLabel>Amount Collected</ControlLabel>
+         <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+         id="collectedAmount"
+         type="text"
+         placeholder="Enter amount collected (SGD$)"
+         value={totalFee}
+         disabled
+         />
+       </Col>
+       <Col md={6} xs={6}>
+         <FormGroup>
+           <ControlLabel>Date Received</ControlLabel>
+             <DatePicker
+               className="form-control"
+               style={{textAlign: 'center'}}
+               id = "paymentDatePicker"
+               dateFormat="DD-MM-YYYY"
+               selected={this.state.receivedDate}
+               onChange={(e) => {
+                     this.handleReceivedDate(moment(e))}}
+               />
+         </FormGroup>
+         <FormGroup validationState={this.state.emailError}>
+         <ControlLabel>Email</ControlLabel>
+              <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
+              id="email"
+              type="text"
+              placeholder="Enter Email"
+              defaultValue={email}
+              />
+            <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+          </FormGroup>
+       </Col>
+       <Col md={12} xs={12}>
+         <button className='submitbtn'
+           onClick={this.checkValid.bind(this)}>Payment Collected</button>
+       </Col>
+      </Row>)
+      bankTransferClass = 'downbtn'
+
+    }
     else if (this.state.form === 'Cash') {
       formhtml.push(<Row key={'amount'} style={{marginTop: '15px', textAlign: 'center'}}>
-        <Col md={3} xs={3}></Col>
         <Col md={6} xs={6}>
           <ControlLabel>Amount Collected</ControlLabel>
              <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
@@ -499,12 +580,27 @@ componentDidMount () {
              type="text"
              autoFocus
              placeholder="Enter amount collected (SGD$)"
-             defaultValue={totalFee}
+             value={totalFee}
+             disabled
              />
-             <FormGroup validationState={this.state.emailError}>
+        </Col>
+        <Col md={6} xs={6}>
+          <FormGroup>
+            <ControlLabel>Date Received</ControlLabel>
+              <DatePicker
+                className="form-control"
+                style={{textAlign: 'center'}}
+                id = "paymentDatePicker"
+                dateFormat="DD-MM-YYYY"
+                selected={this.state.receivedDate}
+                onChange={(e) => {
+                      this.handleReceivedDate(moment(e))}}
+                />
+          </FormGroup>
+            <FormGroup validationState={this.state.emailError}>
              <ControlLabel>Email</ControlLabel>
                   <FormControl style={{marginBottom: '10px', textAlign: 'center'}}
-                  id="cashemail"
+                  id="email"
                   type="text"
                   placeholder="Enter Email"
                   defaultValue={email}
@@ -512,7 +608,6 @@ componentDidMount () {
                 <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
               </FormGroup>
         </Col>
-        <Col md={3} xs={3}></Col>
           <Col md={12} xs={12}>
             <button className='submitbtn' onClick={this.checkValid.bind(this)}>Payment Collected</button>
           </Col>
@@ -523,13 +618,22 @@ componentDidMount () {
     let close = () => this.setState({show:false})
     var modalMessage = '';
 
-      if (this.state.form !== '') {
-        var chequeNumber = 0;
-        if (document.getElementById('chequeNumber') !== null) {
-          chequeNumber = document.getElementById('chequeNumber').value
-        }
-        modalMessage = this.state.form === 'Cash' ? 'Did you receive cash payment of $'+totalFee+' ?':'Did you receive cheque payment of $'+totalFee+' with cheque #' +chequeNumber + ' ?';
-    }
+    if (this.state.form !== '') {
+      var chequeNumber = 0;
+      if (document.getElementById('chequeNumber') !== null) {
+        chequeNumber = document.getElementById('chequeNumber').value
+      }
+      if (this.state.form === 'Cash') {
+        modalMessage = 'Did you receive cash payment of $'+totalFee+' ?'
+      }
+      else if (this.state.form === 'Bank Transfer') {
+        modalMessage = 'Did you receive bank transfer of $'+totalFee+' ?'
+      }
+      else {
+        modalMessage = 'Did you receive cheque payment of $'+totalFee+' with cheque #' +chequeNumber + ' ?'
+      }
+
+  }
 
    return (
      <Grid>
@@ -570,8 +674,9 @@ componentDidMount () {
        <Row>
          <Col md={12} xs={12}>
            <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Payment Method</font>}>
-             <button className={cashClass} onClick={(e) => { this.handleForm(e, "Cash")}} style={{width: "45%", height: "50px"}}>Cash</button>
-             <button className={chequeClass} onClick={(e) => { this.handleForm(e, "Cheque")}} style={{width: "45%", height: "50px"}}>Cheque</button>
+             <button className={cashClass} onClick={(e) => { this.handleForm(e, "Cash")}} style={{width: "30%", height: "50px"}}>Cash</button>
+             <button className={chequeClass} onClick={(e) => { this.handleForm(e, "Cheque")}} style={{width: "30%", height: "50px"}}>Cheque</button>
+             <button className={bankTransferClass} onClick={(e) => { this.handleForm(e, "Bank Transfer")}} style={{width: "30%", height: "50px"}}>Bank Transfer</button>
            </Panel>
          </Col>
          <Col md={12} xs={12}>

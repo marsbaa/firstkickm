@@ -25,7 +25,7 @@ class Root extends React.Component{
     html.push(
             <Row key={paymentDetail.paymentDescription} style={{lineHeight: '12px', margin: '15px 30px'}}>
               <Col xs={8} md={8}><b>{paymentDetail.paymentDescription}</b></Col>
-              <Col xs={4} md={4} style={{textAlign: 'right'}}>{paymentDetail.total}</Col>
+              <Col xs={4} md={4} style={{textAlign: 'right'}}>${paymentDetail.total}</Col>
             </Row>
             )
 

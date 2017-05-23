@@ -81,7 +81,7 @@ class Trial extends React.Component{
             </div>
           </Col>
           <Col xs={5} md={5} style={{textAlign:'right', paddingRight:'3px', paddingLeft: '3px'}}>
-            <button className="innerbtn" onClick={this.handleSelect.bind(this)}>D{deposit === undefined ? "": ": $"+deposit}</button>
+            <button className="innerbtn" onClick={this.handleSelect.bind(this)}>D{deposit === undefined ? "": deposit === "0"? "" : "$"+deposit}</button>
             <Link to={"/m/trials/edit/"+id}><button className="innerbtn"><Glyphicon glyph="pencil" /> </button></Link>
             <Link  to={"/m/trials/register/"+id}><button className="innerbtn" >Register</button></Link>
           </Col>

@@ -57,12 +57,6 @@ class PaymentForm extends React.Component {
     });
   }
 
-  handleBankTransferDate(date) {
-    this.setState({
-      bankTransferDate: date
-    });
-  }
-
   handleReceivedDate(date) {
     this.setState({
       receivedDate: date
@@ -100,8 +94,9 @@ class PaymentForm extends React.Component {
         this.setState({errorID : null})
         this.setState({errorMessage: null})
       }
-      email = document.getElementById('email').value
-      if (email === '') {
+    }
+    email = document.getElementById('email').value
+    if (email === '') {
         this.setState({emailError: 'error'})
         this.setState({emailErrorMessage: 'Please enter a valid email address'})
         count = 2
@@ -113,29 +108,8 @@ class PaymentForm extends React.Component {
       if (count === 0) {
         this.setState({show: true})
       }
-    }
-    else if (this.state.form === 'Cash') {
-      email = document.getElementById('email').value
-      if (email === '') {
-        this.setState({emailError: 'error'})
-        this.setState({emailErrorMessage: 'Please enter a valid email address'})
-      }
-      else {
-        this.setState({show: true})
-        this.setState({email: email})
-      }
-    }
-    else if (this.state.form === 'Bank Transfer') {
-      email = document.getElementById('email').value
-      if (email === '') {
-        this.setState({emailError: 'error'})
-        this.setState({emailErrorMessage: 'Please enter a valid email address'})
-      }
-      else {
-        this.setState({show: true})
-        this.setState({email: email})
-      }
-    }
+
+
   }
 
   formSubmit(e) {
