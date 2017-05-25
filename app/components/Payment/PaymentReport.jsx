@@ -122,7 +122,7 @@ class PaymentReport extends React.Component {
                   return sum + parseInt(n.total);
                   }, 0)
 
-                html.push(  <Row key= {"paidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '14px', fontWeight: '800'}}>
+                html.push(  <Row key= {"paidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '12px', fontWeight: '800'}}>
                     <Col xs={6} md={6}>
                       Paid <Badge>{_.size(paid)}</Badge>  Amount <Badge>${amount}</Badge>
                     </Col>
@@ -141,7 +141,7 @@ class PaymentReport extends React.Component {
                  amountPaid += amount
               }
               if (_.size(unpaid) !== 0) {
-                html.push( <Row key= {"unpaidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '14px', fontWeight: '800'}}>
+                html.push( <Row key= {"unpaidlist"+age+timeSlot+day} style={{backgroundColor: '#f5f5f5', padding: '10px 15px', borderBottom: '1px solid #cccccc', fontSize: '12px', fontWeight: '800'}}>
                   <Col xs={6} md={6}>
                     Unpaid <Badge>{_.size(unpaid)}</Badge>
                   </Col>

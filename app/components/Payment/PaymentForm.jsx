@@ -82,9 +82,9 @@ class PaymentForm extends React.Component {
 
   checkValid(e) {
     var email = ''
+    var count = 0
     if (this.state.form === 'Cheque') {
       var chequeNumber = document.getElementById('chequeNumber').value
-      var count = 0
       if (chequeNumber === '' || chequeNumber.length < 6) {
         this.setState({errorID : 'error'})
         this.setState({errorMessage: 'Please enter 6 digit cheque number'})
@@ -105,9 +105,9 @@ class PaymentForm extends React.Component {
         this.setState({errorID : null})
         this.setState({errorMessage: null})
       }
-      if (count === 0) {
+    if (count === 0) {
         this.setState({show: true})
-      }
+    }
 
 
   }
