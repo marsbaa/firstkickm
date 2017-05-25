@@ -295,8 +295,7 @@ class PaymentForm extends React.Component {
         this.setState({coachDiscount: true})
       }
     }
-
-    if (student.contact !== ""){
+    if (student.contact !== "" && student.contact !== undefined){
       payer = _.filter(filteredStudents, {contact: student.contact})
     }
     else {

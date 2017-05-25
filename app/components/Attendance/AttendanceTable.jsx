@@ -7,6 +7,7 @@ import 'react-table/react-table.css'
 import moment from 'moment'
 import {Glyphicon} from 'react-bootstrap'
 import StudentsFilter from 'StudentsFilter'
+import {Link} from 'react-router'
 
 
 class AttendanceTable extends React.Component {
@@ -23,9 +24,9 @@ class AttendanceTable extends React.Component {
     var data = []
     var termColumns = termDates.map((date, id) => {
       return {
-        header: <b style={{fontSize: '7px'}}>{moment(date).format("DD/MM")}</b>,
+        header: <b style={{fontSize: '9px'}}>{moment(date).format("DD/MM")}</b>,
         accessor: "status["+id+"]",
-        maxWidth: 33
+        maxWidth: 35
       }
     })
     var filteredStudents = StudentsFilter.filter(students, selection.id, '')
@@ -67,13 +68,14 @@ class AttendanceTable extends React.Component {
             backgroundColor: paid ? 'green' : 'none',
             textAlign: 'center',
             color: 'white',
-            fontSize: '8px'
+            fontSize: '9px'
           }}>
           { attended === 'attended' ? <Glyphicon glyph="ok" style={{color: !paid? 'red': 'white'}}/> : attended === 'notattended' ? <Glyphicon glyph="remove" /> : <Glyphicon glyph="minus" />}
         </div>)
       })
       data.push({
-        childName: student.childName,
+        childName: <Link to={"/m/students/edit/"+student.key}>{student.childName}</Link>,
+        paymentButton: <Link className="innerbtn" style={{fontSize: '7px'}} to={"/m/payment/collection/"+student.key}>$</Link>,
         status : termData
       })
     })
@@ -82,11 +84,18 @@ class AttendanceTable extends React.Component {
     const columns = [{
       header: <b style={{fontSize: '14px'}}>{classDayTime}</b>,
       columns: [{
-        header: <b style={{fontSize: '8px'}}>Child Name</b>,
+        header: <b style={{fontSize: '9px'}}>Child Name</b>,
         accessor: 'childName',
-        maxWidth: 70,
+        maxWidth: 80,
         style: {fontSize: '8px'}
-      }, ...termColumns
+      },
+      {
+        header: <b style={{fontSize: '9px'}}>P</b>,
+        accessor: 'paymentButton',
+        maxWidth: 30,
+        style: {fontSize: '8px'}
+      },
+      ...termColumns
       ]
     }]
      return (
