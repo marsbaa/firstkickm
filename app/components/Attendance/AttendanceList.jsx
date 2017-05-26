@@ -69,6 +69,7 @@ class AttendanceList extends React.Component{
 
     if (today !== -1) {
       var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+      var filteredNotActive = _.filter(filteredStudents, (o) => {return o.status==='Not Active'})
       filteredStudents = _.filter(filteredStudents, (o) => {
         return !(o.status==='Not Active')})
       var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment().format('YYYY-MM-DD')})
@@ -142,6 +143,16 @@ class AttendanceList extends React.Component{
           }
         })
       }
+      html.push( <Row key={"notactivelist"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
+         <Col xs={12} md={12}>
+           <h5>Not Active</h5>
+         </Col>
+       </Row>);
+
+       Object.keys(filteredNotActive).forEach((studentId) => {
+           html.push(<Attendee key={filteredNotActive[studentId].key} student={filteredNotActive[studentId]} date={this.state.date}/>);
+
+       });
     }
     else {
       html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)

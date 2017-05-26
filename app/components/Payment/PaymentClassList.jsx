@@ -13,6 +13,7 @@ class PaymentClassList extends React.Component {
 
   render() {
     var {calendars, students, selection} = this.props
+    var checkedAll = this.props.checkedAll
     var {day, startTime, endTime, ageGroup, termKey} = this.props.classes
     var classDayTime = ageGroup + " " + _.capitalize(day) + " " + startTime + " - " + endTime
     var calendar = _.find(calendars, {key : termKey})
@@ -63,7 +64,7 @@ class PaymentClassList extends React.Component {
          </Row>
         )
       unpaid.map((student, key) => {
-        html.push(<PayerNotPaid key={key} student={student} />)
+        html.push(<PayerNotPaid key={key} student={student} checked={checkedAll}/>)
       })
     }
 

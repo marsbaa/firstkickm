@@ -3,6 +3,7 @@ import {Link} from 'react-router'
 import {Grid, Row, Col, FormGroup, ControlLabel, FormControl, ButtonGroup, Button} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import Attendee from 'Attendee'
+import AttendanceClassList from 'AttendanceClassList'
 var actions = require('actions');
 import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
@@ -80,12 +81,11 @@ class AttendanceListHQ extends React.Component{
     dispatch(actions.updateNavTitle("/m/attendance/HQ", selection.name+" Attendance"));
   }
 
-
-
   render() {
     var {students, searchText, selection, calendars, makeUps} = this.props;
     var html=[];
     var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+    var filteredNotActive = _.filter(filteredStudents, (o) => {return o.status==='Not Active'})
     filteredStudents = _.filter(filteredStudents, (o) => {
       return !(o.status==='Not Active')})
     var filteredMakeUps = _.filter(makeUps, {toCentre: selection.key, toDate: moment(this.state.startDate).format('YYYY-MM-DD')})
@@ -119,9 +119,7 @@ class AttendanceListHQ extends React.Component{
               }
               endTime = endTime[0]+":"+endTime[1]
               return endTime
-
-
-          } )
+          })
           groupTime = _.groupBy(groupTime, 'currentClassTime');
           Object.keys(groupTime).forEach((timeSlot)=> {
             var groupAge = _.orderBy(groupTime[timeSlot], ['asc'])
@@ -129,42 +127,15 @@ class AttendanceListHQ extends React.Component{
             Object.keys(groupAge).forEach((age)=> {
               var group = groupAge[age];
               group = _.sortBy(group, ['childName'])
-              var attended = 0;
-              var date = this.state.startDate
-              Object.keys(group).forEach((studentId) => {
-                if (group[studentId].attendance !== undefined) {
-                  if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")] !== undefined) {
-                    if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")].attended) {
-                      attended = attended + 1;
-                    }
-                  }
-                }
-              });
-              html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-                 <Col xs={9} md={9}>
-                   <h5>{age} {timeSlot}</h5>
-                 </Col>
-                   <Col xs={3} md={3} style={{textAlign: 'center'}}>
-                     <h5><font style={{color: 'white'}}>{attended}</font> / {_.size(group)}
-                     </h5>
-                 </Col>
-               </Row>);
-               Object.keys(group).forEach((studentId) => {
-                   var makeUp = _.find(makeUps, {studentKey: group[studentId].key})
-                   if (makeUp !== undefined) {
-                     if ( moment(date).isSame(makeUp.fromDate, 'day')){
-                       html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date} type='makeUpFrom'/>);
-                     }
-                   }
-                   else {
-                     html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date} type='normal'/>);
-                   }
-               });
-               Object.keys(filteredMakeUps).forEach((makeUpId)=> {
+
+              html.push( <AttendanceClassList key={age+timeSlot} name={age+" "+timeSlot+" ("+_.capitalize(day)+")"} group={group} date={this.state.startDate} makeUps={makeUps}/> )
+
+
+              Object.keys(filteredMakeUps).forEach((makeUpId)=> {
                  var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
 
                  if ( timeSlot+" ("+_.capitalize(day)+")" === filteredMakeUps[makeUpId].toClassTimeDay) {
-                   html.push(<Attendee key={student.key} student={student} date={date} type='makeup'/>);
+                   html.push(<Attendee key={student.key} student={student} date={this.state.startDate} type='makeup'/>);
                  }
                })
 
@@ -173,9 +144,7 @@ class AttendanceListHQ extends React.Component{
         }
       })
     }
-    else {
-      html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)
-    }
+    html.push( <AttendanceClassList key='Not Active' name="Not Active" group={filteredNotActive} date={this.state.startDate}/> )
 
 
    return (

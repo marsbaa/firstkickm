@@ -21,4 +21,5 @@ class MakeUpApp extends React.Component {
  }
  }
 
- export default connect ()(MakeUpApp);
+ export default connect ((state) => {return state;
+})(MakeUpApp);

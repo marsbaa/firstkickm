@@ -160,7 +160,7 @@
 .btn:active,
 .btn.active,
 .open .dropdown-toggle.btn {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 .innerbtn {

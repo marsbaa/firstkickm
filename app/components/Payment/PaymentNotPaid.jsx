@@ -14,7 +14,8 @@ class PaymentNotPaid extends React.Component {
     super(props);
     this.state = {
       selectedTerm: 3,
-      selectedYear : moment().year()
+      selectedYear : moment().year(),
+      checkedAll : false
     }
   }
 
@@ -50,7 +51,7 @@ class PaymentNotPaid extends React.Component {
     var classes = selection.classes
     var html = []
     Object.keys(classes).forEach((classKey)=> {
-      html.push(<PaymentClassList key={classKey} classes={classes[classKey]} selectedTerm={this.state.selectedTerm}/>)
+      html.push(<PaymentClassList key={classKey} classes={classes[classKey]} selectedTerm={this.state.selectedTerm} checkedAll = {this.state.checkedAll}/>)
     })
     var termOptions = []
     var terms;
@@ -70,7 +71,7 @@ class PaymentNotPaid extends React.Component {
    return (
      <div>
         <Row style={{backgroundColor: '#ffc600', color: '#656565', padding: '15px 15px 5px 15px'}}>
-          <Col xs={3} md={3}>
+          <Col xs={3} md={3} lg={3} style={{paddingRight: '2px'}}>
           <FormGroup>
             <FormControl style={{padding: '6px 6px 5px 2px'}}
               id="yearSelect" componentClass="select" placeholder="select" defaultValue={this.state.selectedYear} onChange={this.handleSelectYear.bind(this)}>
@@ -78,16 +79,17 @@ class PaymentNotPaid extends React.Component {
             </FormControl>
           </FormGroup>
         </Col>
-         <Col xs={4} md={4} lg={4} style={{paddingLeft: '0px'}}>
+         <Col xs={3} md={3} lg={3} style={{paddingLeft: '0px', paddingRight: '2px'}}>
            <FormGroup>
-            <FormControl id="termSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}>
-              <option value="select">select</option>
+            <FormControl id="termSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)} style={{padding: '6px 2px 5px 2px'}}>
               {termOptions}
             </FormControl>
           </FormGroup>
          </Col>
-         <Col xs={5} md={5} lg={5}>
-           <button className="btn" style={{float: 'right', height: '34px'}}>Send Reminder</button>
+         <Col xs={6} md={6} lg={6} style={{paddingLeft: '0px'}}>
+
+           <button className="btn" style={{float: 'right', height: '34px', marginRight: '2px'}}>Send Reminder</button>
+
          </Col>
        </Row>
       {html}

@@ -26,7 +26,7 @@ class MakeUpList extends React.Component{
         </Row>
         );
       Object.keys(centreMakeUps).forEach((makeUpId) => {
-        html.push(<MakeUp key={centreMakeUps[makeUpId].key} makeUp={centreMakeUps[makeUpId]} student={_.find(students, {key: centreMakeUps[makeUpId].studentKey})}/>);
+        html.push(<MakeUp key={makeUpId} makeUp={centreMakeUps[makeUpId]} student={_.find(students, {key: centreMakeUps[makeUpId].studentKey})}/>);
       });
     }
     else {
