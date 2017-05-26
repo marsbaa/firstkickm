@@ -25,7 +25,7 @@ class SMSModal extends React.Component{
     e.preventDefault();
     var {dispatch, contacts} = this.props;
     var msg = encodeURI(document.getElementById('message').value)
-    msg = '&msg='+msg+'&dstno='+contact
+    msg = '&msg='+msg+'&dstno='+contacts
     SMS.sendSMS(msg)
     this.props.closeModal();
   }
