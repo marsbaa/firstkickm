@@ -3,6 +3,7 @@ import {Link} from 'react-router'
 import {Row, Col, ButtonGroup, Button} from 'react-bootstrap'
 import {connect} from 'react-redux';
 import Attendee from 'Attendee'
+import AttendanceClassList from 'AttendanceClassList'
 var actions = require('actions');
 import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
@@ -113,50 +114,23 @@ class AttendanceList extends React.Component{
               Object.keys(groupAge).forEach((age)=> {
                 var group = groupAge[age];
                 group = _.sortBy(group, ['childName'])
-                var attended = 0;
-                var date = moment().format("YYYY-MM-DD");
-                Object.keys(group).forEach((studentId) => {
-                  if (group[studentId].attendance !== undefined) {
-                    if (group[studentId].attendance[date] !== undefined) {
-                      if (group[studentId].attendance[date].attended) {
-                        attended = attended + 1;
-                      }
-                    }
-                  }
-                });
-                html.push( <Row key={"attendancelist"+age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-                   <Col xs={9} md={9}>
-                     <h5>{age} {timeSlot}</h5>
-                   </Col>
-                     <Col xs={3} md={3} style={{textAlign: 'center'}}>
-                       <h5><font style={{color: 'white'}}>{attended}</font> / {_.size(group)}
-                       </h5>
-                   </Col>
-                 </Row>);
+                html.push( <AttendanceClassList key={age+timeSlot} name={age+" "+timeSlot+" ("+_.capitalize(day)+")"} group={group} date={this.state.startDate} makeUps={makeUps}/> )
 
-                 Object.keys(group).forEach((studentId) => {
-                     html.push(<Attendee key={group[studentId].key} student={group[studentId]} date={date}/>);
 
-                 });
+                Object.keys(filteredMakeUps).forEach((makeUpId)=> {
+                   var student = _.find(students, {key: filteredMakeUps[makeUpId].studentKey})
+
+                   if ( timeSlot+" ("+_.capitalize(day)+")" === filteredMakeUps[makeUpId].toClassTimeDay) {
+                     html.push(<Attendee key={student.key} student={student} date={this.state.startDate} type='makeup'/>);
+                   }
+                 })
               })
             })
           }
         })
       }
-      html.push( <Row key={"notactivelist"} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-         <Col xs={12} md={12}>
-           <h5>Not Active</h5>
-         </Col>
-       </Row>);
-
-       Object.keys(filteredNotActive).forEach((studentId) => {
-           html.push(<Attendee key={filteredNotActive[studentId].key} student={filteredNotActive[studentId]} date={this.state.date}/>);
-
-       });
     }
-    else {
-      html.push(<div key='1' style={{paddingTop: '40px', textAlign: 'center'}}>No Sessions Today</div>)
-    }
+    html.push( <AttendanceClassList key='Not Active' name="Not Active" group={filteredNotActive} date={this.state.startDate}/> )
 
 
    return (
