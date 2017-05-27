@@ -70,8 +70,8 @@ class UserEdit extends React.Component{
     var user = _.find(users, {'key': userId})
     if (user !== undefined) {
       this.setState({
-        assignedRoles: user.assignedRoles,
-        assignedCentres: user.assignedCentres
+        assignedRoles: user.assignedRoles === undefined ? '': user.assignedRoles,
+        assignedCentres: user.assignedCentres === undefined ? [] : user.assignedCentres
       })
     }
 
