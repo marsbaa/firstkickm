@@ -94,8 +94,10 @@ class UserEdit extends React.Component{
     var roleshtml = [];
     centres.map((centre) => {
       var btnClass = "datebtn"
-      if (user.assignedCentres.indexOf(centre.id) > -1) {
-        btnClass = "downbtn"
+      if (user.assignedCentres !== undefined) {
+        if (user.assignedCentres.indexOf(centre.id) > -1) {
+          btnClass = "downbtn"
+        }
       }
       centrehtml.push(<button className={btnClass} key={centre.id} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleCentreChange(e, centre.id)}}>{centre.name}</button>)
     })
