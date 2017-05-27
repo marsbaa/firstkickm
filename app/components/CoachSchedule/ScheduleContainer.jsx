@@ -4,11 +4,9 @@ import ScheduleList from 'ScheduleList'
 class ScheduleContainer extends React.Component{
 
   render() {
-    var calendarKey = this.props.params.calendarKey;
-    var date = this.props.params.date;
-
+    var { calendarKey, date, term } = this.props.params
    return (
-     <ScheduleList key={date} calendarKey={calendarKey} date={date} />
+     <ScheduleList key={date} calendarKey={calendarKey} date={date} term={term}/>
    );
   }
 }

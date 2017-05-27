@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router'
-import {FormGroup, ControlLabel} from 'react-bootstrap'
+import {FormGroup, ControlLabel, Row, Col, Badge} from 'react-bootstrap'
 import {connect} from 'react-redux';
 var actions = require('actions');
 import Select from 'react-select';
@@ -58,18 +58,15 @@ class Schedule extends React.Component{
 
 
   render() {
-    var {coaches, coachSchedule} = this.props;
-    var date = this.props.date;
+    var {coaches, coachSchedule, date, classKey, paid, numOfTrials} = this.props;
     var assignedCoaches = []
-    var classKey = this.props.classKey
     var coachOptions = []
-
     var classTimingClash = (classKey1, classKey2) => {
       var {centres} = this.props
       var class1, class2;
       centres.map((centre) => {
         if(centre.classes !== undefined) {
-          Object.keys(centre.classes).forEach((classId) => {
+          Object.keys(centre.classes).map((classId) => {
             if (classId === classKey1) {
               class1 = centre.classes[classId]
             }
@@ -108,7 +105,7 @@ class Schedule extends React.Component{
       coachOptions.push({label: coach.shortName , value: coach.key});
     })
     coachSchedule.map((schedule) => {
-      if (schedule.date === date) {
+      if (schedule.date === date){
         if (classTimingClash(schedule.classKey, classKey) && schedule.classKey !== classKey) {
           schedule.assigned.map((coach) => {
             var index = _.findIndex(coachOptions, {value: coach.coachKey})
@@ -119,18 +116,31 @@ class Schedule extends React.Component{
     })
     var cla = this.props.cla;
     var className = cla.ageGroup + " " + cla.startTime + " - " + cla.endTime;
-   return (
-           <FormGroup>
-             <ControlLabel>{className}</ControlLabel>
-              <Select
-                   name="form-field-name"
-                   multi={true}
-                   value={this.state.value}
-                   options={coachOptions}
-                   onChange={this.handleSelectChange.bind(this)}
-               />
-           </FormGroup>
 
+
+   return (
+     <div style={{marginTop: '10px'}}>
+       <Row style={{marginBottom:'3px'}}>
+         <Col xs={7} md={7} lg={7}>
+           <b>{className}</b>
+         </Col>
+         <Col xs={5} md={5} lg={5}>
+           P <Badge style={{backgroundColor:'#f5bb05', color: 'black'}}>{paid}</Badge>
+         {numOfTrials === 0 ? '' : <font> T <Badge>{numOfTrials}</Badge></font> }
+         </Col>
+       </Row>
+       <Row>
+         <Col xs={12} md={12} lg={12}>
+           <Select
+                name="form-field-name"
+                multi={true}
+                value={this.state.value}
+                options={coachOptions}
+                onChange={this.handleSelectChange.bind(this)}
+            />
+         </Col>
+       </Row>
+     </div>
    );
  }
  }

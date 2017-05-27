@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import moment from 'moment'
 
 
-class TermButton extends React.Component{
+class ScheduleTermButton extends React.Component{
 
   constructor(props) {
     super(props);
@@ -22,13 +22,10 @@ class TermButton extends React.Component{
   }
 
   render() {
-    var title = this.props.title;
-    var date = this.props.date;
-    var displayDate = this.props.displayDate;
-    var calendarKey = this.props.calendarKey;
+    var {title, date, displayDate, calendarKey, term} = this.props
 
   return (
-    <Link to={"/m/coachschedule/"+calendarKey+"/"+date}>
+    <Link to={"/m/coachschedule/"+calendarKey+"/"+term+"/"+date}>
       <table style={{textAlign:'center', float: 'left', width:'11.5%', margin:'0 1px'}}>
         <tbody>
         <tr style={{backgroundColor: this.state.topColor}}>
@@ -50,4 +47,4 @@ class TermButton extends React.Component{
 }
 
 
-export default (TermButton);
+export default (ScheduleTermButton);

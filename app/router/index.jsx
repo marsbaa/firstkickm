@@ -153,7 +153,7 @@ export default (
           </Route>
           <Route path="coachschedule" component={ScheduleApp}>
             <IndexRoute component={ScheduleMain} />
-            <Route path=":calendarKey/:date" component={ScheduleContainer} />
+            <Route path=":calendarKey/:term/:date" component={ScheduleContainer} />
           </Route>
           <Route path="coaches" component={CoachesApp}>
             <IndexRoute component={CoachesList}/>

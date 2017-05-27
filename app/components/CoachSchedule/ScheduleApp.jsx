@@ -1,9 +1,8 @@
 import React from 'react';
-import {Link, browserHistory} from 'react-router'
 import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap'
 var actions = require('actions');
-import TermButton from 'TermButton'
+import ScheduleTermButton from 'ScheduleTermButton'
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -52,7 +51,9 @@ class ScheduleApp extends React.Component {
     termDates = _.slice(termDates, 0, 8);
     var html = [];
     termDates.map((dateInfo) => {
-        html.push(<TermButton key={dateInfo.date+dateInfo.calendarKey} title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}
+        html.push(<ScheduleTermButton key={dateInfo.date+dateInfo.calendarKey}
+        term = {dateInfo.term}
+        title={"T"+dateInfo.term+"-S"+dateInfo.session} displayDate={moment(dateInfo.date).format('D MMM')} date={moment(dateInfo.date).format('YYYYMMDD')}
         calendarKey = {dateInfo.calendarKey}
         />)
     })

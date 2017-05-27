@@ -339,7 +339,7 @@ export var startStudents = () => {
     var students = snapshot.val();
     var parsedStudents = [];
 
-    Object.keys(students).forEach((studentId)=> {
+    Object.keys(students).map((studentId)=> {
       parsedStudents.push({
         key: studentId,
         ...students[studentId]
