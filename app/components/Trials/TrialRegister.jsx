@@ -93,11 +93,14 @@ class TrialRegister extends React.Component{
         var cla = selection.classes[classID];
         if (cla.ageGroup === childAgeGroup) {
           var classTime = cla.startTime + " - " + cla.endTime;
-          var classTimeDay = classTime+ " ("+cla.day+")";
-          payer.currentClassDay = _.capitalize(cla.day)
-          payer.currentClassTime = classTime
-          payer.ageGroup = childAgeGroup
-          payer.centre = selection.name
+          var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
+          var day = moment(payer.dateOfTrial).format("dddd")
+          if (classTimeDay === payer.timeOfTrial + " ("+ _.capitalize(day)+")"){
+            payer.currentClassDay = _.capitalize(cla.day)
+            payer.currentClassTime = classTime
+            payer.ageGroup = childAgeGroup
+            payer.centre = selection.name
+          }  
         }
       });
     })

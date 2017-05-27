@@ -49,12 +49,12 @@ class TrialRegisterChildForm extends React.Component{
   timeSelect(e) {
     e.preventDefault();
     var {centres} = this.props;
+    var centre;
     centres.map((c) => {
       if(c.id === this.state.selectedCentre.toString()) {
         centre = c;
       }
     });
-    console.log(centre)
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       var classTime = cla.startTime + " - " + cla.endTime;
@@ -149,7 +149,9 @@ class TrialRegisterChildForm extends React.Component{
       if (cla.ageGroup === childAgeGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
-        if (classTimeDay === trial.currentClassTime+' ('+trial.currentClassDay+')'){
+        console.log(classTimeDay)
+        console.log(trial.currentClassTime+' ('+_.capitalize(trial.currentClassDay)+')')
+        if (classTimeDay === trial.currentClassTime+' ('+_.capitalize(trial.currentClassDay)+')'){
           termKey = cla.termKey
         }
         classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
