@@ -5,7 +5,7 @@ export function classToday(calendars, centreKey) {
   var today = false;
   Object.keys(calendars).map((calendarKey) => {
     var calendar = calendars[calendarKey]
-    if (calendars[calendarKey].centreKey === centreKey) {
+    if (calendar.centreKey === centreKey) {
       Object.keys(calendar.terms).map((termId) => {
         var term = calendar.terms[termId]
         term.map ((date)=> {

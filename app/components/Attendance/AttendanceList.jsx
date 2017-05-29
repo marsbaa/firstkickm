@@ -55,15 +55,8 @@ class AttendanceList extends React.Component{
     var {students, searchText, selection, calendars, makeUps, dispatch} = this.props;
     var html=[];
 
-    if (true) {
+    if (classToday(calendars, selection.key)) {
       var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
-      var filteredNoVenue = _.filter(students, (o) => {
-        if (Number.isInteger(o.venueId)){
-          dispatch(actions.convertVenueToString(o.key, o.venueId))
-          return true
-        }
-      })
-      console.log(filteredNoVenue)
       var filteredNotActive = _.filter(filteredStudents, (o) => {return o.status==='Not Active'})
       filteredStudents = _.filter(filteredStudents, (o) => {
         return !(o.status==='Not Active')})

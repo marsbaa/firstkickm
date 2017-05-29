@@ -5,12 +5,12 @@ import moment from 'moment'
 
 export var convertVenueToString = (key, venueId) => {
   return (dispatch) => {
-    var studentRef = firebaseRef.child('students/'+key+'/venueId');
+    var studentRef = firebaseRef.child('students/'+key);
     venueId = venueId.toString()
     studentRef.update({
       venueId
     })
-  }  
+  }
 }
 //Login & Logout Actions
 
