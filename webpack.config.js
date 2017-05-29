@@ -90,6 +90,7 @@ module.exports = {
       './app/css'
     ],
     alias: {
+      helper: 'app/helper/index.jsx',
       actions: 'app/actions/actions.jsx',
       reducers: 'app/reducers/reducers.jsx',
       configureStore: 'app/store/configureStore.jsx'

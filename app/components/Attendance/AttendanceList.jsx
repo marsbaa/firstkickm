@@ -9,6 +9,7 @@ import StudentsFilter from 'StudentsFilter'
 import Search from 'Search'
 import _ from 'lodash'
 import moment from 'moment'
+import {classToday} from 'helper'
 
 class AttendanceList extends React.Component{
 
@@ -51,25 +52,18 @@ class AttendanceList extends React.Component{
 
 
   render() {
-    var {students, searchText, selection, calendars, makeUps} = this.props;
-    var today=-1;
+    var {students, searchText, selection, calendars, makeUps, dispatch} = this.props;
     var html=[];
-    Object.keys(calendars).map((calendarKey) => {
-      var calendar = calendars[calendarKey]
-      if (calendars[calendarKey].centreKey === selection.key) {
-        Object.keys(calendar.terms).map((termId) => {
-          var term = calendar.terms[termId]
-          term.map ((date)=> {
-            if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
-              today = 1;
-            }
-          })
-        })
-      }
-    });
 
-    if (today !== -1) {
+    if (true) {
       var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
+      var filteredNoVenue = _.filter(students, (o) => {
+        if (Number.isInteger(o.venueId)){
+          dispatch(actions.convertVenueToString(o.key, o.venueId))
+          return true
+        }
+      })
+      console.log(filteredNoVenue)
       var filteredNotActive = _.filter(filteredStudents, (o) => {return o.status==='Not Active'})
       filteredStudents = _.filter(filteredStudents, (o) => {
         return !(o.status==='Not Active')})
@@ -129,9 +123,8 @@ class AttendanceList extends React.Component{
           }
         })
       }
+      html.push( <AttendanceClassList key='Not Active' name="Not Active" group={filteredNotActive} date={this.state.startDate}/> )
     }
-    html.push( <AttendanceClassList key='Not Active' name="Not Active" group={filteredNotActive} date={this.state.startDate}/> )
-
 
    return (
      <div>

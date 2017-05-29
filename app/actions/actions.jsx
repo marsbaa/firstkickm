@@ -2,6 +2,16 @@ import firebase, {firebaseRef} from 'app/firebase';
 import axios from 'axios'
 import moment from 'moment'
 
+
+export var convertVenueToString = (key, venueId) => {
+  return (dispatch) => {
+    var studentRef = firebaseRef.child('students/'+key+'/venueId');
+    venueId = venueId.toString()
+    studentRef.update({
+      venueId
+    })
+  }  
+}
 //Login & Logout Actions
 
 export var startLogin = (email, password) => {
