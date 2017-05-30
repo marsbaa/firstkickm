@@ -12,6 +12,7 @@ import SendMail from 'SendMail'
 import InvoiceTemplate from 'InvoiceTemplate'
 import {firebaseRef} from 'app/firebase'
 import {browserHistory} from 'react-router'
+import {termToday, findCalendarKey, getCalendarDates} from 'helper'
 
 class PaymentForm extends React.Component {
 
@@ -21,8 +22,8 @@ class PaymentForm extends React.Component {
       payer : [],
       startDate: [],
       receivedDate: moment(),
-      termDates: [],
-      termKeys: [],
+      calendarDates: [],
+      calendarKeys: [],
       numOfSession: [],
       promotion: 0,
       selectedTermDates: [],
@@ -41,7 +42,70 @@ class PaymentForm extends React.Component {
 
   componentWillMount() {
     window.scrollTo(0,0)
+    var {students, calendars, selection, coaches} = this.props
+    //Initiate Payer
+    var studentId = this.props.params.studentId;
+    var contact = null;
+    var payer = [];
+
+    var filteredStudents = _.filter(students, (o) => {
+      return !(o.status==='Not Active')})
+
+    var student = _.find(filteredStudents, {key: studentId})
+
+    if (student.email !== '') {
+      if (_.findIndex(coaches, {'email': student.email}) !== -1) {
+        this.setState({coachDiscount: true})
+      }
+    }
+    if (student.contact !== "" && student.contact !== undefined){
+      payer = _.filter(filteredStudents, {contact: student.contact})
+    }
+    else {
+      payer.push(student)
+    }
+    this.setState({payer});
+
+    //Initiate Selectable Term Dates
+    var calendarDates = [];
+    var startDates = [];
+    var calendarKeys = [];
+
+    payer.map((child, id) => {
+
+      var currentTerm = termToday(calendars, selection.key)
+      var calendarKey = findCalendarKey(child, selection.classes)
+      var calendar = calendars[calendarKey]
+      var startDate = moment(calendar.terms[currentTerm][0])
+      var calendarDate = getCalendarDates(calendar)
+
+      if (child.payments !== undefined) {
+        Object.keys(child.payments).map((paymentId) => {
+          var payment = child.payments[paymentId]
+          if(payment.termsPaid !== undefined) {
+            Object.keys(payment.termsPaid).map((termId) => {
+              var term = payment.termsPaid[termId]
+              term.map((session) => {
+                var index = _.findIndex(calendarDate, (d) => {
+                  return moment(d).isSame(session.date)})
+                calendarDate.splice(index, 1)
+              })
+            })
+          }
+        })
+      }
+
+      startDates[id] = startDate;
+      calendarDates[id] = calendarDate;
+      calendarKeys[id] = calendarKey;
+    })
+
+    this.setState({calendarKeys})
+    this.setState({calendarDates})
+    this.setState({startDate : startDates});
+
   }
+
 
   handleProrate(e, count) {
     var prorateAmount = this.state.prorateAmount
@@ -63,7 +127,7 @@ class PaymentForm extends React.Component {
     });
   }
 
-   handleForm(e, type) {
+  handleForm(e, type) {
     e.preventDefault()
     this.setState({form : type})
   }
@@ -108,8 +172,6 @@ class PaymentForm extends React.Component {
     if (count === 0) {
         this.setState({show: true})
     }
-
-
   }
 
   formSubmit(e) {
@@ -170,7 +232,7 @@ class PaymentForm extends React.Component {
 
       Object.keys(calendars).map((calendarKey) => {
         var calendar = calendars[calendarKey]
-        if(calendar.key === this.state.termKeys[id]) {
+        if(calendar.key === this.state.calendarKeys[id]) {
           actualTerm = calendar.terms[termId]
         }
       })
@@ -281,87 +343,8 @@ class PaymentForm extends React.Component {
   browserHistory.push('/m/payment');
 }
 
-  componentWillMount() {
-    var {students, calendars, selection, coaches} = this.props
-    //Initiate Payer
-    var studentId = this.props.params.studentId;
-    var contact = null;
-    var payer = [];
-    var filteredStudents = _.filter(students, (o) => {
-      return !(o.status==='Not Active')})
-    var student = _.find(filteredStudents, {key: studentId})
-    if (student.email !== '') {
-      if (_.findIndex(coaches, {'email': student.email}) !== -1) {
-        this.setState({coachDiscount: true})
-      }
-    }
-    if (student.contact !== "" && student.contact !== undefined){
-      payer = _.filter(filteredStudents, {contact: student.contact})
-    }
-    else {
-      payer.push(student)
-    }
-    this.setState({payer});
 
-    //Initiate Selectable Term Dates
-    var termDates = [];
-    var startDates = [];
-    var termKeys = [];
-    payer.map((child, id) => {
-      var termKey;
-      Object.keys(selection.classes).forEach((classId) => {
-          var cla = selection.classes[classId];
-          if (cla.day.toLowerCase() === child.currentClassDay.toLowerCase()) {
-            var classTime = cla.startTime +" - "+cla.endTime;
-            if (classTime === child.currentClassTime) {
-              termKey = cla.termKey
-            }
-          }
-      })
 
-      var startDate;
-      var count = 0;
-      var termDate = [];
-      Object.keys(calendars).map((calendarKey) => {
-        var calendar = calendars[calendarKey]
-        if(calendar.key === termKey) {
-          Object.keys(calendar.terms).map((termId) => {
-            var term = calendar.terms[termId]
-            term.map((date) => {
-              if (moment().isSameOrBefore(date, 'day') && count === 0) {
-                startDate = moment(date);
-                count += 1;
-              }
-              termDate.push(moment(date));
-            })
-          })
-        }
-      })
-      if (child.payments !== undefined) {
-        Object.keys(child.payments).map((paymentId) => {
-          var payment = child.payments[paymentId]
-          if(payment.termsPaid !== undefined) {
-            Object.keys(payment.termsPaid).map((termId) => {
-              var term = payment.termsPaid[termId]
-              term.map((session) => {
-                var index = _.findIndex(termDate, (d) => {
-                  return moment(d).isSame(session.date)})
-                termDate.splice(index, 1)
-              })
-            })
-          }
-      })
-    }
-      startDates[id] = startDate;
-      termDates[id] = termDate;
-      termKeys[id] = termKey;
-    })
-
-    this.setState({termKeys})
-    this.setState({termDates})
-    this.setState({startDate : startDates});
-
-}
   render() {
     var {calendars, selection} = this.props;
     //Render Tabs
@@ -371,33 +354,38 @@ class PaymentForm extends React.Component {
     var email = ''
     this.state.payer.map((student, id) => {
       email = student.email
-      tabs.push(<Tab eventKey={id} key={student.key} title={student.childName}>
-         <Row style={{padding: '10px 20px'}}>
-           <Col xs={12} md={12}>
-             <FormGroup style={{marginBottom: '0'}}>
-               <ControlLabel>Start Date</ControlLabel>
-                 <DatePicker
-                   id = {"datePicker"+ id}
-                   dateFormat="YYYY-MM-DD"
-                   selected={this.state.startDate[id]}
-                   includeDates={this.state.termDates[id]}
-                   onChange={(e) => {
-                         this.handleChange(moment(e), id)}}
-                   />
-             </FormGroup>
-           </Col>
-        </Row>
-        <Row style={{padding: '5px 20px'}}>
-          <Col>
-            <PaymentDatesSelector key={id}
-              startDate = {this.state.startDate[id]}
-              termKey={this.state.termKeys[id]} termDates={this.state.termDates[id]}
-              deselected={this.state.deselectedTermDates[id]}
-              onChange={this.handleDatesChange.bind(this)}
-              onDeselect={this.handleDeSelected.bind(this)}
-              payerId = {id} />
-          </Col>
-        </Row>
+      tabs.push(
+        <Tab
+          eventKey={id}
+          key={student.key}
+          title={student.childName}>
+           <Row style={{padding: '10px 20px'}}>
+             <Col xs={12} md={12}>
+               <FormGroup style={{marginBottom: '0'}}>
+                 <ControlLabel>Start Date</ControlLabel>
+                   <DatePicker
+                     id = {"datePicker"+ id}
+                     dateFormat="YYYY-MM-DD"
+                     selected={this.state.startDate[id]}
+                     includeDates={this.state.calendarDates[id]}
+                     onChange={(e) => {
+                           this.handleChange(moment(e), id)}}
+                     />
+               </FormGroup>
+             </Col>
+           </Row>
+          <Row style={{padding: '5px 20px'}}>
+            <Col>
+              <PaymentDatesSelector key={id}
+                startDate = {this.state.startDate[id]}
+                calendarKey={this.state.calendarKeys[id]} calendarDates={this.state.calendarDates[id]}
+                deselected={this.state.deselectedTermDates[id]}
+                onChange={this.handleDatesChange.bind(this)}
+                onDeselect={this.handleDeSelected.bind(this)}
+                student={student}
+                payerId = {id} />
+            </Col>
+          </Row>
         <Row>
           <Col md={12} xs={12}>
             <Panel header={<font style={{fontSize: '16px', fontWeight: 'bold'}}>Pro-rate from Last Term</font>}>
@@ -472,7 +460,7 @@ class PaymentForm extends React.Component {
           var actualTerm;
           Object.keys(calendars).map((calendarKey) => {
             var calendar = calendars[calendarKey]
-            if(calendar.key === this.state.termKeys[id]) {
+            if(calendar.key === this.state.calendarKeys[id]) {
               actualTerm = calendar.terms[termId]
             }
           })
@@ -710,7 +698,9 @@ class PaymentForm extends React.Component {
        </Modal>
        <Row>
          <Col md={12} xs={12}>
-           <Tabs style={{marginTop:'5px', fontWeight:'600'}} defaultActiveKey={0} id="uncontrolled-tab-example">
+           <Tabs
+             style={{marginTop:'5px', fontWeight:'600'}} defaultActiveKey={0}
+             id="studentPayments">
             {tabs}
           </Tabs>
          </Col>

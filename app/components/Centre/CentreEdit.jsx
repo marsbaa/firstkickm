@@ -1,7 +1,7 @@
 import React from 'react'
 import {Grid,Row,Panel,Col, Form, FormControl,ControlLabel, FormGroup, Button, HelpBlock,Image, Modal} from 'react-bootstrap'
 import {btn} from 'styles.css'
-import TermList from 'TermList'
+import CalendarList from 'CalendarList'
 import ClassList from 'ClassList'
 import DeleteModal from 'DeleteModal'
 import {Link, browserHistory} from 'react-router'
@@ -208,11 +208,11 @@ class CentreEdit extends React.Component{
              </div>
              <ControlLabel>Term Dates</ControlLabel>
                <Link to={"/m/centres/"+centreID+
-                 "/add"} activeClassName="active"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}}>Add Term</button>
+                 "/add"} activeClassName="active"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}}>Add Calendar</button>
                </Link>
              <div>
               <DeleteModal showModal={this.state.showModal} closeModal={this.close} centreKey={centre.key} deleteKey={this.state.delete} type={this.state.type}/>
-              <TermList centreKey={centre.key} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
+              <CalendarList centreKey={centre.key} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type}/>
              </div>
              <button className="submitbtn" style={{width: '100%', margin: '25px 0px'}} onClick={this.formSubmit}>Save Centre Profile</button>
            </Col>

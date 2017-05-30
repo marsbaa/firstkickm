@@ -86,6 +86,7 @@ module.exports = {
       './app/components/Students',
       './app/components/Trials',
       './app/components/User',
+      './app/components/Calendar',
       './app/api',
       './app/css'
     ],

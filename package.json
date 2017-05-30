@@ -22,6 +22,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
+    "compression-webpack-plugin": "^0.4.0",
     "create-react-class": "^15.5.2",
     "css-loader": "^0.23.1",
     "express": "^4.15.2",
@@ -58,8 +59,8 @@
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.8",
+    "victory": "^0.20.0",
     "webpack": "^1.15.0",
-    "webpack-dev-server": "^1.16.4",
-    "compression-webpack-plugin": "^0.4.0"
+    "webpack-dev-server": "^1.16.4"
   }
 }

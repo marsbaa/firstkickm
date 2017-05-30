@@ -87,12 +87,41 @@ export function termToday(calendars, centreKey) {
         if(moment().isBetween(term[0], term[term.length-1], null, '[]')) {
           todayTerm = id
         }
+        else if (moment().isAfter(term[term.length-1])){
+          todayTerm = id + 1
+        }
       })
     }
   })
   return todayTerm
 }
 
+export function findCalendarKey(student, classes) {
+  var calendarKey
+  Object.keys(classes).forEach((classId) => {
+      var {ageGroup, day, startTime, endTime, termKey} = classes[classId];
+      if (ageGroup === student.ageGroup) {
+        if (day.toLowerCase() === student.currentClassDay.toLowerCase()) {
+          var classTime = startTime + " - " + endTime;
+          if (classTime === student.currentClassTime) {
+            calendarKey = termKey
+          }
+        }
+      }
+  })
+  return calendarKey
+}
+
+export function getCalendarDates(calendar) {
+  var calendarDates = []
+  Object.keys(calendar.terms).map((termId) => {
+    var term = calendar.terms[termId]
+    term.map((date) => {
+      calendarDates.push(moment(date));
+    })
+  })
+  return calendarDates
+}
 
 export function isManager(auth, users) {
   var user = _.find(users, ['email', auth.email])

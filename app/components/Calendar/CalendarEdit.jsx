@@ -1,17 +1,17 @@
 import React from 'react';
 import {Grid, Row, Col, FormGroup, ControlLabel, FormControl, HelpBlock, Button} from 'react-bootstrap'
 import TermDatesSelector from 'TermDatesSelector'
-var actions = require('actions');
-var {connect} = require('react-redux');
+import {connect} from 'react-redux'
 import {browserHistory} from 'react-router'
 import {Link} from 'react-router'
+var actions = require('actions');
 
-class TermEdit extends React.Component{
+class CalendarEdit extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      errorTermName: null,
-      errorMessageTermName: ""
+      errorCalendarName: null,
+      errorMessageCalendarName: ""
     }
   }
 
@@ -21,26 +21,26 @@ class TermEdit extends React.Component{
     browserHistory.push('/m/centres/'+ centreID);
   }
 
-  saveTerm(e, centreKey) {
+  saveCalendar(e, centreKey) {
     e.preventDefault();
     var centreID = this.props.params.centreID;
     var {dispatch, terms, calendars} = this.props;
     var calendarKey = this.props.params.calendarKey;
-    var termName = document.getElementById("termName").value;
-    if (termName === "") {
+    var calendarName = document.getElementById("calendarName").value;
+    if (calendarName === "") {
       this.setState({
-        errorTermName: 'error',
-        errorMessageTermName: 'Field Empty. Please enter Term Name'
+        errorCalendarName: 'error',
+        errorMessageCalendarName: 'Field Empty. Please enter Calendar Name'
       });
     }
     else {
       this.setState({
-        errorTermName: null,
-        errorMessageTermName: ''
+        errorCalendarName: null,
+        errorMessageCalendarName: ''
       });
       if (calendarKey === 'add') {
         var calendar = {
-          name: termName,
+          name: calendarName,
           centreKey,
           terms
         }
@@ -48,7 +48,7 @@ class TermEdit extends React.Component{
       }
       else {
         var calendar = {
-          name: termName,
+          name: calendarName,
           centreKey,
           terms,
         }
@@ -80,7 +80,7 @@ class TermEdit extends React.Component{
     var centreID = this.props.params.centreID;
     var calendarKey = this.props.params.calendarKey;
     var {centres, calendars} = this.props;
-    var term = {};
+    var calendar = {};
     var count = 0;
     var numOfTerms = 6;
     var centre = {};
@@ -91,11 +91,9 @@ class TermEdit extends React.Component{
     });
 
     if (calendarKey !== 'add') {
-      term = calendars[calendarKey];
-      if (term !== undefined) {
-        numOfTerms = Object.keys(term.terms)[Object.keys(term.terms).length-1];
-
-
+      calendar = calendars[calendarKey];
+      if (calendar !== undefined) {
+        numOfTerms = Object.keys(calendar.terms)[Object.keys(calendar.terms).length-1];
       }
     }
 
@@ -103,18 +101,18 @@ class TermEdit extends React.Component{
        <Grid>
          <Row>
            <Col md={6}>
-             <FormGroup validationState={this.state.errorTermName}>
-               <ControlLabel>Term Name</ControlLabel>
+             <FormGroup validationState={this.state.errorCalendarName}>
+               <ControlLabel>Calendar Name</ControlLabel>
                <FormControl style={{marginBottom: '10px'}}
-               id="termName"
+               id="calendarName"
                type="text"
-               defaultValue={term.name}
-               placeholder="Enter Name of Term"/>
-             <HelpBlock>{this.state.errorMessageTermName}</HelpBlock>
+               defaultValue={calendar.name}
+               placeholder="Enter Name of Calendar"/>
+             <HelpBlock>{this.state.errorMessageCalendarName}</HelpBlock>
              </FormGroup>
              <TermDatesSelector mode={calendarKey} numOfTerms={numOfTerms}/>
              <Button onClick={this.goBack}>Cancel</Button>
-             <Button onClick={(e) => this.saveTerm(e, centre.key)}>Save</Button>
+             <Button onClick={(e) => this.saveCalendar(e, centre.key)}>Save</Button>
           </Col>
         </Row>
       </Grid>
@@ -123,4 +121,4 @@ class TermEdit extends React.Component{
 }
 
 export default connect((state) => {return state;
-})(TermEdit);
+})(CalendarEdit);

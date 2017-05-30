@@ -13,7 +13,7 @@ import UserEdit from 'UserEdit'
 import CentresApp from 'CentresApp';
 import CentreEdit from 'CentreEdit'
 import CentresList from 'CentresList'
-import TermEdit from 'TermEdit'
+import CalendarEdit from 'CalendarEdit'
 import ClassEdit from 'ClassEdit'
 
 //Components for Trials
@@ -118,7 +118,7 @@ export default (
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
             <Route path=":centreID" component={CentreEdit}/>
-            <Route path=":centreID/:calendarKey" component={TermEdit} />
+            <Route path=":centreID/:calendarKey" component={CalendarEdit} />
             <Route path=":centreID/class/:classKey" component={ClassEdit} />
           </Route>
           <Route path="trials" component={TrialsApp}>
