@@ -5,6 +5,7 @@ export function findPaymentDetails(students, termDates, selectedTerm) {
 
   var paid = []
   var unpaid = []
+  var paidDetails = []
   var paidAmount = 0
 
   Object.keys(students).map((studentId) => {
@@ -21,6 +22,7 @@ export function findPaymentDetails(students, termDates, selectedTerm) {
 
     if (payment !== undefined) {
       paid.push(student)
+      paidDetails.push(payment)
       paidAmount += parseInt(payment.total)
       p = true
     }
@@ -51,6 +53,7 @@ export function findPaymentDetails(students, termDates, selectedTerm) {
   return {
     paid,
     paidAmount,
+    paidDetails,
     unpaid
   }
 }

@@ -66,7 +66,7 @@ class PaymentReport extends React.Component {
       filteredStudents = _.filter(filteredStudents, (o) => {
         return !(o.status==='Not Active')})
 
-       const {paid, paidAmount, unpaid} = findPaymentDetails(filteredStudents, termDates, this.state.selectedTerm)
+       const {paid, paidAmount, paidDetails, unpaid} = findPaymentDetails(filteredStudents, termDates, this.state.selectedTerm)
 
        //Display Class Time Day Header
        if (_.size(paid) !== 0 || _.size(unpaid) !== 0) {
@@ -105,7 +105,7 @@ class PaymentReport extends React.Component {
              <PayerReport
                key={paid[paidId].key}
                student={paid[paidId]}
-               paymentDetails={paid[paidId]}  selectedTerm={this.state.selectedTerm}/>)
+               paymentDetails={paidDetails[paidId]}  selectedTerm={this.state.selectedTerm}/>)
          })
        }
 
