@@ -7,6 +7,9 @@ import moment from 'moment'
 import {normalbtn, selectedbtn} from 'styles.css'
 import {Creatable} from 'react-select'
 import 'react-select/dist/react-select.css';
+import {isManager} from 'helper'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 class TotalCollection extends React.Component {
 
@@ -15,9 +18,11 @@ class TotalCollection extends React.Component {
     this.state = {
       filter: 'all',
       show: false,
-      value: ''
+      value: '',
+      startDate: moment()
     }
     this.removeExpense = this.removeExpense.bind(this)
+    this.handleDateChange = this.handleDateChange.bind(this)
     }
 
   componentWillMount(){
@@ -82,11 +87,19 @@ class TotalCollection extends React.Component {
       this.setState({filter: 'pm'})
     }
   }
+
+  handleDateChange(date) {
+    this.setState({
+      startDate: date
+    });
+  }
+
+
   render() {
-    var {payments, selection, expenses} = this.props;
+    var {payments, selection, expenses, auth, users} = this.props;
     var html = []
     var filteredPayments = _.filter(payments, (p) => {
-      return moment(p.date).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')
+      return moment(p.date).format('YYYY-MM-DD') === moment(this.state.startDate).format('YYYY-MM-DD')
     })
     var filteredExpenses = _.filter(expenses, ['centreId', selection.id])
     if (this.state.filter === 'am') {
@@ -283,6 +296,22 @@ class TotalCollection extends React.Component {
               <Button bsSize='large' onClick={close}>No</Button>
             </Modal.Footer>
          </Modal>
+         {isManager(auth, users)?
+         <Row style={{padding: '8px 10px', backgroundColor: '#ffc600', color: '#656565'}}>
+           <Col xs={12} md={12}>
+             <FormGroup style={{marginBottom: '0'}}>
+               <ControlLabel>Date of Session</ControlLabel>
+                 <DatePicker
+                   id = "datePicker"
+                   dateFormat="YYYY-MM-DD"
+                   selected={this.state.startDate}
+                   includeDates={this.state.termDates}
+                   onChange={(e) => {
+                         this.handleDateChange(moment(e))}}
+                   />
+             </FormGroup>
+           </Col>
+         </Row> : null}
          <Row style={{textAlign: 'center', margin: '10px 10px'}}>
            <Col xs={8} md={8}>
              <ButtonGroup>

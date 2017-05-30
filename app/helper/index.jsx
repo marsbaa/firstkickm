@@ -92,3 +92,19 @@ export function termToday(calendars, centreKey) {
   })
   return todayTerm
 }
+
+
+export function isManager(auth, users) {
+  var user = _.find(users, ['email', auth.email])
+  if (user !== undefined) {
+    if (user.assignedRoles === 'Manager') {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+  else {
+    return false
+  }
+}
