@@ -113,7 +113,7 @@ class TrialRegisterChildForm extends React.Component{
     var {centres, ageGroup, calendars} = this.props;
     var trial = this.props.trial
     var childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth)
-    console.log(childAgeGroup)
+
 
     //Centre List
     var centreOptions = [];
@@ -149,9 +149,6 @@ class TrialRegisterChildForm extends React.Component{
     }
 
     var calendar = calendars[cKey]
-    console.log(calendars)
-    console.log(centre.classes)
-    console.log(cKey)
     Object.keys(calendar.terms).map((termId) => {
       var term = calendar.terms[termId]
       term.map((dates) => {

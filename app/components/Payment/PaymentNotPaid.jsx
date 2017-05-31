@@ -130,7 +130,7 @@ Please be reminded to make term 3 payment this weekend if you have not made any 
 If you would like to pay by Internet banking transfer, please screen shot your payment proof and send to our number through sms or whatsapp at +6591010666.  Our bank account is OCBC bank account no 526-286570-001
 Thank you
 FKA-Admin`
-      console.log(contacts)
+      
    return (
      <div>
         <SMSModal showModal={this.state.show} closeModal={this.close.bind(this)} title="SMS Payment Reminder" message={encodeURIComponent(message)} contacts={contacts}/>

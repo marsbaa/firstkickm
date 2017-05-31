@@ -55,7 +55,6 @@ class PaymentList extends React.Component {
       invoiceKey: newKey,
       email: document.getElementById('email').value
     }
-    console.log(payment)
     dispatch(actions.addPayment(payment))
     var invoiceHTML = InvoiceTemplateOthers.render(payment)
     var updates = {}

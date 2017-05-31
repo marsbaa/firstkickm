@@ -84,12 +84,13 @@ export function getTerm(calendars, centreKey, date) {
     var calendar = calendars[calendarKey]
     if (calendar.centreKey === centreKey) {
       var terms = calendar.terms;
-      terms.map((term, id) => {
+      Object.keys(terms).map((id) => {
+        var term = terms[id]
         if(moment(date).isBetween(term[0], term[term.length-1], null, '[]')) {
-          t = id
+          t = parseInt(id)
         }
         else if (moment(date).isAfter(term[term.length-1])){
-          t = id + 1
+          t = parseInt(id) + 1
         }
       })
     }

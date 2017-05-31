@@ -281,6 +281,8 @@ componentDidMount () {
       var calendarKey = getCalendarKey(child, selection.classes)
       var currentTerm = getTerm(calendars, selection.key, moment())
       var calendar = calendars[calendarKey]
+      console.log(calendarKey)
+      console.log(currentTerm)
       var startDate = moment(calendar.terms[currentTerm][0])
       var calendarDate = getCalendarDates(calendar)
 
