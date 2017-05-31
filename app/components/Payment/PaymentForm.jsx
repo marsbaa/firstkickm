@@ -12,7 +12,7 @@ import SendMail from 'SendMail'
 import InvoiceTemplate from 'InvoiceTemplate'
 import {firebaseRef} from 'app/firebase'
 import {browserHistory} from 'react-router'
-import {termToday, findCalendarKey, getCalendarDates} from 'helper'
+import {getTerm, getCalendarKey, getCalendarDates} from 'helper'
 
 class PaymentForm extends React.Component {
 
@@ -73,8 +73,8 @@ class PaymentForm extends React.Component {
 
     payer.map((child, id) => {
 
-      var currentTerm = termToday(calendars, selection.key)
-      var calendarKey = findCalendarKey(child, selection.classes)
+      var currentTerm = getTerm(calendars, selection.key, moment())
+      var calendarKey = getCalendarKey(child, selection.classes)
       var calendar = calendars[calendarKey]
       var startDate = moment(calendar.terms[currentTerm][0])
       var calendarDate = getCalendarDates(calendar)

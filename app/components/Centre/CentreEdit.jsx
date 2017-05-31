@@ -58,6 +58,7 @@ class CentreEdit extends React.Component{
   formSubmit(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
+    var centre = centres[this.props.params.centreKey]
     var centreID = document.getElementById('centreID').value;
     var centreName = document.getElementById('centreName').value;
     var logoURL = document.getElementById('logoURL').value;
@@ -91,9 +92,8 @@ class CentreEdit extends React.Component{
       })
     }
 
-    var currentCentreID = this.props.params.centreID;
-    if (currentCentreID === '0'){
-      var centreExist = _.findIndex(centres, (c) => {return c.id === centreID});
+    if (centre.key === '0'){
+      var centreExist = _.findIndex(centres, {id: centreID})
       if (centreExist === -1) {
         this.setState({
           errorID: null,
@@ -116,13 +116,12 @@ class CentreEdit extends React.Component{
     }
 
     else if (count === 0) {
-        var selectedCentre = _.find(centres, {id: centreID});
-        var centre = {
-          key: selectedCentre.key,
+        var selectedCentre = {
+          key: centre.key,
           id: centreID,
           name: centreName,
           logoURL: logoURL,
-          classes: selectedCentre.classes
+          classes: centre.classes
         };
         dispatch(actions.updateCentre(centre));
         browserHistory.push('/m/centres');
@@ -149,15 +148,11 @@ class CentreEdit extends React.Component{
   }
 
   render() {
-    var centreID = this.props.params.centreID;
-    var centre = {key:'', id: '', name: '', logoURL: ''};
     var {centres} = this.props;
-    if (centreID != '0') {
-      centres.map((c) => {
-        if(c.id === centreID) {
-          centre = c;
-        }
-      });
+    var centreKey = this.props.params.centreKey;
+    var centre = {key:'', id: '', name: '', logoURL: ''};
+    if (centreKey != '0') {
+      centre = centres[centreKey]
     }
     else {
       centre = {id: '', name: '', logoURL: ''};
@@ -200,14 +195,14 @@ class CentreEdit extends React.Component{
            <Col md={6}>
              <FormGroup>
                <ControlLabel>Class Day & Time</ControlLabel>
-               <Link to={"/m/centres/"+centreID+"/class/add"}>
+               <Link to={"/m/centres/"+centreKey+"/class/add"}>
                  <button className="btn" style={{float: 'right', backgroundColor: '#f5bb05', marginBottom: '5px'}} >Add Class</button></Link>
              </FormGroup>
              <div style={{marginBottom: '20px'}}>
-               <ClassList centreId={centreID} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type} />
+               <ClassList centreKey={centreKey} openModal={this.open} handleDeleteKey={this.delete} handleDeleteType={this.type} />
              </div>
              <ControlLabel>Term Dates</ControlLabel>
-               <Link to={"/m/centres/"+centreID+
+               <Link to={"/m/centres/"+centreKey+
                  "/add"} activeClassName="active"><button className="btn" style={{float: 'right', backgroundColor: '#f5bb05'}}>Add Calendar</button>
                </Link>
              <div>

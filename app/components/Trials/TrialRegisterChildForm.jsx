@@ -4,6 +4,7 @@ import {browserHistory} from 'react-router'
 var {connect} = require('react-redux')
 var actions = require('actions')
 import {Panel, Grid, Row, Col, FormControl, FormGroup, ControlLabel, Radio, Checkbox,Button, Modal} from 'react-bootstrap'
+import {getAgeGroup, getCentreKey} from 'helper'
 
 class TrialRegisterChildForm extends React.Component{
 
@@ -14,12 +15,24 @@ class TrialRegisterChildForm extends React.Component{
       trialDate : '',
       notJoining: false,
       showModal: false,
-      termKey: ''
+      calendarKey: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.close = this.close.bind(this)
     this.open = this.open.bind(this)
 
+  }
+
+  componentWillMount() {
+    var {centres} = this.props
+    var trial = this.props.trial;
+    this.setState({selectedCentre: getCentreKey(centres, trial.venueId)});
+    this.setState({trialDate: trial.dateOfTrial});
+  }
+
+
+  componentDidMount () {
+    window.scrollTo(0, 0)
   }
 
   close() {
@@ -49,18 +62,14 @@ class TrialRegisterChildForm extends React.Component{
   timeSelect(e) {
     e.preventDefault();
     var {centres} = this.props;
-    var centre;
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
+    var centre = centres[this.state.selectedCentre]
+
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       var classTime = cla.startTime + " - " + cla.endTime;
       var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
       if (classTimeDay === e.target.value){
-        this.setState({termKey : cla.termKey})
+        this.setState({calendarKey : cla.calendarKey})
       }
     });
 
@@ -73,11 +82,7 @@ class TrialRegisterChildForm extends React.Component{
     });
   }
 
-  componentWillMount() {
-    var trial = this.props.trial;
-    this.setState({selectedCentre: trial.venueId});
-    this.setState({trialDate: trial.dateOfTrial});
-  }
+
 
   onFormSubmit(e) {
     e.preventDefault();
@@ -104,55 +109,32 @@ class TrialRegisterChildForm extends React.Component{
 
   }
 
-  componentDidMount () {
-    window.scrollTo(0, 0)
-  }
-
   render() {
     var {centres, ageGroup, calendars} = this.props;
     var trial = this.props.trial
-    var getAge = (dob) => {
-    var now = moment();
-    var dateofbirth = moment(JSON.stringify(dob), "YYYY-MM-DD");
-    return now.diff(dateofbirth, 'years');
-  };
-    var childAgeGroup;
-    ageGroup.map((group) => {
-      var age = getAge(trial.dateOfBirth);
-      if (age >= group.minAge && age <= group.maxAge) {
-        childAgeGroup = group.name;
-        if (childAgeGroup === 'U8B') {
-          childAgeGroup = 'U8'
-        }
-      }
-    });
+    var childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth)
+    console.log(childAgeGroup)
 
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
-      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map((centreKey)=> {
+      var centre = centres[centreKey]
+      centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots
-    var termKey;
+    var cKey;
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
+    var centre = centres[this.state.selectedCentre]
     Object.keys(centre.classes).forEach((classID) => {
-      var cla = centre.classes[classID];
-      if (cla.ageGroup === childAgeGroup) {
-        var classTime = cla.startTime + " - " + cla.endTime;
-        var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
-        console.log(classTimeDay)
-        console.log(trial.currentClassTime+' ('+_.capitalize(trial.currentClassDay)+')')
-        if (classTimeDay === trial.currentClassTime+' ('+_.capitalize(trial.currentClassDay)+')'){
-          termKey = cla.termKey
+      var {ageGroup, startTime, endTime, calendarKey, day} = centre.classes[classID];
+      if (ageGroup === childAgeGroup) {
+        var classTime = startTime + " - " + endTime;
+        var classTimeDay = classTime+ " ("+ day +")";
+        if (classTimeDay === trial.currentClassTime+' ('+ trial.currentClassDay +')'){
+          cKey = calendarKey
         }
         classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
       }
@@ -162,11 +144,14 @@ class TrialRegisterChildForm extends React.Component{
     //Trial dates
     var trialDateOptions = [];
     trialDateOptions.push(<option key="0" value="0">select</option>);
-    if (this.state.termKey !== '' ) {
-      termKey = this.state.termKey
+    if (this.state.calendarKey !== '' ) {
+      cKey = this.state.calendarKey
     }
 
-    var calendar = calendars[termKey]
+    var calendar = calendars[cKey]
+    console.log(calendars)
+    console.log(centre.classes)
+    console.log(cKey)
     Object.keys(calendar.terms).map((termId) => {
       var term = calendar.terms[termId]
       term.map((dates) => {
@@ -211,7 +196,7 @@ class TrialRegisterChildForm extends React.Component{
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id={"centreSelect"+trial.id} componentClass="select" placeholder="select"
-                defaultValue={trial.venueId}
+                defaultValue={getCentreKey(centres,trial.venueId)}
                 onChange={this.centreSelect.bind(this)}>
                 {centreOptions}
               </FormControl>

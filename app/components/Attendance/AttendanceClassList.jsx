@@ -2,6 +2,7 @@ import React from 'react'
 import Attendee from 'Attendee'
 import {Row, Col} from 'react-bootstrap'
 import moment from 'moment'
+import {countAttended} from 'helper'
 
 class AttendanceClassList extends React.Component{
 
@@ -15,15 +16,7 @@ class AttendanceClassList extends React.Component{
     render() {
       var attended = 0
       var { group, date, name, makeUps} = this.props
-      Object.keys(group).forEach((studentId) => {
-        if (group[studentId].attendance !== undefined) {
-          if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")] !== undefined) {
-            if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")].attended) {
-              attended = attended + 1;
-            }
-          }
-        }
-      });
+      var attended = countAttended(group, date)
 
       return(
         <div>

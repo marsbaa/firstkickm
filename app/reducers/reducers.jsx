@@ -426,55 +426,49 @@ export var adminReducer = (state = {}, action) => {
    }
   };
 
-export var centreReducer = (state = [], action) => {
+export var centreReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_CENTRES':
-      return [
-        ...state,
-        ...action.centres
-      ];
+      return {...action.centres};
     case 'ADD_CENTRE':
-      return [
+      return {
         ...state,
-        {...action.centre}
-      ];
+        [action.centre.key] : {
+          ...action.centre
+        }
+      }
     case 'UPDATE_CENTRE':
-      return state.map((centre) => {
-        if ((centre.id) === action.centre.id) {
-          return {
-           ...centre,
-           ...action.centre
-         };
+      return {
+        ...state,
+        [action.centre.key] : {
+          ...action.centre
         }
-        else {
-          return centre;
-        }
-      });
+      }
 
     case 'ADD_CLASS':
-    return state.map((centre) => {
-      if ((centre.key) === action.centreKey) {
-        if (centre.classes === undefined) {
-          centre= {...centre, classes: []};
+      var centre = state[action.centreKey]
+      if (centre.classes === undefined){
+        centre = {...centre, classes: []}
+      }
+      return {
+        ...state,
+        [action.centreKey] : {
+           classes : {
+             [action.cla.key] : {
+               ...action.cla
+             }
+           }
         }
-        centre.classes[action.cla.key] = action.cla;
-        return centre;
       }
-      else {
-        return centre;
-      }
-    });
     case 'DELETE_CLASS':
-    return state.map((centre) => {
-      if ((centre.key) === action.centreKey) {
-        centre.classes = _.omit(centre.classes, action.classKey);
-        return centre;
+      var centre = state[action.centreKey]
+      centre.classes = _.omit(centre.classes, action.classKey);
+      return {
+        ...state,
+        [action.centreKey] : {
+          ...action.centre
+        }
       }
-      else {
-        return centre;
-      }
-    });
-
     default:
       return state;
   }
@@ -496,8 +490,8 @@ export var calendarReducer = (state={}, action) => {
       key: action.calendarKey}
     }
     case 'DELETE_TERM':
-      return state.filter((term) => {
-        return term.key !== action.termKey;
+      return state.filter((calendar) => {
+        return calendar.key !== action.calendarKey;
       });
     default:
       return state;

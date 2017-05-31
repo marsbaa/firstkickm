@@ -4,6 +4,7 @@ import {browserHistory} from 'react-router'
 var {connect} = require('react-redux')
 var actions = require('actions')
 import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
+import {getAgeGroup} from 'helper'
 
 class TrialEdit extends React.Component{
 
@@ -35,9 +36,9 @@ class TrialEdit extends React.Component{
 
   componentWillMount() {
     var key = this.props.params.trialId;
-    var {trials,centres} = this.props;
+    var {trials, selection} = this.props;
     var trial = _.find(trials, {id: key});
-    this.setState({selectedCentre: trial.venueId});
+    this.setState({selectedCentre: selection.key});
     this.setState({trialDate: trial.dateOfTrial});
   }
 
@@ -63,7 +64,7 @@ class TrialEdit extends React.Component{
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
       dateOfTrial: document.getElementById("trialDateSelect").value,
-      venueId: document.getElementById("centreSelect").value.toString(),
+      venueId: centres[document.getElementById("centreSelect").value].id,
       timeOfTrial: document.getElementById("timeSlotSelect").value,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
@@ -76,41 +77,22 @@ class TrialEdit extends React.Component{
 
   render() {
     var key = this.props.params.trialId;
-    var {trials,centres, ageGroup, calendars} = this.props;
+    var {trials, centres, ageGroup, calendars, selection} = this.props;
     var trial = _.find(trials, {id: key});
-    var getAge = (dob) => {
-    var now = moment();
-    var dateofbirth = moment(JSON.stringify(dob), "YYYY-MM-DD");
-    return now.diff(dateofbirth, 'years');
-  };
-    var childAgeGroup;
-    ageGroup.map((group) => {
-      console.log(group)
-      var age = getAge(trial.dateOfBirth);
-      if (age >= group.minAge && age <= group.maxAge) {
-        childAgeGroup = group.name;
-        if (childAgeGroup === 'U8B') {
-          childAgeGroup = 'U8'
-        }
-      }
-    });
 
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
-      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map((centreKey)=> {
+      var centre = centres[centreKey]
+      centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots
+    var childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth)
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
+    var centre = centres[this.state.selectedCentre]
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       if (cla.ageGroup === childAgeGroup) {
@@ -145,7 +127,7 @@ class TrialEdit extends React.Component{
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id="centreSelect" componentClass="select" placeholder="select"
-                defaultValue={trial.venueId}
+                defaultValue={selection.key}
                 onChange={this.centreSelect}>
                 {centreOptions}
               </FormControl>

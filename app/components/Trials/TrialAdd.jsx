@@ -35,7 +35,7 @@ class TrialAdd extends React.Component{
 
   componentWillMount() {
     var {selection} = this.props;
-    this.setState({selectedCentre: selection.id});
+    this.setState({selectedCentre: selection.key});
   }
 
 
@@ -49,7 +49,7 @@ class TrialAdd extends React.Component{
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
       dateOfTrial: document.getElementById("trialDateSelect").value,
-      venueId: document.getElementById("centreSelect").value.toString(),
+      venueId: centres[document.getElementById("centreSelect").value].id,
       timeOfTrial: document.getElementById("timeSlotSelect").value,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value
@@ -65,19 +65,16 @@ class TrialAdd extends React.Component{
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
-      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map((centreKey) => {
+      var centre = centres[centreKey]
+      centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
+    var centre = centres[this.state.selectedCentre];
+
     var classTimings = [];
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];

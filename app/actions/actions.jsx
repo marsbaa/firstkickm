@@ -703,13 +703,17 @@ export var startCentres = () => {
     var parsedCentres = [];
 
     Object.keys(centres).forEach((centreId)=> {
-      parsedCentres.push({
+      parsedCentres[centreId] = {
+        key: centreId,
+        ...centres[centreId]
+      }
+      /*parsedCentres.push({
         key: centreId,
         id: centres[centreId].id,
         name: centres[centreId].name,
         logoURL: centres[centreId].logoURL,
         classes: centres[centreId].classes
-      });
+      });*/
     });
     dispatch(isFetching());
     dispatch(addCentres(parsedCentres));
@@ -790,24 +794,24 @@ export var deleteClass = (centreKey, classKey) => {
 
 export var startCalendars = () => {
   return (dispatch) => {
-  var CalendarRef = firebaseRef.child('calendars');
-  var parsedCalendars = {};
-  return CalendarRef.once('value').then((snapshot) => {
-    var value = snapshot.val();
-    if (value !== null){
-      Object.keys(value).forEach((termKey) => {
-        parsedCalendars[termKey] = {
-          key: termKey,
-          name: value[termKey].name,
-          terms: value[termKey].terms,
-          centreKey: value[termKey].centreKey
-        }
-      });
-      dispatch(addCalendars(parsedCalendars));
-    }
-  });
-    }
-};
+    var CalendarRef = firebaseRef.child('calendars');
+    var parsedCalendars = {}
+    return CalendarRef.once('value').then((snapshot) => {
+      var value = snapshot.val()
+      if (value !== null){
+        Object.keys(value).forEach((calendarKey) => {
+          parsedCalendars[calendarKey] = {
+            key: calendarKey,
+            name: value[calendarKey].name,
+            terms: value[calendarKey].terms,
+            centreKey: value[calendarKey].centreKey
+          }
+        })
+        dispatch(addCalendars(parsedCalendars));
+      }
+    })
+  }
+}
 
 export var addCalendars = (calendars) => {
   return {
@@ -818,11 +822,11 @@ export var addCalendars = (calendars) => {
 
 export var addTerm = (calendar) => {
   var CalendarRef = firebase.database().ref('calendars');
-  var termKey = CalendarRef.push().key;
+  var calendarKey = CalendarRef.push().key;
   var updates = {};
-  updates[termKey] = calendar
+  updates[calendarKey] = calendar
   CalendarRef.update(updates);
-  calendar.key=termKey
+  calendar.key=calendarKey
   return {
     type: 'ADD_TERM',
     calendar

@@ -6,28 +6,18 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 import moment from 'moment'
 import Switch from 'Switch'
+import {attendedDate, paidDate, getTerm} from 'helper'
 
 class Attendee extends React.Component {
 
   render() {
-    var {dispatch, date} = this.props;
+    var {dispatch, date, type, calendars, selection} = this.props;
+    var {childName, key, attendance, payments, status} = this.props.student;
     date = moment(date).format("YYYY-MM-DD")
-    var {childName, key, attendance} = this.props.student;
-    var type = this.props.type
     var truncatedName = _.truncate(childName, {
   'length': 28});
-    var attended;
-    if (attendance !== undefined) {
-      if (attendance[date] !== undefined) {
-        attended = attendance[date].attended;
-      }
-      else {
-        attended = false
-      }
-    }
-    else {
-      attended = false
-    }
+    var attended = attendedDate(attendance, date)
+    var paid = paidDate(payments, date, getTerm(calendars, selection.key, date))
     var backgroundColor;
     if (type==='normal') {
       backgroundColor = 'none';
@@ -46,7 +36,7 @@ class Attendee extends React.Component {
             dispatch(actions.updateAttendance(date, key))
             }} />
         </Col>
-        <Col xs={6} md={6} style={{fontSize: '14px'}}>
+        <Col xs={6} md={6} style={{fontSize: '14px', color: paid? '#656565':'red'}}>
           <Glyphicon glyph="user" /> {truncatedName}
         </Col>
         <Col xs={4} md={4} style={{textAlign:'right'}}>

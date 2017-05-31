@@ -103,29 +103,22 @@ class ClassEdit extends React.Component{
 
   goBack(e) {
     e.preventDefault();
-    var centreID = this.props.params.centreID;
-    browserHistory.push('/m/centres/'+ centreID);
+    browserHistory.push('/m/centres/'+ this.props.params.centreKey);
   }
 
   saveClass(e) {
     e.preventDefault();
     var {dispatch, centres} = this.props;
-    var centreID = this.props.params.centreID;
-    var centre;
-    centres.map((c) => {
-      if(c.id === centreID) {
-        centre = c;
-      }
-    });
+    var centreKey = this.props.params.centreKey;
     var cla = {
       ageGroup : this.state.ageGroup,
       day : this.state.day,
-      termKey : this.state.term,
+      calendarKey : this.state.term,
       startTime: this.state.startTime,
       endTime: this.state.endTime
     };
-    dispatch(actions.addClass(cla, centre.key));
-    browserHistory.push('/m/centres/'+ centreID);
+    dispatch(actions.addClass(cla, centreKey));
+    browserHistory.push('/m/centres/'+ centreKey);
   }
 
 
@@ -141,23 +134,19 @@ class ClassEdit extends React.Component{
 
   render() {
      var {centres, calendars} = this.props;
-     var centreID = this.props.params.centreID;
-     var centre;
-     centres.map((c) => {
-       if(c.id === centreID) {
-         centre = c;
-       }
-     });
+     var centreKey = this.props.params.centreKey;
+     var centre = centres[centreKey]
+
      var termhtml = [];
      Object.keys(calendars).map((calendarKey) => {
        var term = calendars[calendarKey]
-       if (centre.key === term.centreKey) {
+       if (centreKey === term.centreKey) {
           termhtml.push(<option key={term.key} value={term.key}>{term.name}</option>);
        }
      });
 
      return (
-       <Grid>
+       <Grid style={{marginTop:'20px'}}>
          <Row>
            <Col md={6}>
              <FormGroup>
@@ -170,13 +159,13 @@ class ClassEdit extends React.Component{
                <ControlLabel>Day of Week</ControlLabel>
                  <FormControl id="selectDay" componentClass="select" onChange={this.handleDayChange}>
                    <option value="select">Select Day of Week</option>
-                   <option value="saturday">Saturday</option>
-                   <option value="sunday">Sunday</option>
-                   <option value="monday">Monday</option>
-                   <option value="tuesday">Tuesday</option>
-                   <option value="wednesday">Wednesday</option>
-                   <option value="thursday">Thursday</option>
-                   <option value="friday">Friday</option>
+                   <option value="Saturday">Saturday</option>
+                   <option value="Sunday">Sunday</option>
+                   <option value="Monday">Monday</option>
+                   <option value="Tuesday">Tuesday</option>
+                   <option value="Wednesday">Wednesday</option>
+                   <option value="Thursday">Thursday</option>
+                   <option value="Friday">Friday</option>
                  </FormControl>
              </FormGroup>
              <FormGroup>

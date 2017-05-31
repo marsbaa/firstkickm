@@ -62,7 +62,6 @@ import ScheduleMain from 'ScheduleMain'
 //Student Attendance
 import AttendanceApp from 'AttendanceApp'
 import AttendanceList from 'AttendanceList'
-import AttendanceListHQ from 'AttendanceListHQ'
 import AttendanceSummary from 'AttendanceSummary'
 import AttendanceMakeUp from 'AttendanceMakeUp'
 
@@ -117,9 +116,9 @@ export default (
           <Route path="totalhq" component={TotalCollectionHQ}/>
           <Route path="centres" component={CentresApp}>
             <IndexRoute component={CentresList}/>
-            <Route path=":centreID" component={CentreEdit}/>
-            <Route path=":centreID/:calendarKey" component={CalendarEdit} />
-            <Route path=":centreID/class/:classKey" component={ClassEdit} />
+            <Route path=":centreKey" component={CentreEdit}/>
+            <Route path=":centreKey/:calendarKey" component={CalendarEdit} />
+            <Route path=":centreKey/class/:classKey" component={ClassEdit} />
           </Route>
           <Route path="trials" component={TrialsApp}>
             <IndexRoute component={TrialList}/>
@@ -133,7 +132,6 @@ export default (
           <Route path="attendance" component={AttendanceApp}>
             <IndexRoute component={AttendanceList}/>
             <Route path="summary" component={AttendanceSummary} />
-            <Route path="HQ" component={AttendanceListHQ} />
             <Route path="makeup/:studentId" component={AttendanceMakeUp} />
           </Route>
           <Route path="students" component={StudentApp}>

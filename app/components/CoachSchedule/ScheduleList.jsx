@@ -30,7 +30,7 @@ class ScheduleList extends React.Component{
       })
     Object.keys(sortedClasses).forEach((classId) => {
       var cla = sortedClasses[classId]
-      if (cla.termKey === calendarKey) {
+      if (cla.calendarKey === calendarKey) {
         var classTime = cla.startTime+" - "+cla.endTime
         var filteredStudents = _.filter(students, (o) => {
           if (o.venueId !== undefined) {

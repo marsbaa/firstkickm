@@ -100,11 +100,10 @@ class TrialRegister extends React.Component{
             payer.currentClassTime = classTime
             payer.ageGroup = childAgeGroup
             payer.centre = selection.name
-          }  
+          }
         }
       });
     })
-    console.log(payers)
     dispatch(actions.addRegister(payers))
   }
 

@@ -14,7 +14,7 @@ render() {
           <img src={centre.logoURL} style={{height:'25px'}} />  {centre.id}.{' '}{_.capitalize(centre.name)}
         </Col>
         <Col xs={3} md={3} style={{textAlign:'right'}}>
-          <Link to={"/m/centres/"+ centre.id}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
+          <Link to={"/m/centres/"+ centre.key}><button className="innerbtn"><Glyphicon glyph="chevron-right" /> </button></Link>
         </Col>
       </Row>
   )

@@ -6,6 +6,7 @@ var actions = require('actions')
 import {Panel, Grid, Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import {getCentreCalendarDates, getCentreCalendarDatesAfter} from 'helper'
 
 class AttendanceMakeUp extends React.Component {
 
@@ -24,66 +25,36 @@ class AttendanceMakeUp extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
 
-  componentDidMount () {
-    var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/attendance/HQ", "Make Up Form"));
-   }
+  componentWillMount() {
+   var {dispatch, selection, calendars} = this.props;
+   dispatch(actions.updateNavTitle("/m/attendance/HQ", "Make Up Form"));
 
-   componentWillMount() {
-     var {selection, calendars} = this.props;
-     var termDates = [];
-     Object.keys(calendars).map((calendarKey) => {
-       var calendar = calendars[calendarKey]
-       if(calendar.centreKey === selection.key) {
-         Object.keys(calendar.terms).map((termId) => {
-           var term = calendar.terms[termId]
-           term.map((date) => {
-             date = moment(date).format("YYYYMMDD")
-             if(moment(date).isSameOrAfter()) {
-               termDates.push(moment(date));
-             }
-           })
-         })
-       }
-     })
-     this.setState({fromTermDates: termDates})
-     this.setState({toTermDates: termDates})
-     this.setState({toDate: termDates[0]})
-     this.setState({fromDate: termDates[0]})
-     this.setState({selectedCentreTo: selection.key})
-   }
+   var termDates = getCentreCalendarDates(calendars, selection.key)
 
-   handleChangeFrom(date) {
-     this.setState({
-       fromDate: date
-     });
-   }
+   this.setState({fromTermDates: termDates})
+   this.setState({toTermDates: termDates})
+   this.setState({toDate: termDates[0]})
+   this.setState({fromDate: termDates[0]})
+   this.setState({selectedCentreTo: selection.key})
+  }
 
-   handleChangeTo(date) {
-     this.setState({
-       toDate: date
-     });
-   }
+  handleChangeFrom(date) {
+   this.setState({
+     fromDate: date
+   });
+  }
+
+  handleChangeTo(date) {
+   this.setState({
+     toDate: date
+   });
+  }
 
   centreSelectTo(e) {
     e.preventDefault();
-    var termDates = [];
     var {calendars} = this.props
-    Object.keys(calendars).map((calendarKey) => {
-      var calendar = calendars[calendarKey]
+    var termDates = getCentreCalendarDatesAfter(calendars, e.target.value)
 
-      if(calendar.centreKey === e.target.value) {
-        Object.keys(calendar.terms).map((termId) => {
-          var term = calendar.terms[termId]
-          term.map((date) => {
-            date = moment(date).format("YYYYMMDD")
-            if(moment(date).isSameOrAfter()) {
-              termDates.push(moment(date));
-            }
-          })
-        })
-      }
-    })
     this.setState({toDate: termDates[0]})
     this.setState({
       selectedCentreTo: e.target.value
@@ -94,8 +65,9 @@ class AttendanceMakeUp extends React.Component {
 
   onFormSubmit(e) {
     e.preventDefault();
-    var {dispatch, selection} = this.props
+    var {dispatch, selection, students} = this.props
     var studentKey = this.props.params.studentId
+    var student = _.find(students, {key: studentId})
     var makeUp = {
       fromDate: document.getElementById('fromDate').value,
       toDate: document.getElementById('toDate').value,
@@ -103,6 +75,7 @@ class AttendanceMakeUp extends React.Component {
       toCentre: document.getElementById('toCentre').value,
       fromClassTimeDay: document.getElementById('fromClassTimeDay').value,
       toClassTimeDay: document.getElementById('toClassTimeDay').value,
+      ageGroup: student.ageGroup,
       studentKey
     }
     if (makeUp.toCentre !== '0') {
@@ -120,19 +93,15 @@ class AttendanceMakeUp extends React.Component {
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
+    Object.keys(centres).map((centreKey) => {
+      var centre = centres[centreKey]
       centreOptions.push(<option key={centre.key} value={centre.key}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots From
     var classTimeSlotsTo = [];
     classTimeSlotsTo.push(<option key="0" value="0">select</option>);
-    var centreTo = {};
-    centres.map((c) => {
-      if(c.key === this.state.selectedCentreTo) {
-        centreTo = c;
-      }
-    });
+    var centreTo = centres[this.state.selectedCentreTo]
 
     Object.keys(centreTo.classes).forEach((classID) => {
       var cla = centreTo.classes[classID];
@@ -141,7 +110,6 @@ class AttendanceMakeUp extends React.Component {
         var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
         classTimeSlotsTo.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
       }
-
     });
 
 

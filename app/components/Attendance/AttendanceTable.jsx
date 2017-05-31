@@ -14,9 +14,9 @@ class AttendanceTable extends React.Component {
 
   render() {
     var {calendars, students, selection} = this.props
-    var {day, startTime, endTime, ageGroup, termKey} = this.props.classes
+    var {day, startTime, endTime, ageGroup, calendarKey} = this.props.classes
     var classDayTime = ageGroup + " " + _.capitalize(day) + " " + startTime + " - " + endTime
-    var calendar = _.find(calendars, {key : termKey})
+    var calendar = _.find(calendars, {key : calendarKey})
     var termDates = []
     calendar.terms[this.props.selectedTerm].map((date) => {
       termDates.push(date)

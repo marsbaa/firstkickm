@@ -7,7 +7,7 @@ var actions = require('actions');
 import StudentsFilter from 'StudentsFilter'
 import _ from 'lodash'
 import moment from 'moment'
-import {termToday, findPaymentDetails} from 'helper'
+import {getTerm, findPaymentDetails} from 'helper'
 
 class PaymentReport extends React.Component {
 
@@ -30,7 +30,7 @@ class PaymentReport extends React.Component {
 
   componentDidMount () {
     var {dispatch, selection, calendars} = this.props;
-    var id = termToday(calendars, selection.key)
+    var id = getTerm(calendars, selection.key, moment())
     document.getElementById('termSelect').value = id
     this.setState({selectedTerm: id})
     dispatch(actions.updateNavTitle("/m/payment/report", selection.name+" Payment Report"));
@@ -49,12 +49,12 @@ class PaymentReport extends React.Component {
     var classes = selection.classes
 
     Object.keys(classes).forEach((classKey)=> {
-      var {day, startTime, endTime, ageGroup, termKey} = classes[classKey]
+      var {day, startTime, endTime, ageGroup, calendarKey} = classes[classKey]
 
       var classTime = startTime + " - " + endTime
 
       //Create TermDates Array
-      calendar = _.find(calendars, {key : termKey})
+      calendar = _.find(calendars, {key : calendarKey})
       var termDates = []
       calendar.terms[this.state.selectedTerm].map((date) => {
         termDates.push(date)

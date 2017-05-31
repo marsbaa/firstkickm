@@ -11,13 +11,7 @@ class MainMenu extends React.Component {
   handleSelect(e) {
     var {dispatch, centres} = this.props;
     e.preventDefault();
-    var centre;
-    centres.map((c)=> {
-      if (e.target.value === c.id) {
-        centre = c
-      }
-    })
-    dispatch(actions.updateSelectedCentre(centre));
+    dispatch(actions.updateSelectedCentre(centres[e.target.value]));
   }
 
     componentDidMount() {
@@ -57,10 +51,11 @@ class MainMenu extends React.Component {
         var centreOptions = [];
         centreOptions.push(<option key="0" value="0">select</option>);
         if (user !== undefined) {
-          centres.map((centre) => {
-            var index = _.findIndex(user.assignedCentres, (c) => { return c == centre.id })
+          Object.keys(centres).map((centreKey) => {
+            var centre = centres[centreKey]
+            var index = _.findIndex(user.assignedCentres, (c) => { return c === centreKey })
             if (index !== -1 || user.assignedCentres[0] === 'all') {
-              centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+              centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
             }
           });
           var menuHTML = []
@@ -93,7 +88,6 @@ class MainMenu extends React.Component {
                 <Link to="m/trials" ><button className="mainbtn" id="trials" disabled={selection.id === '0' ? true : false}>Trials</button></Link>
                 <Link to="m/jersey" ><button className="mainbtn" id="jersey" disabled={selection.id === '0' ? true : false}>Jersey Issue</button></Link>
                 <Link to="m/attendance" ><button className="mainbtn" id="attendance" disabled={selection.id === '0' ? true : false}>Student Attendance</button></Link>
-                <Link to="m/attendance/HQ" ><button className="mainbtn" id="attendanceHQ" disabled={selection.id === '0' ? true : false}>Student Attendance (HQ)</button></Link>
                 <Link to="m/attendance/summary" ><button className="mainbtn" id="attendanceSummary" disabled={selection.id === '0' ? true : false}>Attendance Summary</button></Link>
                 <Link to="m/payment" ><button className="mainbtn" id="makePayment" disabled={selection.id === '0' ? true : false}>Payment</button></Link>
                 <Link to="m/makeup" ><button className="mainbtn" id="makeUp" disabled={selection.id === '0' ? true : false}>Make Up List</button></Link>
@@ -128,7 +122,7 @@ class MainMenu extends React.Component {
                     <ControlLabel>Select Centre</ControlLabel>
                     <FormControl
                       id="centreSelect" componentClass="select" placeholder="select" onChange={this.handleSelect.bind(this)}
-                      defaultValue={selection.id}>
+                      defaultValue={selection.key}>
                       {centreOptions}
                     </FormControl>
                   </FormGroup>

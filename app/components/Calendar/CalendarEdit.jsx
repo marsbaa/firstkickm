@@ -13,12 +13,12 @@ class CalendarEdit extends React.Component{
       errorCalendarName: null,
       errorMessageCalendarName: ""
     }
+    this.saveCalendar = this.saveCalendar.bind(this)
   }
 
   goBack(e) {
     e.preventDefault();
-    var centreID = this.props.params.centreID;
-    browserHistory.push('/m/centres/'+ centreID);
+    browserHistory.push('/m/centres/'+ this.props.params.centreKey);
   }
 
   saveCalendar(e, centreKey) {
@@ -83,12 +83,6 @@ class CalendarEdit extends React.Component{
     var calendar = {};
     var count = 0;
     var numOfTerms = 6;
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === centreID) {
-        centre = c;
-      }
-    });
 
     if (calendarKey !== 'add') {
       calendar = calendars[calendarKey];
@@ -98,7 +92,7 @@ class CalendarEdit extends React.Component{
     }
 
      return (
-       <Grid>
+       <Grid style={{marginTop: '20px'}}>
          <Row>
            <Col md={6}>
              <FormGroup validationState={this.state.errorCalendarName}>
@@ -111,8 +105,8 @@ class CalendarEdit extends React.Component{
              <HelpBlock>{this.state.errorMessageCalendarName}</HelpBlock>
              </FormGroup>
              <TermDatesSelector mode={calendarKey} numOfTerms={numOfTerms}/>
-             <Button onClick={this.goBack}>Cancel</Button>
-             <Button onClick={(e) => this.saveCalendar(e, centre.key)}>Save</Button>
+             <Button onClick={this.goBack.bind(this)}>Cancel</Button>
+             <Button onClick={(e) => this.saveCalendar(e, getCentreKey(centres, centreID))}>Save</Button>
           </Col>
         </Row>
       </Grid>

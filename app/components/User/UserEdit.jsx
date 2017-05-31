@@ -41,17 +41,17 @@ class UserEdit extends React.Component{
 
   }
 
-  handleCentreChange(e, centreId) {
+  handleCentreChange(e, centreKey) {
     e.preventDefault();
     var selected = this.state.assignedCentres
     if (e.target.className === "datebtn") {
       e.target.className = "downbtn"
-      selected.push(centreId)
+      selected.push(centreKey)
     }
     else if (e.target.className === "downbtn"){
       e.target.className = "datebtn"
       var index = _.findIndex(selected, (c) => {
-        return c == centreId
+        return c == centreKey
       })
       _.pullAt(selected, index)
     }
@@ -92,22 +92,26 @@ class UserEdit extends React.Component{
     }
     var centrehtml = [];
     var roleshtml = [];
-    centres.map((centre) => {
+    Object.keys(centres).map((centreKey)=> {
+      var centre = centres[centreKey]
       var btnClass = "datebtn"
       if (user.assignedCentres !== undefined) {
         if (user.assignedCentres.indexOf(centre.id) > -1) {
           btnClass = "downbtn"
         }
       }
-      centrehtml.push(<button className={btnClass} key={centre.id} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleCentreChange(e, centre.id)}}>{centre.name}</button>)
-    })
-    this.state.roles.map((role) => {
-      var rolesBtnClass = "datebtn"
-      if (user.assignedRoles === role) {
-       rolesBtnClass = "downbtn"
-      }
-      roleshtml.push(<Button className="datebtn" key={role} active={this.state.assignedRoles === role} style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</Button>)
-    })
+      centrehtml.push(
+        <button className={btnClass} key={centreKey} style={{borderRadius: '0', width: '25%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleCentreChange(e, centreKey)}}>
+          {centre.name}
+        </button>)
+      })
+      this.state.roles.map((role) => {
+        var rolesBtnClass = "datebtn"
+        if (user.assignedRoles === role) {
+         rolesBtnClass = "downbtn"
+        }
+        roleshtml.push(<Button className="datebtn" key={role} active={this.state.assignedRoles === role} style={{borderRadius: '0', width: '50%', margin : '0px', height: '40px'}} onClick={(e) => { this.handleRoleChange(e, role)}}>{role}</Button>)
+      })
 
 
     return (

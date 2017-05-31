@@ -16,8 +16,7 @@ class PayerReport extends React.Component {
       currentTerm : ''
     }
   }
-
-
+  
   render() {
     var {dispatch} = this.props;
     var {childName, key, gender} = this.props.student;

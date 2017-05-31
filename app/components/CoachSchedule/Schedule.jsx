@@ -64,7 +64,8 @@ class Schedule extends React.Component{
     var classTimingClash = (classKey1, classKey2) => {
       var {centres} = this.props
       var class1, class2;
-      centres.map((centre) => {
+      Object.keys(centres).map((centreKey) => {
+        var centre = centres[centreKey]
         if(centre.classes !== undefined) {
           Object.keys(centre.classes).map((classId) => {
             if (classId === classKey1) {

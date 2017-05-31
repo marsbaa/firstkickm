@@ -31,15 +31,14 @@ class StudentAdd extends React.Component {
 
   componentWillMount() {
     var {selection} = this.props;
-    this.setState({selectedCentre: selection.id});
+    this.setState({selectedCentre: selection.key});
   }
 
   onFormSubmit(e) {
     e.preventDefault();
-    var {dispatch} = this.props;
-    var selected = document.getElementById("timeSlotSelect");
-    var classTimeDay = selected.options[selected.selectedIndex].text;
-    var a = _.split(classTimeDay, '(');
+    var {dispatch, centres} = this.props;
+    var classTimeDay = document.getElementById("timeSlotSelect").value
+    var a = _.split(classTimeDay, ' (');
     var b = _.split(a[1], ')');
     var classDay = b[0];
     var student = {
@@ -48,8 +47,8 @@ class StudentAdd extends React.Component {
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
-      venueId: document.getElementById("centreSelect").value,
-      currentClassTime: document.getElementById("timeSlotSelect").value,
+      venueId: centres[document.getElementById("centreSelect").value].id,
+      currentClassTime: a[0],
       currentClassDay: classDay,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
@@ -73,8 +72,9 @@ class StudentAdd extends React.Component {
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
-      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map((centreKey)=> {
+      var centre = centres[centreKey]
+      centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots
@@ -86,7 +86,7 @@ class StudentAdd extends React.Component {
       if (cla.ageGroup === this.state.ageGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+cla.day+")";
-        classTimeSlots.push(<option key={classTimeDay} value={classTime}>{classTimeDay}</option>);
+        classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
       }
     });
 
@@ -124,7 +124,7 @@ class StudentAdd extends React.Component {
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id="centreSelect" componentClass="select" placeholder="select"
-                defaultValue={selection.id}
+                defaultValue={selection.key}
                 onChange={this.centreSelect.bind(this)}>
                 {centreOptions}
               </FormControl>

@@ -61,9 +61,9 @@ class PaymentNotPaid extends React.Component {
     var html = []
     var contacts = ''
     Object.keys(classes).forEach((classKey)=> {
-      var {day, startTime, endTime, ageGroup, termKey} = classes[classKey]
+      var {day, startTime, endTime, ageGroup, calendarKey} = classes[classKey]
       var classDayTime = ageGroup + " " + _.capitalize(day) + " " + startTime + " - " + endTime
-      var calendar = _.find(calendars, {key : termKey})
+      var calendar = _.find(calendars, {key : calendarKey})
       var termDates = []
       var unpaid = []
       calendar.terms[this.state.selectedTerm].map((date) => {

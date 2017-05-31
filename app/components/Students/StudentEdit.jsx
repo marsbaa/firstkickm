@@ -4,6 +4,7 @@ import {browserHistory} from 'react-router'
 var {connect} = require('react-redux')
 var actions = require('actions')
 import {Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
+import {isManager} from 'helper'
 
 class StudentEdit extends React.Component {
 
@@ -31,9 +32,8 @@ class StudentEdit extends React.Component {
 
   componentWillMount() {
     var key = this.props.params.studentId;
-    var {students} = this.props;
-    var student = _.find(students, {key: key});
-    this.setState({selectedCentre: student.venueId});
+    var {selection} = this.props;
+    this.setState({selectedCentre: selection.key });
   }
 
   componentDidMount() {
@@ -58,9 +58,8 @@ class StudentEdit extends React.Component {
     var {dispatch, centres, students} = this.props;
     var key = this.props.params.studentId;
     var student = _.find(students, {'key': key})
-    var selected = document.getElementById("timeSlotSelect");
-    var classTimeDay = selected.options[selected.selectedIndex].text;
-    var a = _.split(classTimeDay, '(');
+    var classTimeDay = document.getElementById("timeSlotSelect").value;
+    var a = _.split(classTimeDay, ' (');
     var b = _.split(a[1], ')');
     var classDay = b[0];
     student = {
@@ -70,8 +69,8 @@ class StudentEdit extends React.Component {
       email: document.getElementById("email").value,
       gender: document.getElementById("boy").checked ? "boy" : "girl",
       dateOfBirth: document.getElementById("dateOfBirth").value,
-      venueId: document.getElementById("centreSelect").value,
-      currentClassTime: document.getElementById("timeSlotSelect").value,
+      venueId: centres[document.getElementById("centreSelect").value].id,
+      currentClassTime: a[0],
       currentClassDay: classDay,
       parentName: document.getElementById("parentName").value,
       medicalCondition: document.getElementById("medicalCondition").value,
@@ -85,19 +84,7 @@ class StudentEdit extends React.Component {
 
   render() {
     var key = this.props.params.studentId;
-    var {students, centres, ageGroup, users, auth} = this.props;
-    var user;
-    if (auth.email === 'ray@marsbaa.com') {
-      user = {
-        name: 'Ray Yee',
-        email: 'ray@marsbaa.com',
-        assignedRoles : 'Manager',
-        assignedCentres : { 0 : 'all'}
-      }
-    }
-    else {
-      user = _.find(users, ['email', auth.email])
-    }
+    var {students, centres, ageGroup, users, auth, selection} = this.props;
     var student = _.find(students, {key: key});
 
     //Age Group List
@@ -109,26 +96,22 @@ class StudentEdit extends React.Component {
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    centres.map((centre) => {
-      centreOptions.push(<option key={centre.id} value={centre.id}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map((centreKey)=> {
+      var centre = centres[centreKey]
+      centreOptions.push(<option key={centreKey} value={centreKey}>{_.upperFirst(centre.name)}</option>);
     });
 
     //Class TimeSlots
     var classTimeSlots = [];
     classTimeSlots.push(<option key="0" value="0">select</option>);
-    var centre = {};
-    centres.map((c) => {
-      if(c.id === this.state.selectedCentre.toString()) {
-        centre = c;
-      }
-    });
+    var centre = centres[this.state.selectedCentre]
 
     Object.keys(centre.classes).forEach((classID) => {
       var cla = centre.classes[classID];
       if (cla.ageGroup === this.state.ageGroup) {
         var classTime = cla.startTime + " - " + cla.endTime;
         var classTimeDay = classTime+ " ("+cla.day+")";
-        classTimeSlots.push(<option key={classTimeDay} value={classTime}>{classTimeDay}</option>);
+        classTimeSlots.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
       }
     });
 
@@ -140,7 +123,7 @@ class StudentEdit extends React.Component {
               <ControlLabel>Selected Centre</ControlLabel>
               <FormControl
                 id="centreSelect" componentClass="select" placeholder="select"
-                defaultValue={student.venueId}
+                defaultValue={selection.key}
                 onChange={this.centreSelect.bind(this)}>
                 {centreOptions}
               </FormControl>
@@ -158,7 +141,7 @@ class StudentEdit extends React.Component {
               <ControlLabel>Selected Class Time</ControlLabel>
               <FormControl
                 id="timeSlotSelect" componentClass="select" placeholder="select"
-                defaultValue={student.currentClassTime}>
+                defaultValue={student.currentClassTime+" ("+student.currentClassDay+")"}>
                 {classTimeSlots}
               </FormControl>
             </FormGroup>
@@ -248,7 +231,7 @@ class StudentEdit extends React.Component {
               </FormControl>
             </FormGroup>
             <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>Save Student Profile</button>
-            { user.assignedRoles === 'Manager' ?
+            { isManager(auth, users) ?
               <button className="submitbtn" style={{backgroundColor: 'red'}} onClick={this.deleteStudent.bind(this)}>Delete Student Profile</button> : null
             }
           </Col>

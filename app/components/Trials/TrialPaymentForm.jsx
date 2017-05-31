@@ -12,6 +12,7 @@ import SendMail from 'SendMail'
 import InvoiceTemplate from 'InvoiceTemplate'
 import {firebaseRef} from 'app/firebase'
 import {browserHistory} from 'react-router'
+import {getTerm, getCalendarDates, getCalendarKey} from 'helper'
 
 class TrialPaymentForm extends React.Component {
 
@@ -21,8 +22,8 @@ class TrialPaymentForm extends React.Component {
       payer : [],
       startDate: [],
       receivedDate: moment(),
-      termDates: [],
-      termKeys: [],
+      calendarDates: [],
+      calendarKeys: [],
       numOfSession: [],
       promotion: 0,
       selectedTermDates: [],
@@ -168,7 +169,7 @@ class TrialPaymentForm extends React.Component {
           var actualTerm;
           Object.keys(calendars).map((calendarKey) => {
             var calendar = calendars[calendarKey]
-            if(calendar.key === this.state.termKeys[id]) {
+            if(calendar.key === this.state.calendarKeys[id]) {
               actualTerm = calendar.terms[termId]
             }
           })
@@ -272,43 +273,24 @@ componentDidMount () {
     this.setState({payer: register});
 
     //Initiate Selectable Term Dates
-    var termDates = [];
+    var calendarDates = [];
     var startDates = [];
-    var termKeys = [];
+    var calendarKeys = [];
     payer.map((child, id) => {
-      var termKey;
-      Object.keys(selection.classes).forEach((classId) => {
-          var cla = selection.classes[classId];
-          var classTimeDay = cla.startTime +" - "+cla.endTime+" ("+_.capitalize(cla.day)+")";
-          if (classTimeDay === child.currentClassTime+' ('+child.currentClassDay+')'){
-              termKey = cla.termKey
-            }
-      })
-      var startDate;
-      var count = 0;
-      var termDate = [];
-      Object.keys(calendars).map((calendarKey) => {
-        var calendar = calendars[calendarKey]
-        if(calendar.key === termKey) {
-          Object.keys(calendar.terms).map((termId) => {
-            var term = calendar.terms[termId]
-            term.map((date) => {
-              if (moment(date) > moment() && count === 0) {
-                startDate = moment(date);
-                count += 1;
-              }
-              termDate.push(moment(date));
-            })
-          })
-        }
-      })
+
+      var calendarKey = getCalendarKey(child, selection.classes)
+      var currentTerm = getTerm(calendars, selection.key, moment())
+      var calendar = calendars[calendarKey]
+      var startDate = moment(calendar.terms[currentTerm][0])
+      var calendarDate = getCalendarDates(calendar)
+
       startDates[id] = startDate;
-      termDates[id] = termDate;
-      termKeys[id] = termKey;
+      calendarDates[id] = calendarDate;
+      calendarKeys[id] = calendarKey;
     })
 
-    this.setState({termKeys})
-    this.setState({termDates})
+    this.setState({calendarKeys})
+    this.setState({calendarDates})
     this.setState({startDate : startDates});
 
 }
@@ -338,7 +320,7 @@ componentDidMount () {
                      id = {"datePicker"+ id}
                      dateFormat="YYYY-MM-DD"
                      selected={this.state.startDate[id]}
-                     includeDates={this.state.termDates[id]}
+                     includeDates={this.state.calendarDates[id]}
                      onChange={(e) => {
                            this.handleChange(moment(e), id)}}
                      />
@@ -349,10 +331,11 @@ componentDidMount () {
             <Col>
               <PaymentDatesSelector key={id}
                 startDate = {this.state.startDate[id]}
-                termKey={this.state.termKeys[id]} termDates={this.state.termDates[id]}
+                calendarKey={this.state.calendarKeys[id]} calendarDates={this.state.calendarDates[id]}
                 deselected={this.state.deselectedTermDates[id]}
                 onChange={this.handleDatesChange.bind(this)}
                 onDeselect={this.handleDeSelected.bind(this)}
+                student = {student}
                 payerId = {id} />
             </Col>
           </Row>
@@ -422,7 +405,7 @@ componentDidMount () {
             var actualTerm;
             Object.keys(calendars).map((calendarKey) => {
               var calendar = calendars[calendarKey]
-              if(calendar.key === this.state.termKeys[id]) {
+              if(calendar.key === this.state.calendarKeys[id]) {
                 actualTerm = calendar.terms[termId]
               }
             })
