@@ -96,7 +96,7 @@ class UserEdit extends React.Component{
       var centre = centres[centreKey]
       var btnClass = "datebtn"
       if (user.assignedCentres !== undefined) {
-        if (user.assignedCentres.indexOf(centre.id) > -1) {
+        if (user.assignedCentres.indexOf(centre.key) > -1) {
           btnClass = "downbtn"
         }
       }
