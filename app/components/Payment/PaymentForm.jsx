@@ -611,6 +611,7 @@ class PaymentForm extends React.Component {
                   </Col>
                 </Row>
               );
+              totalFee -= 30;
             }
           }
 

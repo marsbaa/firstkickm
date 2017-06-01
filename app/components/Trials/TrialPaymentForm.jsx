@@ -195,10 +195,14 @@ class TrialPaymentForm extends React.Component {
               total -= 20;
             }
 
-            if (id > 0 && term.length >= 5 && siblingCount >= 2) {
+            if (id === 1 && term.length >= 5 && siblingCount >= 2) {
               siblingDiscount = true;
               siblingDiscountAmount += 20;
               total -= 20;
+            } else if (id > 1 && term.length >= 5 && siblingCount >= 2) {
+              siblingDiscount = true;
+              siblingDiscountAmount += 30;
+              total -= 30;
             }
             var datesPaid = [];
             term.map(date => {
@@ -493,7 +497,7 @@ class TrialPaymentForm extends React.Component {
               totalFee -= 20;
             }
             //Sibling Discount
-            if (id >= 1 && term.length >= 5 && siblingCount >= 2) {
+            if (id === 1 && term.length >= 5 && siblingCount >= 2) {
               fees.push(
                 <Row
                   key={'siblingdiscount' + student.childName}
@@ -510,6 +514,23 @@ class TrialPaymentForm extends React.Component {
                 </Row>
               );
               totalFee -= 20;
+            } else if (id > 1 && term.length >= 5 && siblingCount >= 2) {
+              fees.push(
+                <Row
+                  key={'siblingdiscount' + student.childName}
+                  style={{ padding: '0px 15px', marginBottom: '5px' }}
+                >
+                  <Col xs={8} md={8}>
+                    <b style={{ color: '#1796d3' }}>Sibling Discount</b>
+                  </Col>
+                  <Col xs={4} md={4} style={{ float: 'right' }}>
+                    <p style={{ textAlign: 'right', marginBottom: '0px' }}>
+                      ($30)
+                    </p>
+                  </Col>
+                </Row>
+              );
+              totalFee -= 30;
             }
 
             totalFee += cost;
