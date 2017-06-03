@@ -255,7 +255,7 @@ class PaymentForm extends React.Component {
         } else {
           if (
             term.length === actualTerm.length &&
-            moment().isBefore(actualTerm[0])
+            moment().isSameOrBefore(actualTerm[0], 'day')
           ) {
             earlyBird = true;
             total -= 20;
@@ -547,7 +547,7 @@ class PaymentForm extends React.Component {
           } else {
             if (
               term.length === actualTerm.length &&
-              moment().isBefore(actualTerm[0])
+              moment().isSameOrBefore(actualTerm[0], 'day')
             ) {
               fees.push(
                 <Row
