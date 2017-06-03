@@ -90,7 +90,6 @@ class PaymentForm extends React.Component {
       var calendar = calendars[calendarKey];
       var startDate = moment(calendar.terms[currentTerm][0]);
       var calendarDate = getCalendarDates(calendar);
-      console.log(calendarDate);
       if (child.payments !== undefined) {
         Object.keys(child.payments).map(paymentId => {
           var payment = child.payments[paymentId];
