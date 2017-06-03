@@ -1,150 +1,141 @@
 import React from 'react';
-import {Link} from 'react-router'
-import {Row, Col, Glyphicon, Modal, Button} from 'react-bootstrap'
-import {connect} from 'react-redux';
-import {btn} from 'styles.css'
-import Student from 'Student'
+import { Link } from 'react-router';
+import { Row, Col } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import Student from 'Student';
 var actions = require('actions');
-import StudentsFilter from 'StudentsFilter'
-import Search from 'Search'
-import _ from 'lodash'
-import moment from 'moment'
-import Papa from 'papaparse'
+import StudentsFilter from 'StudentsFilter';
+import Search from 'Search';
+import size from 'lodash/size';
+import filter from 'lodash/filter';
+import moment from 'moment';
+import { getActive, getNotActive } from 'helper';
 
 class StudentList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showModal: false,
-      studentsName : []
-    }
-    this.close = this.close.bind(this)
-    this.open = this.open.bind(this)
+  componentDidMount() {
+    var { dispatch, selection } = this.props;
+    dispatch(actions.updateNavTitle('/m/students', selection.name));
   }
-
-  componentDidMount () {
-    var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/students", selection.name));
-  }
-
-  close() {
-    this.setState({ showModal: false });
-  }
-
-  open() {
-    this.setState({ showModal: true });
-  }
-
-  handleChange (e) {
-    var {dispatch, students} = this.props
-    var studentsName = []
-    Papa.parse(e.target.files[0],
-      {
-        delimiter: "",
-        newline: "",
-        header: true,
-        complete: function(results, file) {
-	         Object.keys(results.data).map((id)=> {
-             var student = results.data[id]
-             studentsName.push(student.childName)
-             dispatch(actions.addStudent(student))
-           })
-     }})
-    this.setState({studentsName})
-    this.open()
-  }
-
-
 
   render() {
-    var {students, searchText, selection} = this.props;
+    var { students, searchText, selection } = this.props;
 
-    var html=[];
-    var filteredStudents = StudentsFilter.filter(students, selection.id, searchText);
-    var inActiveStudents = _.filter(filteredStudents, {status: 'Not Active'})
-    filteredStudents = _.filter(filteredStudents, (o) => {
-      return !(o.status==='Not Active')
-    })
-    if (filteredStudents.length !== 0) {
-      var groupDay = _.groupBy(filteredStudents, (o) => {
-        return o.currentClassDay.toLowerCase()
+    var html = [];
+    var filteredStudents = StudentsFilter.filter(
+      students,
+      selection.id,
+      searchText
+    );
+    var activeStudents = getActive(filteredStudents);
+    var notActiveStudents = getNotActive(filteredStudents);
+
+    var classes = selection.classes;
+
+    Object.keys(classes).forEach(classKey => {
+      var { day, startTime, endTime, ageGroup, calendarKey } = classes[
+        classKey
+      ];
+
+      var classTime = startTime + ' - ' + endTime;
+      var classTimeDay = classTime + ' (' + day + ')';
+      //Filter Students base on class
+
+      var classStudents = _.filter(activeStudents, {
+        currentClassDay: day,
+        currentClassTime: classTime,
+        ageGroup: ageGroup
       });
-      Object.keys(groupDay).forEach((day)=> {
-        var groupTime = _.groupBy(groupDay[day], 'currentClassTime');
-        Object.keys(groupTime).forEach((timeSlot)=> {
-          var groupAge = _.groupBy(groupTime[timeSlot], 'ageGroup');
-          Object.keys(groupAge).forEach((age)=> {
-            var group = groupAge[age];
-            group = _.sortBy(group, ['childName'])
-            html.push( <Row key={age+timeSlot} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-               <Col xs={8} md={8}>
-                 <h5>{age} {timeSlot} ({_.capitalize(day)})</h5>
-               </Col>
-                 <Col xs={4} md={4} style={{textAlign: 'center'}}>
-                   <h5>Class Size : {_.size(group)}</h5>
-               </Col>
-             </Row>);
 
-             Object.keys(group).forEach((studentId) => {
-                 html.push(<Student key={group[studentId].key} student={group[studentId]}/>);
+      if (_.size(classStudents) !== 0) {
+        html.push(
+          <div key={ageGroup + classTime + day}>
+            <Row
+              style={{
+                backgroundColor: '#656565',
+                padding: '0px 15px',
+                color: '#ffc600'
+              }}
+            >
+              <Col xs={8} md={8}>
+                <h5>{ageGroup} {classTime} ({day})</h5>
+              </Col>
+              <Col xs={4} md={4} style={{ textAlign: 'center' }}>
+                <h5>Class Size : {_.size(classStudents)}</h5>
+              </Col>
 
-             })
-          })
-        })
-      })
+            </Row>
+            {Object.keys(classStudents).map(studentId => {
+              var student = classStudents[studentId];
+              return <Student key={student.key} student={student} />;
+            })}
+          </div>
+        );
+      }
+    });
 
+    if (notActiveStudents.length !== 0) {
+      html.push(
+        <div>
+          <Row
+            key="inactive"
+            style={{
+              backgroundColor: '#656565',
+              padding: '0px 15px',
+              color: '#ffc600'
+            }}
+          >
+            <Col xs={8} md={8}>
+              <h5>Not Active</h5>
+            </Col>
+            <Col xs={4} md={4} style={{ textAlign: 'center' }}>
+              <h5>Count : {_.size(notActiveStudents)}</h5>
+            </Col>
+          </Row>
+          {Object.keys(notActiveStudents).map(studentId => {
+            const student = notActiveStudents[studentId];
+            return <Student key={student.key} student={student} />;
+          })}
+        </div>
+      );
     }
-    if (inActiveStudents.length !== 0) {
-      html.push( <Row key='inactive' style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
-         <Col xs={8} md={8}>
-           <h5>Not Active</h5>
-         </Col>
-           <Col xs={4} md={4} style={{textAlign: 'center'}}>
-             <h5>Count : {_.size(inActiveStudents)}</h5>
-         </Col>
-       </Row>);
-       Object.keys(inActiveStudents).forEach((studentId) => {
-           html.push(<Student key={inActiveStudents[studentId].key} student={inActiveStudents[studentId]}/>);
 
-       })
+    return (
+      <div>
 
-    }
-    var studentHTML = [];
-    this.state.studentsName.map((name) => {
-      studentHTML.push(<div key={name}>
-        {name}
-      </div>)
-    })
+        <Row
+          style={{
+            padding: '8px 10px',
+            borderBottom: '1px solid #cccccc',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <Col xs={7} md={7}>
+            <Search type="student" />
+          </Col>
+          <Col xs={5} md={5}>
+            <Link to="/m/students/add">
+              <button
+                className="btn"
+                style={{
+                  backgroundColor: '#f5bb05',
+                  margin: '0px',
+                  float: 'right'
+                }}
+              >
+                Add Student
+              </button>
+            </Link>
 
-   return (
-     <div>
+          </Col>
+        </Row>
 
-       <Row style={{padding: '8px 10px', borderBottom: '1px solid #cccccc', display: 'flex', alignItems: 'center'}}>
-         <Col xs={7} md={7}>
-           <Search type="student" />
-         </Col>
-         <Col xs={5} md={5}>
-         <Link to="/m/students/add"><button className="btn" style={{backgroundColor: '#f5bb05', margin: '0px'}}>Add Student</button></Link>
-           <input name="file" id="file" className="inputfile" type="file" accept=".csv" onChange={this.handleChange.bind(this)} />
-           <label htmlFor="file"><Glyphicon glyph="upload" /></label>
-         </Col>
-       </Row>
-       <Modal show={this.state.showModal} onHide={this.close}>
-       <Modal.Header closeButton>
-         <b>Students Added :</b>
-       </Modal.Header>
-       <Modal.Body>
-         {studentHTML}
-       </Modal.Body>
-       <Modal.Footer>
-         <Button onClick={this.close}>Close</Button>
-       </Modal.Footer>
-     </Modal>
-      {html}
-    </div>
-   );
- }
- }
+        {html}
+      </div>
+    );
+  }
+}
 
- export default connect((state) => {return state;
+export default connect(state => {
+  return state;
 })(StudentList);
