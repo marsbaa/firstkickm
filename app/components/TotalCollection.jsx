@@ -68,7 +68,7 @@ class TotalCollection extends React.Component {
       amount: parseInt(document.getElementById('amount').value),
       issuedBy: user.name,
       email: user.email,
-      date: moment().format(),
+      date: moment(this.state.startDate).format(),
       centreId: selection.id
     };
     this.setState({ show: false });
@@ -111,12 +111,12 @@ class TotalCollection extends React.Component {
     var { payments, selection, expenses, auth, users } = this.props;
     var html = [];
     var filteredPayments = _.filter(payments, p => {
-      return (
-        moment(p.date).format('YYYY-MM-DD') ===
-        moment(this.state.startDate).format('YYYY-MM-DD')
-      );
+      return moment(this.state.startDate).isSame(p.date, 'day');
     });
-    var filteredExpenses = _.filter(expenses, ['centreId', selection.id]);
+    var filteredExpenses = _.filter(expenses, { centreId: selection.id });
+    filteredExpenses = _.filter(filteredExpenses, o => {
+      return moment(this.state.startDate).isSame(o.date, 'day');
+    });
     if (this.state.filter === 'am') {
       filteredPayments = _.filter(filteredPayments, p => {
         return moment(p.date).format('HH') <= 12;
