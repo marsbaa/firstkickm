@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const envFile = require('node-env-file');
-const CompressionPlugin = require('compression-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -10,15 +9,24 @@ try {
 } catch (e) {}
 
 module.exports = {
-  entry: ['script-loader!jquery/dist/jquery.min.js', './app/app.jsx'],
+  entry: {
+    app: ['script-loader!jquery/dist/jquery.min.js', './app/app.jsx'],
+    vendor: ['react', 'react-dom', 'react-router']
+  },
   externals: {
     jquery: 'jQuery'
   },
+
   plugins: process.env.NODE_ENV === 'production'
     ? [
         new webpack.ProvidePlugin({
           $: 'jquery',
           jQuery: 'jquery'
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+          name: 'vendor',
+          minChunks: Infinity,
+          filename: '[name].[hash].js'
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.DefinePlugin({
@@ -49,8 +57,8 @@ module.exports = {
         })
       ],
   output: {
-    path: path.resolve(__dirname, 'public'),
-    filename: 'bundle.js'
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'public')
   },
   resolve: {
     modules: [
