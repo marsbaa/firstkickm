@@ -24,7 +24,7 @@ import moment from 'moment';
 import PaymentDatesSelector from 'PaymentDatesSelector';
 import SendMail from 'SendMail';
 import InvoiceTemplate from 'InvoiceTemplate';
-import { firebaseRef } from 'app/firebase';
+import { firebaseRef } from 'firebaseApp';
 import { browserHistory } from 'react-router';
 import { getTerm, getCalendarKey, getCalendarDates } from 'helper';
 

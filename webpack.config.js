@@ -1,74 +1,80 @@
-var webpack = require('webpack');
-var path = require('path');
-var envFile = require('node-env-file');
-var CompressionPlugin = require('compression-webpack-plugin');
+const webpack = require('webpack');
+const path = require('path');
+const envFile = require('node-env-file');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 try {
   envFile(path.join(__dirname, 'config/' + process.env.NODE_ENV + '.env'));
-} catch (e) {
-
-}
+} catch (e) {}
 
 module.exports = {
-  entry: [
-    'script!jquery/dist/jquery.min.js',
-    './app/app.jsx'
-  ],
+  entry: ['script-loader!jquery/dist/jquery.min.js', './app/app.jsx'],
   externals: {
     jquery: 'jQuery'
   },
-  plugins: process.env.NODE_ENV === 'production' ? [
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery'
-    }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    //new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    new CompressionPlugin({
-      asset: "[path].gz[query]",
-      algorithm: "gzip",
-      test: /\.js$|\.css$|\.html$/,
-      threshold: 10240,
-      minRatio: 0.8
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        API_KEY: JSON.stringify(process.env.API_KEY),
-        AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
-        DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
-        STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-        SMS: JSON.stringify(process.env.SMS)
-      }
-    })
-  ] : [
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery'
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        API_KEY: JSON.stringify(process.env.API_KEY),
-        AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
-        DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
-        STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-        SMS: JSON.stringify(process.env.SMS)
-      }
-    })
-  ],
+  plugins: process.env.NODE_ENV === 'production'
+    ? [
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery'
+        }),
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new CompressionPlugin({
+          asset: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: /\.js$|\.css$|\.html$/,
+          threshold: 10240,
+          minRatio: 0.8
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false,
+            conditionals: true,
+            unused: true,
+            comparisons: true,
+            sequences: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true
+          },
+          output: { comments: false }
+        }),
+        new webpack.DefinePlugin({
+          'process.env': {
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+            API_KEY: JSON.stringify(process.env.API_KEY),
+            AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
+            DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+            STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
+            SMS: JSON.stringify(process.env.SMS)
+          }
+        })
+      ]
+    : [
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery'
+        }),
+        new webpack.DefinePlugin({
+          'process.env': {
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+            API_KEY: JSON.stringify(process.env.API_KEY),
+            AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
+            DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+            STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
+            SMS: JSON.stringify(process.env.SMS)
+          }
+        })
+      ],
   output: {
-    path: 'public',
-    filename: 'bundle.js',
-    publicPath: '/'
+    path: path.resolve(__dirname, 'public'),
+    filename: 'bundle.js'
   },
   resolve: {
-    root: __dirname,
-    modulesDirectories: [
+    modules: [
       'node_modules',
       './app/components',
       './app/components/Admin',
@@ -91,34 +97,38 @@ module.exports = {
       './app/css'
     ],
     alias: {
-      helper: 'app/helper/index.jsx',
-      actions: 'app/actions/actions.jsx',
-      reducers: 'app/reducers/reducers.jsx',
-      configureStore: 'app/store/configureStore.jsx'
+      helper: path.resolve(__dirname, 'app/helper/index.jsx'),
+      actions: path.resolve(__dirname, 'app/actions/actions.jsx'),
+      reducers: path.resolve(__dirname, 'app/reducers/reducers.jsx'),
+      router: path.resolve(__dirname, 'app/router/index.jsx'),
+      configureStore: path.resolve(__dirname, 'app/store/configureStore.jsx'),
+      firebaseApp: path.resolve(__dirname, 'app/firebase/index.jsx')
     },
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   module: {
-    loaders: [
+    rules: [
       {
+        test: /\.(js|jsx)?$/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
           presets: ['react', 'es2015', 'stage-0']
-        },
-
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/
+        }
       },
       {
         test: /\.png$/,
-        loader: "url-loader"
+        use: ['url-loader']
       },
       {
         test: /\.jpg$/,
-        loader: "file-loader"
+        use: ['file-loader']
       },
-      { test: /\.css$/, loader: "style!css" }
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
     ]
   },
-  devtool: process.env.NODE_ENV === 'production' ? undefined : 'cheap-module-eval-source-map'
+  devtool: false
 };

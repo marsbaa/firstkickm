@@ -1,4 +1,4 @@
-import firebase, { firebaseRef } from 'app/firebase';
+import firebase, { firebaseRef } from 'firebaseApp';
 import axios from 'axios';
 import moment from 'moment';
 

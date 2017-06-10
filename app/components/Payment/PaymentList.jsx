@@ -17,7 +17,7 @@ import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import StudentsFilter from 'StudentsFilter';
 import InvoiceTemplateOthers from 'InvoiceTemplateOthers';
-import { firebaseRef } from 'app/firebase';
+import { firebaseRef } from 'firebaseApp';
 import SendMail from 'SendMail';
 import Search from 'Search';
 import _ from 'lodash';

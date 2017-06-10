@@ -5,6 +5,7 @@ var actions = require('actions');
 import _ from 'lodash';
 import moment from 'moment';
 import AttendanceTable from 'AttendanceTable';
+import { getTerm, getAllTermId } from 'helper';
 
 class AttendanceSummary extends React.Component {
   constructor(props) {
@@ -18,20 +19,10 @@ class AttendanceSummary extends React.Component {
   }
 
   componentDidMount() {
-    var { dispatch, selection, calendars } = this.props;
-    Object.keys(calendars).map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === selection.key) {
-        var terms = calendar.terms;
-        Object.keys(terms).map(id => {
-          var term = terms[id];
-          if (moment().isBetween(term[0], term[term.length - 1], null, '[]')) {
-            document.getElementById('termSelect').value = id;
-            this.setState({ selectedTerm: id });
-          }
-        });
-      }
-    });
+    const { dispatch, selection, calendars } = this.props;
+    let id = getTerm(calendars, selection.key, moment());
+    document.getElementById('termSelect').value = id;
+    this.setState({ selectedTerm: id });
     dispatch(
       actions.updateNavTitle(
         '/m/attendance/summary',
@@ -41,9 +32,9 @@ class AttendanceSummary extends React.Component {
   }
 
   render() {
-    var { selection, calendars } = this.props;
-    var classes = selection.classes;
-    var html = [];
+    const { selection, calendars } = this.props;
+    const classes = selection.classes;
+    let html = [];
     Object.keys(classes).forEach(classKey => {
       html.push(
         <AttendanceTable
@@ -54,20 +45,7 @@ class AttendanceSummary extends React.Component {
       );
     });
 
-    var termOptions = [];
-    var terms;
-    Object.keys(calendars).map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === selection.key) {
-        terms = calendar.terms;
-        Object.keys(terms).map(id => {
-          var term = terms[id];
-          termOptions.push(
-            <option key={selection.key + id} value={id}>Term {id}</option>
-          );
-        });
-      }
-    });
+    const terms = getAllTermId(calendars, selection.key);
 
     return (
       <Grid style={{ marginTop: '20px' }}>
@@ -81,7 +59,13 @@ class AttendanceSummary extends React.Component {
                 onChange={this.handleSelect.bind(this)}
               >
                 <option value="select">select</option>
-                {termOptions}
+                {terms.map(id => {
+                  return (
+                    <option key={selection.key + id} value={id}>
+                      Term {id}
+                    </option>
+                  );
+                })}
               </FormControl>
             </FormGroup>
           </Col>
