@@ -20,6 +20,20 @@ module.exports = {
           $: 'jquery',
           jQuery: 'jquery'
         }),
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false,
+            conditionals: true,
+            unused: true,
+            comparisons: true,
+            sequences: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true
+          },
+          output: { comments: false }
+        }),
         new webpack.optimize.AggressiveMergingPlugin(),
         new CompressionPlugin({
           asset: '[path].gz[query]',
