@@ -28,20 +28,7 @@ module.exports = {
           threshold: 10240,
           minRatio: 0.8
         }),
-        new webpack.optimize.UglifyJsPlugin({
-          compress: {
-            warnings: false,
-            conditionals: true,
-            unused: true,
-            comparisons: true,
-            sequences: true,
-            dead_code: true,
-            evaluate: true,
-            if_return: true,
-            join_vars: true
-          },
-          output: { comments: false }
-        }),
+
         new webpack.DefinePlugin({
           'process.env': {
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
