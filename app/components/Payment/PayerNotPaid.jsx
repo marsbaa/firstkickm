@@ -4,7 +4,7 @@ import { Row, Col, Glyphicon, Grid, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router';
 import truncate from 'lodash/truncate';
 
-const PayerNotPaid = ({ props }) => {
+const PayerNotPaid = props => {
   const { childName, key, gender, payments, email, contact } = props.student;
   var truncatedName = _.truncate(childName, {
     length: 28

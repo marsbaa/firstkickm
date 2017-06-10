@@ -16,6 +16,7 @@ var actions = require('actions');
 import StudentsFilter from 'StudentsFilter';
 import _ from 'lodash';
 import moment from 'moment';
+import { getTerm, findPaymentDetails, getAllTermId } from 'helper';
 
 class PaymentNotPaid extends React.Component {
   constructor(props) {
@@ -46,18 +47,9 @@ class PaymentNotPaid extends React.Component {
 
   componentDidMount() {
     var { dispatch, selection, calendars } = this.props;
-    Object.keys(calendars).map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === selection.key) {
-        var terms = calendar.terms;
-        terms.map((term, id) => {
-          if (moment().isBetween(term[0], term[term.length - 1], null, '[]')) {
-            document.getElementById('termSelect').value = id;
-            this.setState({ selectedTerm: id });
-          }
-        });
-      }
-    });
+    var id = getTerm(calendars, selection.key, moment());
+    document.getElementById('termSelect').value = id;
+    this.setState({ selectedTerm: id });
     dispatch(
       actions.updateNavTitle(
         '/m/payment/notpaid',
@@ -68,89 +60,55 @@ class PaymentNotPaid extends React.Component {
 
   render() {
     var { selection, calendars, students } = this.props;
-    var classes = selection.classes;
+
     var html = [];
+    var calendar;
     var contacts = '';
+    var classes = selection.classes;
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
         classKey
       ];
-      var classDayTime =
-        ageGroup + ' ' + _.capitalize(day) + ' ' + startTime + ' - ' + endTime;
-      var calendar = _.find(calendars, { key: calendarKey });
+
+      var classTime = startTime + ' - ' + endTime;
+
+      //Create TermDates Array
+      calendar = _.find(calendars, { key: calendarKey });
       var termDates = [];
-      var unpaid = [];
       calendar.terms[this.state.selectedTerm].map(date => {
         termDates.push(date);
       });
-      var filteredStudents = StudentsFilter.filter(students, selection.id, '');
-      filteredStudents = _.filter(filteredStudents, { ageGroup: ageGroup });
+
+      //Filter Students base on Class
+
+      var filteredStudents = _.filter(students, {
+        venueId: selection.id,
+        currentClassDay: _.capitalize(day),
+        currentClassTime: classTime,
+        ageGroup: ageGroup
+      });
       filteredStudents = _.filter(filteredStudents, o => {
-        return o.currentClassDay.toLowerCase() === day.toLowerCase();
+        return !(o.status === 'Not Active');
       });
-      filteredStudents = _.filter(filteredStudents, {
-        currentClassTime: startTime + ' - ' + endTime
-      });
-      Object.keys(filteredStudents).map(studentId => {
-        var student = filteredStudents[studentId];
-        var attended = false;
-        var paid = false;
-        termDates.map(date => {
-          var dateId = moment(date).format('YYYY-MM-DD');
-          if (student.attendance !== undefined) {
-            if (student.attendance[dateId] !== undefined) {
-              if (student.attendance[dateId].attended) {
-                attended = true;
-              }
-            }
-          }
-          var payment = _.find(student.payments, o => {
-            if (o.termsPaid !== undefined) {
-              return o.termsPaid[this.state.selectedTerm] !== undefined;
-            }
-            return false;
-          });
-          if (payment !== undefined) {
-            if (
-              _.find(payment.termsPaid[this.state.selectedTerm], o => {
-                return moment(o.date).isSame(dateId, 'day');
-              }) !== undefined
-            ) {
-              paid = true;
-            }
-          }
-        });
-        if (attended && !paid) {
-          if (student.contact !== '' && student.contact !== undefined) {
-            contacts = contacts + '65' + student.contact + ';';
-          }
-          unpaid.push(student);
-        }
-      });
+
+      const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
+        filteredStudents,
+        termDates,
+        this.state.selectedTerm
+      );
       if (_.size(unpaid) !== 0) {
         html.push(
           <PaymentClassList
             key={classKey}
             group={unpaid}
-            title={classDayTime}
+            title={ageGroup + ' ' + classTime + ' (' + _.capitalize(day) + ')'}
           />
         );
       }
     });
 
-    var termOptions = [];
-    var terms;
-    Object.keys(calendars).map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === selection.key) {
-        terms = calendar.terms;
-        terms.map((term, id) => {
-          termOptions.push(
-            <option key={selection.key + id} value={id}>Term {id}</option>
-          );
-        });
-      }
-    });
+    var terms = getAllTermId(calendars, selection.key);
+
     var yearOptions = [];
     yearOptions.push(
       <option key={moment().year()} value={moment().year()}>
@@ -214,7 +172,13 @@ FKA-Admin`;
                 onChange={this.handleSelect.bind(this)}
                 style={{ padding: '6px 2px 5px 2px' }}
               >
-                {termOptions}
+                {terms.map(id => {
+                  return (
+                    <option key={selection.key + id} value={id}>
+                      Term {id}
+                    </option>
+                  );
+                })}
               </FormControl>
             </FormGroup>
           </Col>
