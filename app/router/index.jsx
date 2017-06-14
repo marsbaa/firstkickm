@@ -7,7 +7,7 @@ import Login from 'Login';
 const NavBar = asyncRoute(() => import('NavBar'));
 const MainMenu = asyncRoute(() => import('MainMenu'));
 
-import Dashboard from 'Dashboard';
+import DashboardApp from 'DashboardApp';
 
 //Components for Access
 import UserApp from 'UserApp';
@@ -110,7 +110,7 @@ export default (
       <IndexRoute component={Login} />
       <Route path="m" component={NavBar} onEnter={requireAuth}>
         <IndexRoute component={MainMenu} />
-        <Route path="dashboard" component={Dashboard} />
+        <Route path="dashboard" component={DashboardApp} />
         <Route path="users" component={UserApp}>
           <IndexRoute component={UserList} />
           <Route path=":userId" component={UserEdit} />

@@ -8,7 +8,10 @@
     "start:dev": "webpack-dev-server --inline --content-base public --history-api-fallback",
     "start:prod": "webpack -p && node server.js"
   },
-  
+  "engines": {
+    "node": "6.7.0",
+    "npm": "4.6.1"
+  },
   "author": "Ray Yee",
   "license": "MIT",
   "dependencies": {

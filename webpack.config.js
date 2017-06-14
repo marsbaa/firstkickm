@@ -63,6 +63,7 @@ module.exports = {
       './app/components/Charts',
       './app/components/Coach',
       './app/components/CoachSchedule',
+      './app/components/Dashboard',
       './app/components/Inventory',
       './app/components/Jersey',
       './app/components/MakeUp',

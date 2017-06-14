@@ -9,7 +9,7 @@ import moment from 'moment';
 import ChartPaymentReport from 'ChartPaymentReport';
 import Loading from 'Loading';
 
-class Dashboard extends React.Component {
+class DashboardApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -117,4 +117,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(DashboardApp);
