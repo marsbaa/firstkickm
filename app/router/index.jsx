@@ -1,10 +1,14 @@
 import firebase from 'firebaseApp';
 import React from 'react';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
-
-import NavBar from 'NavBar';
+import asyncRoute from '../asyncRoute';
 import Login from 'Login';
-import MainMenu from 'MainMenu';
+
+const NavBar = asyncRoute(() => import('NavBar'));
+const MainMenu = asyncRoute(() => import('MainMenu'));
+
+import Dashboard from 'Dashboard';
+
 //Components for Access
 import UserApp from 'UserApp';
 import UserList from 'UserList';
@@ -18,7 +22,6 @@ import ClassEdit from 'ClassEdit';
 
 //Components for Trials
 import TrialsApp from 'TrialsApp';
-import TrialList from 'TrialList';
 import TrialEdit from 'TrialEdit';
 import TrialAdd from 'TrialAdd';
 import TrialRegister from 'TrialRegister';
@@ -107,6 +110,7 @@ export default (
       <IndexRoute component={Login} />
       <Route path="m" component={NavBar} onEnter={requireAuth}>
         <IndexRoute component={MainMenu} />
+        <Route path="dashboard" component={Dashboard} />
         <Route path="users" component={UserApp}>
           <IndexRoute component={UserList} />
           <Route path=":userId" component={UserEdit} />
@@ -119,13 +123,11 @@ export default (
           <Route path=":centreKey/:calendarKey" component={CalendarEdit} />
           <Route path=":centreKey/class/:classKey" component={ClassEdit} />
         </Route>
-        <Route path="trials" component={TrialsApp}>
-          <IndexRoute component={TrialList} />
-          <Route path="edit/:trialId" component={TrialEdit} />
-          <Route path="add" component={TrialAdd} />
-          <Route path="register/:trialId" component={TrialRegister} />
-          <Route path="payment" component={TrialPaymentForm} />
-        </Route>
+        <Route path="trials" component={TrialsApp} />
+        <Route path="trials/edit/:trialId" component={TrialEdit} />
+        <Route path="trials/add" component={TrialAdd} />
+        <Route path="trials/register/:trialId" component={TrialRegister} />
+        <Route path="trials/payment" component={TrialPaymentForm} />
         <Route path="coachattendance" component={CoachAttendance} />
         <Route path="coachattendanceHQ" component={CoachAttendanceHQ} />
         <Route path="attendance" component={AttendanceApp}>

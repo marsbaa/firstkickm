@@ -153,6 +153,14 @@ export function isManager(auth, users) {
   }
 }
 
+export function isSuperAdmin(email) {
+  var superAdminUser = ['ray@fka.sg', 'jimmybeh@fka.sg', 'helmy@fka.sg'];
+  if (superAdminUser.indexOf(email) !== -1) {
+    return true;
+  }
+  return false;
+}
+
 export function getActive(students) {
   return _.filter(students, o => {
     return !(o.status === 'Not Active');
@@ -317,4 +325,20 @@ export function getAllTermId(calendars, centreKey) {
   });
   termIds = termIds.sort();
   return termIds;
+}
+
+export function getTermId(calendars) {
+  let termId = 0;
+  Object.keys(calendars).map(calendarKey => {
+    let terms = calendars[calendarKey].terms;
+    Object.keys(terms).map(id => {
+      let term = terms[id];
+      if (moment().isBetween(term[0], term[term.length - 1], null, '[]')) {
+        termId = parseInt(id);
+      } else if (moment().isAfter(term[term.length - 1])) {
+        termId = parseInt(id) + 1;
+      }
+    });
+  });
+  return termId;
 }

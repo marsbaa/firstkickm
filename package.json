@@ -61,6 +61,7 @@
     "reselect": "^3.0.1",
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.2",
+    "styled-components": "^2.0.1",
     "url-loader": "^0.5.8",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5"

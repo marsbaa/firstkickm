@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 import {
   Grid,
   Row,
@@ -7,43 +7,27 @@ import {
   FormControl,
   ControlLabel
 } from 'react-bootstrap';
-import mainbtn from 'styles.css';
-var { connect } = require('react-redux');
-var { Link, IndexLink } = require('react-router');
-var actions = require('actions');
+import { connect } from 'react-redux';
+import { Link, IndexLink } from 'react-router';
+import { updateSelectedCentre, updateNavTitle } from 'actions';
+import { isManager, isSuperAdmin } from 'helper';
 
 class MainMenu extends React.Component {
-  handleSelect(e) {
-    var { dispatch, centres } = this.props;
-    e.preventDefault();
-    dispatch(actions.updateSelectedCentre(centres[e.target.value]));
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(updateNavTitle('/m', 'Dashboard'));
   }
 
-  componentDidMount() {
-    var { dispatch } = this.props;
-    dispatch(actions.updateNavTitle('/m', 'Dashboard'));
-    //dispatch(actions.deleteDuplicateStudent())
+  handleSelect(e) {
+    const { dispatch, centres } = this.props;
+    e.preventDefault();
+    dispatch(updateSelectedCentre(centres[e.target.value]));
   }
 
   render() {
-    var { selection, centres, users, auth } = this.props;
-    var superAdminUser = ['ray@fka.sg', 'jimmybeh@fka.sg', 'helmy@fka.sg'];
-    var user, superAdmin;
-    if (auth.email === 'ray@marsbaa.com') {
-      user = {
-        name: 'Ray Yee',
-        email: 'ray@marsbaa.com',
-        assignedRoles: 'Manager',
-        assignedCentres: { 0: 'all' }
-      };
-    } else {
-      user = _.find(users, ['email', auth.email]);
-    }
-    if (superAdminUser.indexOf(user.email) !== -1) {
-      superAdmin = true;
-    } else {
-      superAdmin = false;
-    }
+    const { selection, centres, users, auth } = this.props;
+    const user = _.find(users, ['email', auth.email]);
+
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
@@ -174,6 +158,24 @@ class MainMenu extends React.Component {
       } else if (user.assignedRoles === 'Manager') {
         menuHTML.push(
           <div key="managermenu">
+            {isSuperAdmin(auth.email)
+              ? <Link to="m/dashboard">
+                  <button className="mainbtn" id="dashboard">
+                    Dashboard
+                  </button>
+                </Link>
+              : null}
+            {isSuperAdmin(auth.email)
+              ? <Link to="m/totalhq">
+                  <button
+                    className="mainbtn"
+                    id="totalCollectionHQ"
+                    disabled={selection.id === '0' ? true : false}
+                  >
+                    Total Collection (HQ)
+                  </button>
+                </Link>
+              : null}
             <Link to="m/trials">
               <button
                 className="mainbtn"
@@ -255,17 +257,6 @@ class MainMenu extends React.Component {
                 Total Collection (Today)
               </button>
             </Link>
-            {superAdmin
-              ? <Link to="m/totalhq">
-                  <button
-                    className="mainbtn"
-                    id="totalCollectionHQ"
-                    disabled={selection.id === '0' ? true : false}
-                  >
-                    Total Collection (HQ)
-                  </button>
-                </Link>
-              : null}
             <Link to="m/coachattendance">
               <button
                 className="mainbtn"
@@ -332,7 +323,7 @@ class MainMenu extends React.Component {
     }
 
     return (
-      <Grid style={{ paddingTop: '20px', overflow: 'hidden' }}>
+      <Grid style={{ marginTop: '10px' }}>
         <Row>
           <Col xs={12} md={12}>
             <FormGroup
@@ -358,6 +349,13 @@ class MainMenu extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(MainMenu);
+function mapStateToProps(state) {
+  return {
+    selection: state.selection,
+    centres: state.centres,
+    users: state.users,
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps)(MainMenu);

@@ -134,6 +134,7 @@ export var updateUser = (user, userId) => {
 //Actions for TrialsApp
 export var startAddTrials = () => {
   return dispatch => {
+    dispatch({ type: 'IS_FETCHING', completed: false });
     var capitalize = word => {
       var sa = word.replace(/-/g, ' ');
       var saa = sa.toLowerCase();
@@ -236,6 +237,7 @@ export var startAddTrials = () => {
           }
         });
         dispatch(addTrials(parsedTrials));
+        dispatch({ type: 'IS_FETCHING', completed: true });
       });
   };
 };
@@ -730,6 +732,7 @@ export var deleteAdmin = adminId => {
 //Centre Profile
 export var startCentres = () => {
   return dispatch => {
+    dispatch({ type: 'IS_FETCHING', completed: false });
     var centreRef = firebaseRef.child('centres');
     centreRef.orderByChild('id').once('value').then(snapshot => {
       var centres = snapshot.val();
@@ -740,23 +743,10 @@ export var startCentres = () => {
           key: centreId,
           ...centres[centreId]
         };
-        /*parsedCentres.push({
-        key: centreId,
-        id: centres[centreId].id,
-        name: centres[centreId].name,
-        logoURL: centres[centreId].logoURL,
-        classes: centres[centreId].classes
-      });*/
       });
-      dispatch(isFetching());
+      dispatch({ type: 'IS_FETCHING', completed: true });
       dispatch(addCentres(parsedCentres));
     });
-  };
-};
-
-export var isFetching = () => {
-  return {
-    type: 'IS_FETCHING'
   };
 };
 

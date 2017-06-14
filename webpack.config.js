@@ -11,51 +11,44 @@ try {
 module.exports = {
   entry: {
     app: ['script-loader!jquery/dist/jquery.min.js', './app/app.jsx'],
-    vendor: ['react', 'react-dom', 'react-router']
+    vendor: [
+      'react',
+      'react-dom',
+      'react-router',
+      'react-redux',
+      'redux',
+      'redux-thunk',
+      'styled-components',
+      'lodash',
+      'moment'
+    ]
   },
   externals: {
     jquery: 'jQuery'
   },
 
-  plugins: process.env.NODE_ENV === 'production'
-    ? [
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'vendor',
-          minChunks: Infinity,
-          filename: '[name].[hash].js'
-        }),
-        new webpack.optimize.AggressiveMergingPlugin(),
-        new webpack.DefinePlugin({
-          'process.env': {
-            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-            API_KEY: JSON.stringify(process.env.API_KEY),
-            AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
-            DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
-            STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-            SMS: JSON.stringify(process.env.SMS)
-          }
-        })
-      ]
-    : [
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
-        }),
-        new webpack.DefinePlugin({
-          'process.env': {
-            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-            API_KEY: JSON.stringify(process.env.API_KEY),
-            AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
-            DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
-            STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
-            SMS: JSON.stringify(process.env.SMS)
-          }
-        })
-      ],
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.bundle.js',
+      minChunks: Infinity
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        API_KEY: JSON.stringify(process.env.API_KEY),
+        AUTH_DOMAIN: JSON.stringify(process.env.AUTH_DOMAIN),
+        DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+        STORAGE_BUCKET: JSON.stringify(process.env.STORAGE_BUCKET),
+        SMS: JSON.stringify(process.env.SMS)
+      }
+    })
+  ],
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')

@@ -1,26 +1,28 @@
-import React from 'react'
-import _ from 'lodash'
-var actions = require('actions')
-var {connect} = require('react-redux')
+import React from 'react';
+import _ from 'lodash';
+import { startNotes } from 'actions';
+import { connect } from 'react-redux';
 
 class NotesApp extends React.Component {
   componentDidMount() {
-    var {dispatch, notes} = this.props;
+    var { dispatch, notes } = this.props;
     if (_.isEmpty(notes)) {
-      dispatch(actions.startNotes());
+      dispatch(startNotes());
     }
   }
 
   render() {
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
-   return (
-     <div>
-       {this.props.children}
-     </div>
-
-   );
- }
- }
-
- export default connect((state) => {return state;
-})(NotesApp);
+function mapStateToProps(state) {
+  return {
+    notes: state.notes
+  };
+}
+export default connect(mapStateToProps)(NotesApp);
