@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const envFile = require('node-env-file');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -37,6 +38,11 @@ module.exports = {
       filename: 'vendor.bundle.js',
       minChunks: Infinity
     }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'public/index.html'),
+      filename: 'index.html',
+      inject: 'body'
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
@@ -50,7 +56,7 @@ module.exports = {
   ],
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'public/')
   },
   resolve: {
     modules: [
@@ -109,6 +115,5 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       }
     ]
-  },
-  devtool: false
+  }
 };
