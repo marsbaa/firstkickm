@@ -121,13 +121,13 @@ class AttendanceTable extends React.Component {
             header: <b style={{ fontSize: '11px' }}>Child Name</b>,
             accessor: 'childName',
             maxWidth: 80,
-            style: { fontSize: '10px' }
+            style: { fontSize: '11px' }
           },
           {
             header: <b style={{ fontSize: '9px' }}>P</b>,
             accessor: 'paymentButton',
             maxWidth: 30,
-            style: { fontSize: '8px' }
+            style: { fontSize: '11px' }
           },
           ...termColumns
         ]
