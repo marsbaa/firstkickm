@@ -9,7 +9,7 @@
     "start:prod": "webpack -p && node server.js"
   },
   "engines": {
-    "node": "5.5.0",
+    "node": "6.7.0",
     "npm": "4.6.1"
   },
   "author": "Ray Yee",
