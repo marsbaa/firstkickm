@@ -1,6 +1,7 @@
 import firebase from 'firebaseApp';
 import React from 'react';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import asyncRoute from '../asyncRoute';
 import Login from 'Login';
 
@@ -67,6 +68,7 @@ import AttendanceApp from 'AttendanceApp';
 import AttendanceList from 'AttendanceList';
 import AttendanceSummary from 'AttendanceSummary';
 import AttendanceMakeUp from 'AttendanceMakeUp';
+import AttendanceHistory from 'AttendanceHistory';
 
 //Student Profile
 import StudentApp from 'StudentApp';
@@ -95,17 +97,17 @@ import NotesAll from 'NotesAll';
 import MakeUpApp from 'MakeUpApp';
 import MakeUpList from 'MakeUpList';
 
-import EnsureLoggedIn from 'EnsureLoggedIn';
-
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
     replace('/');
   }
   next();
 }
+const store = require('configureStore').configure();
+const history = syncHistoryWithStore(browserHistory, store);
 
 export default (
-  <Router history={browserHistory}>
+  <Router history={history}>
     <Route path="/">
       <IndexRoute component={Login} />
       <Route path="m" component={NavBar} onEnter={requireAuth}>
@@ -132,6 +134,7 @@ export default (
         <Route path="coachattendanceHQ" component={CoachAttendanceHQ} />
         <Route path="attendance" component={AttendanceApp}>
           <IndexRoute component={AttendanceList} />
+          <Route path="history/:studentId" component={AttendanceHistory} />
           <Route path="summary" component={AttendanceSummary} />
           <Route path="makeup/:studentId" component={AttendanceMakeUp} />
         </Route>

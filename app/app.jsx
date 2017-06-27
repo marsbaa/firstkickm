@@ -6,8 +6,7 @@ import router from 'router';
 import { Provider } from 'react-redux';
 import { login, logout } from 'actions';
 import { ThemeProvider } from 'styled-components';
-
-var store = require('configureStore').configure();
+const store = require('configureStore').configure();
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {

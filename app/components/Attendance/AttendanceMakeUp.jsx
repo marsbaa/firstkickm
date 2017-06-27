@@ -1,73 +1,81 @@
-import React from 'react'
-import moment from 'moment'
-import {browserHistory} from 'react-router'
-var {connect} = require('react-redux')
-var actions = require('actions')
-import {Panel, Grid, Row, Col, FormControl, FormGroup, ControlLabel, Radio} from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import {getCentreCalendarDates, getCentreCalendarDatesAfter} from 'helper'
+import React from 'react';
+import moment from 'moment';
+import { browserHistory } from 'react-router';
+var { connect } = require('react-redux');
+var actions = require('actions');
+import {
+  Panel,
+  Grid,
+  Row,
+  Col,
+  FormControl,
+  FormGroup,
+  ControlLabel,
+  Radio
+} from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { getCentreCalendarDates, getClosestDate } from 'helper';
 
 class AttendanceMakeUp extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      fromDate : moment(),
+      fromDate: moment(),
       toDate: moment(),
-      fromTermDates : [],
-      toTermDates : [],
+      fromTermDates: [],
+      toTermDates: [],
       selectedCentreTo: ''
-    }
-    this.handleChangeFrom = this.handleChangeFrom.bind(this)
-    this.handleChangeTo = this.handleChangeTo.bind(this)
-    this.centreSelectTo = this.centreSelectTo.bind(this)
-    this.onFormSubmit = this.onFormSubmit.bind(this)
+    };
+    this.handleChangeFrom = this.handleChangeFrom.bind(this);
+    this.handleChangeTo = this.handleChangeTo.bind(this);
+    this.centreSelectTo = this.centreSelectTo.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
   componentWillMount() {
-   var {dispatch, selection, calendars} = this.props;
-   dispatch(actions.updateNavTitle("/m/attendance/HQ", "Make Up Form"));
+    var { dispatch, selection, calendars } = this.props;
+    dispatch(actions.updateNavTitle('/m/attendance/HQ', 'Make Up Form'));
 
-   var termDates = getCentreCalendarDates(calendars, selection.key)
+    var termDates = getCentreCalendarDates(calendars, selection.key);
+    var fromDate = getClosestDate(termDates);
 
-   this.setState({fromTermDates: termDates})
-   this.setState({toTermDates: termDates})
-   this.setState({toDate: termDates[0]})
-   this.setState({fromDate: termDates[0]})
-   this.setState({selectedCentreTo: selection.key})
+    this.setState({ fromTermDates: termDates });
+    this.setState({ toTermDates: termDates });
+    this.setState({ toDate: moment(fromDate) });
+    this.setState({ fromDate: moment(fromDate) });
+    this.setState({ selectedCentreTo: selection.key });
   }
 
   handleChangeFrom(date) {
-   this.setState({
-     fromDate: date
-   });
+    this.setState({
+      fromDate: date
+    });
   }
 
   handleChangeTo(date) {
-   this.setState({
-     toDate: date
-   });
+    this.setState({
+      toDate: date
+    });
   }
 
   centreSelectTo(e) {
     e.preventDefault();
-    var {calendars} = this.props
-    var termDates = getCentreCalendarDatesAfter(calendars, e.target.value)
-
-    this.setState({toDate: termDates[0]})
+    var { calendars } = this.props;
+    var termDates = getCentreCalendarDates(calendars, e.target.value);
+    var toDate = getClosestDate(termDates);
+    this.setState({ toDate: moment(toDate) });
     this.setState({
       selectedCentreTo: e.target.value
     });
-    this.setState({toTermDates: termDates})
+    this.setState({ toTermDates: termDates });
   }
-
 
   onFormSubmit(e) {
     e.preventDefault();
-    var {dispatch, selection, students} = this.props
-    var studentKey = this.props.params.studentId
-    var student = _.find(students, {key: studentId})
+    var { dispatch, selection, students } = this.props;
+    var studentKey = this.props.params.studentId;
+    var student = _.find(students, { key: studentId });
     var makeUp = {
       fromDate: document.getElementById('fromDate').value,
       toDate: document.getElementById('toDate').value,
@@ -77,116 +85,135 @@ class AttendanceMakeUp extends React.Component {
       toClassTimeDay: document.getElementById('toClassTimeDay').value,
       ageGroup: student.ageGroup,
       studentKey
-    }
+    };
     if (makeUp.toCentre !== '0') {
-      if (makeUp.toClassTimeDay !== '0'){
-        dispatch(actions.addMakeUp(makeUp))
-        browserHistory.push('/m/makeup')
+      if (makeUp.toClassTimeDay !== '0') {
+        dispatch(actions.addMakeUp(makeUp));
+        browserHistory.push('/m/makeup');
       }
     }
   }
 
   render() {
-    var {centres, students, selection} = this.props;
-    var studentId = this.props.params.studentId
-    var student = _.find(students, {key: studentId})
+    var { centres, students, selection } = this.props;
+    var studentId = this.props.params.studentId;
+    var student = _.find(students, { key: studentId });
     //Centre List
     var centreOptions = [];
     centreOptions.push(<option key="0" value="0">select</option>);
-    Object.keys(centres).map((centreKey) => {
-      var centre = centres[centreKey]
-      centreOptions.push(<option key={centre.key} value={centre.key}>{_.upperFirst(centre.name)}</option>);
+    Object.keys(centres).map(centreKey => {
+      var centre = centres[centreKey];
+      centreOptions.push(
+        <option key={centre.key} value={centre.key}>
+          {_.upperFirst(centre.name)}
+        </option>
+      );
     });
 
     //Class TimeSlots From
     var classTimeSlotsTo = [];
     classTimeSlotsTo.push(<option key="0" value="0">select</option>);
-    var centreTo = centres[this.state.selectedCentreTo]
+    var centreTo = centres[this.state.selectedCentreTo];
 
-    Object.keys(centreTo.classes).forEach((classID) => {
+    Object.keys(centreTo.classes).forEach(classID => {
       var cla = centreTo.classes[classID];
       if (cla.ageGroup === student.ageGroup) {
-        var classTime = cla.startTime + " - " + cla.endTime;
-        var classTimeDay = classTime+ " ("+_.capitalize(cla.day)+")";
-        classTimeSlotsTo.push(<option key={classTimeDay} value={classTimeDay}>{classTimeDay}</option>);
+        var classTime = cla.startTime + ' - ' + cla.endTime;
+        var classTimeDay = classTime + ' (' + _.capitalize(cla.day) + ')';
+        classTimeSlotsTo.push(
+          <option key={classTimeDay} value={classTimeDay}>
+            {classTimeDay}
+          </option>
+        );
       }
     });
 
-
     return (
-      <Grid style={{marginTop: '20px'}}>
+      <Grid style={{ marginTop: '20px' }}>
         <Panel header="From">
-          <Row style={{padding: '10px'}}>
+          <Row style={{ padding: '10px' }}>
             <Col md={6}>
               <FormGroup>
                 <ControlLabel>Selected Centre</ControlLabel>
                 <FormControl
-                  id="fromCentre" type="text" disabled
-                  defaultValue={selection.name}>
-                </FormControl>
+                  id="fromCentre"
+                  type="text"
+                  disabled
+                  defaultValue={selection.name}
+                />
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Selected Class Time</ControlLabel>
                 <FormControl
-                  id="fromClassTimeDay" type="text" disabled
-                  defaultValue={student.currentClassTime+ " ("+_.capitalize(student.currentClassDay)+")"}
-                  >
-                </FormControl>
+                  id="fromClassTimeDay"
+                  type="text"
+                  disabled
+                  defaultValue={
+                    student.currentClassTime +
+                      ' (' +
+                      _.capitalize(student.currentClassDay) +
+                      ')'
+                  }
+                />
               </FormGroup>
-              <FormGroup style={{marginTop: '30px'}}>
+              <FormGroup style={{ marginTop: '30px' }}>
                 <ControlLabel>Selected Date</ControlLabel>
-                  <DatePicker
-                    id = "fromDate"
-                    dateFormat="YYYY-MM-DD"
-                    selected={this.state.fromDate}
-                    includeDates={this.state.fromTermDates}
-                    onChange={this.handleChangeFrom}
-                    />
+                <DatePicker
+                  id="fromDate"
+                  dateFormat="YYYY-MM-DD"
+                  selected={this.state.fromDate}
+                  includeDates={this.state.fromTermDates}
+                  onChange={this.handleChangeFrom}
+                />
               </FormGroup>
             </Col>
           </Row>
         </Panel>
         <Panel header="To">
-          <Row style={{padding: '10px'}}>
+          <Row style={{ padding: '10px' }}>
             <Col md={6}>
               <FormGroup>
                 <ControlLabel>Selected Centre</ControlLabel>
                 <FormControl
-                  id="toCentre" componentClass="select" placeholder="select"
-                  onChange={this.centreSelectTo}>
+                  id="toCentre"
+                  componentClass="select"
+                  placeholder="select"
+                  onChange={this.centreSelectTo}
+                >
                   {centreOptions}
                 </FormControl>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Selected Class Time</ControlLabel>
                 <FormControl
-                  id="toClassTimeDay" componentClass="select" placeholder="select"
-                  >
-                {classTimeSlotsTo}
+                  id="toClassTimeDay"
+                  componentClass="select"
+                  placeholder="select"
+                >
+                  {classTimeSlotsTo}
                 </FormControl>
               </FormGroup>
-              <FormGroup style={{marginTop: '30px'}}>
+              <FormGroup style={{ marginTop: '30px' }}>
                 <ControlLabel>Selected Date</ControlLabel>
-                  <DatePicker
-                    id = "toDate"
-                    dateFormat="YYYY-MM-DD"
-                    selected={this.state.toDate}
-                    includeDates={this.state.toTermDates}
-                    onChange={this.handleChangeTo}
-                    />
+                <DatePicker
+                  id="toDate"
+                  dateFormat="YYYY-MM-DD"
+                  selected={this.state.toDate}
+                  includeDates={this.state.toTermDates}
+                  onChange={this.handleChangeTo}
+                />
               </FormGroup>
             </Col>
           </Row>
         </Panel>
-        <button className="submitbtn" onClick={this.onFormSubmit}>Submit Make Up</button>
+        <button className="submitbtn" onClick={this.onFormSubmit}>
+          Submit Make Up
+        </button>
       </Grid>
-
-    )
+    );
   }
 }
 
-export default connect(
-  (state) => {
-    return state;
-  }
-)(AttendanceMakeUp);
+export default connect(state => {
+  return state;
+})(AttendanceMakeUp);

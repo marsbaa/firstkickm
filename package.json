@@ -15,7 +15,6 @@
   "author": "Ray Yee",
   "license": "MIT",
   "dependencies": {
-    "auth0-js": "^8.7.0",
     "axios": "^0.15.3",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
@@ -47,6 +46,7 @@
     "react-radio-group": "^3.0.1",
     "react-redux": "^4.4.8",
     "react-router": "^2.8.1",
+    "react-router-redux": "^4.0.8",
     "react-select": "^1.0.0-rc.3",
     "react-signature-pad": "0.0.6",
     "react-table": "^5.6.0",
@@ -59,7 +59,6 @@
     "redux-reset": "^0.3.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
-    "router5": "^4.7.1",
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.2",
     "styled-components": "^2.0.1",

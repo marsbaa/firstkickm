@@ -342,3 +342,17 @@ export function getTermId(calendars) {
   });
   return termId;
 }
+
+export function paidTerm(payments, term) {
+  var payment = _.find(payments, o => {
+    if (o.termsPaid !== undefined) {
+      return o.termsPaid[term] !== undefined;
+    }
+    return false;
+  });
+  if (payment !== undefined) {
+    return true;
+  } else {
+    return false;
+  }
+}

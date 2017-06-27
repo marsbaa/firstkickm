@@ -1,9 +1,35 @@
-import {createStore, applyMiddleware, combineReducers} from 'redux'
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
-import reduxReset from 'redux-reset'
-import {composeWithDevTools} from 'redux-devtools-extension/logOnlyInProduction'
-var {authReducer, usersReducer, centreReducer, navbarReducer, trialsReducer, selectionReducer, searchTextReducer, coachReducer, adminReducer, termReducer, ageGroupReducer, studentReducer, calendarReducer, coachScheduleReducer, paymentReducer, expenseReducer, registrationReducer, inventoryReducer, fetchingReducer, notesReducer, makeUpReducer, redirectReducer} = require('reducers');
+import reduxReset from 'redux-reset';
+import { routerReducer } from 'react-router-redux';
+import {
+  composeWithDevTools
+} from 'redux-devtools-extension/logOnlyInProduction';
+import {
+  authReducer,
+  usersReducer,
+  centreReducer,
+  navbarReducer,
+  trialsReducer,
+  selectionReducer,
+  searchTextReducer,
+  coachReducer,
+  adminReducer,
+  termReducer,
+  ageGroupReducer,
+  studentReducer,
+  calendarReducer,
+  coachScheduleReducer,
+  paymentReducer,
+  expenseReducer,
+  registrationReducer,
+  inventoryReducer,
+  fetchingReducer,
+  notesReducer,
+  makeUpReducer,
+  redirectReducer
+} from 'reducers';
 
 export var configure = (initialState = {}) => {
   var reducer = combineReducers({
@@ -29,11 +55,15 @@ export var configure = (initialState = {}) => {
     notes: notesReducer,
     makeUps: makeUpReducer,
     redirect: redirectReducer,
-    form : formReducer
+    form: formReducer,
+    routing: routerReducer
   });
-  var store = createStore(reducer, initialState, composeWithDevTools(
-    applyMiddleware(thunk), reduxReset()
-  ));
+
+  const store = createStore(
+    reducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(thunk), reduxReset())
+  );
 
   return store;
 };
