@@ -175,7 +175,7 @@ export var startAddTrials = () => {
     };
     var trialsRef = firebaseRef.child('trials');
     axios
-      .get('http://www.fka.sg/get-api-students')
+      .get('https://www.fka.sg/get-api-students')
       .then(function(response) {
         var trialList = response.data.data;
         trialsRef.once('value').then(snapshot => {
