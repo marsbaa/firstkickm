@@ -2,6 +2,13 @@ import moment from 'moment';
 import React from 'react';
 import _ from 'lodash';
 
+export function getClosestDate(termDates) {
+  var today = moment();
+  return _.filter(termDates, o => {
+    return moment(o.date).isSameOrAfter(today, 'day');
+  })[0];
+}
+
 export function findPaymentDetails(students, termDates, selectedTerm) {
   var paid = [];
   var unpaid = [];
