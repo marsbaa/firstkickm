@@ -21,7 +21,7 @@ var smtpTransport = nodemailer.createTransport(smtpConfig);
 var app = express();
 const PORT = process.env.PORT || 3000;
 app.use(compression());
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -31,8 +31,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('*', function(request, res) {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+app.get('*', function(req, res) {
+  // and drop 'public' in the middle of here
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/send', function(req, res) {
