@@ -76,7 +76,7 @@ class AttendanceTable extends React.Component {
           <div
             style={{
               width: '100%',
-              height: '100%',
+              height: '15px',
               backgroundColor: paid ? 'green' : 'none',
               textAlign: 'center',
               color: 'white',
