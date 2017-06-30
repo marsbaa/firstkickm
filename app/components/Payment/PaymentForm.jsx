@@ -55,7 +55,7 @@ class PaymentForm extends React.Component {
 
   componentWillMount() {
     window.scrollTo(0, 0);
-    var { students, calendars, selection, coaches } = this.props;
+    var { students, calendars, selection, coaches, makeUps } = this.props;
     //Initiate Payer
     var studentId = this.props.params.studentId;
     var contact = null;
@@ -85,12 +85,9 @@ class PaymentForm extends React.Component {
     var calendarKeys = [];
 
     payer.map((child, id) => {
-      console.log(child);
       var currentTerm = getTerm(calendars, selection.key, moment());
       var calendarKey = getCalendarKey(child, selection.classes);
       var calendar = calendars[calendarKey];
-      console.log(currentTerm);
-      console.log(calendarKey);
       var startDate = moment(calendar.terms[currentTerm][0]);
       var calendarDate = getCalendarDates(calendar);
       if (child.payments !== undefined) {
@@ -107,6 +104,15 @@ class PaymentForm extends React.Component {
               });
             });
           }
+        });
+      }
+      let filteredMakeUps = _.filter(makeUps, { studentKey: child.key });
+      if (!_.isEmpty(filteredMakeUps)) {
+        filteredMakeUps.map(makeUp => {
+          var index = _.findIndex(calendarDate, d => {
+            return moment(d).isSame(makeUp.toDate, 'day');
+          });
+          calendarDate.splice(index, 1);
         });
       }
 

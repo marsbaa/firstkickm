@@ -3,12 +3,13 @@ import { Link } from 'react-router';
 import { Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import MakeUp from 'MakeUp';
+import { updateNavTitle } from 'actions';
 var actions = require('actions');
 
 class MakeUpList extends React.Component {
   componentDidMount() {
     var { dispatch } = this.props;
-    dispatch(actions.updateNavTitle('/m/makeup', 'Make Up'));
+    dispatch(updateNavTitle('/m/makeup', 'Make Up'));
   }
 
   render() {
@@ -56,6 +57,11 @@ class MakeUpList extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(MakeUpList);
+function mapStateToProps(state) {
+  return {
+    makeUps: state.makeUps,
+    selection: state.selection,
+    students: state.students
+  };
+}
+export default connect(mapStateToProps)(MakeUpList);

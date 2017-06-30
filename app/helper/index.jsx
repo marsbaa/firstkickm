@@ -363,3 +363,17 @@ export function paidTerm(payments, term) {
     return false;
   }
 }
+
+export function makeUpDate(makeUps, date) {
+  const toMakeUp = _.find(makeUps, d => {
+    return moment(d.toDate).isSame(date, 'day');
+  });
+  const fromMakeUp = _.find(makeUps, d => {
+    return moment(d.fromDate).isSame(date, 'day');
+  });
+
+  return {
+    to: !(toMakeUp === undefined),
+    from: !(fromMakeUp === undefined)
+  };
+}

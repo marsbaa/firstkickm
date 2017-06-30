@@ -7,13 +7,19 @@ import moment from 'moment';
 import { Glyphicon, Row, Col } from 'react-bootstrap';
 import StudentsFilter from 'StudentsFilter';
 import { Link } from 'react-router';
-import { getActive, paidDate, findPaymentDetails } from 'helper';
+import { getActive, paidDate, findPaymentDetails, makeUpDate } from 'helper';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
 
 class AttendanceTable extends React.Component {
   render() {
-    const { calendars, students, selection, selectedTerm } = this.props;
+    const {
+      calendars,
+      students,
+      selection,
+      selectedTerm,
+      makeUps
+    } = this.props;
     const {
       day,
       startTime,
@@ -61,6 +67,8 @@ class AttendanceTable extends React.Component {
         const dateId = moment(date).format('YYYY-MM-DD');
         let attended = '';
         const paid = paidDate(payments, dateId, selectedTerm);
+        const filteredMakeUps = _.filter(makeUps, { studentKey: key });
+        const { to, from } = makeUpDate(filteredMakeUps, dateId);
         if (attendance !== undefined) {
           if (attendance[dateId] !== undefined) {
             if (attendance[dateId].attended) {
@@ -78,7 +86,7 @@ class AttendanceTable extends React.Component {
             style={{
               width: '100%',
               height: '15px',
-              backgroundColor: paid ? 'green' : 'none',
+              backgroundColor: from ? 'blue' : paid ? 'green' : 'none',
               textAlign: 'center',
               color: 'white',
               fontSize: '9px'
@@ -87,7 +95,7 @@ class AttendanceTable extends React.Component {
             {attended === 'attended'
               ? <Glyphicon
                   glyph="ok"
-                  style={{ color: !paid ? 'red' : 'white' }}
+                  style={{ color: to ? 'blue' : !paid ? 'red' : 'white' }}
                 />
               : attended === 'notattended'
                   ? <Glyphicon glyph="remove" />
