@@ -143,17 +143,20 @@ class AttendanceList extends React.Component {
           ageGroup: ageGroup,
           toClassTimeDay: classTimeDay
         });
-
-        Object.keys(filteredMakeUps).forEach(makeUpId => {
-          html.push(
-            <Attendee
-              key={student.key}
-              student={student}
-              date={this.state.startDate}
-              type="makeup"
-            />
-          );
-        });
+        if (!_.isEmpty(filteredMakeUps)) {
+          Object.keys(filteredMakeUps).forEach(makeUpId => {
+            const { studentKey } = filteredMakeUps[makeUpId];
+            const student = _.find(filteredActiveClass, { key: studentKey });
+            html.push(
+              <Attendee
+                key={student.key}
+                student={student}
+                date={this.state.startDate}
+                type="makeup"
+              />
+            );
+          });
+        }
       }
     });
     //Display Not Active List

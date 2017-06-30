@@ -1,8 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col, FormGroup, FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-var actions = require('actions');
-import _ from 'lodash';
+import { updateNavTitle } from 'actions';
 import moment from 'moment';
 import AttendanceTable from 'AttendanceTable';
 import { getTerm, getAllTermId } from 'helper';
@@ -24,7 +23,7 @@ class AttendanceSummary extends React.Component {
     document.getElementById('termSelect').value = id;
     this.setState({ selectedTerm: id });
     dispatch(
-      actions.updateNavTitle(
+      updateNavTitle(
         '/m/attendance/summary',
         selection.name + ' Attendance Summary'
       )
@@ -71,7 +70,7 @@ class AttendanceSummary extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={12} md={12}>
+          <Col xs={12} md={12} lg={12} style={{ padding: '0px' }}>
             {html}
           </Col>
         </Row>

@@ -2,7 +2,6 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 import reduxReset from 'redux-reset';
-import { routerReducer } from 'react-router-redux';
 import {
   composeWithDevTools
 } from 'redux-devtools-extension/logOnlyInProduction';
@@ -55,8 +54,7 @@ export var configure = (initialState = {}) => {
     notes: notesReducer,
     makeUps: makeUpReducer,
     redirect: redirectReducer,
-    form: formReducer,
-    routing: routerReducer
+    form: formReducer
   });
 
   const store = createStore(

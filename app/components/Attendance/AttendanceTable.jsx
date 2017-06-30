@@ -4,10 +4,10 @@ var { connect } = require('react-redux');
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import moment from 'moment';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, Row, Col } from 'react-bootstrap';
 import StudentsFilter from 'StudentsFilter';
 import { Link } from 'react-router';
-import { getActive, paidDate } from 'helper';
+import { getActive, paidDate, findPaymentDetails } from 'helper';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
 
@@ -29,7 +29,8 @@ class AttendanceTable extends React.Component {
     calendar.terms[selectedTerm].map(date => {
       termDates.push(date);
     });
-    let data = [];
+    let dataPaid = [];
+    let dataUnPaid = [];
     let termColumns = termDates.map((date, id) => {
       return {
         header: (
@@ -47,15 +48,19 @@ class AttendanceTable extends React.Component {
       currentClassTime: classTime
     });
 
-    Object.keys(filteredActiveStudents).map(studentId => {
-      var termData = [];
-      var { payments, attendance, childName, key } = filteredActiveStudents[
-        studentId
-      ];
+    const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
+      filteredActiveStudents,
+      termDates,
+      selectedTerm
+    );
+
+    Object.keys(paid).map(studentId => {
+      let termData = [];
+      const { payments, attendance, childName, key } = paid[studentId];
       termDates.map(date => {
-        var dateId = moment(date).format('YYYY-MM-DD');
-        var attended = '';
-        var paid = paidDate(payments, dateId, selectedTerm);
+        const dateId = moment(date).format('YYYY-MM-DD');
+        let attended = '';
+        const paid = paidDate(payments, dateId, selectedTerm);
         if (attendance !== undefined) {
           if (attendance[dateId] !== undefined) {
             if (attendance[dateId].attended) {
@@ -90,7 +95,7 @@ class AttendanceTable extends React.Component {
           </div>
         );
       });
-      data.push({
+      dataPaid.push({
         childName: (
           <Link to={'/m/students/edit/' + key}>
             {childName}
@@ -109,9 +114,9 @@ class AttendanceTable extends React.Component {
       });
     });
 
-    const columns = [
+    const columnsPaid = [
       {
-        header: <b style={{ fontSize: '14px' }}>{headerTitle}</b>,
+        header: <b style={{ fontSize: '14px' }}>Paid</b>,
         columns: [
           {
             header: <b style={{ fontSize: '11px' }}>Child Name</b>,
@@ -129,14 +134,110 @@ class AttendanceTable extends React.Component {
         ]
       }
     ];
+
+    Object.keys(unpaid).map(studentId => {
+      let termData = [];
+      const { payments, attendance, childName, key } = unpaid[studentId];
+      termDates.map(date => {
+        const dateId = moment(date).format('YYYY-MM-DD');
+        let attended = '';
+        const paid = paidDate(payments, dateId, selectedTerm);
+        if (attendance !== undefined) {
+          if (attendance[dateId] !== undefined) {
+            if (attendance[dateId].attended) {
+              attended = 'attended';
+            }
+          }
+        }
+        if (moment().isAfter(dateId)) {
+          if (paid & (attended !== 'attended')) {
+            attended = 'notattended';
+          }
+        }
+        termData.push(
+          <div
+            style={{
+              width: '100%',
+              height: '15px',
+              backgroundColor: 'none',
+              textAlign: 'center',
+              color: 'white',
+              fontSize: '9px'
+            }}
+          >
+            {attended === 'attended'
+              ? <Glyphicon glyph="ok" style={{ color: 'red' }} />
+              : <Glyphicon glyph="minus" />}
+          </div>
+        );
+      });
+      dataUnPaid.push({
+        childName: (
+          <Link to={'/m/students/edit/' + key}>
+            {childName}
+          </Link>
+        ),
+        paymentButton: (
+          <Link
+            className="innerbtn"
+            style={{ fontSize: '7px' }}
+            to={'/m/payment/collection/' + key}
+          >
+            $
+          </Link>
+        ),
+        status: termData
+      });
+    });
+
+    const columnsUnPaid = [
+      {
+        header: <b style={{ fontSize: '14px' }}>Not Paid</b>,
+        columns: [
+          {
+            header: <b style={{ fontSize: '11px' }}>Child Name</b>,
+            accessor: 'childName',
+            maxWidth: 80,
+            style: { fontSize: '11px' }
+          },
+          {
+            header: <b style={{ fontSize: '9px' }}>P</b>,
+            accessor: 'paymentButton',
+            maxWidth: 30,
+            style: { fontSize: '11px' }
+          },
+          ...termColumns
+        ]
+      }
+    ];
+
     return (
       <div>
+        <Row
+          key={headerTitle}
+          style={{
+            backgroundColor: '#656565',
+            textAlign: 'center',
+            color: '#ffc600'
+          }}
+        >
+          <Col xs={12} md={12} lg={12}>
+            <h5>{headerTitle}</h5>
+          </Col>
+        </Row>
         <ReactTable
           showPagination={false}
-          data={data}
+          data={dataPaid}
           resizable={false}
-          columns={columns}
-          pageSize={size(filteredActiveStudents)}
+          columns={columnsPaid}
+          pageSize={size(paid)}
+        />
+        <ReactTable
+          showPagination={false}
+          data={dataUnPaid}
+          resizable={false}
+          columns={columnsUnPaid}
+          pageSize={size(unpaid)}
         />
       </div>
     );

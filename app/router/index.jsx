@@ -1,7 +1,6 @@
 import firebase from 'firebaseApp';
 import React from 'react';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
 import asyncRoute from '../asyncRoute';
 import Login from 'Login';
 
@@ -103,11 +102,9 @@ function requireAuth(nextState, replace, next) {
   }
   next();
 }
-const store = require('configureStore').configure();
-const history = syncHistoryWithStore(browserHistory, store);
 
 export default (
-  <Router history={history}>
+  <Router history={browserHistory}>
     <Route path="/">
       <IndexRoute component={Login} />
       <Route path="m" component={NavBar} onEnter={requireAuth}>
