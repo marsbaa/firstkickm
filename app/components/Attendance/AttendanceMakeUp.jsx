@@ -1,8 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import { browserHistory } from 'react-router';
-var { connect } = require('react-redux');
-var actions = require('actions');
+import { connect } from 'react-redux';
+import { updateNavTitle, addMakeUp } from 'actions';
 import {
   Panel,
   Grid,
@@ -35,7 +35,7 @@ class AttendanceMakeUp extends React.Component {
 
   componentWillMount() {
     var { dispatch, selection, calendars } = this.props;
-    dispatch(actions.updateNavTitle('/m/attendance/HQ', 'Make Up Form'));
+    dispatch(updateNavTitle('/m/attendance/HQ', 'Make Up Form'));
 
     var termDates = getCentreCalendarDates(calendars, selection.key);
     var fromDate = getClosestDate(termDates);
@@ -75,7 +75,7 @@ class AttendanceMakeUp extends React.Component {
     e.preventDefault();
     var { dispatch, selection, students } = this.props;
     var studentKey = this.props.params.studentId;
-    var student = _.find(students, { key: studentId });
+    var student = _.find(students, { key: studentKey });
     var makeUp = {
       fromDate: document.getElementById('fromDate').value,
       toDate: document.getElementById('toDate').value,
@@ -88,7 +88,7 @@ class AttendanceMakeUp extends React.Component {
     };
     if (makeUp.toCentre !== '0') {
       if (makeUp.toClassTimeDay !== '0') {
-        dispatch(actions.addMakeUp(makeUp));
+        dispatch(addMakeUp(makeUp));
         browserHistory.push('/m/makeup');
       }
     }
@@ -214,6 +214,13 @@ class AttendanceMakeUp extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(AttendanceMakeUp);
+function mapStateToProps(state) {
+  return {
+    selection: state.selection,
+    centres: state.centres,
+    calendars: state.calendars,
+    students: state.students
+  };
+}
+
+export default connect(mapStateToProps)(AttendanceMakeUp);

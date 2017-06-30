@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-var actions = require('actions');
 var { connect } = require('react-redux');
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -8,20 +7,30 @@ import moment from 'moment';
 import { Glyphicon } from 'react-bootstrap';
 import StudentsFilter from 'StudentsFilter';
 import { Link } from 'react-router';
+import { getActive, paidDate } from 'helper';
+import filter from 'lodash/filter';
+import size from 'lodash/size';
 
 class AttendanceTable extends React.Component {
   render() {
-    var { calendars, students, selection } = this.props;
-    var { day, startTime, endTime, ageGroup, calendarKey } = this.props.classes;
-    var classDayTime =
+    const { calendars, students, selection, selectedTerm } = this.props;
+    const {
+      day,
+      startTime,
+      endTime,
+      ageGroup,
+      calendarKey
+    } = this.props.classes;
+    const headerTitle =
       ageGroup + ' ' + _.capitalize(day) + ' ' + startTime + ' - ' + endTime;
-    var calendar = _.find(calendars, { key: calendarKey });
-    var termDates = [];
-    calendar.terms[this.props.selectedTerm].map(date => {
+    const classTime = startTime + ' - ' + endTime;
+    const calendar = _.find(calendars, { key: calendarKey });
+    let termDates = [];
+    calendar.terms[selectedTerm].map(date => {
       termDates.push(date);
     });
-    var data = [];
-    var termColumns = termDates.map((date, id) => {
+    let data = [];
+    let termColumns = termDates.map((date, id) => {
       return {
         header: (
           <b style={{ fontSize: '9px' }}>{moment(date).format('DD/MM')}</b>
@@ -30,41 +39,28 @@ class AttendanceTable extends React.Component {
         maxWidth: 35
       };
     });
-    var filteredStudents = StudentsFilter.filter(students, selection.id, '');
-    filteredStudents = _.filter(filteredStudents, { ageGroup: ageGroup });
-    filteredStudents = _.filter(filteredStudents, o => {
-      return o.currentClassDay.toLowerCase() === day.toLowerCase();
+    let filteredStudents = StudentsFilter.filter(students, selection.id, '');
+    let activeStudents = getActive(filteredStudents);
+    let filteredActiveStudents = filter(activeStudents, {
+      ageGroup: ageGroup,
+      currentClassDay: day,
+      currentClassTime: classTime
     });
-    filteredStudents = _.filter(filteredStudents, {
-      currentClassTime: startTime + ' - ' + endTime
-    });
-    Object.keys(filteredStudents).map(studentId => {
+
+    Object.keys(filteredActiveStudents).map(studentId => {
       var termData = [];
-      var student = filteredStudents[studentId];
+      var { payments, attendance, childName, key } = filteredActiveStudents[
+        studentId
+      ];
       termDates.map(date => {
         var dateId = moment(date).format('YYYY-MM-DD');
         var attended = '';
-        var paid = false;
-        if (student.attendance !== undefined) {
-          if (student.attendance[dateId] !== undefined) {
-            if (student.attendance[dateId].attended) {
+        var paid = paidDate(payments, dateId, selectedTerm);
+        if (attendance !== undefined) {
+          if (attendance[dateId] !== undefined) {
+            if (attendance[dateId].attended) {
               attended = 'attended';
             }
-          }
-        }
-        var payment = _.find(student.payments, o => {
-          if (o.termsPaid !== undefined) {
-            return o.termsPaid[this.props.selectedTerm] !== undefined;
-          }
-          return false;
-        });
-        if (payment !== undefined) {
-          if (
-            _.find(payment.termsPaid[this.props.selectedTerm], o => {
-              return moment(o.date).isSame(dateId, 'day');
-            }) !== undefined
-          ) {
-            paid = true;
           }
         }
         if (moment().isAfter(dateId)) {
@@ -96,15 +92,15 @@ class AttendanceTable extends React.Component {
       });
       data.push({
         childName: (
-          <Link to={'/m/students/edit/' + student.key}>
-            {student.childName}
+          <Link to={'/m/students/edit/' + key}>
+            {childName}
           </Link>
         ),
         paymentButton: (
           <Link
             className="innerbtn"
             style={{ fontSize: '7px' }}
-            to={'/m/payment/collection/' + student.key}
+            to={'/m/payment/collection/' + key}
           >
             $
           </Link>
@@ -115,7 +111,7 @@ class AttendanceTable extends React.Component {
 
     const columns = [
       {
-        header: <b style={{ fontSize: '14px' }}>{classDayTime}</b>,
+        header: <b style={{ fontSize: '14px' }}>{headerTitle}</b>,
         columns: [
           {
             header: <b style={{ fontSize: '11px' }}>Child Name</b>,
@@ -140,7 +136,7 @@ class AttendanceTable extends React.Component {
           data={data}
           resizable={false}
           columns={columns}
-          pageSize={_.size(filteredStudents)}
+          pageSize={size(filteredActiveStudents)}
         />
       </div>
     );
