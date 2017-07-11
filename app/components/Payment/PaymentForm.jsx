@@ -186,6 +186,7 @@ class PaymentForm extends React.Component {
       });
       count = 2;
     } else {
+      this.setState({ email });
       this.setState({ errorID: null });
       this.setState({ errorMessage: null });
     }
