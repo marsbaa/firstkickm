@@ -16,8 +16,8 @@ import {
   HelpBlock
 } from 'react-bootstrap';
 import { datebtn, downbtn } from 'styles.css';
-var actions = require('actions');
-var { connect } = require('react-redux');
+import { addPayment } from 'actions';
+import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import moment from 'moment';
@@ -364,7 +364,7 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         };
       }
-      dispatch(actions.addPayment(paymentDetail));
+      dispatch(addPayment(paymentDetail));
       paymentDetails.push(paymentDetail);
     });
     var invoiceHTML = InvoiceTemplate.render(paymentDetails);
