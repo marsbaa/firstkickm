@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { FormGroup, ControlLabel, Row, Col, Badge } from 'react-bootstrap';
 import { connect } from 'react-redux';
-var actions = require('actions');
+import { toggleSchedule } from 'actions';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import moment from 'moment';
@@ -31,7 +31,7 @@ class Schedule extends React.Component {
         });
       }
     });
-    dispatch(actions.toggleSchedule(classKey, date, attended));
+    dispatch(toggleSchedule(classKey, date, attended));
     this.setState({ value });
   }
 

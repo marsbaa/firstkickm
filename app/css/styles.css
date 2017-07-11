@@ -229,17 +229,7 @@
   overflow: auto;
 }
 
-.select {
-   background-color: #f5bb05;
-   color: black;
-   width:100%;
-   padding: 10px;
-   font-size: 16px;
-   line-height: 1;
-   border: 1px;
-   border-radius: 5px;
-   height: 34px;
-   }
+
 
 .trial {
      cursor: pointer;

@@ -78,6 +78,7 @@ class PaymentForm extends React.Component {
       payer.push(student);
     }
     this.setState({ payer });
+    console.log(payer);
 
     //Initiate Selectable Term Dates
     var calendarDates = [];
