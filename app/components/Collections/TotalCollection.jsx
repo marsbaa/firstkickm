@@ -1,7 +1,16 @@
 import React from 'react';
-import _ from 'lodash';
-var actions = require('actions');
-var { connect } = require('react-redux');
+import isEmpty from 'lodash/isEmpty';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import size from 'lodash/size';
+import {
+  updateNavTitle,
+  startPayments,
+  startExpenses,
+  deleteExpense,
+  addExpense
+} from 'actions';
+import { connect } from 'react-redux';
 import {
   Row,
   Col,
@@ -18,7 +27,6 @@ import {
   ControlLabel
 } from 'react-bootstrap';
 import moment from 'moment';
-import { normalbtn, selectedbtn } from 'styles.css';
 import { Creatable } from 'react-select';
 import 'react-select/dist/react-select.css';
 import { isManager } from 'helper';
@@ -40,20 +48,18 @@ class TotalCollection extends React.Component {
 
   componentWillMount() {
     var { dispatch, payments, selection, expenses } = this.props;
-    dispatch(
-      actions.updateNavTitle('/m/total', selection.name + ' Collections')
-    );
-    if (_.isEmpty(payments)) {
-      dispatch(actions.startPayments());
+    dispatch(updateNavTitle('/m/total', selection.name + ' Collections'));
+    if (isEmpty(payments)) {
+      dispatch(startPayments());
     }
-    if (_.isEmpty(expenses)) {
-      dispatch(actions.startExpenses());
+    if (isEmpty(expenses)) {
+      dispatch(startExpenses());
     }
   }
 
   removeExpense(key) {
     var { dispatch } = this.props;
-    dispatch(actions.deleteExpense(key));
+    dispatch(deleteExpense(key));
   }
 
   handleShow() {
@@ -62,7 +68,7 @@ class TotalCollection extends React.Component {
 
   formSubmit() {
     var { dispatch, users, auth, selection } = this.props;
-    var user = _.find(users, ['email', auth.email]);
+    var user = find(users, ['email', auth.email]);
     var expense = {
       name: this.state.value.value,
       amount: parseInt(document.getElementById('amount').value),
@@ -72,7 +78,7 @@ class TotalCollection extends React.Component {
       centreId: selection.id
     };
     this.setState({ show: false });
-    dispatch(actions.addExpense(expense));
+    dispatch(addExpense(expense));
   }
 
   handleChange(value) {
@@ -110,34 +116,34 @@ class TotalCollection extends React.Component {
   render() {
     var { payments, selection, expenses, auth, users } = this.props;
     var html = [];
-    var filteredPayments = _.filter(payments, p => {
+    var filteredPayments = filter(payments, p => {
       return moment(this.state.startDate).isSame(p.date, 'day');
     });
-    var filteredExpenses = _.filter(expenses, { centreId: selection.id });
-    filteredExpenses = _.filter(filteredExpenses, o => {
+    var filteredExpenses = filter(expenses, { centreId: selection.id });
+    filteredExpenses = filter(filteredExpenses, o => {
       return moment(this.state.startDate).isSame(o.date, 'day');
     });
     if (this.state.filter === 'am') {
-      filteredPayments = _.filter(filteredPayments, p => {
+      filteredPayments = filter(filteredPayments, p => {
         return moment(p.date).format('HH') <= 12;
       });
-      filteredExpenses = _.filter(filteredExpenses, e => {
+      filteredExpenses = filter(filteredExpenses, e => {
         return moment(e.date).format('HH') <= 12;
       });
     } else if (this.state.filter === 'pm') {
-      filteredPayments = _.filter(filteredPayments, p => {
+      filteredPayments = filter(filteredPayments, p => {
         return moment(p.date).format('HH') > 12;
       });
-      filteredExpenses = _.filter(filteredExpenses, e => {
+      filteredExpenses = filter(filteredExpenses, e => {
         return moment(e.date).format('HH') > 12;
       });
     }
     var cashTotal = 0;
     var chequeTotal = 0;
-    filteredPayments = _.filter(filteredPayments, ['centreId', selection.id]);
-    if (_.size(filteredPayments) !== 0) {
-      var cashPayments = _.filter(filteredPayments, ['paymentMethod', 'Cash']);
-      if (_.size(cashPayments) !== 0) {
+    filteredPayments = filter(filteredPayments, ['centreId', selection.id]);
+    if (size(filteredPayments) !== 0) {
+      var cashPayments = filter(filteredPayments, ['paymentMethod', 'Cash']);
+      if (size(cashPayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -201,11 +207,11 @@ class TotalCollection extends React.Component {
         );
         cashTotal = total;
       }
-      var chequePayments = _.filter(filteredPayments, [
+      var chequePayments = filter(filteredPayments, [
         'paymentMethod',
         'Cheque'
       ]);
-      if (_.size(chequePayments) !== 0) {
+      if (size(chequePayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -274,7 +280,7 @@ class TotalCollection extends React.Component {
       }
       var expenseshtml = [];
       var expenseTotal = 0;
-      if (_.size(filteredExpenses) !== 0) {
+      if (size(filteredExpenses) !== 0) {
         expenseshtml.push(
           <Row
             key="expenses"
@@ -353,7 +359,7 @@ class TotalCollection extends React.Component {
               Cash to Deposit (Cash - Expenses): ${cashTotal - expenseTotal}
             </ListGroupItem>
             <ListGroupItem>
-              No. of Cheques to Deposit: {_.size(chequePayments)}
+              No. of Cheques to Deposit: {size(chequePayments)}
             </ListGroupItem>
             <ListGroupItem>
               Total Collections (Cash + Cheque) : ${cashTotal + chequeTotal}

@@ -176,6 +176,13 @@ class MainMenu extends React.Component {
                   </button>
                 </Link>
               : null}
+            {isSuperAdmin(auth.email)
+              ? <Link to="m/bankin">
+                  <button className="mainbtn" id="bankInCollection">
+                    Bank In Collection
+                  </button>
+                </Link>
+              : null}
             <Link to="m/trials">
               <button
                 className="mainbtn"

@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { firebaseRef } from 'firebaseApp';
-var actions = require('actions');
+import { updateNavTitle, removePayment } from 'actions';
 import moment from 'moment';
 import PaymentDetails from 'PaymentDetails';
 import {
@@ -34,7 +34,7 @@ class PaymentHistory extends React.Component {
   }
   componentDidMount() {
     var { dispatch } = this.props;
-    dispatch(actions.updateNavTitle('/m/payment', 'Payment History'));
+    dispatch(updateNavTitle('/m/payment', 'Payment History'));
   }
 
   handleSelect(paymentKey, childKey) {
@@ -48,7 +48,7 @@ class PaymentHistory extends React.Component {
     var key = _.find(payments, { key: this.state.paymentKey }).invoiceKey;
     var invoiceRef = firebaseRef.child('invoices/' + key);
     invoiceRef.remove();
-    dispatch(actions.removePayment(this.state.paymentKey, this.state.childKey));
+    dispatch(removePayment(this.state.paymentKey, this.state.childKey));
     this.setState({ show: false });
   }
 

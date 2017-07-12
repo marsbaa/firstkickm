@@ -76,6 +76,7 @@ import StudentEdit from 'StudentEdit';
 import StudentAdd from 'StudentAdd';
 
 //Total collection
+import BankInCollection from 'BankInCollection';
 import TotalCollection from 'TotalCollection';
 import TotalCollectionHQ from 'TotalCollectionHQ';
 
@@ -114,6 +115,7 @@ export default (
           <IndexRoute component={UserList} />
           <Route path=":userId" component={UserEdit} />
         </Route>
+        <Route path="bankin" component={BankInCollection} />
         <Route path="total" component={TotalCollection} />
         <Route path="totalhq" component={TotalCollectionHQ} />
         <Route path="centres" component={CentresApp}>

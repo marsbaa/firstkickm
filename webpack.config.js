@@ -76,6 +76,8 @@ module.exports = {
       './app/components/Centre',
       './app/components/Charts',
       './app/components/Coach',
+      './app/components/Common',
+      './app/components/Collections',
       './app/components/CoachSchedule',
       './app/components/Dashboard',
       './app/components/Inventory',
