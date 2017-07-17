@@ -90,6 +90,7 @@ module.exports = {
       './app/components/Trials',
       './app/components/User',
       './app/components/Calendar',
+      './app/components/Openhouse',
       './app/api',
       './app/css'
     ],

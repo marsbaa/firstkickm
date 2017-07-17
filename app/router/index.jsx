@@ -27,6 +27,10 @@ import TrialAdd from 'TrialAdd';
 import TrialRegister from 'TrialRegister';
 import TrialPaymentForm from 'TrialPaymentForm';
 
+//Components for Openhouse
+import OpenhouseEdit from 'OpenhouseEdit';
+import OpenhouseRegister from 'OpenhouseRegister';
+import OpenhousePayment from 'OpenhousePayment';
 //JerseyIssue
 import JerseyIssue from 'JerseyIssue';
 import JerseyIssueList from 'JerseyIssueList';
@@ -124,6 +128,12 @@ export default (
           <Route path=":centreKey/:calendarKey" component={CalendarEdit} />
           <Route path=":centreKey/class/:classKey" component={ClassEdit} />
         </Route>
+        <Route path="openhouse/edit/:openhouseId" component={OpenhouseEdit} />
+        <Route
+          path="openhouse/register/:openhouseId"
+          component={OpenhouseRegister}
+        />
+        <Route path="openhouse/payment" component={OpenhousePayment} />
         <Route path="trials" component={TrialsApp} />
         <Route path="trials/edit/:trialId" component={TrialEdit} />
         <Route path="trials/add" component={TrialAdd} />

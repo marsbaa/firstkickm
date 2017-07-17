@@ -127,7 +127,7 @@ class CentreEdit extends React.Component {
         logoURL: logoURL,
         classes: centre.classes
       };
-      dispatch(updateCentre(centre));
+      dispatch(updateCentre(selectedCentre));
       browserHistory.push('/m/centres');
     }
   }
@@ -171,7 +171,9 @@ class CentreEdit extends React.Component {
                   disabled={centre.id === '' ? false : true}
                   defaultValue={centre.id}
                 />
-                <HelpBlock>{this.state.errorMessageID}</HelpBlock>
+                <HelpBlock>
+                  {this.state.errorMessageID}
+                </HelpBlock>
               </FormGroup>
               <FormGroup validationState={this.state.errorName}>
                 <ControlLabel>Centre Name</ControlLabel>
@@ -182,7 +184,9 @@ class CentreEdit extends React.Component {
                   placeholder="Enter Centre Name"
                   defaultValue={centre.name}
                 />
-                <HelpBlock>{this.state.errorMessageName}</HelpBlock>
+                <HelpBlock>
+                  {this.state.errorMessageName}
+                </HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Logo URL</ControlLabel>

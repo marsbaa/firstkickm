@@ -142,6 +142,74 @@ export var trialsReducer = (state = [], action) => {
   }
 };
 
+export var openhouseReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_OPENHOUSE':
+      return [...action.openhouse];
+    case 'UPDATE_OPENHOUSE':
+      return state.map(openhouse => {
+        if (openhouse.key === action.trial.key) {
+          return {
+            ...openhouse,
+            childName: action.trial.childName,
+            contactNumber: action.trial.contactNumber,
+            email: action.trial.email,
+            gender: action.trial.gender,
+            dateOfBirth: action.trial.dateOfBirth,
+            dateOfTrial: action.trial.dateOfTrial,
+            venueId: action.trial.venueId,
+            timeOfTrial: action.trial.timeOfTrial,
+            parentName: action.trial.parentName,
+            medicalCondition: action.trial.medicalCondition
+          };
+        } else {
+          return openhouse;
+        }
+      });
+    case 'UPDATE_OPENHOUSE_REGISTRATION':
+      return state.map(openhouse => {
+        if (openhouse.key === action.key) {
+          return {
+            ...openhouse,
+            registered: true,
+            dateRegistered: moment().format('YYYY-MM-DD')
+          };
+        } else {
+          return openhouse;
+        }
+      });
+    case 'TOGGLE_OPENHOUSE':
+      return state.map(openhouse => {
+        if (openhouse.key === action.key) {
+          var nextAttended = !openhouse.attended;
+
+          return {
+            ...openhouse,
+            attended: nextAttended,
+            attendedOn: moment().unix()
+          };
+        } else {
+          return openhouse;
+        }
+      });
+    case 'ADD_OH_DEPOSIT':
+      return state.map(openhouse => {
+        if (openhouse.key === action.key) {
+          return {
+            ...openhouse,
+            deposit: action.deposit,
+            depositCollected: action.date,
+            depositCleared: false
+          };
+        } else {
+          return openhouse;
+        }
+      });
+    default:
+      return state;
+  }
+};
+
 export var paymentReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_PAYMENT':
@@ -339,9 +407,10 @@ export var coachReducer = (state = [], action) => {
                 attendance: {
                   ...attendance,
                   [action.date]: {
-                    attended: coach.attendance[action.date].attended === true
-                      ? false
-                      : true,
+                    attended:
+                      coach.attendance[action.date].attended === true
+                        ? false
+                        : true,
                     classId: action.classId,
                     sessionRate: action.sessionRate
                   }

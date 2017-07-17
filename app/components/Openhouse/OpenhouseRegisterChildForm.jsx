@@ -16,9 +16,10 @@ import {
   Button,
   Modal
 } from 'react-bootstrap';
+import find from 'lodash/find';
 import { getAgeGroup, getCentreKey } from 'helper';
 
-class TrialRegisterChildForm extends React.Component {
+class OpenhouseRegisterChildForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +37,9 @@ class TrialRegisterChildForm extends React.Component {
   componentWillMount() {
     var { centres } = this.props;
     var trial = this.props.trial;
-    this.setState({ selectedCentre: getCentreKey(centres, trial.venueId) });
+    this.setState({
+      selectedCentre: find(centres, { name: trial.centreName }).key
+    });
     this.setState({ trialDate: trial.dateOfTrial });
   }
 
@@ -93,23 +96,23 @@ class TrialRegisterChildForm extends React.Component {
   onFormSubmit(e) {
     e.preventDefault();
     var { dispatch } = this.props;
-    var { id } = this.props.trial;
-    var classTimeSelector = document.getElementById('timeSlotSelect' + id);
+    var { key } = this.props.trial;
+    var classTimeSelector = document.getElementById('timeSlotSelect');
     var classTimeDay =
       classTimeSelector.options[classTimeSelector.selectedIndex].text;
     var init = classTimeDay.indexOf('(');
     var fin = classTimeDay.indexOf(')');
     var classDay = classTimeDay.substr(init + 1, fin - init - 1);
     var trial = {
-      id: id,
-      childName: document.getElementById('childName' + id).value,
-      gender: document.getElementById('boy' + id).checked ? 'boy' : 'girl',
-      dateOfBirth: document.getElementById('dateOfBirth' + id).value,
-      dateOfTrial: document.getElementById('trialDateSelect' + id).value,
-      venueId: document.getElementById('centreSelect' + id).value.toString(),
-      currentClassTime: document.getElementById('timeSlotSelect' + id).value,
+      key,
+      childName: document.getElementById('childName').value,
+      gender: document.getElementById('boy').checked ? 'boy' : 'girl',
+      dateOfBirth: document.getElementById('dateOfBirth').value,
+      dateOfTrial: document.getElementById('trialDateSelect').value,
+      venueId: document.getElementById('centreSelect').value.toString(),
+      currentClassTime: document.getElementById('timeSlotSelect').value,
       currentClassDay: classDay,
-      medicalCondition: document.getElementById('medicalCondition' + id).value
+      medicalCondition: document.getElementById('medicalCondition').value
     };
     dispatch(updateRegister(trial));
     this.open();
@@ -118,7 +121,21 @@ class TrialRegisterChildForm extends React.Component {
   render() {
     var { centres, ageGroup, calendars } = this.props;
     var trial = this.props.trial;
-    var childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth);
+
+    var childAgeGroup;
+    if (trial.dateOfBirth !== undefined) {
+      childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth);
+    } else {
+      const { age } = trial;
+      ageGroup.map(group => {
+        if (age >= group.minAge && age <= group.maxAge) {
+          childAgeGroup = group.name;
+          if (childAgeGroup === 'U8B') {
+            childAgeGroup = 'U8';
+          }
+        }
+      });
+    }
 
     //Centre List
     var centreOptions = [];
@@ -131,14 +148,15 @@ class TrialRegisterChildForm extends React.Component {
       var centre = centres[centreKey];
       centreOptions.push(
         <option key={centreKey} value={centreKey}>
-          {_.upperFirst(centre.name)}
+          {centre.name}
         </option>
       );
     });
 
     //Class TimeSlots
-    var cKey;
     var classTimeSlots = [];
+    let time, cKey;
+
     classTimeSlots.push(
       <option key="0" value="0">
         select
@@ -146,20 +164,21 @@ class TrialRegisterChildForm extends React.Component {
     );
     var centre = centres[this.state.selectedCentre];
     Object.keys(centre.classes).forEach(classID => {
-      var { ageGroup, startTime, endTime, calendarKey, day } = centre.classes[
+      var { ageGroup, startTime, endTime, day, calendarKey } = centre.classes[
         classID
       ];
       if (ageGroup === childAgeGroup) {
         var classTime = startTime + ' - ' + endTime;
         var classTimeDay = classTime + ' (' + day + ')';
         if (
-          classTimeDay ===
-          trial.currentClassTime + ' (' + trial.currentClassDay + ')'
+          startTime === trial.startTime &&
+          day === moment(this.state.trialDate).format('dddd')
         ) {
+          time = classTime;
           cKey = calendarKey;
         }
         classTimeSlots.push(
-          <option key={classTimeDay} value={classTimeDay}>
+          <option key={classTimeDay} value={classTime}>
             {classTimeDay}
           </option>
         );
@@ -173,9 +192,6 @@ class TrialRegisterChildForm extends React.Component {
         select
       </option>
     );
-    if (this.state.calendarKey !== '') {
-      cKey = this.state.calendarKey;
-    }
 
     var calendar = calendars[cKey];
     Object.keys(calendar.terms).map(termId => {
@@ -193,14 +209,14 @@ class TrialRegisterChildForm extends React.Component {
     var formHTML = [];
     if (!this.state.notJoining) {
       formHTML.push(
-        <Grid key={trial.id}>
+        <Grid key={trial.key}>
           <Row style={{ padding: '10px' }}>
             <Col xs={12} md={10} lg={11}>
               <FormGroup>
                 <ControlLabel>Child's Name</ControlLabel>
                 <FormControl
                   style={{ marginBottom: '10px' }}
-                  id={'childName' + trial.id}
+                  id="childName"
                   type="text"
                   placeholder="Enter Child's Name"
                   defaultValue={trial.childName}
@@ -208,19 +224,19 @@ class TrialRegisterChildForm extends React.Component {
               </FormGroup>
               <FormGroup>
                 <Radio
-                  id={'boy' + trial.id}
+                  id="boy"
                   value="boy"
                   inline
-                  name={'gender' + trial.id}
+                  name="gender"
                   defaultChecked={trial.gender === 'boy' ? true : false}
                 >
                   Boy
                 </Radio>{' '}
                 <Radio
-                  id={'girl' + trial.id}
+                  id="girl"
                   value="girl"
                   inline
-                  name={'gender' + trial.id}
+                  name="gender"
                   defaultChecked={trial.gender === 'girl' ? true : false}
                 >
                   Girl
@@ -230,7 +246,7 @@ class TrialRegisterChildForm extends React.Component {
                 <ControlLabel>Date of Birth</ControlLabel>
                 <FormControl
                   style={{ marginBottom: '10px' }}
-                  id={'dateOfBirth' + trial.id}
+                  id="dateOfBirth"
                   type="text"
                   placeholder="Enter Date of Birth"
                   defaultValue={trial.dateOfBirth}
@@ -239,10 +255,10 @@ class TrialRegisterChildForm extends React.Component {
               <FormGroup>
                 <ControlLabel>Selected Centre</ControlLabel>
                 <FormControl
-                  id={'centreSelect' + trial.id}
+                  id="centreSelect"
                   componentClass="select"
                   placeholder="select"
-                  defaultValue={getCentreKey(centres, trial.venueId)}
+                  defaultValue={this.state.selectedCentre}
                   onChange={this.centreSelect.bind(this)}
                 >
                   {centreOptions}
@@ -251,15 +267,10 @@ class TrialRegisterChildForm extends React.Component {
               <FormGroup>
                 <ControlLabel>Selected Class Time</ControlLabel>
                 <FormControl
-                  id={'timeSlotSelect' + trial.id}
+                  id="timeSlotSelect"
                   componentClass="select"
                   placeholder="select"
-                  defaultValue={
-                    trial.timeOfTrial +
-                    ' (' +
-                    moment(trial.dateOfTrial).format('dddd') +
-                    ')'
-                  }
+                  defaultValue={time}
                   onChange={this.timeSelect.bind(this)}
                 >
                   {classTimeSlots}
@@ -268,7 +279,7 @@ class TrialRegisterChildForm extends React.Component {
               <FormGroup>
                 <ControlLabel>Date of Trial</ControlLabel>
                 <FormControl
-                  id={'trialDateSelect' + trial.id}
+                  id="trialDateSelect"
                   componentClass="select"
                   placeholder="select"
                   defaultValue={trial.dateOfTrial}
@@ -281,7 +292,7 @@ class TrialRegisterChildForm extends React.Component {
                 <ControlLabel>Medical Condition</ControlLabel>
                 <FormControl
                   style={{ marginBottom: '10px', height: '90px' }}
-                  id={'medicalCondition' + trial.id}
+                  id="medicalCondition"
                   componentClass="textarea"
                   placeholder="Enter Medical Condition"
                   defaultValue={trial.medicalCondition}
@@ -304,7 +315,7 @@ class TrialRegisterChildForm extends React.Component {
       );
     } else {
       formHTML.push(
-        <Row key={trial.id}>
+        <Row key={trial.key}>
           <Col md={12}>
             {trial.childName} is not joining
           </Col>
@@ -345,6 +356,12 @@ class TrialRegisterChildForm extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(TrialRegisterChildForm);
+function mapStateToProps(state) {
+  return {
+    centres: state.centres,
+    ageGroup: state.ageGroup,
+    calendars: state.calendars
+  };
+}
+
+export default connect(mapStateToProps)(OpenhouseRegisterChildForm);

@@ -181,11 +181,12 @@ export var startAddTrials = () => {
         trialsRef.once('value').then(snapshot => {
           var firebaseTrialList = snapshot.val();
           trialList.forEach(trials => {
-            var trialExist = _.findKey(firebaseTrialList, {
-              childId: trials.child_id
-            }) === undefined || ''
-              ? false
-              : true;
+            var trialExist =
+              _.findKey(firebaseTrialList, {
+                childId: trials.child_id
+              }) === undefined || ''
+                ? false
+                : true;
             if (!trialExist) {
               trialsRef.push().set({
                 childId: trials.child_id,
@@ -320,9 +321,8 @@ export var startToggleTrial = id => {
       .once('value')
       .then(snapshot => {
         var val = snapshot.val();
-        var attended = val.attended === undefined || val.attended === false
-          ? true
-          : false;
+        var attended =
+          val.attended === undefined || val.attended === false ? true : false;
         var attendedOn = attended ? moment().unix() : null;
         return trialsRef.update({
           attended,
@@ -357,6 +357,124 @@ export var addDeposit = (deposit, id) => {
     deposit,
     date,
     id
+  };
+};
+
+//OpenHouse Actions
+export var startOpenHouse = () => {
+  return dispatch => {
+    const openhouseRef = firebaseRef.child('openhouse');
+    openhouseRef.once('value').then(snapshot => {
+      var openhouse = snapshot.val();
+      var parsedOpenHouse = [];
+
+      Object.keys(openhouse).map(id => {
+        const { selectedSession } = openhouse[id];
+        const splitS = selectedSession.split(', ');
+        const date = splitS[1].split(' ');
+        const formattedDate =
+          '2017-' + date[1].slice(0, 3) + '-' + date[0].slice(0, 2);
+        const startTime = splitS[2].slice(0, 1) + ':00' + splitS[2].slice(1, 3);
+        parsedOpenHouse.push({
+          key: id,
+          ...openhouse[id],
+          centreName: splitS[0],
+          dateOfTrial: moment(formattedDate).format('YYYY-MM-DD'),
+          startTime
+        });
+      });
+      dispatch(addOpenHouse(parsedOpenHouse));
+    });
+  };
+};
+
+export var addOpenHouse = openhouse => {
+  return {
+    type: 'ADD_OPENHOUSE',
+    openhouse
+  };
+};
+
+export var updateOpenhouse = trial => {
+  var openhouseRef = firebaseRef.child('openhouse/' + trial.key);
+  openhouseRef.update({
+    childName: trial.childName,
+    contact: trial.contact,
+    email: trial.email,
+    gender: trial.gender,
+    venueId: trial.venueId,
+    dateOfBirth: trial.dateOfBirth,
+    dateOfTrial: trial.dateOfTrial,
+    timeOfTrial: trial.timeOfTrial,
+    parentName: trial.name,
+    medicalCondition: trial.medicalCondition,
+    attended: trial.attended,
+    attendedOn: trial.attendedOn
+  });
+  return {
+    type: 'UPDATE_OPENHOUSE',
+    trial
+  };
+};
+
+export var startToggleOpenhouse = key => {
+  return dispatch => {
+    var openhouseRef = firebaseRef.child('openhouse/' + key);
+
+    return openhouseRef
+      .once('value')
+      .then(snapshot => {
+        var val = snapshot.val();
+        var attended =
+          val.attended === undefined || val.attended === false ? true : false;
+        var attendedOn = attended ? moment().unix() : null;
+        return openhouseRef.update({
+          attended,
+          attendedOn
+        });
+      })
+      .then(() => {
+        dispatch(toggleOpenhouse(key));
+      });
+  };
+};
+
+export var updateOpenhouseRegistration = key => {
+  var openhouseRef = firebaseRef.child('openhouse/' + key);
+  openhouseRef.once('value').then(snapshot => {
+    var updates = snapshot.val();
+    updates.registered = true;
+    updates.dateRegistered = moment().format('YYYY-MM-DD');
+    openhouseRef.update(updates);
+  });
+  return {
+    type: 'UPDATE_OPENHOUSE_REGISTRATION',
+    key
+  };
+};
+
+export var toggleOpenhouse = key => {
+  return {
+    type: 'TOGGLE_OPENHOUSE',
+    key
+  };
+};
+
+export var addOHDeposit = (deposit, key) => {
+  var openhouseRef = firebaseRef.child('openhouse/' + key);
+  var date = moment().format();
+  openhouseRef.once('value').then(snapshot => {
+    var updates = snapshot.val();
+    updates.deposit = deposit;
+    updates.depositCollected = date;
+    updates.depositCleared = false;
+    openhouseRef.update(updates);
+  });
+  return {
+    type: 'ADD_OH_DEPOSIT',
+    deposit,
+    date,
+    key
   };
 };
 
@@ -427,6 +545,35 @@ export var addTrialStudent = student => {
   var updates = {};
   updates[newKey] = {
     trialId: student.id,
+    address: student.address,
+    ageGroup: student.ageGroup,
+    childName: student.childName,
+    contact: student.contact,
+    currentClassDay: student.currentClassDay,
+    currentClassTime: student.currentClassTime,
+    dateAdded: moment().format('YYYY-MM-DD'),
+    dateOfBirth: student.dateOfBirth,
+    email: student.email,
+    gender: student.gender,
+    parentName: student.parentName,
+    medicalCondition: student.medicalCondition,
+    venueId: student.venueId,
+    centre: student.centre
+  };
+  studentRef.update(updates);
+  student.key = newKey;
+  return {
+    type: 'ADD_STUDENT',
+    student
+  };
+};
+
+export var addOpenhouseStudent = student => {
+  var studentRef = firebaseRef.child('students');
+  var newKey = studentRef.push().key;
+  var updates = {};
+  updates[newKey] = {
+    trialId: student.key,
     address: student.address,
     ageGroup: student.ageGroup,
     childName: student.childName,
@@ -613,10 +760,10 @@ export var updateCoachAttendance = (date, id, classKey, paymentRate) => {
         if (attendance === null) {
           attendance = {};
         }
-        attendance.attended = attendance.attended === undefined ||
-          attendance.attended === false
-          ? true
-          : null;
+        attendance.attended =
+          attendance.attended === undefined || attendance.attended === false
+            ? true
+            : null;
 
         if (attendance.attended) {
           classId = classKey;
@@ -1085,9 +1232,8 @@ export var addStudentPayment = paymentDetails => {
   updates[newKey] = {
     paymentKey: paymentDetails.key,
     date: paymentDetails.date,
-    termsPaid: paymentDetails.termsPaid === undefined
-      ? null
-      : paymentDetails.termsPaid,
+    termsPaid:
+      paymentDetails.termsPaid === undefined ? null : paymentDetails.termsPaid,
     total: paymentDetails.total
   };
   studentRef.update(updates);

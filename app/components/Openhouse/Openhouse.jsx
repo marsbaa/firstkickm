@@ -9,23 +9,23 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Label
 } from 'react-bootstrap';
 import moment from 'moment';
-import { startToggleTrial } from 'actions';
+import { startToggleOpenhouse } from 'actions';
 import { Link } from 'react-router';
 import Switch from 'Switch';
 
-class Trial extends React.Component {
+class Openhouse extends React.Component {
   render() {
     const { dispatch } = this.props;
     const {
-      id,
+      key,
       childName,
-      dateOfBirth,
+      age,
       contact,
       email,
-      gender,
       attended,
       attendedOn,
       registered,
@@ -37,15 +37,9 @@ class Trial extends React.Component {
       length: 16
     });
 
-    const getAge = dob => {
-      const now = moment();
-      const dateofbirth = moment(JSON.stringify(dob), 'YYYY-MM-DD');
-      return now.diff(dateofbirth, 'years');
-    };
-
     return (
       <Row
-        key={id}
+        key={key}
         style={{
           backgroundColor: registered ? '#d7d7d7' : 'none',
           padding: '8px 20px',
@@ -56,20 +50,20 @@ class Trial extends React.Component {
       >
         <Col xs={2} md={2} lg={2}>
           <Switch
-            name={id + 'attended'}
+            name={key + 'attended'}
             checked={attended}
             onChange={() => {
-              dispatch(startToggleTrial(id));
+              dispatch(startToggleOpenhouse(key));
             }}
           />
         </Col>
         <Col xs={5} md={5} lg={5} style={{ paddingRight: '3px' }}>
+          <div style={{ fontSize: '10px', color: '#9a9a9a' }}>
+            <Label bsStyle="primary">Openhouse</Label>
+          </div>
           <div>
             <font className={trialClassName}>
-              {truncatedChildName}{' '}
-            </font>
-            <font className={gender}>
-              ({getAge(dateOfBirth)})
+              {truncatedChildName} ({age})
             </font>
           </div>
           <div style={{ fontSize: '10px', color: '#9a9a9a' }}>
@@ -95,17 +89,17 @@ class Trial extends React.Component {
             >
               <button
                 className="innerbtn"
-                onClick={() => this.props.open(childName, id)}
+                onClick={() => this.props.open(childName, key)}
               >
                 D
                 {deposit === undefined
                   ? ''
                   : deposit === '0' ? '' : '$' + deposit}
               </button>
-              <Link to={'/m/trials/edit/' + id} className="innerbtn">
+              <Link to={'/m/openhouse/edit/' + key} className="innerbtn">
                 <Glyphicon glyph="pencil" style={{ padding: '2px 0px' }} />
               </Link>
-              <Link to={'/m/trials/register/' + id} className="innerbtn">
+              <Link to={'/m/openhouse/register/' + key} className="innerbtn">
                 Register
               </Link>
             </Col>}
@@ -114,4 +108,4 @@ class Trial extends React.Component {
   }
 }
 
-export default connect()(Trial);
+export default connect()(Openhouse);

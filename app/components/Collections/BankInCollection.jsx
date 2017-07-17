@@ -47,7 +47,12 @@ class BankInCollection extends React.Component {
       let expensesGroup = filter(expenses, o => {
         return moment(o.date).isSame(id, 'day');
       });
-      html.push(<ListHeader key={id} title={'Collections on ' + id} />);
+      html.push(
+        <ListHeader
+          key={id}
+          title={'Collections on ' + moment(id).format('Do MMM YYYY')}
+        />
+      );
       let paymentsByCentre = groupBy(dateGroup, 'centreId');
       Object.keys(paymentsByCentre).map(centreId => {
         const centreGroup = paymentsByCentre[centreId];

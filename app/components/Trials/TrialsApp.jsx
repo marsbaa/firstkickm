@@ -1,8 +1,15 @@
 import React from 'react';
-import { startAddTrials, updateNavTitle, isFetching } from 'actions';
+import {
+  startAddTrials,
+  updateNavTitle,
+  isFetching,
+  startOpenHouse
+} from 'actions';
 import { Link } from 'react-router';
 import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import filter from 'lodash/filter';
+import union from 'lodash/union';
 import isEmpty from 'lodash/isEmpty';
 import size from 'lodash/size';
 import groupBy from 'lodash/groupBy';
@@ -12,7 +19,9 @@ import moment from 'moment';
 import TrialsFilter from 'TrialsFilter';
 import TrialList from 'TrialList';
 import Trial from 'Trial';
+import Openhouse from 'Openhouse';
 import TrialDepositModal from 'TrialDepositModal';
+import OpenhouseDepositModal from 'OpenhouseDepositModal';
 import Loading from 'Loading';
 
 class TrialsApp extends React.Component {
@@ -20,15 +29,21 @@ class TrialsApp extends React.Component {
     super(props);
     this.state = {
       showModal: false,
+      showOHModal: false,
       childName: '',
-      id: ''
+      childNameOH: '',
+      id: '',
+      key: ''
     };
   }
 
   componentWillMount() {
-    const { dispatch, trials, selection } = this.props;
+    const { dispatch, trials, selection, openhouse } = this.props;
     if (isEmpty(trials)) {
       dispatch(startAddTrials());
+    }
+    if (isEmpty(openhouse)) {
+      dispatch(startOpenHouse());
     }
     dispatch(updateNavTitle('/m/trials', selection.name + ' Trial List'));
   }
@@ -45,14 +60,31 @@ class TrialsApp extends React.Component {
     });
   }
 
+  closeOH(e) {
+    this.setState({ showOHModal: false });
+  }
+
+  openOH(childNameOH, key) {
+    this.setState({
+      childNameOH,
+      key,
+      showOHModal: true
+    });
+  }
+
   render() {
-    const { trials, searchText, selection, isFetching } = this.props;
+    const { trials, searchText, selection, isFetching, openhouse } = this.props;
     const filteredTrials = TrialsFilter.filter(
       trials,
       selection.id,
       searchText
     );
     const groupDates = groupBy(filteredTrials, 'dateOfTrial');
+    const filteredOpenHouse = filter(openhouse, { centreName: selection.name });
+    const groupOpenHouse = groupBy(filteredOpenHouse, 'dateOfTrial');
+    const dates = union(Object.keys(groupDates), Object.keys(groupOpenHouse))
+      .sort()
+      .reverse();
     return (
       <div>
         <TrialDepositModal
@@ -60,6 +92,12 @@ class TrialsApp extends React.Component {
           id={this.state.id}
           show={this.state.showModal}
           close={this.close.bind(this)}
+        />
+        <OpenhouseDepositModal
+          childName={this.state.childNameOH}
+          id={this.state.key}
+          show={this.state.showOHModal}
+          close={this.closeOH.bind(this)}
         />
         {isFetching.completed
           ? <div>
@@ -88,9 +126,10 @@ class TrialsApp extends React.Component {
                   </Link>
                 </Col>
               </Row>
-              {Object.keys(groupDates).sort().reverse().map(dateId => {
-                const trialByDates = groupDates[dateId];
-                const trialNum = size(trialByDates);
+              {dates.map(date => {
+                const trialByDates = groupDates[date];
+                const openhouseByDates = groupOpenHouse[date];
+                const trialNum = size(trialByDates) + size(openhouseByDates);
                 const attendedNum = reduce(
                   trialByDates,
                   (result, value) => {
@@ -102,22 +141,36 @@ class TrialsApp extends React.Component {
                   0
                 );
                 return (
-                  <div key={dateId}>
+                  <div key={date}>
                     <TrialList
-                      dateId={moment(dateId).format('DD.MMM YYYY')}
+                      dateId={moment(date).format('DD.MMM YYYY')}
                       trialNum={trialNum}
                       attendedNum={attendedNum}
                     />
-                    {Object.keys(trialByDates).map(trialId => {
-                      const trial = trialByDates[trialId];
-                      return (
-                        <Trial
-                          key={trial.id}
-                          trial={trial}
-                          open={this.open.bind(this)}
-                        />
-                      );
-                    })}
+                    {size(trialByDates) !== 0
+                      ? Object.keys(trialByDates).map(trialId => {
+                          const trial = trialByDates[trialId];
+                          return (
+                            <Trial
+                              key={trial.id}
+                              trial={trial}
+                              open={this.open.bind(this)}
+                            />
+                          );
+                        })
+                      : null}
+                    {size(openhouseByDates) !== 0
+                      ? Object.keys(openhouseByDates).map(oId => {
+                          const oh = openhouseByDates[oId];
+                          return (
+                            <Openhouse
+                              key={oh.key}
+                              trial={oh}
+                              open={this.openOH.bind(this)}
+                            />
+                          );
+                        })
+                      : null}
                   </div>
                 );
               })}
@@ -133,7 +186,8 @@ function mapStateToProps(state) {
     selection: state.selection,
     trials: state.trials,
     searchText: state.searchText,
-    isFetching: state.isFetching
+    isFetching: state.isFetching,
+    openhouse: state.openhouse
   };
 }
 
