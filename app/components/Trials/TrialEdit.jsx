@@ -1,8 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import { browserHistory } from 'react-router';
-var { connect } = require('react-redux');
-var actions = require('actions');
+import { connect } from 'react-redux';
+import { updateTrial } from 'actions';
 import {
   Row,
   Col,
@@ -12,6 +12,7 @@ import {
   Radio
 } from 'react-bootstrap';
 import { getAgeGroup } from 'helper';
+import find from 'lodash/find';
 
 class TrialEdit extends React.Component {
   constructor(props) {
@@ -78,7 +79,7 @@ class TrialEdit extends React.Component {
       attended: trial.attended === undefined ? false : trial.attended,
       attendedOn: trial.attended === undefined ? null : trial.attended
     };
-    dispatch(actions.updateTrial(trial));
+    dispatch(updateTrial(trial));
     browserHistory.push(`/m/trials`);
   }
 
@@ -103,7 +104,7 @@ class TrialEdit extends React.Component {
     });
 
     //Class TimeSlots
-    let cKey;
+    let cKey = '';
     var childAgeGroup = getAgeGroup(ageGroup, trial.dateOfBirth);
     var classTimeSlots = [];
     classTimeSlots.push(
@@ -138,7 +139,10 @@ class TrialEdit extends React.Component {
         select
       </option>
     );
-    const calendar = calendars[cKey];
+    if (cKey === '') {
+      cKey = find(calendars, { centreKey: selection.key }).key;
+    }
+    let calendar = calendars[cKey];
     Object.keys(calendar.terms).map(termId => {
       var term = calendar.terms[termId];
       term.map(dates => {
@@ -217,7 +221,7 @@ class TrialEdit extends React.Component {
               style={{ marginBottom: '10px' }}
               id="dateOfBirth"
               type="text"
-              placeholder="Enter Date of Birth"
+              placeholder="Enter Date of Birth (YYYY-MM-DD)"
               defaultValue={trial.dateOfBirth}
             />
           </FormGroup>
@@ -273,6 +277,14 @@ class TrialEdit extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(TrialEdit);
+function mapStateToProps(state) {
+  return {
+    trials: state.trials,
+    centres: state.centres,
+    ageGroup: state.ageGroup,
+    calendars: state.calendars,
+    selection: state.selection
+  };
+}
+
+export default connect(mapStateToProps)(TrialEdit);
