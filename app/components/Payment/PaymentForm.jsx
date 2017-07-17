@@ -78,7 +78,6 @@ class PaymentForm extends React.Component {
       payer.push(student);
     }
     this.setState({ payer });
-    console.log(payer);
 
     //Initiate Selectable Term Dates
     var calendarDates = [];
@@ -315,9 +314,10 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          prorate: this.state.prorateAmount[id] !== undefined
-            ? this.state.prorateAmount[id]
-            : null,
+          prorate:
+            this.state.prorateAmount[id] !== undefined
+              ? this.state.prorateAmount[id]
+              : null,
           termsPaid,
           paymentMethod: this.state.form,
           email: this.state.email,
@@ -335,9 +335,10 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          prorate: this.state.prorateAmount[id] !== undefined
-            ? this.state.prorateAmount[id]
-            : null,
+          prorate:
+            this.state.prorateAmount[id] !== undefined
+              ? this.state.prorateAmount[id]
+              : null,
           termsPaid,
           paymentMethod: this.state.form,
           chequeNumber: document.getElementById('chequeNumber').value,
@@ -356,9 +357,10 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          prorate: this.state.prorateAmount[id] !== undefined
-            ? this.state.prorateAmount[id]
-            : null,
+          prorate:
+            this.state.prorateAmount[id] !== undefined
+              ? this.state.prorateAmount[id]
+              : null,
           termsPaid,
           paymentMethod: this.state.form,
           email: this.state.email,
@@ -504,13 +506,17 @@ class PaymentForm extends React.Component {
             if (dateId === 0) {
               datehtml.push(
                 <font key={date} style={{ fontSize: '9px' }}>
-                  <i>{moment(date).format('D MMM')}</i>
+                  <i>
+                    {moment(date).format('D MMM')}
+                  </i>
                 </font>
               );
             } else {
               datehtml.push(
                 <font key={date} style={{ fontSize: '9px' }}>
-                  <i>, {moment(date).format('D MMM')}</i>
+                  <i>
+                    , {moment(date).format('D MMM')}
+                  </i>
                 </font>
               );
             }
@@ -527,8 +533,12 @@ class PaymentForm extends React.Component {
               <Col xs={8} md={8}>
                 <b>Term {termId}</b> ({term.length} sessions)
               </Col>
-              <Col xs={4} md={4} style={{ textAlign: 'right' }}>${cost}</Col>
-              <Col xs={12} md={12} style={{ marginTop: '0px' }}>{datehtml}</Col>
+              <Col xs={4} md={4} style={{ textAlign: 'right' }}>
+                ${cost}
+              </Col>
+              <Col xs={12} md={12} style={{ marginTop: '0px' }}>
+                {datehtml}
+              </Col>
             </Row>
           );
           var actualTerm;
@@ -550,7 +560,9 @@ class PaymentForm extends React.Component {
                   <b style={{ color: '#1796d3' }}>Coach Discount</b>
                 </Col>
                 <Col xs={4} md={4} style={{ float: 'right' }}>
-                  <p style={{ textAlign: 'right' }}>(${coachdiscount})</p>
+                  <p style={{ textAlign: 'right' }}>
+                    (${coachdiscount})
+                  </p>
                 </Col>
               </Row>
             );
@@ -691,7 +703,9 @@ class PaymentForm extends React.Component {
                 type="text"
                 placeholder="Enter Cheque No."
               />
-              <HelpBlock>{this.state.errorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.errorMessage}
+              </HelpBlock>
             </FormGroup>
             <FormGroup validationState={this.state.emailError}>
               <ControlLabel>Email</ControlLabel>
@@ -702,7 +716,9 @@ class PaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -753,7 +769,9 @@ class PaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -802,7 +820,9 @@ class PaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -857,7 +877,9 @@ class PaymentForm extends React.Component {
             <Button bsSize="large" onClick={this.formSubmit.bind(this)}>
               Yes
             </Button>
-            <Button bsSize="large" onClick={close}>No</Button>
+            <Button bsSize="large" onClick={close}>
+              No
+            </Button>
           </Modal.Footer>
         </Modal>
         <Row>

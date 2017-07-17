@@ -59,7 +59,6 @@ class CalendarEdit extends React.Component {
           centreKey,
           terms
         };
-        console.log(calendar);
         dispatch(updateTerm(calendar, calendarKey));
       }
       browserHistory.push('/m/centres/' + centreKey);
@@ -112,13 +111,13 @@ class CalendarEdit extends React.Component {
                 defaultValue={calendar.name}
                 placeholder="Enter Name of Calendar"
               />
-              <HelpBlock>{this.state.errorMessageCalendarName}</HelpBlock>
+              <HelpBlock>
+                {this.state.errorMessageCalendarName}
+              </HelpBlock>
             </FormGroup>
             <TermDatesSelector mode={calendarKey} numOfTerms={numOfTerms} />
             <Button onClick={this.goBack.bind(this)}>Cancel</Button>
-            <Button onClick={e => this.saveCalendar(e, centreKey)}>
-              Save
-            </Button>
+            <Button onClick={e => this.saveCalendar(e, centreKey)}>Save</Button>
           </Col>
         </Row>
       </Grid>

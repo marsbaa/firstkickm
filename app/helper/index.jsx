@@ -109,7 +109,6 @@ export function getTerm(calendars, centreKey, date) {
 }
 
 export function getCalendarKey(student, classes, ag) {
-  console.log(student);
   var key = '';
   var studentAgeGroup = '';
   var currentClassDay, currentClassTime;
@@ -122,8 +121,6 @@ export function getCalendarKey(student, classes, ag) {
     currentClassDay = student.currentClassDay;
     currentClassTime = student.currentClassTime;
   }
-
-  console.log(studentAgeGroup, currentClassDay, currentClassTime);
   Object.keys(classes).forEach(classId => {
     var { ageGroup, day, startTime, endTime, calendarKey } = classes[classId];
     if (ageGroup === studentAgeGroup) {

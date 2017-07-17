@@ -100,7 +100,6 @@ class OpenhouseEdit extends React.Component {
     const { age, dateOfTrial } = trial;
     let time;
     var childAgeGroup;
-    console.log(age);
     ageGroup.map(group => {
       if (age >= group.minAge && age <= group.maxAge) {
         childAgeGroup = group.name;
@@ -109,7 +108,6 @@ class OpenhouseEdit extends React.Component {
         }
       }
     });
-    console.log(childAgeGroup);
     var classTimeSlots = [];
     classTimeSlots.push(
       <option key="0" value="0">

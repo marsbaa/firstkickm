@@ -312,7 +312,6 @@ class TrialPaymentForm extends React.Component {
       var startDate = moment(calendar.terms[currentTerm][0]);
       var calendarDate = getCalendarDates(calendar);
 
-      console.log(calendarDate);
       startDates[id] = startDate;
       calendarDates[id] = calendarDate;
       calendarKeys[id] = calendarKey;
@@ -434,13 +433,17 @@ class TrialPaymentForm extends React.Component {
               if (dateId === 0) {
                 datehtml.push(
                   <font key={date} style={{ fontSize: '9px' }}>
-                    <i>{moment(date).format('D MMM')}</i>
+                    <i>
+                      {moment(date).format('D MMM')}
+                    </i>
                   </font>
                 );
               } else {
                 datehtml.push(
                   <font key={date} style={{ fontSize: '9px' }}>
-                    <i>, {moment(date).format('D MMM')}</i>
+                    <i>
+                      , {moment(date).format('D MMM')}
+                    </i>
                   </font>
                 );
               }
@@ -460,7 +463,9 @@ class TrialPaymentForm extends React.Component {
                 <Col xs={8} md={8}>
                   <b>Term {termId}</b> ({term.length} sessions)
                 </Col>
-                <Col xs={4} md={4} style={{ textAlign: 'right' }}>${cost}</Col>
+                <Col xs={4} md={4} style={{ textAlign: 'right' }}>
+                  ${cost}
+                </Col>
                 <Col xs={12} md={12} style={{ marginTop: '0px' }}>
                   {datehtml}
                 </Col>
@@ -563,7 +568,9 @@ class TrialPaymentForm extends React.Component {
             key={'registration' + student.childName}
             style={{ padding: '0px 15px', marginBottom: '5px' }}
           >
-            <Col xs={8} md={8}><b>Registration Fee</b></Col>
+            <Col xs={8} md={8}>
+              <b>Registration Fee</b>
+            </Col>
             <Col xs={4} md={4} style={{ float: 'right' }}>
               <p style={{ textAlign: 'right', marginBottom: '0px' }}>$80</p>
             </Col>
@@ -614,7 +621,9 @@ class TrialPaymentForm extends React.Component {
                 type="text"
                 placeholder="Enter Cheque No."
               />
-              <HelpBlock>{this.state.errorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.errorMessage}
+              </HelpBlock>
             </FormGroup>
             <FormGroup validationState={this.state.emailError}>
               <ControlLabel>Email</ControlLabel>
@@ -625,7 +634,9 @@ class TrialPaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -676,7 +687,9 @@ class TrialPaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -725,7 +738,9 @@ class TrialPaymentForm extends React.Component {
                 placeholder="Enter Email"
                 defaultValue={email}
               />
-              <HelpBlock>{this.state.emailErrorMessage}</HelpBlock>
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
             </FormGroup>
           </Col>
           <Col md={12} xs={12}>
@@ -780,7 +795,9 @@ class TrialPaymentForm extends React.Component {
             <Button bsSize="large" onClick={this.formSubmit.bind(this)}>
               Yes
             </Button>
-            <Button bsSize="large" onClick={close}>No</Button>
+            <Button bsSize="large" onClick={close}>
+              No
+            </Button>
           </Modal.Footer>
         </Modal>
         <Row>

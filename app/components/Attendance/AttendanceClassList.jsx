@@ -16,7 +16,6 @@ class AttendanceClassList extends React.Component {
     var attended = 0;
     var { group, date, name, makeUps } = this.props;
     var attended = countAttended(group, date);
-    console.log(group);
     return (
       <div>
         <Row
@@ -30,14 +29,13 @@ class AttendanceClassList extends React.Component {
             this.setState({ show: this.state.show ? false : true })}
         >
           <Col xs={9} md={9}>
-            <h5>{name}</h5>
+            <h5>
+              {name}
+            </h5>
           </Col>
           <Col xs={3} md={3} style={{ textAlign: 'center' }}>
             <h5>
-              <font style={{ color: 'white' }}>{attended}</font>
-              {' '}
-              /
-              {' '}
+              <font style={{ color: 'white' }}>{attended}</font> /{' '}
               {_.size(group)}
             </h5>
           </Col>
