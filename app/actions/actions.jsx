@@ -379,7 +379,9 @@ export var startOpenHouse = () => {
           key: id,
           ...openhouse[id],
           centreName: splitS[0],
-          dateOfTrial: moment(formattedDate).format('YYYY-MM-DD'),
+          dateOfTrial: moment(formattedDate, 'YYYY-MMM-DD').format(
+            'YYYY-MM-DD'
+          ),
           startTime
         });
       });
