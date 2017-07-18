@@ -39,7 +39,7 @@ class Trial extends React.Component {
 
     const getAge = dob => {
       const now = moment();
-      const dateofbirth = moment(JSON.stringify(dob), 'YYYY-MM-DD');
+      const dateofbirth = moment(dob, 'YYYY-MM-DD');
       return now.diff(dateofbirth, 'years');
     };
 
@@ -81,7 +81,7 @@ class Trial extends React.Component {
         </Col>
         {registered
           ? <Col xs={5} md={5} lg={5} style={{ textAlign: 'right' }}>
-              Registered on {moment(dateRegistered).format('D MMM YYYY')}
+              Registered on {dateRegistered}
             </Col>
           : <Col
               xs={5}

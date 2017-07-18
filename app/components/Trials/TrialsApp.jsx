@@ -74,15 +74,11 @@ class TrialsApp extends React.Component {
 
   render() {
     const { trials, searchText, selection, isFetching, openhouse } = this.props;
-    const filteredTrials = TrialsFilter.filter(
-      trials,
-      selection.id,
-      searchText
-    );
-    const groupDates = groupBy(filteredTrials, 'dateOfTrial');
-    const filteredOpenHouse = filter(openhouse, { centreName: selection.name });
-    const groupOpenHouse = groupBy(filteredOpenHouse, 'dateOfTrial');
-    const dates = union(Object.keys(groupDates), Object.keys(groupOpenHouse))
+    let filteredTrials = TrialsFilter.filter(trials, selection.id, searchText);
+    let groupDates = groupBy(filteredTrials, 'dateOfTrial');
+    let filteredOpenHouse = filter(openhouse, { centreName: selection.name });
+    let groupOpenHouse = groupBy(filteredOpenHouse, 'dateOfTrial');
+    let dates = union(Object.keys(groupDates), Object.keys(groupOpenHouse))
       .sort()
       .reverse();
     return (
@@ -140,10 +136,13 @@ class TrialsApp extends React.Component {
                   },
                   0
                 );
+                const formattedDate = moment(date, 'YYYY-MM-DD').format(
+                  'DD MMM YYYY'
+                );
                 return (
                   <div key={date}>
                     <TrialList
-                      dateId={moment(date).format('DD.MMM YYYY')}
+                      dateId={formattedDate}
                       trialNum={trialNum}
                       attendedNum={attendedNum}
                     />

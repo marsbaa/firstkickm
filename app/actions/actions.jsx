@@ -323,7 +323,7 @@ export var startToggleTrial = id => {
         var val = snapshot.val();
         var attended =
           val.attended === undefined || val.attended === false ? true : false;
-        var attendedOn = attended ? moment().unix() : null;
+        var attendedOn = attended ? moment().format() : null;
         return trialsRef.update({
           attended,
           attendedOn
@@ -427,7 +427,7 @@ export var startToggleOpenhouse = key => {
         var val = snapshot.val();
         var attended =
           val.attended === undefined || val.attended === false ? true : false;
-        var attendedOn = attended ? moment().unix() : null;
+        var attendedOn = attended ? moment().format() : null;
         return openhouseRef.update({
           attended,
           attendedOn
