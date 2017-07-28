@@ -1,14 +1,11 @@
 import firebase from 'firebaseApp';
 import React from 'react';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
-import asyncRoute from '../asyncRoute';
 import Login from 'Login';
 
-const NavBar = asyncRoute(() => import('NavBar'));
-const MainMenu = asyncRoute(() => import('MainMenu'));
-
 import DashboardApp from 'DashboardApp';
-
+import NavBar from 'NavBar';
+import MainMenu from 'MainMenu';
 //Components for Access
 import UserApp from 'UserApp';
 import UserList from 'UserList';
@@ -24,7 +21,6 @@ import ClassEdit from 'ClassEdit';
 import TrialsApp from 'TrialsApp';
 import TrialEditForm from 'TrialEditForm';
 import TrialAddForm from 'TrialAddForm';
-import TrialPaymentForm from 'TrialPaymentForm';
 import TrialRegistration from 'TrialRegistration';
 import TrialPayment from 'TrialPayment';
 
