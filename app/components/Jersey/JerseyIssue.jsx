@@ -1,26 +1,25 @@
-import React from 'react'
-import _ from 'lodash'
-var actions = require('actions')
-var {connect} = require('react-redux')
+import React from 'react';
+import _ from 'lodash';
+var actions = require('actions');
+import { connect } from 'react-redux';
 
 class JerseyIssue extends React.Component {
   componentDidMount() {
-    var {dispatch, payments} = this.props;
+    var { dispatch, payments } = this.props;
     if (_.isEmpty(payments)) {
       dispatch(actions.startPayments());
     }
   }
 
   render() {
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
-   return (
-     <div>
-       {this.props.children}
-     </div>
-
-   );
- }
- }
-
- export default connect((state) => {return state;
+export default connect(state => {
+  return state;
 })(JerseyIssue);

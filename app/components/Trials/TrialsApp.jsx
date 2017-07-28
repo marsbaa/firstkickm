@@ -3,7 +3,9 @@ import {
   startAddTrials,
   updateNavTitle,
   isFetching,
-  startOpenHouse
+  startOpenHouse,
+  resetRegister,
+  resetParent
 } from 'actions';
 import { Link } from 'react-router';
 import { Col, Row } from 'react-bootstrap';
@@ -45,6 +47,8 @@ class TrialsApp extends React.Component {
     if (isEmpty(openhouse)) {
       dispatch(startOpenHouse());
     }
+    dispatch(resetRegister());
+    dispatch(resetParent());
     dispatch(updateNavTitle('/m/trials', selection.name + ' Trial List'));
   }
 

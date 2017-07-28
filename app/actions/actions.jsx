@@ -174,7 +174,7 @@ export var startAddTrials = () => {
       }
     };
     var trialsRef = firebaseRef.child('trials');
-    axios
+    /*axios
       .get('https://www.fka.sg/get-api-students/')
       .then(function(response) {
         var trialList = response.data.data;
@@ -212,7 +212,7 @@ export var startAddTrials = () => {
       })
       .catch(function(response) {
         console.log(response);
-      });
+      });*/
 
     return trialsRef
       .orderByChild('dateOfTrial')
@@ -546,21 +546,8 @@ export var addTrialStudent = student => {
   var newKey = studentRef.push().key;
   var updates = {};
   updates[newKey] = {
-    trialId: student.id,
-    address: student.address,
-    ageGroup: student.ageGroup,
-    childName: student.childName,
-    contact: student.contact,
-    currentClassDay: student.currentClassDay,
-    currentClassTime: student.currentClassTime,
-    dateAdded: moment().format('YYYY-MM-DD'),
-    dateOfBirth: student.dateOfBirth,
-    email: student.email,
-    gender: student.gender,
-    parentName: student.parentName,
-    medicalCondition: student.medicalCondition,
-    venueId: student.venueId,
-    centre: student.centre
+    dateAdded: moment().format(),
+    ...student
   };
   studentRef.update(updates);
   student.key = newKey;
@@ -1319,10 +1306,48 @@ export var addInventories = inventories => {
 };
 
 //Registration Actions
-export var addRegister = payers => {
+export var addRegister = register => {
   return {
     type: 'ADD_REGISTER',
-    payers
+    register
+  };
+};
+
+export var resetRegister = () => {
+  return {
+    type: 'RESET_REGISTER'
+  };
+};
+
+export var updateChildName = (childName, id) => {
+  return {
+    type: 'UPDATE_CHILDNAME',
+    childName,
+    id
+  };
+};
+
+export var updateGender = (gender, id) => {
+  return {
+    type: 'UPDATE_GENDER',
+    gender,
+    id
+  };
+};
+
+export var updateDateOfBirth = (dob, id) => {
+  return {
+    type: 'UPDATE_DATE_OF_BIRTH',
+    dob,
+    id
+  };
+};
+
+export var updateMedical = (mc, id) => {
+  return {
+    type: 'UPDATE_MEDICAL',
+    mc,
+    id
   };
 };
 
@@ -1333,17 +1358,125 @@ export var updateRegister = trial => {
   };
 };
 
-export var updateJoining = id => {
+export var updateCentreId = (venueId, id) => {
   return {
-    type: 'UPDATE_JOINING',
+    type: 'UPDATE_CENTREID',
+    venueId,
     id
   };
 };
 
-export var updateParentDetails = parentDetails => {
+export var updateDateOfTrial = (dateOfTrial, id) => {
   return {
-    type: 'UPDATE_PARENT',
-    parentDetails
+    type: 'UPDATE_DATE_OF_TRIAL',
+    dateOfTrial,
+    id
+  };
+};
+
+export var updateStartDate = (startDate, id) => {
+  return {
+    type: 'UPDATE_START_DATE',
+    startDate,
+    id
+  };
+};
+
+export var updateClassTimeDay = (time, day, id) => {
+  return {
+    type: 'UPDATE_TIME_DAY',
+    time,
+    day,
+    id
+  };
+};
+
+export var updateJoining = (notJoining, id) => {
+  return {
+    type: 'UPDATE_JOINING',
+    notJoining: notJoining ? false : true,
+    id
+  };
+};
+
+export var addSessionDates = (dates, id) => {
+  return {
+    type: 'ADD_SESSION_DATES',
+    dates,
+    id
+  };
+};
+
+export var insertSessionDate = (date, termId, id) => {
+  return {
+    type: 'INSERT_SESSION_DATE',
+    date,
+    termId,
+    id
+  };
+};
+
+export var removeSessionDate = (date, termId, id) => {
+  return {
+    type: 'REMOVE_SESSION_DATE',
+    date,
+    termId,
+    id
+  };
+};
+
+//Parent Actions
+export var addParent = parent => {
+  return {
+    type: 'ADD_PARENT',
+    parent
+  };
+};
+
+export var resetParent = () => {
+  return {
+    type: 'RESET_PARENT'
+  };
+};
+export var updateParentName = name => {
+  return {
+    type: 'UPDATE_PARENT_NAME',
+    name
+  };
+};
+
+export var updateContact = contact => {
+  return {
+    type: 'UPDATE_CONTACT',
+    contact
+  };
+};
+
+export var updateEmail = email => {
+  return {
+    type: 'UPDATE_EMAIL',
+    email
+  };
+};
+
+export var updateAddress = address => {
+  return {
+    type: 'UPDATE_ADDRESS',
+    address
+  };
+};
+
+export var updatePostalCode = postalCode => {
+  return {
+    type: 'UPDATE_POSTAL_CODE',
+    postalCode
+  };
+};
+
+export var updateTC = tc => {
+  return {
+    type: 'UPDATE_TC',
+    tc: tc ? false : true
   };
 };
 
@@ -1529,5 +1662,59 @@ export var addMakeUp = makeUp => {
   return {
     type: 'ADD_MAKEUP',
     makeUp
+  };
+};
+
+//PromotionsApp
+export const startPromotions = () => {
+  return dispatch => {
+    const promoRef = firebaseRef.child('promotions');
+    promoRef.once('value').then(snapshot => {
+      const promotions = snapshot.val();
+      let parsedPromo = {};
+      if (promotions !== null) {
+        Object.keys(promotions).map(key => {
+          parsedPromo[key] = {
+            key,
+            ...promotions[key]
+          };
+        });
+        dispatch(addPromotions(parsedPromo));
+      }
+    });
+  };
+};
+
+export const addPromotions = promotions => {
+  return {
+    type: 'ADD_PROMOTIONS',
+    promotions
+  };
+};
+
+export var addPromotion = promotion => {
+  var promoRef = firebaseRef.child('promotions');
+  var newKey = promoRef.push().key;
+  var updates = {};
+  updates[newKey] = promotion;
+  promoRef.update(updates);
+  promotion.key = newKey;
+  return {
+    type: 'ADD_PROMOTION',
+    promotion
+  };
+};
+
+//Selected promotion
+export var addSelectedPromotion = promoKey => {
+  return {
+    type: 'ADD_SELECTED_PROMOTION',
+    promoKey
+  };
+};
+
+export var resetSelectedPromotion = () => {
+  return {
+    type: 'RESET_SELECTED_PROMOTION'
   };
 };

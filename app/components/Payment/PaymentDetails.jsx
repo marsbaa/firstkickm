@@ -1,29 +1,60 @@
-import React from 'react'
-import _ from 'lodash'
-import {ListGroup, ListGroupItem, Button, Glyphicon} from 'react-bootstrap'
-import moment from 'moment'
-var actions = require('actions')
-var {connect} = require('react-redux')
+import React from 'react';
+import _ from 'lodash';
+import { ListGroup, ListGroupItem, Button, Glyphicon } from 'react-bootstrap';
+import moment from 'moment';
+import size from 'lodash/size';
+import isEmpty from 'lodash/isEmpty';
+var actions = require('actions');
+import { connect } from 'react-redux';
 
 class PaymentDetails extends React.Component {
-
   render() {
-    var {payment, centres} = this.props
-    var centre = _.find(centres, {id : payment.centreId})
-    var termspaidhtml = []
-    var termsamounthtml = []
-    var paidSessions = 0
-    var cost = 0
+    const { centres } = this.props;
+    const {
+      termsPaid,
+      key,
+      earlyBird,
+      earlyBirdAmount,
+      siblingDiscount,
+      siblingDiscountAmount,
+      promotionDiscount,
+      promotionDiscountAmount,
+      registration,
+      registrationAmount,
+      total,
+      coachDiscount,
+      prorate,
+      centreId
+    } = this.props.payment;
+    const centre = _.find(centres, { id: centreId });
+    let termspaidhtml = [];
+    let termsamounthtml = [];
+    let paidSessions = 0;
+    let cost = 0;
 
-    if (payment.termsPaid !== undefined) {
-      Object.keys(payment.termsPaid).map((termId) => {
-        paidSessions += payment.termsPaid[termId].length
-      })
-      Object.keys(payment.termsPaid).map((termId) => {
-        termspaidhtml.push(<Button style={{padding: '2px' ,fontSize:'8px', backgroundColor: '#ffc600', color: '#656565'}} key={payment.key+termId} bsSize="xsmall">T{termId}<Glyphicon glyph="ok" /></Button>)
+    if (termsPaid !== undefined) {
+      Object.keys(termsPaid).map(termId => {
+        paidSessions += termsPaid[termId].length;
+      });
+      Object.keys(termsPaid).map(termId => {
+        termspaidhtml.push(
+          <Button
+            style={{
+              padding: '2px',
+              fontSize: '8px',
+              backgroundColor: '#ffc600',
+              color: '#656565'
+            }}
+            key={key + termId}
+            bsSize="xsmall"
+          >
+            T{termId}
+            <Glyphicon glyph="ok" />
+          </Button>
+        );
 
-        var term = payment.termsPaid[termId]
-        switch (_.size(term)) {
+        let term = termsPaid[termId];
+        switch (size(term)) {
           case 8:
             cost = 300;
             break;
@@ -37,41 +68,99 @@ class PaymentDetails extends React.Component {
             cost = 220;
             break;
           default:
-            cost = term.length * (paidSessions > 8 ? 35:45);
+            cost = term.length * (paidSessions > 8 ? 35 : 45);
             break;
         }
 
-        termsamounthtml.push(<p key={"amount"+termId} style={{margin : '0px'}}>Term {termId} Fees : ${cost}</p>)
-    })
+        termsamounthtml.push(
+          <p key={'amount' + termId} style={{ margin: '0px' }}>
+            Term {termId} Fees : ${cost}
+          </p>
+        );
+      });
+    }
+
+    return (
+      <ListGroup fill>
+        <ListGroupItem>
+          Centre : {centre.name}
+        </ListGroupItem>
+        {isEmpty(termspaidhtml)
+          ? null
+          : <ListGroupItem>
+              Terms Paid : {termspaidhtml}
+            </ListGroupItem>}
+        {termsPaid !== undefined
+          ? <ListGroupItem>
+              {Object.keys(termsPaid).map(termId => {
+                const term = termsPaid[termId];
+                return (
+                  <p
+                    key={'TermDates' + termId}
+                    style={{ fontSize: '9px', margin: '0px' }}
+                  >
+                    T{termId} ({size(term)} sessions):{' '}
+                    {term.map((date, index) => {
+                      return index < size(term) - 1
+                        ? <i key={date.date}>
+                            {moment(date.date).format('DD MMM YYYY')},{' '}
+                          </i>
+                        : <i key={date.date}>
+                            {moment(date.date).format('DD MMM YYYY')}
+                          </i>;
+                    })}
+                  </p>
+                );
+              })}
+            </ListGroupItem>
+          : ''}
+        {isEmpty(termsamounthtml)
+          ? null
+          : <ListGroupItem>
+              {termsamounthtml}
+            </ListGroupItem>}
+        {coachDiscount !== undefined
+          ? <ListGroupItem>
+              Coach Discount: (${cost * 0.5})
+            </ListGroupItem>
+          : null}
+        {earlyBird
+          ? <ListGroupItem>
+              Early Bird: (${earlyBirdAmount})
+            </ListGroupItem>
+          : null}
+        {registration
+          ? <ListGroupItem>
+              Registration: ${registrationAmount}
+            </ListGroupItem>
+          : null}
+        {prorate !== undefined
+          ? <ListGroupItem>
+              Pro-rate: (${prorate})
+            </ListGroupItem>
+          : null}
+        {siblingDiscount
+          ? <ListGroupItem>
+              Sibling Discount: (${siblingDiscountAmount})
+            </ListGroupItem>
+          : null}
+        {promotionDiscount !== undefined
+          ? <ListGroupItem>
+              {promotionDiscount}: (${promotionDiscountAmount})
+            </ListGroupItem>
+          : null}
+        <ListGroupItem>
+          Total : ${total}
+        </ListGroupItem>
+      </ListGroup>
+    );
   }
+}
 
+function mapStateToProps(state) {
+  return {
+    centres: state.centres
+  };
+}
 
-
-   return (
-     <ListGroup fill>
-       <ListGroupItem>Centre : {centre.name}</ListGroupItem>
-       {_.isEmpty(termspaidhtml)? null : <ListGroupItem>Terms Paid : {termspaidhtml}</ListGroupItem> }
-       {
-           payment.termsPaid !== undefined ?
-             <ListGroupItem>{Object.keys(payment.termsPaid).map((termId) => {
-               var term = payment.termsPaid[termId]
-               return <p key={"TermDates"+termId} style={{fontSize: '9px', margin: '0px'}}>T{termId} ({_.size(term)} sessions): {Object.keys(term).map((id)=>{
-                 return id < _.size(term)-1 ? <i key={term[id].date}>{moment(term[id].date).format("DD MMM YY")}, </i> : <i key={term[id].date}>{moment(term[id].date).format("DD MMM YY")}</i>
-               })}</p>
-           })}</ListGroupItem> : ""
-       }
-     {_.isEmpty(termsamounthtml) ? null : <ListGroupItem>{termsamounthtml}</ListGroupItem> }
-     {payment.coachDiscount ? <ListGroupItem>Coach Discount: (${cost * 0.5})</ListGroupItem> : null}
-     {payment.earlyBird ? <ListGroupItem>Early Bird: ($20)</ListGroupItem> : null}
-     {payment.registration ? <ListGroupItem>Registration: $80</ListGroupItem> : null}
-     {payment.prorate !== undefined ? <ListGroupItem>Pro-rate: (${payment.prorate})</ListGroupItem> : null}
-     {payment.siblingDiscount ? <ListGroupItem>Sibling Discount: (${payment.siblingDiscountAmount})</ListGroupItem> : null}
-     <ListGroupItem>Total : ${payment.total}</ListGroupItem>
-     </ListGroup>
-
-   );
- }
- }
-
- export default connect((state) => {return state;
-})(PaymentDetails);
+export default connect(mapStateToProps)(PaymentDetails);

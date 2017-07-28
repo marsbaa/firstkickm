@@ -85,6 +85,7 @@ module.exports = {
       './app/components/MakeUp',
       './app/components/Notes',
       './app/components/Payment',
+      './app/components/Promotions',
       './app/components/Settings',
       './app/components/Students',
       './app/components/Trials',

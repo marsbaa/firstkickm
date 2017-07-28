@@ -25,6 +25,17 @@ export var redirectReducer = (state = '', action) => {
   }
 };
 
+export var selectedPromotionReducer = (state = '', action) => {
+  switch (action.type) {
+    case 'ADD_SELECTED_PROMOTION':
+      return action.promoKey;
+    case 'RESET_SELECTED_PROMOTION':
+      return '';
+    default:
+      return state;
+  }
+};
+
 export var navbarReducer = (state = { link: '', title: '' }, action) => {
   switch (action.type) {
     case 'UPDATE_NAV_TITLE':
@@ -629,50 +640,150 @@ export var inventoryReducer = (state = [], action) => {
   }
 };
 
-export var registrationReducer = (state = [], action) => {
+export var registrationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_REGISTER':
-      return [...action.payers];
-    case 'UPDATE_REGISTER':
-      return state.map(register => {
-        if (register.id === action.trial.id) {
-          return {
-            ...register,
-            childName: action.trial.childName,
-            gender: action.trial.gender,
-            dateOfBirth: action.trial.dateOfBirth,
-            dateOfTrial: action.trial.dateOfTrial,
-            venueId: action.trial.venueId,
-            currentClassTime: action.trial.currentClassTime,
-            currentClassDay: action.trial.currentClassDay,
-            medicalCondition: action.trial.medicalCondition
-          };
-        } else {
-          return register;
+      return action.register;
+    case 'ADD_SESSION_DATES':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: { ...action.dates }
         }
-      });
+      };
+    case 'INSERT_SESSION_DATE':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: {
+            ...state[action.id].sessionDates,
+            [action.termId]: [
+              ...state[action.id].sessionDates[action.termId],
+              action.date
+            ]
+          }
+        }
+      };
+    case 'REMOVE_SESSION_DATE':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: {
+            ...state[action.id].sessionDates,
+            [action.termId]: [
+              ...state[action.id].sessionDates[action.termId].filter(date => {
+                return date !== action.date;
+              })
+            ]
+          }
+        }
+      };
+    case 'UPDATE_CHILDNAME':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          childName: action.childName
+        }
+      };
+    case 'UPDATE_GENDER':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          gender: action.gender
+        }
+      };
+    case 'UPDATE_DATE_OF_BIRTH':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          dateOfBirth: action.dob
+        }
+      };
+    case 'UPDATE_DATE_OF_TRIAL':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          dateOfTrial: action.dateOfTrial,
+          startDate: action.dateOfTrial
+        }
+      };
+    case 'UPDATE_START_DATE':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          startDate: action.startDate
+        }
+      };
+    case 'UPDATE_MEDICAL':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          medicalCondition: action.mc
+        }
+      };
     case 'UPDATE_JOINING':
-      return state.map(register => {
-        if (register.id === action.id) {
-          return {
-            ...register,
-            joining: register.joining === true ? false : true
-          };
-        } else {
-          return register;
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          notJoining: action.notJoining
         }
-      });
-    case 'UPDATE_PARENT':
-      return state.map(register => {
-        return {
-          ...register,
-          parentName: action.parentDetails.parentName,
-          contactNumber: action.parentDetails.contactNumber,
-          email: action.parentDetails.email,
-          address: action.parentDetails.address,
-          postalcode: action.parentDetails.postalcode
-        };
-      });
+      };
+    case 'UPDATE_CENTREID':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          venueId: action.venueId
+        }
+      };
+    case 'UPDATE_TIME_DAY':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          currentClassTime: action.time,
+          currentClassDay: action.day
+        }
+      };
+
+    case 'RESET_REGISTER':
+      return {};
+    default:
+      return state;
+  }
+};
+
+export var parentReducer = (
+  state = { address: '', postalCode: '' },
+  action
+) => {
+  switch (action.type) {
+    case 'ADD_PARENT':
+      return { ...state, ...action.parent };
+    case 'RESET_PARENT':
+      return {};
+    case 'UPDATE_PARENT_NAME':
+      return { ...state, parentName: action.name };
+    case 'UPDATE_CONTACT':
+      return { ...state, contact: action.contact };
+    case 'UPDATE_EMAIL':
+      return { ...state, email: action.email };
+    case 'UPDATE_ADDRESS':
+      return { ...state, address: action.address };
+    case 'UPDATE_POSTAL_CODE':
+      return { ...state, postalCode: action.postalCode };
+    case 'UPDATE_TC':
+      return { ...state, tc: action.tc };
     default:
       return state;
   }
@@ -730,6 +841,17 @@ export var makeUpReducer = (state = [], action) => {
       return [...state, { ...action.makeUp }];
     case 'REMOVE_MAKEUP':
       return state.filter(({ key }) => key !== action.key);
+    default:
+      return state;
+  }
+};
+
+export const promotionsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_PROMOTIONS':
+      return action.promotions;
+    case 'ADD_PROMOTION':
+      return [...state, { ...action.promotion }];
     default:
       return state;
   }

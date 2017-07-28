@@ -79,7 +79,7 @@ class BankInCollection extends React.Component {
           <ListContent
             key={id + centreId}
             contentLeft={centreName}
-            contentRight={total}
+            contentRight={'$' + total}
           />
         );
       });

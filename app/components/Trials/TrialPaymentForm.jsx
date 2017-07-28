@@ -16,9 +16,8 @@ import {
   HelpBlock,
   Glyphicon
 } from 'react-bootstrap';
-import { datebtn, downbtn } from 'styles.css';
 var actions = require('actions');
-var { connect } = require('react-redux');
+import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import moment from 'moment';

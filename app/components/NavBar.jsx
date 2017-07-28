@@ -18,7 +18,7 @@ import Loading from 'Loading';
 const Button = styled.button`
   border-radius: 3px;
   border: 1px solid ${props => props.theme.primary};
-  background : none;
+  background: none;
   color: ${props => props.theme.primary};
 `;
 
@@ -37,6 +37,12 @@ const StyledHeaderLink = styled(Link)`
 `;
 
 class NavBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false
+    };
+  }
   onLogout() {
     var { dispatch } = this.props;
     dispatch(startLogout());
@@ -57,7 +63,12 @@ class NavBar extends React.Component {
     const { navbar, auth, users, isFetching } = this.props;
     return (
       <div>
-        <Navbar style={{ padding: '10px', marginBottom: '0px' }}>
+        <Navbar
+          style={{ padding: '10px', marginBottom: '0px' }}
+          onToggle={() =>
+            this.setState({ expanded: this.state.expanded ? false : true })}
+          expanded={this.state.expanded}
+        >
           <Navbar.Header>
             <Navbar.Brand style={{ fontSize: '16px' }}>
               <StyledLink to="/m">
@@ -70,13 +81,13 @@ class NavBar extends React.Component {
             <Navbar.Toggle style={{ marginTop: '15px' }} />
           </Navbar.Header>
           <Navbar.Collapse>
-
             {isManager(auth, users)
               ? <Nav style={{ float: 'right' }}>
                   <NavItem key="centres" eventKey={1}>
                     <butt
                       onClick={e => {
                         e.preventDefault();
+                        this.setState({ expanded: false });
                         browserHistory.push('/m/centres');
                       }}
                     >
@@ -87,36 +98,45 @@ class NavBar extends React.Component {
                     <butt
                       onClick={e => {
                         e.preventDefault();
+                        this.setState({ expanded: false });
                         browserHistory.push('/m/settings');
                       }}
                     >
                       Settings
                     </butt>
                   </NavItem>
+
                   <NavItem key="users" eventKey={3}>
                     <butt
                       onClick={e => {
                         e.preventDefault();
+                        this.setState({ expanded: false });
                         browserHistory.push('/m/users');
                       }}
                     >
                       Access Rights
                     </butt>
                   </NavItem>
-                  <NavItem eventKey={4}>
-                    <Button onClick={this.onLogout.bind(this)}>
-                      Log Out
-                    </Button>
+                  <NavItem key="promotions" eventKey={4}>
+                    <butt
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({ expanded: false });
+                        browserHistory.push('/m/promotions');
+                      }}
+                    >
+                      Manage Promotions
+                    </butt>
+                  </NavItem>
+                  <NavItem eventKey={5}>
+                    <Button onClick={this.onLogout.bind(this)}>Log Out</Button>
                   </NavItem>
                 </Nav>
               : <Nav style={{ float: 'right' }}>
                   <NavItem eventKey={1}>
-                    <Button onClick={this.onLogout.bind(this)}>
-                      Log Out
-                    </Button>
+                    <Button onClick={this.onLogout.bind(this)}>Log Out</Button>
                   </NavItem>
                 </Nav>}
-
           </Navbar.Collapse>
         </Navbar>
         {isFetching.completed

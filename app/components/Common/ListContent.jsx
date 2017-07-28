@@ -16,7 +16,7 @@ const ListContent = props => {
         {contentLeft}
       </Col>
       <Col xs={4} md={4} style={{ textAlign: 'right' }}>
-        ${contentRight}
+        {contentRight}
       </Col>
     </Row>
   );

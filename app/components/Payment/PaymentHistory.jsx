@@ -1,8 +1,10 @@
 import React from 'react';
-import _ from 'lodash';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { connect } from 'react-redux';
 import { firebaseRef } from 'firebaseApp';
 import { updateNavTitle, removePayment } from 'actions';
+import { isManager } from 'helper';
 import moment from 'moment';
 import PaymentDetails from 'PaymentDetails';
 import {
@@ -68,152 +70,11 @@ class PaymentHistory extends React.Component {
   }
 
   render() {
-    var { payments, students, users, auth } = this.props;
-    var user;
-    if (auth.email === 'ray@marsbaa.com') {
-      user = {
-        name: 'Ray Yee',
-        email: 'ray@marsbaa.com',
-        assignedRoles: 'Manager',
-        assignedCentres: { 0: 'all' }
-      };
-    } else {
-      user = _.find(users, ['email', auth.email]);
-    }
-    var studentId = this.props.params.studentId;
-    var student = _.find(students, { key: studentId });
+    const { payments, student, users, auth } = this.props;
+
     var html = [];
     let close = () => this.setState({ show: false });
     let closeR = () => this.setState({ showR: false });
-    if (student.payments === undefined) {
-      html.push(
-        <p style={{ textAlign: 'center' }} key="nohistory">
-          No payment history
-        </p>
-      );
-    } else {
-      html.push(
-        <PanelGroup key="accordion" accordion>
-          {Object.keys(student.payments).map(paymentId => {
-            var payment = _.find(payments, {
-              key: student.payments[paymentId].paymentKey
-            });
-            return (
-              <Panel
-                header={
-                  <Row>
-                    <Col xs={7} md={7}>
-                      <ControlLabel>
-                        {moment(payment.date).format('DD MMM YYYY') +
-                          ' - Total : $' +
-                          payment.total}
-                      </ControlLabel>
-                    </Col>
-                    {user.assignedRoles === 'Manager'
-                      ? <Col xs={5} md={5} style={{ textAlign: 'right' }}>
-                          <button
-                            className="btn"
-                            style={{ float: 'right' }}
-                            onClick={e => {
-                              e.preventDefault();
-                              this.handleSelect(payment.key, payment.childKey);
-                            }}
-                          >
-                            Remove
-                          </button>
-                        </Col>
-                      : null}
-                  </Row>
-                }
-                footer={
-                  payment.invoiceKey !== undefined
-                    ? <p style={{ textAlign: 'right' }}>
-                        <button
-                          className="btn"
-                          onClick={() => this.setState({ showR: true })}
-                        >
-                          Resend Receipt
-                        </button>
-                      </p>
-                    : ''
-                }
-                eventKey={payment.key}
-                key={payment.key}
-              >
-                <PaymentDetails payment={payment} />
-                <Modal
-                  show={this.state.showR}
-                  onHide={closeR}
-                  container={this}
-                  aria-labelledby="contained-modal-title1"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title1">
-                      Resend Receipt
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Are you sure you want to resend a copy of receipt?
-                    <FormGroup>
-                      <ControlLabel>Email</ControlLabel>
-                      <FormControl
-                        style={{ marginBottom: '10px', textAlign: 'center' }}
-                        id="email"
-                        type="text"
-                        placeholder="Enter Email"
-                        defaultValue={payment.email}
-                      />
-                    </FormGroup>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button
-                      bsSize="large"
-                      onClick={e =>
-                        this.resendReceipt(
-                          e,
-                          payment.invoiceKey,
-                          payment.email
-                        )}
-                    >
-                      Yes
-                    </Button>
-                    <Button bsSize="large" onClick={close}>No</Button>
-                  </Modal.Footer>
-                </Modal>
-                <Modal
-                  show={this.state.show}
-                  onHide={close}
-                  container={this}
-                  aria-labelledby="contained-modal-title"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title">
-                      Delete Payment Records
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Are you sure you want to delete payment record of $
-                    {payment.total}
-                    {' '}
-                    made on
-                    {' '}
-                    {moment(payment.date).format('DD MMM YYYY')}
-                    {' '}
-                    ?
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button bsSize="large" onClick={this.formSubmit.bind(this)}>
-                      Yes
-                    </Button>
-                    <Button bsSize="large" onClick={close}>No</Button>
-                  </Modal.Footer>
-                </Modal>
-              </Panel>
-            );
-          })}
-        </PanelGroup>
-      );
-    }
 
     return (
       <Grid style={{ paddingTop: '20px', paddingBottom: '200px' }}>
@@ -229,7 +90,140 @@ class PaymentHistory extends React.Component {
             >
               {student.childName}
             </p>
-            {html}
+            {payments === undefined
+              ? <p style={{ textAlign: 'center' }} key="nohistory">
+                  No payment history
+                </p>
+              : <PanelGroup key="accordion" accordion>
+                  {Object.keys(payments).map(paymentId => {
+                    const payment = payments[paymentId];
+                    const {
+                      date,
+                      total,
+                      key,
+                      childKey,
+                      email,
+                      invoiceKey
+                    } = payment;
+                    return (
+                      <Panel
+                        header={
+                          <Row>
+                            <Col xs={7} md={7}>
+                              <ControlLabel>
+                                {moment(date).format('DD MMM YYYY') +
+                                  ' - Total : $' +
+                                  total}
+                              </ControlLabel>
+                            </Col>
+                            {isManager(auth, users)
+                              ? <Col
+                                  xs={5}
+                                  md={5}
+                                  style={{ textAlign: 'right' }}
+                                >
+                                  <button
+                                    className="btn"
+                                    style={{ float: 'right' }}
+                                    onClick={e => {
+                                      e.preventDefault();
+                                      this.handleSelect(key, childKey);
+                                    }}
+                                  >
+                                    Remove
+                                  </button>
+                                </Col>
+                              : null}
+                          </Row>
+                        }
+                        footer={
+                          invoiceKey !== undefined
+                            ? <p style={{ textAlign: 'right' }}>
+                                <button
+                                  className="btn"
+                                  onClick={() => this.setState({ showR: true })}
+                                >
+                                  Resend Receipt
+                                </button>
+                              </p>
+                            : ''
+                        }
+                        eventKey={key}
+                        key={key}
+                      >
+                        <PaymentDetails payment={payment} />
+                        <Modal
+                          show={this.state.showR}
+                          onHide={closeR}
+                          container={this}
+                          aria-labelledby="contained-modal-title1"
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title1">
+                              Resend Receipt
+                            </Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            Are you sure you want to resend a copy of receipt?
+                            <FormGroup>
+                              <ControlLabel>Email</ControlLabel>
+                              <FormControl
+                                style={{
+                                  marginBottom: '10px',
+                                  textAlign: 'center'
+                                }}
+                                id="email"
+                                type="text"
+                                placeholder="Enter Email"
+                                defaultValue={email}
+                              />
+                            </FormGroup>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button
+                              bsSize="large"
+                              onClick={e =>
+                                this.resendReceipt(e, invoiceKey, email)}
+                            >
+                              Yes
+                            </Button>
+                            <Button bsSize="large" onClick={close}>
+                              No
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                        <Modal
+                          show={this.state.show}
+                          onHide={close}
+                          container={this}
+                          aria-labelledby="contained-modal-title"
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title">
+                              Delete Payment Records
+                            </Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            Are you sure you want to delete payment record of $
+                            {total} made on {moment(date).format('DD MMM YYYY')}{' '}
+                            ?
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button
+                              bsSize="large"
+                              onClick={this.formSubmit.bind(this)}
+                            >
+                              Yes
+                            </Button>
+                            <Button bsSize="large" onClick={close}>
+                              No
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                      </Panel>
+                    );
+                  })}
+                </PanelGroup>}
           </Col>
         </Row>
       </Grid>
@@ -237,6 +231,13 @@ class PaymentHistory extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(PaymentHistory);
+function mapStateToProps(state, props) {
+  return {
+    payments: filter(state.payments, { childKey: props.params.studentId }),
+    student: find(state.students, { key: props.params.studentId }),
+    auth: state.auth,
+    users: state.users
+  };
+}
+
+export default connect(mapStateToProps)(PaymentHistory);

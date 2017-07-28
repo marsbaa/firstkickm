@@ -2,9 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 import reduxReset from 'redux-reset';
-import {
-  composeWithDevTools
-} from 'redux-devtools-extension/logOnlyInProduction';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 import {
   authReducer,
   usersReducer,
@@ -13,6 +11,7 @@ import {
   trialsReducer,
   openhouseReducer,
   selectionReducer,
+  selectedPromotionReducer,
   searchTextReducer,
   coachReducer,
   adminReducer,
@@ -28,7 +27,9 @@ import {
   fetchingReducer,
   notesReducer,
   makeUpReducer,
-  redirectReducer
+  redirectReducer,
+  parentReducer,
+  promotionsReducer
 } from 'reducers';
 
 export var configure = (initialState = {}) => {
@@ -51,12 +52,15 @@ export var configure = (initialState = {}) => {
     payments: paymentReducer,
     expenses: expenseReducer,
     register: registrationReducer,
+    parent: parentReducer,
     inventory: inventoryReducer,
     isFetching: fetchingReducer,
     notes: notesReducer,
     makeUps: makeUpReducer,
     redirect: redirectReducer,
-    form: formReducer
+    form: formReducer,
+    promotions: promotionsReducer,
+    selectedPromotion: selectedPromotionReducer
   });
 
   const store = createStore(

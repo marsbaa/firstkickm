@@ -22,10 +22,11 @@ import ClassEdit from 'ClassEdit';
 
 //Components for Trials
 import TrialsApp from 'TrialsApp';
-import TrialEdit from 'TrialEdit';
-import TrialAdd from 'TrialAdd';
-import TrialRegister from 'TrialRegister';
+import TrialEditForm from 'TrialEditForm';
+import TrialAddForm from 'TrialAddForm';
 import TrialPaymentForm from 'TrialPaymentForm';
+import TrialRegistration from 'TrialRegistration';
+import TrialPayment from 'TrialPayment';
 
 //Components for Openhouse
 import OpenhouseEdit from 'OpenhouseEdit';
@@ -101,6 +102,10 @@ import NotesAll from 'NotesAll';
 import MakeUpApp from 'MakeUpApp';
 import MakeUpList from 'MakeUpList';
 
+//Promotions
+import PromotionsApp from 'PromotionsApp';
+import PromotionAdd from 'PromotionAdd';
+
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
     replace('/');
@@ -135,10 +140,10 @@ export default (
         />
         <Route path="openhouse/payment" component={OpenhousePayment} />
         <Route path="trials" component={TrialsApp} />
-        <Route path="trials/edit/:trialId" component={TrialEdit} />
-        <Route path="trials/add" component={TrialAdd} />
-        <Route path="trials/register/:trialId" component={TrialRegister} />
-        <Route path="trials/payment" component={TrialPaymentForm} />
+        <Route path="trials/edit/:trialId" component={TrialEditForm} />
+        <Route path="trials/add" component={TrialAddForm} />
+        <Route path="trials/register/:trialId" component={TrialRegistration} />
+        <Route path="trials/payment" component={TrialPayment} />
         <Route path="coachattendance" component={CoachAttendance} />
         <Route path="coachattendanceHQ" component={CoachAttendanceHQ} />
         <Route path="attendance" component={AttendanceApp}>
@@ -197,6 +202,8 @@ export default (
           <IndexRoute component={SettingsList} />
           <Route path="ageGroup/:name" component={EditAgeGroup} />
         </Route>
+        <Route path="promotions" component={PromotionsApp} />
+        <Route path="promotions/add" component={PromotionAdd} />
       </Route>
     </Route>
   </Router>

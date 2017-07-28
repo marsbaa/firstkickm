@@ -64,6 +64,7 @@ class PaymentForm extends React.Component {
     var filteredStudents = _.filter(students, o => {
       return !(o.status === 'Not Active');
     });
+    filteredStudents = _.filter(filteredStudents, { venueId: selection.id });
 
     var student = _.find(filteredStudents, { key: studentId });
 
