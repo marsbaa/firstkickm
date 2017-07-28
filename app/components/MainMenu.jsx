@@ -16,13 +16,12 @@ import isEmpty from 'lodash/isEmpty';
 
 class MainMenu extends React.Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, user, centres } = this.props;
     dispatch(updateNavTitle('/m', 'Dashboard'));
   }
 
   handleSelect(e) {
     const { dispatch, centres } = this.props;
-    e.preventDefault();
     dispatch(updateSelectedCentre(centres[e.target.value]));
   }
 
@@ -328,6 +327,9 @@ class MainMenu extends React.Component {
                 onChange={this.handleSelect.bind(this)}
                 defaultValue={selection.key}
               >
+                <option key={0} value={0}>
+                  Select Centre
+                </option>
                 {isEmpty(centres)
                   ? null
                   : user.assignedCentres.map(centreKey => {
