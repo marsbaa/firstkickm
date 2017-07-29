@@ -110,6 +110,7 @@ export function getTerm(calendars, centreKey, date) {
 
 export function getCalendarKey(student, classes, ag) {
   var key = '';
+  let sKey = '';
   var studentAgeGroup = '';
   var currentClassDay, currentClassTime;
   if (student.ageGroup === undefined) {
@@ -125,7 +126,7 @@ export function getCalendarKey(student, classes, ag) {
     var { ageGroup, day, startTime, endTime, calendarKey } = classes[classId];
     if (ageGroup === studentAgeGroup) {
       if (day === currentClassDay) {
-        key = calendarKey;
+        sKey = calendarKey;
         var classTime = startTime + ' - ' + endTime;
         if (classTime === currentClassTime) {
           key = calendarKey;
@@ -133,6 +134,9 @@ export function getCalendarKey(student, classes, ag) {
       }
     }
   });
+  if (key === '') {
+    key = sKey;
+  }
   return key;
 }
 
