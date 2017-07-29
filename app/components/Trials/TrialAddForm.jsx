@@ -27,7 +27,8 @@ class TrialAddForm extends React.Component {
     super(props);
     this.state = {
       trial: {
-        venueId: props.venueId
+        venueId: props.venueId,
+        medicalCondition: ''
       }
     };
     this.generateFormInput = this.generateFormInput.bind(this);
@@ -60,7 +61,7 @@ class TrialAddForm extends React.Component {
 
   onFormSubmit() {
     const { dispatch } = this.props;
-    dispatch(actions.addTrial(this.state.trial));
+    dispatch(addTrial(this.state.trial));
     browserHistory.push(`/m/trials`);
   }
 
@@ -134,7 +135,6 @@ class TrialAddForm extends React.Component {
             {this.generateFormInput("Parent's Name", 'parentName', 'text')}
             <RadioGroup
               name="gender"
-              selectedValue={'boy'}
               onChange={value => {
                 this.setState({
                   trial: {
