@@ -119,19 +119,23 @@ class PaymentDetails extends React.Component {
           : <ListGroupItem>
               {termsamounthtml}
             </ListGroupItem>}
-        {coachDiscount !== undefined
+        {coachDiscount !== false && coachDiscount !== undefined
           ? <ListGroupItem>
               Coach Discount: (${cost * 0.5})
             </ListGroupItem>
           : null}
         {earlyBird
           ? <ListGroupItem>
-              Early Bird: (${earlyBirdAmount})
+              Early Bird: (${earlyBirdAmount === undefined
+                ? 20
+                : earlyBirdAmount})
             </ListGroupItem>
           : null}
         {registration
           ? <ListGroupItem>
-              Registration: ${registrationAmount}
+              Registration: ${registrationAmount === undefined
+                ? 80
+                : registrationAmount}
             </ListGroupItem>
           : null}
         {prorate !== undefined

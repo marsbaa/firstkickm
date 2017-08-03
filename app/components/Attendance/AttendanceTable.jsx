@@ -27,6 +27,7 @@ class AttendanceTable extends React.Component {
       ageGroup,
       calendarKey
     } = this.props.classes;
+
     const headerTitle =
       ageGroup + ' ' + _.capitalize(day) + ' ' + startTime + ' - ' + endTime;
     const classTime = startTime + ' - ' + endTime;
@@ -40,7 +41,9 @@ class AttendanceTable extends React.Component {
     let termColumns = termDates.map((date, id) => {
       return {
         header: (
-          <b style={{ fontSize: '9px' }}>{moment(date).format('DD/MM')}</b>
+          <b style={{ fontSize: '9px' }}>
+            {moment(date).format('DD/MM')}
+          </b>
         ),
         accessor: 'status[' + id + ']',
         maxWidth: 35
@@ -66,9 +69,12 @@ class AttendanceTable extends React.Component {
       termDates.map(date => {
         const dateId = moment(date).format('YYYY-MM-DD');
         let attended = '';
+
         const paid = paidDate(payments, dateId, selectedTerm);
+
         const filteredMakeUps = _.filter(makeUps, { studentKey: key });
         const { to, from } = makeUpDate(filteredMakeUps, dateId);
+
         if (attendance !== undefined) {
           if (attendance[dateId] !== undefined) {
             if (attendance[dateId].attended) {
@@ -98,8 +104,8 @@ class AttendanceTable extends React.Component {
                   style={{ color: to ? 'blue' : !paid ? 'red' : 'white' }}
                 />
               : attended === 'notattended'
-                  ? <Glyphicon glyph="remove" />
-                  : <Glyphicon glyph="minus" />}
+                ? <Glyphicon glyph="remove" />
+                : <Glyphicon glyph="minus" />}
           </div>
         );
       });
@@ -162,6 +168,8 @@ class AttendanceTable extends React.Component {
             attended = 'notattended';
           }
         }
+        const filteredMakeUps = _.filter(makeUps, { studentKey: key });
+        const { to, from } = makeUpDate(filteredMakeUps, dateId);
         termData.push(
           <div
             style={{
@@ -174,7 +182,7 @@ class AttendanceTable extends React.Component {
             }}
           >
             {attended === 'attended'
-              ? <Glyphicon glyph="ok" style={{ color: 'red' }} />
+              ? <Glyphicon glyph="ok" style={{ color: to ? 'blue' : 'red' }} />
               : <Glyphicon glyph="minus" />}
           </div>
         );
@@ -230,7 +238,9 @@ class AttendanceTable extends React.Component {
           }}
         >
           <Col xs={12} md={12} lg={12}>
-            <h5>{headerTitle}</h5>
+            <h5>
+              {headerTitle}
+            </h5>
           </Col>
         </Row>
         <ReactTable

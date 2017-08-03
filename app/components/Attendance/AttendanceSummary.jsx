@@ -31,20 +31,7 @@ class AttendanceSummary extends React.Component {
   }
 
   render() {
-    const { selection, calendars } = this.props;
-    const classes = selection.classes;
-    let html = [];
-    Object.keys(classes).forEach(classKey => {
-      html.push(
-        <AttendanceTable
-          key={classKey}
-          classes={classes[classKey]}
-          selectedTerm={this.state.selectedTerm}
-        />
-      );
-    });
-
-    const terms = getAllTermId(calendars, selection.key);
+    const { classes, terms } = this.props;
 
     return (
       <Grid style={{ marginTop: '20px' }}>
@@ -60,7 +47,7 @@ class AttendanceSummary extends React.Component {
                 <option value="select">select</option>
                 {terms.map(id => {
                   return (
-                    <option key={selection.key + id} value={id}>
+                    <option key={id} value={id}>
                       Term {id}
                     </option>
                   );
@@ -71,15 +58,29 @@ class AttendanceSummary extends React.Component {
         </Row>
         <Row>
           <Col xs={12} md={12} lg={12} style={{ padding: '0px' }}>
-            {html}
+            {Object.keys(classes).map(classKey => {
+              return (
+                <AttendanceTable
+                  key={classKey}
+                  classes={classes[classKey]}
+                  selectedTerm={this.state.selectedTerm}
+                />
+              );
+            })}
           </Col>
         </Row>
-
       </Grid>
     );
   }
 }
 
-export default connect(state => {
-  return state;
-})(AttendanceSummary);
+function mapStateToProps(state) {
+  return {
+    terms: getAllTermId(state.calendars, state.selection.key),
+    selection: state.selection,
+    calendars: state.calendars,
+    classes: state.selection.classes
+  };
+}
+
+export default connect(mapStateToProps)(AttendanceSummary);

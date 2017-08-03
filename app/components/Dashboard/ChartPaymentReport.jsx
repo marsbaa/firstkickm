@@ -18,49 +18,61 @@ import filter from 'lodash/filter';
 const ChartPaymentReport = props => {
   const { calendars, students, selectedTerm, centres } = props;
   let data = [];
-  let totalStudents = 0, totalPaid = 0, totalUnPaid = 0;
+  let totalStudents = 0,
+    totalPaid = 0,
+    totalUnPaid = 0;
   Object.keys(centres).map(centreKey => {
-    let studentsPaid = 0, paidTotal = 0, studentsUnPaid = 0;
-    const centre = centres[centreKey];
-    const classes = centre.classes;
-    Object.keys(classes).forEach(classKey => {
-      const { day, startTime, endTime, ageGroup, calendarKey } = classes[
-        classKey
-      ];
-      const classTime = startTime + ' - ' + endTime;
+    const { name, id, classes } = centres[centreKey];
 
-      //Get TermDates
-      const calendar = _.find(calendars, { key: calendarKey });
+    const centreCalendars = _.filter(calendars, { centreKey: centreKey });
+
+    let studentsPaid = 0,
+      paidTotal = 0,
+      studentsUnPaid = 0;
+    Object.keys(centreCalendars).map(calendarId => {
+      const { terms, key } = centreCalendars[calendarId];
+      //Get TermDates from Calendar
       let termDates = [];
-      calendar.terms[selectedTerm].map(date => {
-        termDates.push(date);
+      if (terms[selectedTerm] !== undefined) {
+        terms[selectedTerm].map(date => {
+          termDates.push(date);
+        });
+      }
+      //Filter Students by centre
+      const clas = filter(classes, { calendarKey: key });
+      clas.map(c => {
+        const { day, ageGroup, startTime, endTime } = c;
+        const classTime = startTime + ' - ' + endTime;
+
+        let filteredStudents = filter(students, {
+          venueId: id,
+          currentClassTime: classTime,
+          currentClassDay: day,
+          ageGroup: ageGroup
+        });
+
+        const { paid, paidAmount, unpaid } = findPaymentDetails(
+          filteredStudents,
+          termDates,
+          selectedTerm
+        );
+
+        studentsPaid += size(paid);
+        paidTotal += paidAmount;
+        studentsUnPaid += size(unpaid);
       });
-      //Filter Students on Centre
-      let filteredStudents = filter(students, {
-        venueId: centre.id,
-        currentClassDay: day,
-        currentClassTime: classTime,
-        ageGroup: ageGroup
-      });
-      const { paid, paidAmount, unpaid } = findPaymentDetails(
-        filteredStudents,
-        termDates,
-        selectedTerm
-      );
-      studentsPaid += size(paid);
-      paidTotal += paidAmount;
-      studentsUnPaid += size(unpaid);
     });
     totalStudents += studentsPaid + studentsUnPaid;
     totalPaid += paidTotal;
     totalUnPaid += studentsUnPaid;
     data.push({
-      name: centre.name,
+      name,
       paid: studentsPaid,
       unpaid: studentsUnPaid
     });
   });
   const avgPaid = totalPaid / totalStudents;
+
   return (
     <div>
       <Row
@@ -71,10 +83,14 @@ const ChartPaymentReport = props => {
         }}
       >
         <Col xs={4} md={4} lg={4}>
-          <h5>Students: {totalStudents}</h5>
+          <h5>
+            Students: {totalStudents}
+          </h5>
         </Col>
         <Col xs={4} md={4} lg={4}>
-          <h5>Collected: ${totalPaid}</h5>
+          <h5>
+            Collected: ${totalPaid}
+          </h5>
         </Col>
         <Col xs={4} md={4} lg={4}>
           <h5>

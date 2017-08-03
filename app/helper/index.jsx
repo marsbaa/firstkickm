@@ -10,18 +10,18 @@ export function getClosestDate(termDates) {
 }
 
 export function findPaymentDetails(students, termDates, selectedTerm) {
-  var paid = [];
-  var unpaid = [];
-  var paidDetails = [];
-  var paidAmount = 0;
+  let paid = [];
+  let unpaid = [];
+  let paidDetails = [];
+  let paidAmount = 0;
 
   Object.keys(students).map(studentId => {
-    var student = students[studentId];
-    var attended = false;
-    var p = false;
+    const student = students[studentId];
+    let attended = false;
+    let p = false;
 
     //Check if payment is made for this term
-    var payment = _.find(student.payments, o => {
+    let payment = _.find(student.payments, o => {
       if (o.termsPaid !== undefined) {
         return o.termsPaid[selectedTerm] !== undefined;
       }
@@ -275,7 +275,6 @@ export function paidDate(payments, date, term) {
     if (o.termsPaid !== undefined) {
       return o.termsPaid[term] !== undefined;
     }
-    return false;
   });
   if (payment !== undefined) {
     if (
