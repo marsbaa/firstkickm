@@ -168,14 +168,31 @@ class MainMenu extends React.Component {
                   </button>
                 </Link>
               : null}
-
-            <Link to="m/jersey">
+            <Link to="m/attendance/summary">
               <button
                 className="mainbtn"
-                id="jersey"
+                id="attendanceSummary"
                 disabled={selection.id === '0' ? true : false}
               >
-                Jersey Issue
+                Attendance Summary
+              </button>
+            </Link>
+            <Link to="m/payment/report">
+              <button
+                className="mainbtn"
+                id="paymentReport"
+                disabled={selection.id === '0' ? true : false}
+              >
+                Payment Report (HQ)
+              </button>
+            </Link>
+            <Link to="m/trials">
+              <button
+                className="mainbtn"
+                id="trials"
+                disabled={selection.id === '0' ? true : false}
+              >
+                Trials
               </button>
             </Link>
             <Link to="m/attendance">
@@ -187,15 +204,7 @@ class MainMenu extends React.Component {
                 Student Attendance
               </button>
             </Link>
-            <Link to="m/attendance/summary">
-              <button
-                className="mainbtn"
-                id="attendanceSummary"
-                disabled={selection.id === '0' ? true : false}
-              >
-                Attendance Summary
-              </button>
-            </Link>
+
             <Link to="m/payment">
               <button
                 className="mainbtn"
@@ -203,6 +212,15 @@ class MainMenu extends React.Component {
                 disabled={selection.id === '0' ? true : false}
               >
                 Payment
+              </button>
+            </Link>
+            <Link to="m/jersey">
+              <button
+                className="mainbtn"
+                id="jersey"
+                disabled={selection.id === '0' ? true : false}
+              >
+                Jersey Issue
               </button>
             </Link>
             <Link to="m/makeup">
@@ -223,15 +241,7 @@ class MainMenu extends React.Component {
                 Not Paid List
               </button>
             </Link>
-            <Link to="m/payment/report">
-              <button
-                className="mainbtn"
-                id="paymentReport"
-                disabled={selection.id === '0' ? true : false}
-              >
-                Payment Report (HQ)
-              </button>
-            </Link>
+
             <Link to="m/total">
               <button
                 className="mainbtn"
