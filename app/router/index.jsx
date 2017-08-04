@@ -85,10 +85,6 @@ import TotalCollectionHQ from 'TotalCollectionHQ';
 import InventoryApp from 'InventoryApp';
 import InventoryList from 'InventoryList';
 
-//Charts
-import ChartsApp from 'ChartsApp';
-import ChartsList from 'ChartsList';
-
 //Notes
 import NotesApp from 'NotesApp';
 import NotesList from 'NotesList';
@@ -186,9 +182,6 @@ export default (
         </Route>
         <Route path="inventory" component={InventoryApp}>
           <IndexRoute component={InventoryList} />
-        </Route>
-        <Route path="charts" component={ChartsApp}>
-          <IndexRoute component={ChartsList} />
         </Route>
         <Route path="notes" component={NotesApp}>
           <IndexRoute component={NotesList} />

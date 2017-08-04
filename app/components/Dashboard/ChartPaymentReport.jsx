@@ -98,11 +98,11 @@ const ChartPaymentReport = props => {
           </h5>
         </Col>
       </Row>
-      <ResponsiveContainer minWidth={300} aspect={1}>
+      <ResponsiveContainer minWidth={300} height="80%">
         <BarChart
           layout="vertical"
           width={600}
-          height={600}
+          height={400}
           data={data}
           margin={{ top: 20, right: 20, left: 20, bottom: 5 }}
         >
@@ -111,8 +111,8 @@ const ChartPaymentReport = props => {
           <CartesianGrid />
           <Tooltip />
           <Legend />
-          <Bar dataKey="paid" stackId="a" fill="#8884d8" />
-          <Bar dataKey="unpaid" stackId="a" fill="#82ca9d" />
+          <Bar dataKey="paid" stackId="a" fill="#bed499" />
+          <Bar dataKey="unpaid" stackId="a" fill="#cf6362" />
         </BarChart>
       </ResponsiveContainer>
     </div>

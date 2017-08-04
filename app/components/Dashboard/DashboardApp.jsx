@@ -1,12 +1,13 @@
 import React from 'react';
 import { Row, Col, FormControl, FormGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { updateNavTitle } from 'actions';
+import { updateNavTitle, startAddTrials } from 'actions';
 import { getTermId, getAllTermId } from 'helper';
 import filter from 'lodash/filter';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import ChartPaymentReport from 'ChartPaymentReport';
+import ChartTrialConversion from 'ChartTrialConversion';
 import Loading from 'Loading';
 
 class DashboardApp extends React.Component {
@@ -16,6 +17,13 @@ class DashboardApp extends React.Component {
       selectedTerm: '3',
       selectedYear: moment().year()
     };
+  }
+
+  componentWillMount() {
+    const { dispatch, trials } = this.props;
+    if (isEmpty(trials)) {
+      dispatch(startAddTrials());
+    }
   }
 
   componentDidMount() {
@@ -36,11 +44,8 @@ class DashboardApp extends React.Component {
   }
 
   render() {
-    const { calendars, students, centres, isFetching } = this.props;
+    const { calendars, students, centres, trials } = this.props;
 
-    const filteredStudents = filter(students, o => {
-      return !(o.status === 'Not Active');
-    });
     //Generate Year Options
     let terms = ['1', '2', '3', '4', '5', '6'];
     let yearOptions = [];
@@ -99,9 +104,15 @@ class DashboardApp extends React.Component {
         </Row>
         <ChartPaymentReport
           selectedTerm={this.state.selectedTerm}
-          students={filteredStudents}
+          students={students}
           calendars={calendars}
           centres={centres}
+        />
+        <ChartTrialConversion
+          selectedTerm={this.state.selectedTerm}
+          calendars={calendars}
+          centres={centres}
+          trials={trials}
         />
       </div>
     );
@@ -111,9 +122,13 @@ class DashboardApp extends React.Component {
 function mapStateToProps(state) {
   return {
     calendars: state.calendars,
-    students: state.students,
+    students: filter(state.students, o => {
+      return !(o.status === 'Not Active');
+    }),
     centres: state.centres,
-    isFetching: state.isFetching
+    trials: filter(state.trials, o => {
+      return moment(o.dateAdded).isAfter('2017-03-01', 'day');
+    })
   };
 }
 

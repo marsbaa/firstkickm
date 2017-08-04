@@ -19,7 +19,9 @@ firebase.auth().onAuthStateChanged(user => {
 });
 
 const theme = {
-  primary: '#f5bb05'
+  primary: '#f5bb05',
+  secondary: '#656565',
+  secondaryFont: '#ffffff'
 };
 
 ReactDOM.render(

@@ -532,6 +532,33 @@ export function getAllCalendarKeys(classes, ageGroup) {
   return _.uniq(calendarKeys);
 }
 
+export function getCalendarKeysByCentre(calendars, centreKey) {
+  let calendarKeys = [];
+  Object.keys(calendars).map(calendarKey => {
+    if (calendars[calendarKey].centreKey === centreKey) {
+      calendarKeys.push(calendarKey);
+    }
+  });
+  return calendarKeys;
+}
+
+export function getAllCalendarDatesByTerm(
+  calendars,
+  calendarKeys,
+  selectedTerm
+) {
+  let calendarDates = [];
+  calendarKeys.map(calendarKey => {
+    const calendar = calendars[calendarKey];
+    const term = calendar.terms[selectedTerm];
+    term.map(date => {
+      calendarDates.push(date);
+    });
+  });
+
+  return _.uniq(calendarDates).sort();
+}
+
 export function getAllCalendarDates(calendars, calendarKeys) {
   let calendarDates = [];
   calendarKeys.map(calendarKey => {

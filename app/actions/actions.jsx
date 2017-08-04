@@ -174,7 +174,7 @@ export var startAddTrials = () => {
       }
     };
     var trialsRef = firebaseRef.child('trials');
-    /*axios
+    axios
       .get('https://www.fka.sg/get-api-students/')
       .then(function(response) {
         var trialList = response.data.data;
@@ -212,7 +212,7 @@ export var startAddTrials = () => {
       })
       .catch(function(response) {
         console.log(response);
-      });*/
+      });
 
     return trialsRef
       .orderByChild('dateOfTrial')
