@@ -681,6 +681,17 @@ export var registrationReducer = (state = {}, action) => {
           }
         }
       };
+    case 'UPDATE_PARENT_DETAILS':
+      return state.map(register => {
+        return {
+          ...register,
+          parentName: action.parentDetails.parentName,
+          contactNumber: action.parentDetails.contactNumber,
+          email: action.parentDetails.email,
+          address: action.parentDetails.address,
+          postalcode: action.parentDetails.postalcode
+        };
+      });
     case 'UPDATE_CHILDNAME':
       return {
         ...state,

@@ -1438,6 +1438,13 @@ export var resetParent = () => {
     type: 'RESET_PARENT'
   };
 };
+
+export var updateParentDetails = parentDetails => {
+  return {
+    type: 'UPDATE_PARENT_DETAILS',
+    parentDetails
+  };
+};
 export var updateParentName = name => {
   return {
     type: 'UPDATE_PARENT_NAME',
