@@ -20,6 +20,7 @@ import {
   FormControl
 } from 'react-bootstrap';
 import { browserHistory } from 'react-router';
+import InvoiceTemplate from 'InvoiceTemplate';
 import SendMail from 'SendMail';
 
 class PaymentHistory extends React.Component {
@@ -54,23 +55,21 @@ class PaymentHistory extends React.Component {
     this.setState({ show: false });
   }
 
-  resendReceipt(e, key) {
-    e.preventDefault();
+  resendReceipt(e, payment) {
+    const { payments } = this.props;
+    let paymentDetails = [payment];
+    if (payment.invoiceKey !== '') {
+      paymentDetails = filter(payments, { invoiceKey: payment.invoiceKey });
+    }
     var email = document.getElementById('email').value;
-    var invoiceRef = firebaseRef.child('invoices/' + key);
-    invoiceRef.once('value').then(snapshot => {
-      var invoice = snapshot.val();
-      SendMail.mail(
-        email,
-        'First Kick Academy - Payment Receipt',
-        invoice.invoiceHTML
-      );
-    });
+    const invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    SendMail.mail(email, 'First Kick Academy - Payment Receipt', invoiceHTML);
     this.setState({ showR: false });
   }
 
   render() {
     const { payments, student, users, auth } = this.props;
+    const paymentHistories = filter(payments, { childKey: student.key });
 
     var html = [];
     let close = () => this.setState({ show: false });
@@ -90,13 +89,13 @@ class PaymentHistory extends React.Component {
             >
               {student.childName}
             </p>
-            {payments === undefined
+            {paymentHistories === undefined
               ? <p style={{ textAlign: 'center' }} key="nohistory">
                   No payment history
                 </p>
               : <PanelGroup key="accordion" accordion>
-                  {Object.keys(payments).map(paymentId => {
-                    const payment = payments[paymentId];
+                  {Object.keys(paymentHistories).map(paymentId => {
+                    const payment = paymentHistories[paymentId];
                     const {
                       date,
                       total,
@@ -182,8 +181,7 @@ class PaymentHistory extends React.Component {
                           <Modal.Footer>
                             <Button
                               bsSize="large"
-                              onClick={e =>
-                                this.resendReceipt(e, invoiceKey, email)}
+                              onClick={e => this.resendReceipt(e, payment)}
                             >
                               Yes
                             </Button>
@@ -233,7 +231,7 @@ class PaymentHistory extends React.Component {
 
 function mapStateToProps(state, props) {
   return {
-    payments: filter(state.payments, { childKey: props.params.studentId }),
+    payments: state.payments,
     student: find(state.students, { key: props.params.studentId }),
     auth: state.auth,
     users: state.users

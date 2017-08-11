@@ -371,10 +371,8 @@ class PaymentForm extends React.Component {
       dispatch(addPayment(paymentDetail));
       paymentDetails.push(paymentDetail);
     });
-    var invoiceHTML = InvoiceTemplate.render(paymentDetails);
-    var updates = {};
-    updates[newKey] = { invoiceHTML };
-    invoiceRef.update(updates);
+    let invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',

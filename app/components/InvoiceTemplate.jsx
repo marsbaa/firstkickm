@@ -18,6 +18,10 @@ class Root extends React.Component {
     const paymentDetails = this.props;
     let html = [];
     let chequeHTML = [];
+    let receiptDate =
+      paymentDetails[0].date === undefined
+        ? moment().format('D MMM YYYY')
+        : moment(paymentDetails[0].date).format('D MMM YYYY');
     let paymentMethod = paymentDetails[0].paymentMethod;
     if (paymentMethod === 'Cheque') {
       paymentMethod = paymentMethod + ' #' + paymentDetails[0].chequeNumber;
@@ -41,8 +45,11 @@ class Root extends React.Component {
         registrationAmount,
         promotionDiscount,
         promotionDiscountAmount,
+        coachDiscount,
+        prorate,
         total
       } = this.props[id];
+
       html.push(
         <Row key={childKey} style={{ marginLeft: '30px' }}>
           <Col xs={8} md={8}>
@@ -125,7 +132,7 @@ class Root extends React.Component {
           </Row>
         );
       }
-      /*if (paymentDetail.coachDiscount) {
+      if (coachDiscount) {
         html.push(
           <Row
             key={'coachDiscount' + childName}
@@ -139,7 +146,7 @@ class Root extends React.Component {
             </Col>
           </Row>
         );
-      }*/
+      }
       if (earlyBird) {
         html.push(
           <Row
@@ -150,26 +157,26 @@ class Root extends React.Component {
               <b style={{ color: '#1796d3' }}>Early Bird Discount</b>
             </Col>
             <Col xs={4} md={4} style={{ textAlign: 'right' }}>
-              $({earlyBirdAmount})
+              $({earlyBirdAmount === undefined ? '20' : earlyBirdAmount})
             </Col>
           </Row>
         );
       }
-      /*if (paymentDetail.prorateAmount !== undefined) {
+      if (prorate !== undefined && prorate !== null) {
         html.push(
           <Row
-            key={'prorate' + paymentDetail.childName}
+            key={'prorate' + childName}
             style={{ lineHeight: '12px', margin: '15px 30px' }}
           >
             <Col xs={8} md={8}>
               <b style={{ color: '#1796d3' }}>Pro-rate</b>
             </Col>
             <Col xs={4} md={4} style={{ textAlign: 'right' }}>
-              $({paymentDetail.prorateAmount})
+              $({prorate})
             </Col>
           </Row>
         );
-      }*/
+      }
       if (siblingDiscount) {
         html.push(
           <Row
@@ -263,7 +270,7 @@ class Root extends React.Component {
                     RECEIPT
                   </h4>
                   <font style={{ fontSize: '10px' }}>
-                    Date : {moment().format('D MMM YYYY')}
+                    Date : {receiptDate}
                   </font>
                 </Col>
               </Row>

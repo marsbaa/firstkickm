@@ -138,7 +138,7 @@ class PaymentDetails extends React.Component {
                 : registrationAmount}
             </ListGroupItem>
           : null}
-        {prorate !== undefined
+        {prorate !== undefined && prorate !== null
           ? <ListGroupItem>
               Pro-rate: (${prorate})
             </ListGroupItem>

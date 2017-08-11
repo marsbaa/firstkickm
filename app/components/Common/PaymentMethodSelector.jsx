@@ -58,7 +58,7 @@ class PaymentMethodSelector extends React.Component {
           paymentMethod: this.state.paymentMethod,
           email: this.state.email,
           jerseyIssued: false,
-          invoiceKey: ''
+          invoiceKey: newKey
         };
         if (this.state.paymentMethod === 'Cheque') {
           finalPaymentDetail.chequeNumber = this.state.chequeNumber;
@@ -68,7 +68,6 @@ class PaymentMethodSelector extends React.Component {
       finalPaymentDetails.push(finalPaymentDetail);
     });
     const invoiceHTML = InvoiceTemplate.render(finalPaymentDetails);
-    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
