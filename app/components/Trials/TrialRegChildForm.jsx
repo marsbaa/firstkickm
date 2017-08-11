@@ -46,7 +46,6 @@ class TrialRegChildForm extends React.Component {
       ageGroup
     } = register[id];
     const centre = find(centres, { id: venueId });
-    console.log(centre);
 
     //Get all term dates for Term Dates Selector
     const calendarKeys = getAllCalendarKeys(centre.classes, ageGroup);
@@ -115,8 +114,9 @@ class TrialRegChildForm extends React.Component {
             <TermDateSelector
               calendarDates={calendarDates}
               dateOfTrial={dateOfTrial}
-              handleChange={(time, day) =>
-                dispatch(updateClassTimeDay(time, day, id))}
+              handleChange={date => {
+                dispatch(updateDateOfTrial(date, id));
+              }}
             />
             <FormGroup>
               <ControlLabel>Medical Condition</ControlLabel>
