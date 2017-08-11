@@ -127,7 +127,7 @@ class Root extends React.Component {
               <b>Registration Fee</b>
             </Col>
             <Col xs={4} md={4} style={{ textAlign: 'right' }}>
-              ${registrationAmount}
+              ${registrationAmount === undefined ? 80 : registrationAmount}
             </Col>
           </Row>
         );
