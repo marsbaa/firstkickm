@@ -19,6 +19,7 @@ import reduce from 'lodash/reduce';
 import Search from 'Search';
 import moment from 'moment';
 import TrialsFilter from 'TrialsFilter';
+import OpenhouseFilter from 'OpenhouseFilter';
 import TrialList from 'TrialList';
 import Trial from 'Trial';
 import Openhouse from 'Openhouse';
@@ -80,7 +81,12 @@ class TrialsApp extends React.Component {
     const { trials, searchText, selection, isFetching, openhouse } = this.props;
     let filteredTrials = TrialsFilter.filter(trials, selection.id, searchText);
     let groupDates = groupBy(filteredTrials, 'dateOfTrial');
-    let filteredOpenHouse = filter(openhouse, { centreName: selection.name });
+    let filteredOpenHouse = OpenhouseFilter.filter(
+      openhouse,
+      selection.name,
+      searchText
+    );
+
     let groupOpenHouse = groupBy(filteredOpenHouse, 'dateOfTrial');
     let dates = union(Object.keys(groupDates), Object.keys(groupOpenHouse))
       .sort()

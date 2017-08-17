@@ -98,6 +98,10 @@ class PaymentList extends React.Component {
     var activeStudents = _.filter(filteredStudents, o => {
       return !(o.status === 'Not Active');
     });
+    var notActiveStudents = _.filter(filteredStudents, o => {
+      return o.status === 'Not Active';
+    });
+    console.log(notActiveStudents);
 
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
@@ -123,7 +127,9 @@ class PaymentList extends React.Component {
               }}
             >
               <Col xs={12} md={12}>
-                <h5>{ageGroup} {classTime} ({day})</h5>
+                <h5>
+                  {ageGroup} {classTime} ({day})
+                </h5>
               </Col>
             </Row>
             {Object.keys(classStudents).map(studentId => {
@@ -140,6 +146,34 @@ class PaymentList extends React.Component {
         );
       }
     });
+
+    if (_.size(notActiveStudents) !== 0) {
+      html.push(
+        <div key="Not Active">
+          <Row
+            style={{
+              backgroundColor: '#656565',
+              padding: '0px 15px',
+              color: '#ffc600'
+            }}
+          >
+            <Col xs={12} md={12}>
+              <h5>Not Active Students</h5>
+            </Col>
+          </Row>
+          {Object.keys(notActiveStudents).map(studentId => {
+            var student = notActiveStudents[studentId];
+            return (
+              <Payer
+                key={student.key}
+                student={student}
+                onShow={this.onShow.bind(this)}
+              />
+            );
+          })}
+        </div>
+      );
+    }
 
     let close = () => this.setState({ show: false });
 
@@ -219,7 +253,9 @@ class PaymentList extends React.Component {
             <Button bsSize="large" onClick={this.formSubmit.bind(this)}>
               Yes
             </Button>
-            <Button bsSize="large" onClick={close}>No</Button>
+            <Button bsSize="large" onClick={close}>
+              No
+            </Button>
           </Modal.Footer>
         </Modal>
         <Row
