@@ -74,7 +74,11 @@ class PaymentBreakdown extends React.Component {
       const totalSessions = getTotalSessions(sessionDates);
       const actualTerms =
         calendars[getCalendarKey(register[payerKey], classes)].terms;
-      const earlybird = checkEarlyBird(actualTerms, sessionDates, moment());
+      const earlybird = checkEarlyBird(
+        actualTerms,
+        sessionDates,
+        this.state.receivedDate
+      );
       //Display Term Fee
       let paymentDetail = {};
       let childTotal = 0;

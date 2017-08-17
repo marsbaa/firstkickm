@@ -8,14 +8,12 @@ import PromotionSelector from 'PromotionSelector';
 class TrialPayment extends React.Component {
   render() {
     const { register } = this.props;
-
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12} lg={12}>
             <Tabs
               style={{ marginTop: '5px', fontWeight: '600' }}
-              defaultActiveKey={0}
               id="paymentTab"
             >
               {Object.keys(register).map((payerKey, index) => {
@@ -23,7 +21,7 @@ class TrialPayment extends React.Component {
                 if (!notJoining) {
                   return (
                     <ChildPayTab
-                      key={index}
+                      key={payerKey}
                       eventKey={index}
                       title={childName}
                       payerKey={payerKey}

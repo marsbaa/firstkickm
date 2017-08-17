@@ -119,7 +119,7 @@ export function getCalendarKey(student, classes, ag) {
     currentClassTime = student.timeOfTrial;
   } else {
     studentAgeGroup = student.ageGroup;
-    currentClassDay = student.currentClassDay;
+    currentClassDay = _.capitalize(student.currentClassDay);
     currentClassTime = student.currentClassTime;
   }
   Object.keys(classes).forEach(classId => {
