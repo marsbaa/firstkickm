@@ -101,7 +101,6 @@ class PaymentList extends React.Component {
     var notActiveStudents = _.filter(filteredStudents, o => {
       return o.status === 'Not Active';
     });
-    console.log(notActiveStudents);
 
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
