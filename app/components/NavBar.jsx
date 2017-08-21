@@ -14,6 +14,7 @@ import {
 import { Link, browserHistory } from 'react-router';
 import styled from 'styled-components';
 import Loading from 'Loading';
+import StudentCSV from 'StudentCSV';
 
 const Button = styled.button`
   border-radius: 3px;
@@ -60,7 +61,7 @@ class NavBar extends React.Component {
   }
 
   render() {
-    const { navbar, auth, users, isFetching } = this.props;
+    const { navbar, auth, users, isFetching, students } = this.props;
     return (
       <div>
         <Navbar
@@ -128,7 +129,10 @@ class NavBar extends React.Component {
                       Manage Promotions
                     </butt>
                   </NavItem>
-                  <NavItem eventKey={5}>
+
+                  <StudentCSV students={students} />
+
+                  <NavItem eventKey={6}>
                     <Button onClick={this.onLogout.bind(this)}>Log Out</Button>
                   </NavItem>
                 </Nav>
@@ -154,7 +158,8 @@ function mapStateToProps(state) {
     navbar: state.navbar,
     auth: state.auth,
     users: state.users,
-    isFetching: state.isFetching
+    isFetching: state.isFetching,
+    students: state.students
   };
 }
 
