@@ -3,7 +3,6 @@ import { Navbar, Nav, NavItem, Image, Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { isManager } from 'helper';
 import {
-  startLogout,
   startUsers,
   startCentres,
   startCalendars,
@@ -11,6 +10,7 @@ import {
   startStudents,
   startMakeUps
 } from 'actions';
+import { startLogout } from 'AuthActions';
 import { Link, browserHistory } from 'react-router';
 import styled from 'styled-components';
 import Loading from 'Loading';
@@ -61,7 +61,7 @@ class NavBar extends React.Component {
   }
 
   render() {
-    const { navbar, auth, users, isFetching, students } = this.props;
+    const { navbar, auth, users, isFetching, students, centres } = this.props;
     return (
       <div>
         <Navbar
@@ -130,7 +130,7 @@ class NavBar extends React.Component {
                     </butt>
                   </NavItem>
 
-                  <StudentCSV students={students} />
+                  <StudentCSV students={students} centres={centres} />
 
                   <NavItem eventKey={6}>
                     <Button onClick={this.onLogout.bind(this)}>Log Out</Button>
@@ -159,7 +159,8 @@ function mapStateToProps(state) {
     auth: state.auth,
     users: state.users,
     isFetching: state.isFetching,
-    students: state.students
+    students: state.students,
+    centres: state.centres
   };
 }
 

@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import firebase from 'firebaseApp';
 import router from 'router';
 import { Provider } from 'react-redux';
-import { login, logout } from 'actions';
+import { login, logout } from 'AuthActions';
 import { ThemeProvider } from 'styled-components';
 const store = require('configureStore').configure();
 

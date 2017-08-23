@@ -93,11 +93,11 @@ module.exports = {
       './app/components/Calendar',
       './app/components/Openhouse',
       './app/api',
-      './app/css'
+      './app/css',
+      './app/actions'
     ],
     alias: {
       helper: path.resolve(__dirname, 'app/helper/index.jsx'),
-      actions: path.resolve(__dirname, 'app/actions/actions.jsx'),
       reducers: path.resolve(__dirname, 'app/reducers/reducers.jsx'),
       router: path.resolve(__dirname, 'app/router/index.jsx'),
       configureStore: path.resolve(__dirname, 'app/store/configureStore.jsx'),

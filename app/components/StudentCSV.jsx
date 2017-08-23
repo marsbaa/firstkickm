@@ -1,6 +1,7 @@
 import React from 'react';
 import { CSVLink, CSVDownload } from 'react-csv';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import groupBy from 'lodash/groupBy';
 
 const csvData = [
@@ -9,11 +10,12 @@ const csvData = [
     'Given Name',
     'Group Membership',
     'Phone 1 - Type',
-    'Phone 1 - Value'
+    'Phone 1 - Value',
+    'Email'
   ]
 ];
 
-const StudentCSV = ({ students }) => {
+const StudentCSV = ({ students, centres }) => {
   const activeStudents = filter(students, o => {
     return !(o.status === 'Not Active');
   });
@@ -30,15 +32,18 @@ const StudentCSV = ({ students }) => {
         );
       }
     });
+    const centreName = find(centres, { id: id }).name;
+    console.log(find(centres, { id: id }));
     Object.keys(groupByClass).map(classId => {
       const cla = groupByClass[classId];
       cla.map(student => {
         csvData.push([
           student.childName,
           student.childName,
-          classId,
+          centreName + ' ' + classId,
           'mobile',
-          student.contact
+          student.contact,
+          student.email
         ]);
       });
     });
