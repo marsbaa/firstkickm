@@ -108,6 +108,22 @@ export function getTerm(calendars, centreKey, date) {
   return t;
 }
 
+export function getClassTerm(calendar, date) {
+  var t = 1;
+  if (calendar !== undefined) {
+    Object.keys(calendar.terms).map(id => {
+      var term = calendar.terms[id];
+      if (moment(date).isBetween(term[0], term[term.length - 1], null, '[]')) {
+        t = parseInt(id);
+      } else if (moment(date).isAfter(term[term.length - 1])) {
+        t = parseInt(id) + 1;
+      }
+    });
+  }
+
+  return t;
+}
+
 export function getCalendarKey(student, classes, ag) {
   var key = '';
   let sKey = '';

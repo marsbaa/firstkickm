@@ -6,18 +6,31 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 import moment from 'moment';
 import Switch from 'Switch';
-import { attendedDate, paidDate, getTerm } from 'helper';
+import { attendedDate, paidDate, getClassTerm, getCalendarKey } from 'helper';
 
 class Attendee extends React.Component {
   render() {
     var { dispatch, date, type, calendars, selection } = this.props;
-    var { childName, key, attendance, payments, status } = this.props.student;
+    var {
+      childName,
+      key,
+      attendance,
+      payments,
+      status,
+      ageGroup
+    } = this.props.student;
     date = moment(date).format('YYYY-MM-DD');
     var truncatedName = _.truncate(childName, {
       length: 28
     });
     var attended = attendedDate(attendance, date);
-    var termId = getTerm(calendars, selection.key, date);
+    var calendarKey = getCalendarKey(
+      this.props.student,
+      selection.classes,
+      ageGroup
+    );
+    console.log(calendarKey);
+    var termId = getClassTerm(calendars[calendarKey], date);
     var paid = paidDate(payments, date, termId);
     var backgroundColor;
     if (type === 'normal') {

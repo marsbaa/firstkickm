@@ -37,7 +37,6 @@ const StudentCSV = ({ students, centres }) => {
     if (centre !== undefined) {
       centreName = centre.name;
     }
-    console.log(find(centres, { id: id }));
     Object.keys(groupByClass).map(classId => {
       const cla = groupByClass[classId];
       cla.map(student => {

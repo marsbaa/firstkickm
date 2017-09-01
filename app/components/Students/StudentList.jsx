@@ -18,8 +18,8 @@ class StudentList extends React.Component {
   }
 
   render() {
-    var { students, searchText, selection } = this.props;
-
+    const { students, searchText, selection, auth, users } = this.props;
+    const user = _.find(users, ['email', auth.email]);
     var html = [];
     var filteredStudents = StudentsFilter.filter(
       students,
@@ -57,12 +57,15 @@ class StudentList extends React.Component {
               }}
             >
               <Col xs={8} md={8}>
-                <h5>{ageGroup} {classTime} ({day})</h5>
+                <h5>
+                  {ageGroup} {classTime} ({day})
+                </h5>
               </Col>
               <Col xs={4} md={4} style={{ textAlign: 'center' }}>
-                <h5>Class Size : {_.size(classStudents)}</h5>
+                <h5>
+                  Class Size : {_.size(classStudents)}
+                </h5>
               </Col>
-
             </Row>
             {Object.keys(classStudents).map(studentId => {
               var student = classStudents[studentId];
@@ -88,7 +91,9 @@ class StudentList extends React.Component {
               <h5>Not Active</h5>
             </Col>
             <Col xs={4} md={4} style={{ textAlign: 'center' }}>
-              <h5>Count : {_.size(notActiveStudents)}</h5>
+              <h5>
+                Count : {_.size(notActiveStudents)}
+              </h5>
             </Col>
           </Row>
           {Object.keys(notActiveStudents).map(studentId => {
@@ -101,7 +106,6 @@ class StudentList extends React.Component {
 
     return (
       <div>
-
         <Row
           style={{
             padding: '8px 10px',
@@ -114,19 +118,20 @@ class StudentList extends React.Component {
             <Search type="student" />
           </Col>
           <Col xs={5} md={5}>
-            <Link to="/m/students/add">
-              <button
-                className="btn"
-                style={{
-                  backgroundColor: '#f5bb05',
-                  margin: '0px',
-                  float: 'right'
-                }}
-              >
-                Add Student
-              </button>
-            </Link>
-
+            {user.assignedRoles === 'Manager'
+              ? <Link to="/m/students/add">
+                  <button
+                    className="btn"
+                    style={{
+                      backgroundColor: '#f5bb05',
+                      margin: '0px',
+                      float: 'right'
+                    }}
+                  >
+                    Add Student
+                  </button>
+                </Link>
+              : null}
           </Col>
         </Row>
 
