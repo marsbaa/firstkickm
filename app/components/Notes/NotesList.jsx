@@ -76,7 +76,11 @@ class NotesList extends React.Component {
     var { dispatch, notes, auth, users, selection } = this.props;
     var user = _.find(users, ['email', auth.email]);
     notes = _.filter(notes, { centreKey: selection.key });
-    notes = _.sortBy(notes, ['date']);
+    console.log(notes);
+    notes = _.sortBy(notes, o => {
+      return moment(o.date).format();
+    }).reverse();
+    console.log(notes);
     return (
       <Grid style={{ marginTop: '20px' }}>
         <Row>
@@ -150,8 +154,8 @@ class NotesList extends React.Component {
                           id="message"
                           componentClass="textarea"
                           style={{
-                            height: note.message.split(/\r\n|\r|\n/).length *
-                              25,
+                            height:
+                              note.message.split(/\r\n|\r|\n/).length * 25,
                             minHeight: '50px'
                           }}
                           disabled
@@ -162,8 +166,8 @@ class NotesList extends React.Component {
                         style={{ textAlign: 'right', fontSize: '10px' }}
                       >
                         <i>
-                          - by {note.name} on {note.date} {note.email ===
-                            auth.email
+                          - by {note.name} on {note.date}{' '}
+                          {note.email === auth.email
                             ? <button
                                 className="btn"
                                 onClick={e => {
@@ -203,8 +207,8 @@ class NotesList extends React.Component {
                           id="message"
                           componentClass="textarea"
                           style={{
-                            height: note.message.split(/\r\n|\r|\n/).length *
-                              25,
+                            height:
+                              note.message.split(/\r\n|\r|\n/).length * 25,
                             minHeight: '50px'
                           }}
                           disabled
@@ -215,8 +219,8 @@ class NotesList extends React.Component {
                         style={{ textAlign: 'right', fontSize: '10px' }}
                       >
                         <i>
-                          - by {note.name} on {note.date} {note.email ===
-                            auth.email
+                          - by {note.name} on {note.date}{' '}
+                          {note.email === auth.email
                             ? <button
                                 className="btn"
                                 onClick={e => {
