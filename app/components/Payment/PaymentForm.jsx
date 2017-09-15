@@ -99,9 +99,11 @@ class PaymentForm extends React.Component {
               var term = payment.termsPaid[termId];
               term.map(session => {
                 var index = _.findIndex(calendarDate, d => {
-                  return moment(d).isSame(session.date);
+                  return moment(d).isSame(session.date, 'day');
                 });
-                calendarDate.splice(index, 1);
+                if (index !== -1) {
+                  calendarDate.splice(index, 1);
+                }
               });
             });
           }
@@ -121,7 +123,6 @@ class PaymentForm extends React.Component {
       calendarDates[id] = calendarDate;
       calendarKeys[id] = calendarKey;
     });
-
     this.setState({ calendarKeys });
     this.setState({ calendarDates });
     this.setState({ startDate: startDates });
