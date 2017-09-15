@@ -140,6 +140,7 @@ class TotalCollection extends React.Component {
     }
     var cashTotal = 0;
     var chequeTotal = 0;
+    var netsTotal = 0;
     filteredPayments = filter(filteredPayments, ['centreId', selection.id]);
     if (size(filteredPayments) !== 0) {
       var cashPayments = filter(filteredPayments, ['paymentMethod', 'Cash']);
@@ -278,6 +279,71 @@ class TotalCollection extends React.Component {
         );
         chequeTotal = total;
       }
+      var netsPayments = filter(filteredPayments, ['paymentMethod', 'NETS']);
+      if (size(netsPayments) !== 0) {
+        var total = 0;
+        html.push(
+          <Row
+            key="netspayments"
+            style={{
+              backgroundColor: '#656565',
+              padding: '0px 15px',
+              color: '#ffc600'
+            }}
+          >
+            <Col xs={8} md={8}>
+              <h5>NETS Collections</h5>
+            </Col>
+            <Col xs={4} md={4} />
+          </Row>
+        );
+        netsPayments.map(payment => {
+          html.push(
+            <Row
+              key={payment.key}
+              style={{
+                padding: '8px 10px',
+                borderBottom: '1px solid #cccccc',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Col xs={8} md={8} style={{ fontSize: '14px' }}>
+                <Glyphicon glyph="user" /> {payment.childName}
+              </Col>
+              <Col xs={4} md={4} style={{ textAlign: 'right' }}>
+                ${payment.total}
+              </Col>
+            </Row>
+          );
+          total += payment.total;
+        });
+        html.push(
+          <Row
+            key="totalCashPayment"
+            style={{
+              padding: '8px 10px',
+              borderBottom: '1px solid #cccccc',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <Col xs={6} md={6} />
+            <Col
+              xs={6}
+              md={6}
+              style={{
+                fontWeight: 'bold',
+                textAlign: 'right',
+                fontSize: '14px'
+              }}
+            >
+              Total NETS: ${total}
+            </Col>
+          </Row>
+        );
+        netsTotal = total;
+      }
       var expenseshtml = [];
       var expenseTotal = 0;
       if (size(filteredExpenses) !== 0) {
@@ -308,7 +374,8 @@ class TotalCollection extends React.Component {
               }}
             >
               <Col xs={8} md={8} style={{ fontSize: '14px' }}>
-                <Glyphicon glyph="minus" /> {expense.name} <button
+                <Glyphicon glyph="minus" /> {expense.name}{' '}
+                <button
                   className="innerbtn"
                   onClick={e => {
                     e.preventDefault();
@@ -362,10 +429,12 @@ class TotalCollection extends React.Component {
               No. of Cheques to Deposit: {size(chequePayments)}
             </ListGroupItem>
             <ListGroupItem>
-              Total Collections (Cash + Cheque) : ${cashTotal + chequeTotal}
+              NETS : ${netsTotal}
+            </ListGroupItem>
+            <ListGroupItem>
+              Total Collections (Cash + Cheque + NETS) : ${cashTotal + chequeTotal + netsTotal}
             </ListGroupItem>
           </ListGroup>
-
         </Panel>
       );
     } else {
@@ -425,7 +494,9 @@ class TotalCollection extends React.Component {
             <Button bsSize="large" onClick={this.formSubmit.bind(this)}>
               Yes
             </Button>
-            <Button bsSize="large" onClick={close}>No</Button>
+            <Button bsSize="large" onClick={close}>
+              No
+            </Button>
           </Modal.Footer>
         </Modal>
         {isManager(auth, users)

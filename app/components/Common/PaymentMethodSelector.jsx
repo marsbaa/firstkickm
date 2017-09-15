@@ -26,6 +26,7 @@ class PaymentMethodSelector extends React.Component {
     this.state = {
       paymentMethod: '',
       chequeNumber: '',
+      refNumber: '',
       email: props.parent.email,
       show: false
     };
@@ -60,6 +61,9 @@ class PaymentMethodSelector extends React.Component {
           jerseyIssued: false,
           invoiceKey: newKey
         };
+        if (this.state.paymentMethod === 'NETS') {
+          finalPaymentDetail.refNumber = this.state.refNumber;
+        }
         if (this.state.paymentMethod === 'Cheque') {
           finalPaymentDetail.chequeNumber = this.state.chequeNumber;
         }
@@ -125,7 +129,7 @@ class PaymentMethodSelector extends React.Component {
                 this.state.paymentMethod === 'Cash' ? 'btnoff' : 'btnon'
               }
               onClick={() => this.setState({ paymentMethod: 'Cash' })}
-              style={{ width: '32%', height: '50px' }}
+              style={{ width: '49%', height: '50px' }}
             >
               Cash
             </button>
@@ -134,7 +138,7 @@ class PaymentMethodSelector extends React.Component {
                 this.state.paymentMethod === 'Cheque' ? 'btnoff' : 'btnon'
               }
               onClick={() => this.setState({ paymentMethod: 'Cheque' })}
-              style={{ width: '32%', height: '50px' }}
+              style={{ width: '49%', height: '50px' }}
             >
               Cheque
             </button>
@@ -145,9 +149,18 @@ class PaymentMethodSelector extends React.Component {
                   : 'btnon'
               }
               onClick={() => this.setState({ paymentMethod: 'Bank Transfer' })}
-              style={{ width: '32%', height: '50px' }}
+              style={{ width: '49%', height: '50px' }}
             >
               Bank<br />Transfer
+            </button>
+            <button
+              className={
+                this.state.paymentMethod === 'NETS' ? 'btnoff' : 'btnon'
+              }
+              onClick={() => this.setState({ paymentMethod: 'NETS' })}
+              style={{ width: '49%', height: '50px' }}
+            >
+              NETS
             </button>
             {this.state.paymentMethod !== ''
               ? <Row style={{ marginTop: '15px', textAlign: 'center' }}>
@@ -162,6 +175,33 @@ class PaymentMethodSelector extends React.Component {
                       value={total}
                       disabled
                     />
+                    {this.state.paymentMethod === 'NETS'
+                      ? <FormGroup
+                          validationState={
+                            this.state.chequeNumber !== '' ? 'error' : null
+                          }
+                        >
+                          <ControlLabel>Ref No.</ControlLabel>
+                          <FormControl
+                            style={{
+                              marginBottom: '10px',
+                              textAlign: 'center'
+                            }}
+                            autoFocus
+                            id="refNumber"
+                            type="text"
+                            onChange={e =>
+                              this.setState({ refNumber: e.target.value })}
+                            placeholder="Enter Ref No."
+                          />
+                          {this.state.chequeNumber.length !== 6 &&
+                          this.state.chequeNumber !== ''
+                            ? <HelpBlock>
+                                Please enter reference number
+                              </HelpBlock>
+                            : null}
+                        </FormGroup>
+                      : null}
                     {this.state.paymentMethod === 'Cheque'
                       ? <FormGroup
                           validationState={

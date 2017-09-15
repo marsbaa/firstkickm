@@ -31,6 +31,9 @@ class Root extends React.Component {
         </i>
       );
     }
+    if (paymentMethod === 'NETS') {
+      paymentMethod = paymentMethod + ' #' + paymentDetails[0].refNumber;
+    }
     let grandTotal = 0;
     Object.keys(paymentDetails).forEach(id => {
       const {

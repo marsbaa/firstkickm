@@ -167,6 +167,17 @@ class PaymentForm extends React.Component {
   checkValid(e) {
     var email = '';
     var count = 0;
+    if (this.state.form === 'NETS') {
+      var refNumber = document.getElementById('refNumber').value;
+      if (refNumber === '') {
+        this.setState({ errorID: 'error' });
+        this.setState({ errorMessage: 'Please enter reference number' });
+        count = 1;
+      } else {
+        this.setState({ errorID: null });
+        this.setState({ errorMessage: null });
+      }
+    }
     if (this.state.form === 'Cheque') {
       var chequeNumber = document.getElementById('chequeNumber').value;
       if (chequeNumber === '' || chequeNumber.length < 6) {
@@ -346,6 +357,28 @@ class PaymentForm extends React.Component {
           email: this.state.email,
           invoiceKey: newKey
         };
+      } else if (this.state.form === 'NETS') {
+        var paymentDetail = {
+          centreId: student.venueId.toString(),
+          childKey: student.key,
+          childName: student.childName,
+          ageGroup: student.ageGroup,
+          earlyBird,
+          date: moment(this.state.receivedDate).format(),
+          coachDiscount: this.state.coachDiscount,
+          siblingDiscount,
+          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
+          total: total,
+          prorate:
+            this.state.prorateAmount[id] !== undefined
+              ? this.state.prorateAmount[id]
+              : null,
+          termsPaid,
+          paymentMethod: this.state.form,
+          refNumber: document.getElementById('refNumber').value,
+          email: this.state.email,
+          invoiceKey: newKey
+        };
       } else if (this.state.form === 'Bank Transfer') {
         var paymentDetail = {
           centreId: student.venueId.toString(),
@@ -372,6 +405,7 @@ class PaymentForm extends React.Component {
       paymentDetails.push(paymentDetail);
     });
     let invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
@@ -664,6 +698,7 @@ class PaymentForm extends React.Component {
     var chequeClass = 'datebtn';
     var cashClass = 'datebtn';
     var bankTransferClass = 'datebtn';
+    var netsClass = 'datebtn';
     if (this.state.form === 'Cheque') {
       formhtml.push(
         <Row key={'cheque'} style={{ marginTop: '15px', textAlign: 'center' }}>
@@ -727,6 +762,70 @@ class PaymentForm extends React.Component {
         </Row>
       );
       chequeClass = 'downbtn';
+    }
+    if (this.state.form === 'NETS') {
+      formhtml.push(
+        <Row key={'nets'} style={{ marginTop: '15px', textAlign: 'center' }}>
+          <Col md={6} xs={6}>
+            <ControlLabel>Amount Collected</ControlLabel>
+            <FormControl
+              style={{ marginBottom: '10px', textAlign: 'center' }}
+              id="collectedAmount"
+              type="text"
+              placeholder="Enter amount collected (SGD$)"
+              value={totalFee}
+              disabled
+            />
+            <FormGroup>
+              <ControlLabel>Date Received</ControlLabel>
+              <DatePicker
+                className="form-control"
+                style={{ textAlign: 'center' }}
+                id="paymentDatePicker"
+                dateFormat="DD-MM-YYYY"
+                selected={this.state.receivedDate}
+                onChange={e => {
+                  this.handleReceivedDate(moment(e));
+                }}
+              />
+            </FormGroup>
+          </Col>
+          <Col md={6} xs={6}>
+            <FormGroup validationState={this.state.errorID}>
+              <ControlLabel>Ref No.</ControlLabel>
+              <FormControl
+                style={{ marginBottom: '10px', textAlign: 'center' }}
+                autoFocus
+                id="refNumber"
+                type="text"
+                placeholder="Enter Ref No."
+              />
+              <HelpBlock>
+                {this.state.errorMessage}
+              </HelpBlock>
+            </FormGroup>
+            <FormGroup validationState={this.state.emailError}>
+              <ControlLabel>Email</ControlLabel>
+              <FormControl
+                style={{ marginBottom: '10px', textAlign: 'center' }}
+                id="email"
+                type="text"
+                placeholder="Enter Email"
+                defaultValue={email}
+              />
+              <HelpBlock>
+                {this.state.emailErrorMessage}
+              </HelpBlock>
+            </FormGroup>
+          </Col>
+          <Col md={12} xs={12}>
+            <button className="submitbtn" onClick={this.checkValid.bind(this)}>
+              Payment Collected
+            </button>
+          </Col>
+        </Row>
+      );
+      netsClass = 'downbtn';
     } else if (this.state.form === 'Bank Transfer') {
       formhtml.push(
         <Row
@@ -845,6 +944,8 @@ class PaymentForm extends React.Component {
         modalMessage = 'Did you receive cash payment of $' + totalFee + ' ?';
       } else if (this.state.form === 'Bank Transfer') {
         modalMessage = 'Did you receive bank transfer of $' + totalFee + ' ?';
+      } else if (this.state.form === 'NETS') {
+        modalMessage = 'Did you receive NETS payment of $' + totalFee + ' ?';
       } else {
         modalMessage =
           'Did you receive cheque payment of $' +
@@ -939,7 +1040,7 @@ class PaymentForm extends React.Component {
                 onClick={e => {
                   this.handleForm(e, 'Cash');
                 }}
-                style={{ width: '30%', height: '50px' }}
+                style={{ width: '45%', height: '50px' }}
               >
                 Cash
               </button>
@@ -948,7 +1049,7 @@ class PaymentForm extends React.Component {
                 onClick={e => {
                   this.handleForm(e, 'Cheque');
                 }}
-                style={{ width: '30%', height: '50px' }}
+                style={{ width: '45%', height: '50px' }}
               >
                 Cheque
               </button>
@@ -957,9 +1058,18 @@ class PaymentForm extends React.Component {
                 onClick={e => {
                   this.handleForm(e, 'Bank Transfer');
                 }}
-                style={{ width: '30%', height: '50px' }}
+                style={{ width: '45%', height: '50px' }}
               >
                 Bank Transfer
+              </button>
+              <button
+                className={netsClass}
+                onClick={e => {
+                  this.handleForm(e, 'NETS');
+                }}
+                style={{ width: '45%', height: '50px' }}
+              >
+                NETS
               </button>
             </Panel>
           </Col>
