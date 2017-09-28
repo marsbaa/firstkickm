@@ -92,6 +92,7 @@ module.exports = {
       './app/components/User',
       './app/components/Calendar',
       './app/components/Openhouse',
+      './app/components/Cancel',
       './app/api',
       './app/css',
       './app/actions'

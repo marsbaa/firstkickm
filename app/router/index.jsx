@@ -98,6 +98,8 @@ import MakeUpList from 'MakeUpList';
 import PromotionsApp from 'PromotionsApp';
 import PromotionAdd from 'PromotionAdd';
 
+import CancelSessionApp from 'CancelSessionApp';
+
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
     replace('/');
@@ -125,12 +127,7 @@ export default (
           <Route path=":centreKey/:calendarKey" component={CalendarEdit} />
           <Route path=":centreKey/class/:classKey" component={ClassEdit} />
         </Route>
-        <Route path="openhouse/edit/:openhouseId" component={OpenhouseEdit} />
-        <Route
-          path="openhouse/register/:openhouseId"
-          component={OpenhouseRegister}
-        />
-        <Route path="openhouse/payment" component={OpenhousePayment} />
+        <Route path="cancel" component={CancelSessionApp} />
         <Route path="trials" component={TrialsApp} />
         <Route path="trials/edit/:trialId" component={TrialEditForm} />
         <Route path="trials/add" component={TrialAddForm} />

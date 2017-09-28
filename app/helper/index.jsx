@@ -9,6 +9,38 @@ export function getClosestDate(termDates) {
   })[0];
 }
 
+export function isDatePaid(payments, date) {
+  let found = false;
+  Object.keys(payments).map(paymentKey => {
+    const { termsPaid } = payments[paymentKey];
+    if (termsPaid !== undefined) {
+      Object.keys(termsPaid).map(termId => {
+        if (
+          _.find(termsPaid[termId], o => {
+            return moment(o.date).isSame(date, 'day');
+          }) !== undefined
+        ) {
+          found = true;
+        }
+      });
+    }
+  });
+  return found;
+}
+
+export function isAttended(attendance, date) {
+  let found = false;
+  Object.keys(attendance).map(attendedDate => {
+    const { attended } = attendance[attendedDate];
+    if (attended !== undefined) {
+      if (moment(attendedDate).isSame(date, 'day')) {
+        found = attended;
+      }
+    }
+  });
+  return found;
+}
+
 export function findPaymentDetails(students, termDates, selectedTerm) {
   let paid = [];
   let unpaid = [];

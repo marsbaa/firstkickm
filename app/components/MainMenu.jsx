@@ -168,6 +168,13 @@ class MainMenu extends React.Component {
                   </button>
                 </Link>
               : null}
+            {isSuperAdmin(auth.email)
+              ? <Link to="m/cancel">
+                  <button className="mainbtn" id="cancelSession">
+                    Cancel Session
+                  </button>
+                </Link>
+              : null}
             <Link to="m/attendance/summary">
               <button
                 className="mainbtn"
