@@ -76,11 +76,9 @@ class NotesList extends React.Component {
     var { dispatch, notes, auth, users, selection } = this.props;
     var user = _.find(users, ['email', auth.email]);
     notes = _.filter(notes, { centreKey: selection.key });
-    console.log(notes);
     notes = _.sortBy(notes, o => {
       return moment(o.date).format();
     }).reverse();
-    console.log(notes);
     return (
       <Grid style={{ marginTop: '20px' }}>
         <Row>

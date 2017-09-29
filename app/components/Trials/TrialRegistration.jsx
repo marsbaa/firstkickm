@@ -65,7 +65,6 @@ class TrialRegistration extends React.Component {
             >
               {Object.keys(register).map((payerKey, index) => {
                 const { childName } = register[payerKey];
-                console.log(childName);
                 return (
                   <TrialRegChildTab
                     eventKey={index}

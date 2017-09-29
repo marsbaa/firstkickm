@@ -29,7 +29,6 @@ class Attendee extends React.Component {
       selection.classes,
       ageGroup
     );
-    console.log(calendarKey);
     var termId = getClassTerm(calendars[calendarKey], date);
     var paid = paidDate(payments, date, termId);
     var backgroundColor;

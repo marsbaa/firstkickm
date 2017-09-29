@@ -73,7 +73,6 @@ class PromotionAdd extends React.Component {
       const { name } = centres[centreKey];
       options.push({ label: name, value: name });
     });
-    console.log(this.state.value);
 
     return (
       <Grid style={{ marginTop: '20px' }}>

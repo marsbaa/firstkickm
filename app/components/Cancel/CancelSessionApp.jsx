@@ -24,6 +24,7 @@ class CancelSessionApp extends React.Component {
     };
     this.handleClassSelect = this.handleClassSelect.bind(this);
     this.open = this.open.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
   componentDidMount() {
     const { dispatch, calendars, selection } = this.props;
@@ -55,6 +56,7 @@ class CancelSessionApp extends React.Component {
 
   onFormSubmit() {
     console.log('Cancelled');
+    this.close();
   }
 
   render() {
@@ -100,7 +102,7 @@ class CancelSessionApp extends React.Component {
           cancelClassList={cancelClassList}
           show={this.state.show}
           close={() => this.close.bind(this)}
-          onFormSubmit={this.onFormSubmit.bind(this)}
+          onFormSubmit={cancelClassList => this.onFormSubmit(cancelClassList)}
         />
         <DateSelector
           termDates={this.state.termDates}
