@@ -862,7 +862,40 @@ export const promotionsReducer = (state = {}, action) => {
     case 'ADD_PROMOTIONS':
       return action.promotions;
     case 'ADD_PROMOTION':
-      return [...state, { ...action.promotion }];
+      return { ...state, [action.promotion.key]: { ...action.promotion } };
+    default:
+      return state;
+  }
+};
+
+export const cancelReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_CANCELLED':
+      return action.cancelled;
+    case 'ADD_CANCELLED_CLASS':
+      return {
+        ...state,
+        [action.classDetails.key]: { ...action.classDetails }
+      };
+    default:
+      return state;
+  }
+};
+
+export const creditReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_CREDITS':
+      return action.credits;
+    case 'ADD_STUDENT_CREDIT':
+      return {
+        ...state,
+        [action.creditDetails.key]: { ...action.creditDetails }
+      };
+    case 'USE_STUDENT_CREDIT':
+      return {
+        ...state,
+        [action.credit.key]: { ...action.credit }
+      };
     default:
       return state;
   }

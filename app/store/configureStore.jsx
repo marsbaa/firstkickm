@@ -29,7 +29,9 @@ import {
   makeUpReducer,
   redirectReducer,
   parentReducer,
-  promotionsReducer
+  promotionsReducer,
+  cancelReducer,
+  creditReducer
 } from 'reducers';
 
 export var configure = (initialState = {}) => {
@@ -60,7 +62,9 @@ export var configure = (initialState = {}) => {
     redirect: redirectReducer,
     form: formReducer,
     promotions: promotionsReducer,
-    selectedPromotion: selectedPromotionReducer
+    selectedPromotion: selectedPromotionReducer,
+    cancelled: cancelReducer,
+    credits: creditReducer
   });
 
   const store = createStore(

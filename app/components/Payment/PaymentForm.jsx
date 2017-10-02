@@ -16,11 +16,14 @@ import {
   HelpBlock
 } from 'react-bootstrap';
 import { datebtn, downbtn } from 'styles.css';
-import { addPayment } from 'actions';
+import { addPayment, startCredits, useStudentCredit } from 'actions';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import moment from 'moment';
+import find from 'lodash/find';
+import isEmpty from 'lodash/isEmpty';
+import filter from 'lodash/filter';
 import PaymentDatesSelector from 'PaymentDatesSelector';
 import SendMail from 'SendMail';
 import InvoiceTemplate from 'InvoiceTemplate';
@@ -55,7 +58,20 @@ class PaymentForm extends React.Component {
 
   componentWillMount() {
     window.scrollTo(0, 0);
-    var { students, calendars, selection, coaches, makeUps } = this.props;
+    var {
+      students,
+      calendars,
+      selection,
+      coaches,
+      makeUps,
+      credits,
+      dispatch
+    } = this.props;
+
+    if (isEmpty(credits)) {
+      dispatch(startCredits());
+    }
+
     //Initiate Payer
     var studentId = this.props.params.studentId;
     var contact = null;
@@ -209,7 +225,10 @@ class PaymentForm extends React.Component {
 
   formSubmit(e) {
     e.preventDefault();
-    var { dispatch, calendars } = this.props;
+    var { dispatch, calendars, credits } = this.props;
+    let filteredCredits = filter(credits, o => {
+      return o.dateUsed === undefined;
+    });
     var paymentDetails = [];
     var invoiceRef = firebaseRef.child('invoices');
     var newKey = invoiceRef.push().key;
@@ -315,6 +334,15 @@ class PaymentForm extends React.Component {
       if (this.state.prorateAmount[id] !== undefined) {
         total -= this.state.prorateAmount[id];
       }
+      let credit = find(filteredCredits, { studentKey: student.key });
+      if (credit !== undefined) {
+        const newCredit = {
+          ...credit,
+          dateUsed: moment(this.state.receivedDate).format()
+        };
+        dispatch(useStudentCredit(newCredit));
+        total -= credit.amount;
+      }
       if (this.state.form === 'Cash') {
         var paymentDetail = {
           centreId: student.venueId.toString(),
@@ -327,6 +355,7 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
+          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -348,6 +377,7 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
+          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -370,6 +400,7 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
+          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -392,6 +423,7 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
+          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -403,9 +435,11 @@ class PaymentForm extends React.Component {
         };
       }
       dispatch(addPayment(paymentDetail));
+
       paymentDetails.push(paymentDetail);
     });
     let invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
@@ -415,7 +449,11 @@ class PaymentForm extends React.Component {
   }
 
   render() {
-    var { calendars, selection } = this.props;
+    const { calendars, selection, credits } = this.props;
+
+    let filteredCredits = filter(credits, o => {
+      return o.dateUsed === undefined;
+    });
     //Render Tabs
     var tabs = [];
     var fees = [];
@@ -671,6 +709,25 @@ class PaymentForm extends React.Component {
 
           totalFee += cost;
         });
+      }
+      let credit = find(filteredCredits, { studentKey: student.key });
+      if (credit !== undefined) {
+        fees.push(
+          <Row
+            key={'credit' + id}
+            style={{ padding: '0px 15px', marginTop: '5px' }}
+          >
+            <Col xs={8} md={8}>
+              <b style={{ color: '#1796d3' }}>Credits</b>
+            </Col>
+            <Col xs={4} md={4} style={{ float: 'right' }}>
+              <p style={{ textAlign: 'right' }}>
+                (${credit.amount})
+              </p>
+            </Col>
+          </Row>
+        );
+        totalFee -= credit.amount;
       }
       if (this.state.prorateAmount[id] !== undefined) {
         if (this.state.prorateAmount[id] !== '') {

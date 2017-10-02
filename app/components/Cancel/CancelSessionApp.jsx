@@ -1,7 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { updateNavTitle } from 'actions';
+import {
+  updateNavTitle,
+  addCancelledClass,
+  addStudentCredit,
+  startCancelled
+} from 'actions';
 import { getCentreCalendarDates, isDatePaid, isAttended } from 'helper';
 import DateSelector from 'DateSelector';
 import CancelClassItem from 'CancelClassItem';
@@ -11,6 +16,8 @@ import indexOf from 'lodash/indexOf';
 import pull from 'lodash/pull';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
+import isEmpty from 'lodash/isEmpty';
+import find from 'lodash/find';
 
 class CancelSessionApp extends React.Component {
   constructor(props) {
@@ -26,6 +33,14 @@ class CancelSessionApp extends React.Component {
     this.open = this.open.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
+
+  componentWillMount() {
+    const { dispatch, cancelled } = this.props;
+    if (isEmpty(cancelled)) {
+      dispatch(startCancelled());
+    }
+  }
+
   componentDidMount() {
     const { dispatch, calendars, selection } = this.props;
     dispatch(updateNavTitle('/m/cancel', selection.name + ' Cancel Session'));
@@ -48,19 +63,49 @@ class CancelSessionApp extends React.Component {
     this.setState({ show: false });
   }
 
-  open(cancelClassList) {
-    if (size(cancelClassList) !== 0) {
+  open() {
+    if (this.state.cancelList.length !== 0) {
       this.setState({ show: true });
     }
   }
 
-  onFormSubmit() {
-    console.log('Cancelled');
+  onFormSubmit(classPaid) {
+    const { dispatch, selection, classes } = this.props;
+    this.state.cancelList.map(classKey => {
+      const { ageGroup, startTime, endTime, day } = classes[classKey];
+      const name = ageGroup + ' ' + startTime + ' - ' + endTime + ' ' + day;
+      const classDetails = {
+        classKey,
+        name,
+        ageGroup,
+        startTime,
+        endTime,
+        day,
+        venueId: selection.id,
+        date: moment(this.state.selectedDate).format()
+      };
+      dispatch(addCancelledClass(classDetails));
+      classPaid[classKey].map(student => {
+        const { key } = student;
+        const creditDetails = {
+          studentKey: key,
+          name,
+          date: moment(this.state.selectedDate).format(),
+          amount: 35
+        };
+        dispatch(addStudentCredit(creditDetails));
+      });
+    });
     this.close();
   }
 
   render() {
-    const { students, classes } = this.props;
+    const { students, classes, cancelled, selection } = this.props;
+
+    let classCancelled = filter(cancelled, { venueId: selection.id });
+    classCancelled = filter(classCancelled, o => {
+      return moment(o.date).isSame(this.state.selectedDate, 'day');
+    });
     //filter active students only
     let activeStudents = filter(students, o => {
       return o.status !== 'Not Active';
@@ -71,8 +116,8 @@ class CancelSessionApp extends React.Component {
     let classPaid = [];
     let attendedStudents = [];
     let classAttendance = [];
-    let cancelClassList = [];
-    this.state.cancelList.map(classKey => {
+
+    Object.keys(classes).map(classKey => {
       const { ageGroup, startTime, endTime, day } = classes[classKey];
       let filteredStudents = filter(activeStudents, {
         ageGroup: ageGroup,
@@ -91,18 +136,17 @@ class CancelSessionApp extends React.Component {
         }
       });
       classAttendance[classKey] = attendedStudents;
-      if (size(attendedStudents) === 0) {
-        cancelClassList[classKey] = classes[classKey];
-      }
     });
 
     return (
       <div>
         <CancelClassModal
-          cancelClassList={cancelClassList}
+          cancelList={this.state.cancelList}
+          classes={classes}
+          classPaid={classPaid}
           show={this.state.show}
           close={() => this.close.bind(this)}
-          onFormSubmit={cancelClassList => this.onFormSubmit(cancelClassList)}
+          onFormSubmit={classPaid => this.onFormSubmit(classPaid)}
         />
         <DateSelector
           termDates={this.state.termDates}
@@ -119,16 +163,16 @@ class CancelSessionApp extends React.Component {
               handleChange={() => this.handleClassSelect(classKey)}
               paidStudents={size(classPaid[classKey])}
               attendedStudents={size(classAttendance[classKey])}
+              classCancelled={
+                find(classCancelled, { classKey: classKey }) !== undefined
+              }
             />
           );
         })}
         <i style={{ marginLeft: '15px' }}>
           Note : You cannot cancel class with attendance
         </i>
-        <button
-          className="submitbtn"
-          onClick={cancelClassList => this.open(cancelClassList)}
-        >
+        <button className="submitbtn" onClick={this.open.bind(this)}>
           Cancel Classes
         </button>
       </div>
@@ -141,7 +185,8 @@ function mapStateToProps(state) {
     students: filter(state.students, { venueId: state.selection.id }),
     calendars: state.calendars,
     selection: state.selection,
-    classes: state.selection.classes
+    classes: state.selection.classes,
+    cancelled: state.cancelled
   };
 }
 

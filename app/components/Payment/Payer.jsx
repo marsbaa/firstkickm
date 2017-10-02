@@ -6,8 +6,8 @@ import uniq from 'lodash/uniq';
 import truncate from 'lodash/truncate';
 import moment from 'moment';
 
-const Payer = props => {
-  const { childName, key, gender, payments, email } = props.student;
+const Payer = ({ student, credit, creditAmount, onShow }) => {
+  const { childName, key, gender, payments, email } = student;
   let truncatedName = truncate(childName, {
     length: 28
   });
@@ -55,12 +55,18 @@ const Payer = props => {
               {truncatedName}
             </font>
           </Link>
+
           {termsPaidHTML}
         </Col>
         <Col xs={5} md={5} lg={5} style={{ textAlign: 'right' }}>
+          {credit
+            ? <button className="innerbtn">
+                ${creditAmount}
+              </button>
+            : null}
           <button
             className="innerbtn"
-            onClick={e => props.onShow(e, key, childName, email)}
+            onClick={e => onShow(e, key, childName, email)}
           >
             <Glyphicon glyph="shopping-cart" />{' '}
           </button>

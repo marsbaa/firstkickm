@@ -1659,3 +1659,93 @@ export var resetSelectedPromotion = () => {
     type: 'RESET_SELECTED_PROMOTION'
   };
 };
+
+//Cancel Class
+export const startCancelled = () => {
+  return dispatch => {
+    const cancelRef = firebaseRef.child('cancelled');
+    cancelRef.once('value').then(snapshot => {
+      const cancelled = snapshot.val();
+      let parsedCancelled = {};
+      if (cancelled !== null) {
+        Object.keys(cancelled).map(key => {
+          parsedCancelled[key] = {
+            key,
+            ...cancelled[key]
+          };
+        });
+        dispatch(addCancelled(parsedCancelled));
+      }
+    });
+  };
+};
+
+export const addCancelled = cancelled => {
+  return {
+    type: 'ADD_CANCELLED',
+    cancelled
+  };
+};
+export var addCancelledClass = classDetails => {
+  var cancelRef = firebaseRef.child('cancelled');
+  var newKey = cancelRef.push().key;
+  var updates = {};
+  updates[newKey] = classDetails;
+  cancelRef.update(updates);
+  classDetails.key = newKey;
+  return {
+    type: 'ADD_CANCELLED_CLASS',
+    classDetails
+  };
+};
+
+//credit
+export const startCredits = () => {
+  return dispatch => {
+    const creditRef = firebaseRef.child('credits');
+    creditRef.once('value').then(snapshot => {
+      const credits = snapshot.val();
+      let parsedCredits = {};
+      if (credits !== null) {
+        Object.keys(credits).map(key => {
+          parsedCredits[key] = {
+            key,
+            ...credits[key]
+          };
+        });
+        dispatch(addCredits(parsedCredits));
+      }
+    });
+  };
+};
+
+export const addCredits = credits => {
+  return {
+    type: 'ADD_CREDITS',
+    credits
+  };
+};
+
+export var addStudentCredit = creditDetails => {
+  var creditRef = firebaseRef.child('credits');
+  var newKey = creditRef.push().key;
+  var updates = {};
+  updates[newKey] = creditDetails;
+  creditRef.update(updates);
+  creditDetails.key = newKey;
+  return {
+    type: 'ADD_STUDENT_CREDIT',
+    creditDetails
+  };
+};
+
+export var useStudentCredit = credit => {
+  var creditRef = firebaseRef.child('credits');
+  var updates = {};
+  updates[credit.key] = credit;
+  creditRef.update(updates);
+  return {
+    type: 'USE_STUDENT_CREDIT',
+    credit
+  };
+};

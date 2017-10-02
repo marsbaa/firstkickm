@@ -6,21 +6,25 @@ const CancelClassItem = ({
   name,
   handleChange,
   paidStudents,
-  attendedStudents
+  attendedStudents,
+  classCancelled
 }) => {
   return (
     <Row
       style={{
         padding: '8px 10px',
-        borderBottom: '1px solid #cccccc'
+        borderBottom: '1px solid #cccccc',
+        backgroundColor: classCancelled ? 'pink' : 'white'
       }}
     >
       <Col xs={2} md={2} lg={2}>
-        <Switch
-          name={name}
-          onChange={() => handleChange()}
-          disabled={attendedStudents > 0 ? true : false}
-        />
+        {classCancelled
+          ? <div>Cancelled</div>
+          : <Switch
+              name={name}
+              onChange={() => handleChange()}
+              disabled={attendedStudents > 0 ? true : false}
+            />}
       </Col>
       <Col xs={7} md={7} lg={7}>
         {name}{' '}

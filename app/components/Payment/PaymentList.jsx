@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Payer from 'Payer';
-var actions = require('actions');
+import { startCredits, addPayment, updateNavTitle } from 'actions';
 import { RadioGroup, Radio } from 'react-radio-group';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
@@ -20,8 +20,11 @@ import InvoiceTemplateOthers from 'InvoiceTemplateOthers';
 import { firebaseRef } from 'firebaseApp';
 import SendMail from 'SendMail';
 import Search from 'Search';
-import _ from 'lodash';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
+import find from 'lodash/find';
+import filter from 'lodash/filter';
+import size from 'lodash/size';
 
 class PaymentList extends React.Component {
   constructor(props) {
@@ -48,7 +51,7 @@ class PaymentList extends React.Component {
 
   formSubmit() {
     var { dispatch, users, auth, selection, students } = this.props;
-    var user = _.find(users, ['email', auth.email]);
+    var user = find(users, ['email', auth.email]);
     var invoiceRef = firebaseRef.child('invoices');
     var newKey = invoiceRef.push().key;
     var payment = {
@@ -62,7 +65,7 @@ class PaymentList extends React.Component {
       invoiceKey: newKey,
       email: document.getElementById('email').value
     };
-    dispatch(actions.addPayment(payment));
+    dispatch(addPayment(payment));
     var invoiceHTML = InvoiceTemplateOthers.render(payment);
     var updates = {};
     updates[newKey] = { invoiceHTML };
@@ -75,9 +78,16 @@ class PaymentList extends React.Component {
     this.setState({ show: false });
   }
 
+  componentWillMount() {
+    const { dispatch, credits } = this.props;
+    if (isEmpty(credits)) {
+      dispatch(startCredits());
+    }
+  }
+
   componentDidMount() {
     var { dispatch, selection } = this.props;
-    dispatch(actions.updateNavTitle('/m/payment', selection.name + ' Payment'));
+    dispatch(updateNavTitle('/m/payment', selection.name + ' Payment'));
   }
 
   onShow(e, key, childName, email) {
@@ -86,19 +96,26 @@ class PaymentList extends React.Component {
   }
 
   render() {
-    var { students, searchText, selection } = this.props;
+    const { students, searchText, selection, credits } = this.props;
     var html = [];
     var classes = selection.classes;
+
+    //Filter Away Used credits
+    console.log(credits);
+    var filteredCredits = filter(credits, o => {
+      console.log(o.dateUsed);
+      return o.dateUsed === undefined;
+    });
 
     var filteredStudents = StudentsFilter.filter(
       students,
       selection.id,
       searchText
     );
-    var activeStudents = _.filter(filteredStudents, o => {
+    var activeStudents = filter(filteredStudents, o => {
       return !(o.status === 'Not Active');
     });
-    var notActiveStudents = _.filter(filteredStudents, o => {
+    var notActiveStudents = filter(filteredStudents, o => {
       return o.status === 'Not Active';
     });
 
@@ -109,13 +126,13 @@ class PaymentList extends React.Component {
 
       var classTime = startTime + ' - ' + endTime;
 
-      var classStudents = _.filter(activeStudents, {
+      var classStudents = filter(activeStudents, {
         currentClassDay: day,
         currentClassTime: classTime,
         ageGroup: ageGroup
       });
 
-      if (_.size(classStudents) !== 0) {
+      if (size(classStudents) !== 0) {
         html.push(
           <div key={ageGroup + classTime + day}>
             <Row
@@ -133,10 +150,13 @@ class PaymentList extends React.Component {
             </Row>
             {Object.keys(classStudents).map(studentId => {
               var student = classStudents[studentId];
+              let credit = find(filteredCredits, { studentKey: student.key });
               return (
                 <Payer
                   key={student.key}
                   student={student}
+                  credit={credit !== undefined}
+                  creditAmount={credit !== undefined ? credit.amount : null}
                   onShow={this.onShow.bind(this)}
                 />
               );
@@ -146,7 +166,7 @@ class PaymentList extends React.Component {
       }
     });
 
-    if (_.size(notActiveStudents) !== 0) {
+    if (size(notActiveStudents) !== 0) {
       html.push(
         <div key="Not Active">
           <Row
