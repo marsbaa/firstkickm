@@ -101,9 +101,7 @@ class PaymentList extends React.Component {
     var classes = selection.classes;
 
     //Filter Away Used credits
-    console.log(credits);
     var filteredCredits = filter(credits, o => {
-      console.log(o.dateUsed);
       return o.dateUsed === undefined;
     });
 

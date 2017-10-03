@@ -355,7 +355,6 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -377,7 +376,6 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -400,7 +398,6 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -423,7 +420,6 @@ class PaymentForm extends React.Component {
           siblingDiscount,
           siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
           total: total,
-          credit: credit.amount,
           prorate:
             this.state.prorateAmount[id] !== undefined
               ? this.state.prorateAmount[id]
@@ -433,6 +429,15 @@ class PaymentForm extends React.Component {
           email: this.state.email,
           invoiceKey: newKey
         };
+      }
+      if (credit !== undefined) {
+        const newCredit = {
+          ...credit,
+          dateUsed: moment(this.state.receivedDate).format()
+        };
+        dispatch(useStudentCredit(newCredit));
+        total -= credit.amount;
+        paymentDetail.credit = credit.amount;
       }
       dispatch(addPayment(paymentDetail));
 
