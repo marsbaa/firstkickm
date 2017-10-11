@@ -1,28 +1,18 @@
+import firebase, { firebaseRef } from 'firebaseApp';
 //Coaches Profile
-export const fetchCoaches = () => {
+export const startCoaches = () => {
   return dispatch => {
-    dispatch(requestCoaches());
     const coachesRef = firebaseRef.child('coaches');
     coachesRef.once('value').then(snapshot => {
       const coaches = snapshot.val();
-      var parsedCoaches = {};
-
+      var parsedCoaches = [];
       Object.keys(coaches).forEach(coachId => {
-        parsedCoaches[coachId] = coaches[coachId];
+        parsedCoaches.push({ key: coachId, ...coaches[coachId] });
       });
       dispatch(addCoaches(parsedCoaches));
-      dispatch(receivedCoaches());
     });
   };
 };
-
-export const requestCoaches = () => ({
-  type: 'REQUEST_COACHES'
-});
-
-export const receivedCoaches = () => ({
-  type: 'RECEIVED_COACHES'
-});
 
 export const addCoaches = coaches => ({
   type: 'ADD_COACHES',

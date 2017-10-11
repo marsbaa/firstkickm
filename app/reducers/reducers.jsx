@@ -366,7 +366,7 @@ export var studentReducer = (state = [], action) => {
 export var coachReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_COACHES':
-      return [...state, ...action.coaches];
+      return action.coaches;
     case 'ADD_COACH':
       return [...state, { ...action.coach }];
     case 'UPDATE_COACH':

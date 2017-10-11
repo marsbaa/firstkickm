@@ -562,64 +562,6 @@ export var toggleAttendance = (date, id) => {
   };
 };
 
-//Coaches Profile
-export var startCoaches = () => {
-  return dispatch => {
-    var coachesRef = firebaseRef.child('coaches');
-    coachesRef.once('value').then(snapshot => {
-      var coaches = snapshot.val();
-      var parsedCoaches = [];
-
-      Object.keys(coaches).forEach(coachId => {
-        parsedCoaches.push({
-          key: coachId,
-          ...coaches[coachId]
-        });
-      });
-      dispatch(addCoaches(parsedCoaches));
-    });
-  };
-};
-
-export var addCoaches = coaches => {
-  return {
-    type: 'ADD_COACHES',
-    coaches
-  };
-};
-
-export var addCoach = coach => {
-  var coachesRef = firebaseRef.child('coaches');
-  var newKey = coachesRef.push().key;
-  var updates = {};
-  updates[newKey] = coach;
-  coachesRef.update(updates);
-  coach.key = newKey;
-  return {
-    type: 'ADD_COACH',
-    coach
-  };
-};
-
-export var updateCoach = (coachId, coach) => {
-  var updates = {};
-  updates['/coaches/' + coachId] = coach;
-  firebase.database().ref().update(updates);
-  return {
-    type: 'UPDATE_COACH',
-    coachId,
-    coach
-  };
-};
-
-export var deleteCoach = coachId => {
-  var coachesRef = firebaseRef.child('coaches/' + coachId);
-  coachesRef.remove();
-  return {
-    type: 'DELETE_COACH',
-    coachId
-  };
-};
 /*
 export var updateCoachDate = () => {
   return (dispatch) => {

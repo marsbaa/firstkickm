@@ -1,13 +1,13 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
-import { fetchCoaches } from 'CoachesActions';
+import { startCoaches } from 'CoachesActions';
 import { connect } from 'react-redux';
 
 class CoachesApp extends React.Component {
   componentDidMount() {
     const { dispatch, coaches } = this.props;
     if (isEmpty(coaches)) {
-      dispatch(fetchCoaches());
+      dispatch(startCoaches());
     }
   }
 
@@ -22,7 +22,6 @@ class CoachesApp extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isFetching: state.isFetching,
     coaches: state.coaches
   };
 }
