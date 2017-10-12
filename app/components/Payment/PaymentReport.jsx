@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PayerReport from 'PayerReport';
-var actions = require('actions');
+import { updateNavTitle } from 'actions';
 import StudentsFilter from 'StudentsFilter';
 import _ from 'lodash';
 import moment from 'moment';
@@ -41,15 +41,12 @@ class PaymentReport extends React.Component {
     document.getElementById('termSelect').value = id;
     this.setState({ selectedTerm: id });
     dispatch(
-      actions.updateNavTitle(
-        '/m/payment/report',
-        selection.name + ' Payment Report'
-      )
+      updateNavTitle('/m/payment/report', selection.name + ' Payment Report')
     );
   }
 
   render() {
-    var { students, searchText, selection, calendars } = this.props;
+    var { students, selection, calendars, makeUps } = this.props;
 
     var html = [];
     var studentsPaid = 0;
@@ -87,7 +84,8 @@ class PaymentReport extends React.Component {
       const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
         filteredStudents,
         termDates,
-        this.state.selectedTerm
+        this.state.selectedTerm,
+        makeUps
       );
 
       //Display Class Time Day Header
@@ -102,7 +100,9 @@ class PaymentReport extends React.Component {
             }}
           >
             <Col xs={12} md={12}>
-              <h5>{ageGroup} {classTime} ({_.capitalize(day)})</h5>
+              <h5>
+                {ageGroup} {classTime} ({_.capitalize(day)})
+              </h5>
             </Col>
           </Row>
         );
@@ -131,12 +131,7 @@ class PaymentReport extends React.Component {
             }}
           >
             <Col xs={6} md={6}>
-              Paid
-              {' '}
-              <Badge>{_.size(paid)}</Badge>
-              {' '}
-              Amount
-              {' '}
+              Paid <Badge>{_.size(paid)}</Badge> Amount{' '}
               <Badge>${paidAmount}</Badge>
             </Col>
             <Col xs={6} md={6}>
@@ -263,7 +258,9 @@ class PaymentReport extends React.Component {
           lg={12}
           style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
         >
-          <h4>Students (Unpaid) <Label>{studentsUnPaid}</Label></h4>
+          <h4>
+            Students (Unpaid) <Label>{studentsUnPaid}</Label>
+          </h4>
         </Col>
       </Row>
     );
@@ -410,6 +407,13 @@ class PaymentReport extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(PaymentReport);
+function mapStateToProps(state) {
+  return {
+    students: state.students,
+    selection: state.selection,
+    calendars: state.calendars,
+    makeUps: state.makeUps
+  };
+}
+
+export default connect(mapStateToProps)(PaymentReport);

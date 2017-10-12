@@ -60,7 +60,8 @@ class AttendanceTable extends React.Component {
     const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
       filteredActiveStudents,
       termDates,
-      selectedTerm
+      selectedTerm,
+      makeUps
     );
 
     Object.keys(paid).map(studentId => {

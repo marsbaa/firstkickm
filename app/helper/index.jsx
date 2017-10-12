@@ -41,7 +41,7 @@ export function isAttended(attendance, date) {
   return found;
 }
 
-export function findPaymentDetails(students, termDates, selectedTerm) {
+export function findPaymentDetails(students, termDates, selectedTerm, makeUps) {
   let paid = [];
   let unpaid = [];
   let paidDetails = [];
@@ -49,6 +49,7 @@ export function findPaymentDetails(students, termDates, selectedTerm) {
 
   Object.keys(students).map(studentId => {
     const student = students[studentId];
+    let studentMakeUps = _.filter(makeUps, { studentKey: student.key });
     let attended = false;
     let p = false;
 
@@ -70,10 +71,15 @@ export function findPaymentDetails(students, termDates, selectedTerm) {
     //Check if student attends term
     termDates.map(date => {
       var dateId = moment(date).format('YYYY-MM-DD');
+      let makeUpDate = _.find(studentMakeUps, o => {
+        return moment(o.toDate).isSame(date, 'day');
+      });
       if (student.attendance !== undefined) {
         if (student.attendance[dateId] !== undefined) {
           if (student.attendance[dateId].attended) {
-            attended = true;
+            if (makeUpDate === undefined) {
+              attended = true;
+            }
           }
         }
       }
