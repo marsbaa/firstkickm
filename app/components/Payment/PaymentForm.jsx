@@ -24,6 +24,7 @@ import moment from 'moment';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import filter from 'lodash/filter';
+import reduce from 'lodash/reduce';
 import PaymentDatesSelector from 'PaymentDatesSelector';
 import SendMail from 'SendMail';
 import InvoiceTemplate from 'InvoiceTemplate';
@@ -334,17 +335,23 @@ class PaymentForm extends React.Component {
       if (this.state.prorateAmount[id] !== undefined) {
         total -= this.state.prorateAmount[id];
       }
-      let credit = find(filteredCredits, { studentKey: student.key });
-      if (credit !== undefined) {
-        const newCredit = {
-          ...credit,
-          dateUsed: moment(this.state.receivedDate).format()
-        };
-        dispatch(useStudentCredit(newCredit));
-        total -= credit.amount;
+      let paymentDetail = {};
+      let studentCredits = filter(filteredCredits, { studentKey: student.key });
+      if (studentCredits.length > 0) {
+        let totalCredit = 0;
+        studentCredits.map(credit => {
+          const newCredit = {
+            ...credit,
+            dateUsed: moment(this.state.receivedDate).format()
+          };
+          dispatch(useStudentCredit(newCredit));
+          total -= credit.amount;
+          totalCredit += credit.amount;
+        });
+        paymentDetail.credit = totalCredit;
       }
       if (this.state.form === 'Cash') {
-        var paymentDetail = {
+        paymentDetail = {
           centreId: student.venueId.toString(),
           childKey: student.key,
           childName: student.childName,
@@ -365,7 +372,7 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         };
       } else if (this.state.form === 'Cheque') {
-        var paymentDetail = {
+        paymentDetail = {
           centreId: student.venueId.toString(),
           childKey: student.key,
           childName: student.childName,
@@ -387,7 +394,7 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         };
       } else if (this.state.form === 'NETS') {
-        var paymentDetail = {
+        paymentDetail = {
           centreId: student.venueId.toString(),
           childKey: student.key,
           childName: student.childName,
@@ -409,7 +416,7 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         };
       } else if (this.state.form === 'Bank Transfer') {
-        var paymentDetail = {
+        paymentDetail = {
           centreId: student.venueId.toString(),
           childKey: student.key,
           childName: student.childName,
@@ -430,21 +437,12 @@ class PaymentForm extends React.Component {
           invoiceKey: newKey
         };
       }
-      if (credit !== undefined) {
-        const newCredit = {
-          ...credit,
-          dateUsed: moment(this.state.receivedDate).format()
-        };
-        dispatch(useStudentCredit(newCredit));
-        total -= credit.amount;
-        paymentDetail.credit = credit.amount;
-      }
+
       dispatch(addPayment(paymentDetail));
 
       paymentDetails.push(paymentDetail);
     });
     let invoiceHTML = InvoiceTemplate.render(paymentDetails);
-    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
@@ -715,8 +713,15 @@ class PaymentForm extends React.Component {
           totalFee += cost;
         });
       }
-      let credit = find(filteredCredits, { studentKey: student.key });
-      if (credit !== undefined) {
+      let studentCredits = filter(filteredCredits, { studentKey: student.key });
+      if (studentCredits.length > 0) {
+        let totalCredit = reduce(
+          studentCredits,
+          function(sum, n) {
+            return sum + n.amount;
+          },
+          0
+        );
         fees.push(
           <Row
             key={'credit' + id}
@@ -727,12 +732,12 @@ class PaymentForm extends React.Component {
             </Col>
             <Col xs={4} md={4} style={{ float: 'right' }}>
               <p style={{ textAlign: 'right' }}>
-                (${credit.amount})
+                (${totalCredit})
               </p>
             </Col>
           </Row>
         );
-        totalFee -= credit.amount;
+        totalFee -= totalCredit;
       }
       if (this.state.prorateAmount[id] !== undefined) {
         if (this.state.prorateAmount[id] !== '') {

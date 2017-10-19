@@ -109,9 +109,10 @@ export var startAddTrials = () => {
     };
     var trialsRef = firebaseRef.child('trials');
     axios
-      .get('https://www.fka.sg/get-api-students/')
+      .get('https://www.fka.sg/trialstudents/')
       .then(function(response) {
         var trialList = response.data.data;
+        console.log(response.data);
         trialsRef.once('value').then(snapshot => {
           var firebaseTrialList = snapshot.val();
           trialList.forEach(trials => {
@@ -150,7 +151,7 @@ export var startAddTrials = () => {
 
     return trialsRef
       .orderByChild('dateOfTrial')
-      .startAt('2017-01-01')
+      .startAt('2017-06-01')
       .once('value')
       .then(snapshot => {
         var trials = snapshot.val() || {};

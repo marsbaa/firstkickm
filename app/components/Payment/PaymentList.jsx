@@ -25,6 +25,7 @@ import isEmpty from 'lodash/isEmpty';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
+import reduce from 'lodash/reduce';
 
 class PaymentList extends React.Component {
   constructor(props) {
@@ -148,13 +149,24 @@ class PaymentList extends React.Component {
             </Row>
             {Object.keys(classStudents).map(studentId => {
               var student = classStudents[studentId];
-              let credit = find(filteredCredits, { studentKey: student.key });
+              let studentCredits = filter(filteredCredits, {
+                studentKey: student.key
+              });
+              let totalCredit = reduce(
+                studentCredits,
+                function(sum, n) {
+                  return sum + n.amount;
+                },
+                0
+              );
               return (
                 <Payer
                   key={student.key}
                   student={student}
-                  credit={credit !== undefined}
-                  creditAmount={credit !== undefined ? credit.amount : null}
+                  credit={studentCredits.length > 0}
+                  creditAmount={
+                    studentCredits !== undefined ? totalCredit : null
+                  }
                   onShow={this.onShow.bind(this)}
                 />
               );

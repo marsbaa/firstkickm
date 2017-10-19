@@ -13,6 +13,7 @@ class PaymentDetails extends React.Component {
     const {
       termsPaid,
       key,
+      credit,
       earlyBird,
       earlyBirdAmount,
       siblingDiscount,
@@ -151,6 +152,11 @@ class PaymentDetails extends React.Component {
         {promotionDiscount !== undefined
           ? <ListGroupItem>
               {promotionDiscount}: (${promotionDiscountAmount})
+            </ListGroupItem>
+          : null}
+        {credit !== undefined
+          ? <ListGroupItem>
+              Credit : (${credit})
             </ListGroupItem>
           : null}
         <ListGroupItem>
