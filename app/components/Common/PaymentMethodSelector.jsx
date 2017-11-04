@@ -15,7 +15,6 @@ import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import { updateTrialRegistration, addTrialStudent, addPayment } from 'actions';
 import moment from 'moment';
-import { firebaseRef } from 'firebaseApp';
 import { browserHistory } from 'react-router';
 import InvoiceTemplate from 'InvoiceTemplate';
 import SendMail from 'SendMail';
@@ -41,9 +40,6 @@ class PaymentMethodSelector extends React.Component {
   formSubmit() {
     const { dispatch, paymentDetails, childDetails, parent } = this.props;
     let finalPaymentDetails = [];
-    //Get Invoice Key
-    const invoiceRef = firebaseRef.child('invoices');
-    const newKey = invoiceRef.push().key;
 
     Object.keys(childDetails).map(payerKey => {
       const { trialId } = childDetails[payerKey];
@@ -58,8 +54,7 @@ class PaymentMethodSelector extends React.Component {
           childKey: response.student.key,
           paymentMethod: this.state.paymentMethod,
           email: this.state.email,
-          jerseyIssued: false,
-          invoiceKey: newKey
+          jerseyIssued: false
         };
         if (this.state.paymentMethod === 'NETS') {
           finalPaymentDetail.refNumber = this.state.refNumber;

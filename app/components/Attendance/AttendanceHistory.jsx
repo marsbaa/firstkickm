@@ -33,7 +33,6 @@ class AttendanceHistory extends React.Component {
                   {term.map(date => {
                     const paid = paidDate(student.payments, date, termId);
                     const attended = attendedDate(student.attendance, date);
-
                     return (
                       <Label
                         style={{
@@ -70,9 +69,10 @@ class AttendanceHistory extends React.Component {
           }}
         >
           <Col xs={12} md={12} lg={12}>
-            <h5>{student.childName} (Attendance {moment().format('YYYY')})</h5>
+            <h5>
+              {student.childName} (Attendance {moment().format('YYYY')})
+            </h5>
           </Col>
-
         </Row>
         <div style={{ padding: '0px 15px' }}>
           {html}

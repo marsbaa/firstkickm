@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import Attendee from 'Attendee';
 import AttendanceClassList from 'AttendanceClassList';
-var actions = require('actions');
+import { startMakeUps, updateNavTitle } from 'actions';
 import StudentsFilter from 'StudentsFilter';
 import Search from 'Search';
 import _ from 'lodash';
@@ -45,10 +45,10 @@ class AttendanceList extends React.Component {
     var { dispatch, selection, calendars, makeUps } = this.props;
 
     if (_.isEmpty(makeUps)) {
-      dispatch(actions.startMakeUps());
+      dispatch(startMakeUps());
     }
     dispatch(
-      actions.updateNavTitle('/m/attendance/HQ', selection.name + ' Attendance')
+      updateNavTitle('/m/attendance/HQ', selection.name + ' Attendance')
     );
 
     var termDates = getCentreCalendarDates(calendars, selection.key);
@@ -146,10 +146,10 @@ class AttendanceList extends React.Component {
         if (!_.isEmpty(filteredMakeUps)) {
           Object.keys(filteredMakeUps).forEach(makeUpId => {
             const { studentKey } = filteredMakeUps[makeUpId];
-            const student = _.find(filteredActiveClass, { key: studentKey });
+            const student = _.find(filteredActive, { key: studentKey });
             html.push(
               <Attendee
-                key={student.key}
+                key={studentKey}
                 student={student}
                 date={this.state.startDate}
                 type="makeup"
@@ -248,6 +248,16 @@ class AttendanceList extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(AttendanceList);
+function mapStateToProps(state) {
+  return {
+    students: state.students,
+    selection: state.selection,
+    calendars: state.calendars,
+    makeUps: state.makeUps,
+    searchText: state.searchText,
+    auth: state.auth,
+    users: state.users
+  };
+}
+
+export default connect(mapStateToProps)(AttendanceList);

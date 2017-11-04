@@ -1692,3 +1692,12 @@ export var useStudentCredit = credit => {
     credit
   };
 };
+
+export var removeCredits = key => {
+  var creditsRef = firebaseRef.child('credits/' + key);
+  creditsRef.remove();
+  return {
+    type: 'REMOVE_CREDITS',
+    key
+  };
+};

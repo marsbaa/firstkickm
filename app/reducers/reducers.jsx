@@ -896,6 +896,8 @@ export const creditReducer = (state = {}, action) => {
         ...state,
         [action.credit.key]: { ...action.credit }
       };
+    case 'REMOVE_CREDITS':
+      return _.omit(state, [action.key]);
     default:
       return state;
   }

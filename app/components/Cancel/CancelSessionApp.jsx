@@ -5,7 +5,8 @@ import {
   updateNavTitle,
   addCancelledClass,
   addStudentCredit,
-  startCancelled
+  startCancelled,
+  removeCredits
 } from 'actions';
 import { getCentreCalendarDates, isDatePaid, isAttended } from 'helper';
 import DateSelector from 'DateSelector';
@@ -18,6 +19,7 @@ import filter from 'lodash/filter';
 import size from 'lodash/size';
 import isEmpty from 'lodash/isEmpty';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 
 class CancelSessionApp extends React.Component {
   constructor(props) {
@@ -59,6 +61,28 @@ class CancelSessionApp extends React.Component {
     }
   }
 
+  remove() {
+    const { dispatch, credits } = this.props;
+    let filteredCredits = filter(credits, o => {
+      return o.dateUsed === undefined;
+    });
+    let noDuplicates = [...filteredCredits];
+    Object.keys(filteredCredits).map(id => {
+      let { key, date, name, studentKey } = filteredCredits[id];
+      let c = filter(noDuplicates, { date, name, studentKey });
+      if (c.length > 1) {
+        var index = findIndex(noDuplicates, { key });
+        noDuplicates.splice(index, 1);
+      }
+    });
+    let newList = filter(credits, o => {
+      return find(noDuplicates, { key: o.key }) === undefined;
+    });
+    newList.map(it => {
+      dispatch(removeCredits(it.key));
+    });
+  }
+
   close() {
     this.setState({ show: false });
   }
@@ -84,7 +108,8 @@ class CancelSessionApp extends React.Component {
         venueId: selection.id,
         date: moment(this.state.selectedDate).format()
       };
-      dispatch(addCancelledClass(classDetails));
+      console.log(classDetails);
+      //  dispatch(addCancelledClass(classDetails));
       classPaid[classKey].map(student => {
         const { key } = student;
         const creditDetails = {
@@ -93,7 +118,8 @@ class CancelSessionApp extends React.Component {
           date: moment(this.state.selectedDate).format(),
           amount: 35
         };
-        dispatch(addStudentCredit(creditDetails));
+        console.log(creditDetails);
+        //    dispatch(addStudentCredit(creditDetails));
       });
     });
     this.close();
@@ -186,7 +212,8 @@ function mapStateToProps(state) {
     calendars: state.calendars,
     selection: state.selection,
     classes: state.selection.classes,
-    cancelled: state.cancelled
+    cancelled: state.cancelled,
+    credits: state.credits
   };
 }
 
