@@ -24,7 +24,9 @@ class PromotionAdd extends React.Component {
       startDate: moment(),
       endDate: moment(),
       name: '',
-      amount: ''
+      discount: '',
+      type: '',
+      group: ''
     };
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
@@ -58,10 +60,13 @@ class PromotionAdd extends React.Component {
     const promotion = {
       name: this.state.name,
       centres: this.state.value,
-      amount: this.state.amount,
+      discount: this.state.discount,
+      type: this.state.type,
+      group: this.state.group,
       startDate: moment(this.state.startDate).format('YYYY-MM-DD'),
       endDate: moment(this.state.endDate).format('YYYY-MM-DD')
     };
+
     dispatch(addPromotion(promotion));
     browserHistory.push('/m/promotions/');
   }
@@ -100,14 +105,43 @@ class PromotionAdd extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <ControlLabel>Amount</ControlLabel>
+              <ControlLabel>Target Group</ControlLabel>
               <FormControl
-                id="amount"
-                type="text"
-                placeholder="Enter Amount of Discount"
-                onChange={e => this.setState({ amount: e.target.value })}
-              />
+                id="targetgroup"
+                componentClass="select"
+                onChange={e => this.setState({ group: e.target.value })}
+              >
+                <option value="select">Select</option>
+                <option value="All">All</option>
+                <option value="Trial">Trial</option>
+                <option value="Current">Current Student</option>
+              </FormControl>
             </FormGroup>
+            <Row>
+              <Col xs={6}>
+                <ControlLabel>Type</ControlLabel>
+                <FormControl
+                  id="type"
+                  componentClass="select"
+                  onChange={e => this.setState({ type: e.target.value })}
+                >
+                  <option value="select">Select</option>
+                  <option value="Amount">Amount</option>
+                  <option value="Percentage">Percentage</option>
+                </FormControl>
+              </Col>
+              <Col xs={6}>
+                <FormGroup>
+                  <ControlLabel>Discount</ControlLabel>
+                  <FormControl
+                    id="amount"
+                    type="text"
+                    placeholder="Enter Discount"
+                    onChange={e => this.setState({ discount: e.target.value })}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row style={{ marginTop: '15px' }}>

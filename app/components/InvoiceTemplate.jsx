@@ -41,6 +41,8 @@ class Root extends React.Component {
         childName,
         termsPaid,
         registration,
+        discountName,
+        discount,
         siblingDiscount,
         siblingDiscountAmount,
         earlyBird,
@@ -162,6 +164,23 @@ class Root extends React.Component {
             </Col>
             <Col xs={4} md={4} style={{ textAlign: 'right' }}>
               $({earlyBirdAmount === undefined ? '20' : earlyBirdAmount})
+            </Col>
+          </Row>
+        );
+      }
+      if (discount !== undefined) {
+        html.push(
+          <Row
+            key={'discount' + childName}
+            style={{ lineHeight: '12px', margin: '15px 30px' }}
+          >
+            <Col xs={8} md={8}>
+              <b style={{ color: '#1796d3' }}>
+                {discountName} Discount
+              </b>
+            </Col>
+            <Col xs={4} md={4} style={{ textAlign: 'right' }}>
+              $({discount})
             </Col>
           </Row>
         );

@@ -70,7 +70,7 @@ class PaymentHistory extends React.Component {
   render() {
     const { payments, student, users, auth } = this.props;
     const paymentHistories = filter(payments, { childKey: student.key });
-
+    console.log(paymentHistories);
     var html = [];
     let close = () => this.setState({ show: false });
     let closeR = () => this.setState({ showR: false });

@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import {
   Tabs,
   Tab,
@@ -15,20 +14,26 @@ import {
   Modal,
   HelpBlock
 } from 'react-bootstrap';
-import { datebtn, downbtn } from 'styles.css';
-import { addPayment, startCredits, useStudentCredit } from 'actions';
+import {
+  addPayment,
+  startCredits,
+  useStudentCredit,
+  startPromotions
+} from 'actions';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
 import moment from 'moment';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import isEmpty from 'lodash/isEmpty';
 import filter from 'lodash/filter';
 import reduce from 'lodash/reduce';
+import size from 'lodash/size';
+import PaymentPromotionSelector from 'PaymentPromotionSelector';
 import PaymentDatesSelector from 'PaymentDatesSelector';
 import SendMail from 'SendMail';
 import InvoiceTemplate from 'InvoiceTemplate';
-import { firebaseRef } from 'firebaseApp';
 import { browserHistory } from 'react-router';
 import { getTerm, getCalendarKey, getCalendarDates } from 'helper';
 
@@ -66,32 +71,34 @@ class PaymentForm extends React.Component {
       coaches,
       makeUps,
       credits,
+      promotions,
       dispatch
     } = this.props;
 
     if (isEmpty(credits)) {
       dispatch(startCredits());
     }
+    if (isEmpty(promotions)) {
+      dispatch(startPromotions());
+    }
 
     //Initiate Payer
-    var studentId = this.props.params.studentId;
-    var contact = null;
-    var payer = [];
-
-    var filteredStudents = _.filter(students, o => {
+    const studentId = this.props.params.studentId;
+    let payer = [];
+    let filteredStudents = filter(students, o => {
       return !(o.status === 'Not Active');
     });
-    filteredStudents = _.filter(filteredStudents, { venueId: selection.id });
-
-    var student = _.find(filteredStudents, { key: studentId });
+    filteredStudents = filter(filteredStudents, { venueId: selection.id });
+    let student = find(filteredStudents, { key: studentId });
 
     if (student.email !== '') {
-      if (_.findIndex(coaches, { email: student.email }) !== -1) {
+      if (findIndex(coaches, { email: student.email }) !== -1) {
         this.setState({ coachDiscount: true });
       }
     }
+
     if (student.contact !== '' && student.contact !== undefined) {
-      payer = _.filter(filteredStudents, { contact: student.contact });
+      payer = filter(filteredStudents, { contact: student.contact });
     } else {
       payer.push(student);
     }
@@ -115,7 +122,7 @@ class PaymentForm extends React.Component {
             Object.keys(payment.termsPaid).map(termId => {
               var term = payment.termsPaid[termId];
               term.map(session => {
-                var index = _.findIndex(calendarDate, d => {
+                var index = findIndex(calendarDate, d => {
                   return moment(d).isSame(session.date, 'day');
                 });
                 if (index !== -1) {
@@ -126,10 +133,10 @@ class PaymentForm extends React.Component {
           }
         });
       }
-      let filteredMakeUps = _.filter(makeUps, { studentKey: child.key });
-      if (!_.isEmpty(filteredMakeUps)) {
+      let filteredMakeUps = filter(makeUps, { studentKey: child.key });
+      if (!isEmpty(filteredMakeUps)) {
         filteredMakeUps.map(makeUp => {
-          var index = _.findIndex(calendarDate, d => {
+          var index = findIndex(calendarDate, d => {
             return moment(d).isSame(makeUp.toDate, 'day');
           });
           calendarDate.splice(index, 1);
@@ -226,13 +233,18 @@ class PaymentForm extends React.Component {
 
   formSubmit(e) {
     e.preventDefault();
-    var { dispatch, calendars, credits } = this.props;
+    var {
+      dispatch,
+      calendars,
+      credits,
+      selection,
+      selectedPromotion,
+      promotions
+    } = this.props;
     let filteredCredits = filter(credits, o => {
       return o.dateUsed === undefined;
     });
     var paymentDetails = [];
-    var invoiceRef = firebaseRef.child('invoices');
-    var newKey = invoiceRef.push().key;
     this.state.payer.map((student, id) => {
       //Term Id
       var termsPaid = [];
@@ -247,7 +259,7 @@ class PaymentForm extends React.Component {
         var paymentTerm = [];
 
         term.map(date => {
-          var index = _.findIndex(this.state.deselectedTermDates[id], d => {
+          var index = findIndex(this.state.deselectedTermDates[id], d => {
             return moment(d).isSame(date);
           });
           if (index === -1) {
@@ -259,9 +271,11 @@ class PaymentForm extends React.Component {
           paidSessions += paymentTerm.length;
         }
       });
+      let discountAmount, discountName;
       payerTerm.map((term, termId) => {
-        var cost = 0;
-        switch (_.size(term)) {
+        let cost = 0;
+
+        switch (size(term)) {
           case 8:
             cost = 300;
             perSession = 37.5;
@@ -283,6 +297,7 @@ class PaymentForm extends React.Component {
             perSession = paidSessions > 8 ? 35 : 45;
             break;
         }
+        total += cost;
         var actualTerm;
 
         Object.keys(calendars).map(calendarKey => {
@@ -308,6 +323,25 @@ class PaymentForm extends React.Component {
             earlyBird = true;
             total -= 20;
           }
+          let type;
+          if (selectedPromotion !== '') {
+            if (
+              promotions[selectedPromotion].centres === 'All' ||
+              promotions[selectedPromotion].centres === selection.name
+            ) {
+              let discount = promotions[selectedPromotion].discount;
+              discountName = promotions[selectedPromotion].name;
+              type = promotions[selectedPromotion].type;
+              if (type === 'Percentage') {
+                console.log(total);
+                discountAmount = total * discount / 100;
+                total -= discountAmount;
+              } else if (type === 'Amount') {
+                discountAmount = discount;
+                total -= discountAmount;
+              }
+            }
+          }
 
           if (id === 1 && term.length >= 5) {
             siblingDiscount = true;
@@ -318,8 +352,6 @@ class PaymentForm extends React.Component {
             siblingDiscountAmount += 30;
             total -= 30;
           }
-
-          total += cost;
         }
 
         var datesPaid = [];
@@ -350,94 +382,37 @@ class PaymentForm extends React.Component {
         });
         paymentDetail.credit = totalCredit;
       }
-      if (this.state.form === 'Cash') {
-        paymentDetail = {
-          centreId: student.venueId.toString(),
-          childKey: student.key,
-          childName: student.childName,
-          ageGroup: student.ageGroup,
-          earlyBird,
-          coachDiscount: this.state.coachDiscount,
-          date: moment(this.state.receivedDate).format(),
-          siblingDiscount,
-          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
-          total: total,
-          prorate:
-            this.state.prorateAmount[id] !== undefined
-              ? this.state.prorateAmount[id]
-              : null,
-          termsPaid,
-          paymentMethod: this.state.form,
-          email: this.state.email,
-          invoiceKey: newKey
-        };
-      } else if (this.state.form === 'Cheque') {
-        paymentDetail = {
-          centreId: student.venueId.toString(),
-          childKey: student.key,
-          childName: student.childName,
-          ageGroup: student.ageGroup,
-          earlyBird,
-          date: moment(this.state.receivedDate).format(),
-          coachDiscount: this.state.coachDiscount,
-          siblingDiscount,
-          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
-          total: total,
-          prorate:
-            this.state.prorateAmount[id] !== undefined
-              ? this.state.prorateAmount[id]
-              : null,
-          termsPaid,
-          paymentMethod: this.state.form,
-          chequeNumber: document.getElementById('chequeNumber').value,
-          email: this.state.email,
-          invoiceKey: newKey
-        };
-      } else if (this.state.form === 'NETS') {
-        paymentDetail = {
-          centreId: student.venueId.toString(),
-          childKey: student.key,
-          childName: student.childName,
-          ageGroup: student.ageGroup,
-          earlyBird,
-          date: moment(this.state.receivedDate).format(),
-          coachDiscount: this.state.coachDiscount,
-          siblingDiscount,
-          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
-          total: total,
-          prorate:
-            this.state.prorateAmount[id] !== undefined
-              ? this.state.prorateAmount[id]
-              : null,
-          termsPaid,
-          paymentMethod: this.state.form,
-          refNumber: document.getElementById('refNumber').value,
-          email: this.state.email,
-          invoiceKey: newKey
-        };
-      } else if (this.state.form === 'Bank Transfer') {
-        paymentDetail = {
-          centreId: student.venueId.toString(),
-          childKey: student.key,
-          childName: student.childName,
-          ageGroup: student.ageGroup,
-          earlyBird,
-          coachDiscount: this.state.coachDiscount,
-          date: moment(this.state.receivedDate).format(),
-          siblingDiscount,
-          siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
-          total: total,
-          prorate:
-            this.state.prorateAmount[id] !== undefined
-              ? this.state.prorateAmount[id]
-              : null,
-          termsPaid,
-          paymentMethod: this.state.form,
-          email: this.state.email,
-          invoiceKey: newKey
-        };
+      if (discountAmount !== undefined) {
+        paymentDetail.discount = discountAmount;
+        paymentDetail.discountName = discountName;
       }
-
+      paymentDetail = {
+        ...paymentDetail,
+        centreId: student.venueId.toString(),
+        childKey: student.key,
+        childName: student.childName,
+        ageGroup: student.ageGroup,
+        earlyBird,
+        coachDiscount: this.state.coachDiscount,
+        date: moment(this.state.receivedDate).format(),
+        siblingDiscount,
+        siblingDiscountAmount: siblingDiscount ? siblingDiscountAmount : null,
+        total: total,
+        prorate:
+          this.state.prorateAmount[id] !== undefined
+            ? this.state.prorateAmount[id]
+            : null,
+        termsPaid,
+        paymentMethod: this.state.form,
+        email: this.state.email
+      };
+      if (this.state.form === 'Cheque') {
+        paymentDetail.chequeNumber = document.getElementById(
+          'chequeNumber'
+        ).value;
+      } else if (this.state.form === 'NETS') {
+        paymentDetail.refNumber = document.getElementById('refNumber').value;
+      }
       dispatch(addPayment(paymentDetail));
 
       paymentDetails.push(paymentDetail);
@@ -452,7 +427,13 @@ class PaymentForm extends React.Component {
   }
 
   render() {
-    const { calendars, selection, credits } = this.props;
+    const {
+      calendars,
+      selection,
+      credits,
+      promotions,
+      selectedPromotion
+    } = this.props;
 
     let filteredCredits = filter(credits, o => {
       return o.dateUsed === undefined;
@@ -499,6 +480,11 @@ class PaymentForm extends React.Component {
           </Row>
           <Row>
             <Col md={12} xs={12}>
+              <PaymentPromotionSelector />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12} xs={12}>
               <Panel
                 header={
                   <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
@@ -538,7 +524,7 @@ class PaymentForm extends React.Component {
         this.state.selectedTermDates[id].map((term, termId) => {
           var paymentTerm = [];
           term.map(date => {
-            var index = _.findIndex(this.state.deselectedTermDates[id], d => {
+            var index = findIndex(this.state.deselectedTermDates[id], d => {
               return moment(d).isSame(date);
             });
             if (index === -1) {
@@ -573,6 +559,7 @@ class PaymentForm extends React.Component {
               cost = term.length * (paidSessions > 8 ? 35 : 45);
               break;
           }
+          totalFee += cost;
           totalSession += term.length;
           var datehtml = [];
           term.map((date, dateId) => {
@@ -677,6 +664,41 @@ class PaymentForm extends React.Component {
               );
               totalFee -= 20;
             }
+            let type, discountName, discountAmount;
+            if (selectedPromotion !== '') {
+              if (
+                promotions[selectedPromotion].centres === 'All' ||
+                promotions[selectedPromotion].centres === selection.name
+              ) {
+                let discount = promotions[selectedPromotion].discount;
+                discountName = promotions[selectedPromotion].name;
+                type = promotions[selectedPromotion].type;
+                if (type === 'Percentage') {
+                  discountAmount = totalFee * discount / 100;
+                  totalFee -= discountAmount;
+                } else if (type === 'Amount') {
+                  discountAmount = discount;
+                  totalFee -= discountAmount;
+                }
+              }
+              fees.push(
+                <Row
+                  key={'discount' + termId + student.childName}
+                  style={{ padding: '0px 15px', marginTop: '5px' }}
+                >
+                  <Col xs={8} md={8}>
+                    <b style={{ color: '#1796d3' }}>
+                      {discountName} Discount
+                    </b>
+                  </Col>
+                  <Col xs={4} md={4} style={{ float: 'right' }}>
+                    <p style={{ textAlign: 'right' }}>
+                      (${discountAmount})
+                    </p>
+                  </Col>
+                </Row>
+              );
+            }
             if ((id === 1) & (term.length >= 5)) {
               fees.push(
                 <Row
@@ -709,8 +731,6 @@ class PaymentForm extends React.Component {
               totalFee -= 30;
             }
           }
-
-          totalFee += cost;
         });
       }
       let studentCredits = filter(filteredCredits, { studentKey: student.key });
@@ -1149,6 +1169,17 @@ class PaymentForm extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(PaymentForm);
+function mapStateToProps(state) {
+  return {
+    students: state.students,
+    calendars: state.calendars,
+    selection: state.selection,
+    coaches: state.coaches,
+    makeUps: state.makeUps,
+    credits: state.credits,
+    promotions: state.promotions,
+    selectedPromotion: state.selectedPromotion
+  };
+}
+
+export default connect(mapStateToProps)(PaymentForm);

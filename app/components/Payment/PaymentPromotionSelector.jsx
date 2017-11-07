@@ -7,7 +7,7 @@ import {
   resetSelectedPromotion
 } from 'actions';
 
-class PromotionSelector extends React.Component {
+class PaymentPromotionSelector extends React.Component {
   componentWillMount() {
     const { dispatch } = this.props;
     dispatch(startPromotions());
@@ -35,12 +35,12 @@ class PromotionSelector extends React.Component {
               dispatch(addSelectedPromotion(e.target.value));
             }}
           >
-            <option key="0" value="0">
+            <option key="0" value="">
               select
             </option>
             {Object.keys(promotions).map(promoKey => {
               const { name, group } = promotions[promoKey];
-              if (group === 'Trial' || group === 'All') {
+              if (group === 'Current' || group === 'All') {
                 return (
                   <option key={promoKey} value={promoKey}>
                     {name}
@@ -61,4 +61,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(PromotionSelector);
+export default connect(mapStateToProps)(PaymentPromotionSelector);

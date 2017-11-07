@@ -33,12 +33,17 @@ class PromotionsApp extends React.Component {
           }
         />
         {Object.keys(promotions).map(promoKey => {
-          const { name, amount } = promotions[promoKey];
+          const { name, discount, type } = promotions[promoKey];
+          console.log(promotions);
           return (
             <ListContent
               key={promoKey}
               contentLeft={name}
-              contentRight={'$' + amount}
+              contentRight={
+                (type === 'Amount' ? '$' : '') +
+                discount +
+                (type === 'Percentage' ? '%' : '')
+              }
             />
           );
         })}

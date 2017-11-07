@@ -16,6 +16,8 @@ class PaymentDetails extends React.Component {
       credit,
       earlyBird,
       earlyBirdAmount,
+      discount,
+      discountName,
       siblingDiscount,
       siblingDiscountAmount,
       promotionDiscount,
@@ -130,6 +132,11 @@ class PaymentDetails extends React.Component {
               Early Bird: (${earlyBirdAmount === undefined
                 ? 20
                 : earlyBirdAmount})
+            </ListGroupItem>
+          : null}
+        {discount
+          ? <ListGroupItem>
+              {discountName} Discount: (${discount})
             </ListGroupItem>
           : null}
         {registration
