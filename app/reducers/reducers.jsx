@@ -902,3 +902,12 @@ export const creditReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const classesReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'ADD_CLASSES':
+      return action.classes;
+    default:
+      return state;
+  }
+};

@@ -1701,3 +1701,29 @@ export var removeCredits = key => {
     key
   };
 };
+
+//Actions for Classes
+export var startClasses = () => {
+  return dispatch => {
+    var classesRef = firebaseRef.child('classes');
+    classesRef.once('value').then(snapshot => {
+      var classes = snapshot.val();
+      var parsedClasses = {};
+
+      Object.keys(classes).forEach(classId => {
+        parsedClasses[classId] = {
+          key: classId,
+          ...classes[classId]
+        };
+      });
+      dispatch(addClasses(parsedClasses));
+    });
+  };
+};
+
+export const addClasses = classes => {
+  return {
+    type: 'ADD_CLASSES',
+    classes
+  };
+};

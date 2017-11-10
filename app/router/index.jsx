@@ -13,7 +13,6 @@ import UserEdit from 'UserEdit';
 //Components for Centre Profile
 import CentresApp from 'CentresApp';
 import CentreEdit from 'CentreEdit';
-import CentresList from 'CentresList';
 import CalendarEdit from 'CalendarEdit';
 import ClassEdit from 'ClassEdit';
 
@@ -121,12 +120,8 @@ export default (
         <Route path="bankin" component={BankInCollection} />
         <Route path="total" component={TotalCollection} />
         <Route path="totalhq" component={TotalCollectionHQ} />
-        <Route path="centres" component={CentresApp}>
-          <IndexRoute component={CentresList} />
-          <Route path=":centreKey" component={CentreEdit} />
-          <Route path=":centreKey/:calendarKey" component={CalendarEdit} />
-          <Route path=":centreKey/class/:classKey" component={ClassEdit} />
-        </Route>
+        <Route path="centres" component={CentresApp} />
+        <Route path="centres/:centreKey" component={CentreEdit} />
         <Route path="cancel" component={CancelSessionApp} />
         <Route path="trials" component={TrialsApp} />
         <Route path="trials/edit/:trialId" component={TrialEditForm} />

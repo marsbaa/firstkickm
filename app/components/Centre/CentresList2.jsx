@@ -1,23 +1,32 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { updateNavTitle } from 'actions';
-import Centre from 'Centre';
-import Search from 'Search';
 import { Row, Col, Glyphicon } from 'react-bootstrap';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import Centre from 'Centre';
+import { btn } from 'styles.css';
+import Search from 'Search';
 import CentresFilter from 'CentresFilter';
-import orderBy from 'lodash/orderBy';
+var actions = require('actions');
+import _ from 'lodash';
 
-class CentresApp extends React.Component {
+class CentresList extends React.Component {
+  renderCentre() {
+    var { centres, searchText } = this.props;
+    var html = [];
+    centres = _.orderBy(centres, 'id', 'asc');
+    var filteredCentres = CentresFilter.filter(centres, searchText);
+    filteredCentres.map(centre => {
+      html.push(<Centre key={centre.id} c={centre} />);
+    });
+    return html;
+  }
+
   componentDidMount() {
     var { dispatch } = this.props;
-    dispatch(updateNavTitle('/m/centres', 'Centres Profile'));
+    dispatch(actions.updateNavTitle('/m/centres', 'Centres Profile'));
   }
-  render() {
-    const { centres, searchText } = this.props;
-    let orderedCentres = orderBy(centres, 'id', 'asc');
-    let filteredCentres = CentresFilter.filter(orderedCentres, searchText);
 
+  render() {
     return (
       <div>
         <Row
@@ -46,19 +55,12 @@ class CentresApp extends React.Component {
             </Link>
           </Col>
         </Row>
-        {Object.keys(filteredCentres).map(centreKey => {
-          return <Centre key={centreKey} centre={filteredCentres[centreKey]} />;
-        })}
+        {this.renderCentre()}
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    centres: state.centres,
-    searchText: state.searchText
-  };
-}
-
-export default connect(mapStateToProps)(CentresApp);
+export default connect(state => {
+  return state;
+})(CentresList);

@@ -20,6 +20,9 @@ import { Link, browserHistory } from 'react-router';
 import { addCentre, updateCentre, updateNavTitle } from 'actions';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import filter from 'lodash/filter';
+import size from 'lodash/size';
+import findIndex from 'lodash/findIndex';
 
 class CentreEdit extends React.Component {
   constructor(props) {
@@ -74,7 +77,7 @@ class CentreEdit extends React.Component {
     var centreName = document.getElementById('centreName').value;
     var logoURL = document.getElementById('logoURL').value;
     var count = 0;
-    if (_.size(centreID) == 0) {
+    if (size(centreID) == 0) {
       count += 1;
       this.setState({
         errorID: 'error',
@@ -86,7 +89,7 @@ class CentreEdit extends React.Component {
         errorMessageID: ''
       });
     }
-    if (_.size(centreName) == 0) {
+    if (size(centreName) == 0) {
       count += 1;
       this.setState({
         errorName: 'error',
@@ -100,7 +103,7 @@ class CentreEdit extends React.Component {
     }
 
     if (centre.key === '0') {
-      var centreExist = _.findIndex(centres, { id: centreID });
+      var centreExist = findIndex(centres, { id: centreID });
       if (centreExist === -1) {
         this.setState({
           errorID: null,
@@ -133,13 +136,12 @@ class CentreEdit extends React.Component {
   }
 
   componentDidMount() {
-    var { dispatch } = this.props;
-    var centreID = this.props.params.centreID;
-    var { centres } = this.props;
+    let { dispatch } = this.props;
+    const centreKey = this.props.params.centreKey;
     this.setState({
       logoURL: document.getElementById('logoURL').value
     });
-    if (centreID === '0') {
+    if (centreKey === '0') {
       dispatch(updateNavTitle('/m/centres', 'Add Centre'));
     } else {
       dispatch(updateNavTitle('/m/centres', 'Edit Centre'));
@@ -147,15 +149,16 @@ class CentreEdit extends React.Component {
   }
 
   render() {
-    var { centres } = this.props;
-    var centreKey = this.props.params.centreKey;
-    var centre = { key: '', id: '', name: '', logoURL: '' };
+    const { centres, classes } = this.props;
+    const centreKey = this.props.params.centreKey;
+    let centre = { key: '', id: '', name: '', logoURL: '' };
     if (centreKey != '0') {
       centre = centres[centreKey];
     } else {
       centre = { id: '', name: '', logoURL: '' };
     }
-
+    let filteredClasses = filter(classes, { venueId: centre.id });
+    console.log(filteredClasses);
     return (
       <div>
         <Grid style={{ marginTop: '20px' }}>
@@ -219,7 +222,7 @@ class CentreEdit extends React.Component {
               </FormGroup>
               <div style={{ marginBottom: '20px' }}>
                 <ClassList
-                  centreKey={centreKey}
+                  classes={filteredClasses}
                   openModal={this.open}
                   handleDeleteKey={this.delete}
                   handleDeleteType={this.type}
@@ -269,7 +272,8 @@ class CentreEdit extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    centres: state.centres
+    centres: state.centres,
+    classes: state.classes
   };
 }
 

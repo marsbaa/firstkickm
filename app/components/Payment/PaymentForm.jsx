@@ -47,6 +47,7 @@ class PaymentForm extends React.Component {
       calendarDates: [],
       calendarKeys: [],
       numOfSession: [],
+      promotions: [],
       promotion: 0,
       selectedTermDates: [],
       deselectedTermDates: [],
@@ -158,6 +159,12 @@ class PaymentForm extends React.Component {
     this.setState({ prorateAmount });
   }
 
+  handlePromotionSelected(value, count) {
+    let promotions = this.state.promotions;
+    promotions[count] = value;
+    this.setState({ promotions });
+  }
+
   handleChange(date, count) {
     var dates = this.state.startDate;
     dates[count] = date;
@@ -233,14 +240,7 @@ class PaymentForm extends React.Component {
 
   formSubmit(e) {
     e.preventDefault();
-    var {
-      dispatch,
-      calendars,
-      credits,
-      selection,
-      selectedPromotion,
-      promotions
-    } = this.props;
+    var { dispatch, calendars, credits, selection, promotions } = this.props;
     let filteredCredits = filter(credits, o => {
       return o.dateUsed === undefined;
     });
@@ -316,15 +316,18 @@ class PaymentForm extends React.Component {
           ) {
             earlyBird = true;
             total -= 20;
+            cost -= 20;
           } else if (
             term.length === actualTerm.length &&
-            moment(this.state.receivedDate).isBefore(actualTerm[0])
+            moment(this.state.receivedDate).isSameOrBefore(actualTerm[0], 'day')
           ) {
             earlyBird = true;
             total -= 20;
+            cost -= 20;
           }
           let type;
-          if (selectedPromotion !== '') {
+          let selectedPromotion = this.state.promotions[id];
+          if (selectedPromotion !== undefined && selectedPromotion !== '0') {
             if (
               promotions[selectedPromotion].centres === 'All' ||
               promotions[selectedPromotion].centres === selection.name
@@ -333,8 +336,7 @@ class PaymentForm extends React.Component {
               discountName = promotions[selectedPromotion].name;
               type = promotions[selectedPromotion].type;
               if (type === 'Percentage') {
-                console.log(total);
-                discountAmount = total * discount / 100;
+                discountAmount = cost * discount / 100;
                 total -= discountAmount;
               } else if (type === 'Amount') {
                 discountAmount = discount;
@@ -418,6 +420,7 @@ class PaymentForm extends React.Component {
       paymentDetails.push(paymentDetail);
     });
     let invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
@@ -427,13 +430,7 @@ class PaymentForm extends React.Component {
   }
 
   render() {
-    const {
-      calendars,
-      selection,
-      credits,
-      promotions,
-      selectedPromotion
-    } = this.props;
+    const { calendars, selection, credits, promotions } = this.props;
 
     let filteredCredits = filter(credits, o => {
       return o.dateUsed === undefined;
@@ -480,7 +477,10 @@ class PaymentForm extends React.Component {
           </Row>
           <Row>
             <Col md={12} xs={12}>
-              <PaymentPromotionSelector />
+              <PaymentPromotionSelector
+                id={id}
+                onChange={this.handlePromotionSelected.bind(this)}
+              />
             </Col>
           </Row>
           <Row>
@@ -645,9 +645,13 @@ class PaymentForm extends React.Component {
                 </Row>
               );
               totalFee -= 20;
+              cost -= 20;
             } else if (
               term.length === actualTerm.length &&
-              moment(this.state.receivedDate).isBefore(actualTerm[0])
+              moment(this.state.receivedDate).isSameOrBefore(
+                actualTerm[0],
+                'day'
+              )
             ) {
               fees.push(
                 <Row
@@ -663,9 +667,11 @@ class PaymentForm extends React.Component {
                 </Row>
               );
               totalFee -= 20;
+              cost -= 20;
             }
             let type, discountName, discountAmount;
-            if (selectedPromotion !== '') {
+            let selectedPromotion = this.state.promotions[id];
+            if (selectedPromotion !== undefined && selectedPromotion !== '0') {
               if (
                 promotions[selectedPromotion].centres === 'All' ||
                 promotions[selectedPromotion].centres === selection.name
@@ -674,7 +680,7 @@ class PaymentForm extends React.Component {
                 discountName = promotions[selectedPromotion].name;
                 type = promotions[selectedPromotion].type;
                 if (type === 'Percentage') {
-                  discountAmount = totalFee * discount / 100;
+                  discountAmount = cost * discount / 100;
                   totalFee -= discountAmount;
                 } else if (type === 'Amount') {
                   discountAmount = discount;
@@ -1177,8 +1183,7 @@ function mapStateToProps(state) {
     coaches: state.coaches,
     makeUps: state.makeUps,
     credits: state.credits,
-    promotions: state.promotions,
-    selectedPromotion: state.selectedPromotion
+    promotions: state.promotions
   };
 }
 

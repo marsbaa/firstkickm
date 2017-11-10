@@ -6,19 +6,18 @@ import {
   addSelectedPromotion,
   resetSelectedPromotion
 } from 'actions';
+import isEmpty from 'lodash/isEmpty';
 
 class PaymentPromotionSelector extends React.Component {
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(startPromotions());
+    const { dispatch, promotions } = this.props;
+    if (!isEmpty(promotions)) {
+      dispatch(startPromotions());
+    }
   }
 
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch(resetSelectedPromotion());
-  }
   render() {
-    const { promotions, dispatch } = this.props;
+    const { promotions, onChange, id } = this.props;
     return (
       <Panel
         header={
@@ -32,10 +31,10 @@ class PaymentPromotionSelector extends React.Component {
             componentClass="select"
             defaultValue={0}
             onChange={e => {
-              dispatch(addSelectedPromotion(e.target.value));
+              onChange(e.target.value, id);
             }}
           >
-            <option key="0" value="">
+            <option key="0" value="0">
               select
             </option>
             {Object.keys(promotions).map(promoKey => {
