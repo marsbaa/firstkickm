@@ -63,6 +63,7 @@ class PaymentHistory extends React.Component {
     }
     var email = document.getElementById('email').value;
     const invoiceHTML = InvoiceTemplate.render(paymentDetails);
+    console.log(invoiceHTML);
     SendMail.mail(email, 'First Kick Academy - Payment Receipt', invoiceHTML);
     this.setState({ showR: false });
   }
@@ -70,7 +71,6 @@ class PaymentHistory extends React.Component {
   render() {
     const { payments, student, users, auth } = this.props;
     const paymentHistories = filter(payments, { childKey: student.key });
-    console.log(paymentHistories);
     var html = [];
     let close = () => this.setState({ show: false });
     let closeR = () => this.setState({ showR: false });
@@ -136,16 +136,14 @@ class PaymentHistory extends React.Component {
                           </Row>
                         }
                         footer={
-                          invoiceKey !== undefined
-                            ? <p style={{ textAlign: 'right' }}>
-                                <button
-                                  className="btn"
-                                  onClick={() => this.setState({ showR: true })}
-                                >
-                                  Resend Receipt
-                                </button>
-                              </p>
-                            : ''
+                          <p style={{ textAlign: 'right' }}>
+                            <button
+                              className="btn"
+                              onClick={() => this.setState({ showR: true })}
+                            >
+                              Resend Receipt
+                            </button>
+                          </p>
                         }
                         eventKey={key}
                         key={key}
@@ -185,7 +183,7 @@ class PaymentHistory extends React.Component {
                             >
                               Yes
                             </Button>
-                            <Button bsSize="large" onClick={close}>
+                            <Button bsSize="large" onClick={closeR}>
                               No
                             </Button>
                           </Modal.Footer>
