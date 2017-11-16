@@ -85,6 +85,7 @@ const ChartPaymentReport = props => {
         <Col xs={4} md={4} lg={4}>
           <h5>
             Students: {totalStudents}
+            <font style={{ color: '#cf6362' }}>({totalUnPaid})</font>
           </h5>
         </Col>
         <Col xs={4} md={4} lg={4}>
