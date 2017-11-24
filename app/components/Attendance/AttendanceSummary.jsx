@@ -62,7 +62,7 @@ class AttendanceSummary extends React.Component {
               return (
                 <AttendanceTable
                   key={classKey}
-                  classes={classes[classKey]}
+                  cla={classes[classKey]}
                   selectedTerm={this.state.selectedTerm}
                 />
               );

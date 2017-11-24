@@ -20,13 +20,7 @@ class AttendanceTable extends React.Component {
       selectedTerm,
       makeUps
     } = this.props;
-    const {
-      day,
-      startTime,
-      endTime,
-      ageGroup,
-      calendarKey
-    } = this.props.classes;
+    const { day, startTime, endTime, ageGroup, calendarKey } = this.props.cla;
 
     const headerTitle =
       ageGroup + ' ' + _.capitalize(day) + ' ' + startTime + ' - ' + endTime;
