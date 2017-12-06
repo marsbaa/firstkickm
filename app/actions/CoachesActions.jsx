@@ -1,6 +1,6 @@
 import firebase, { firebaseRef } from 'firebaseApp';
 //Coaches Profile
-export const startCoaches = () => {
+export var startCoaches = () => {
   return dispatch => {
     const coachesRef = firebaseRef.child('coaches');
     coachesRef.once('value').then(snapshot => {
@@ -14,12 +14,12 @@ export const startCoaches = () => {
   };
 };
 
-export const addCoaches = coaches => ({
+export var addCoaches = coaches => ({
   type: 'ADD_COACHES',
   coaches
 });
 
-export const addCoach = coach => {
+export var addCoach = coach => {
   const coachesRef = firebaseRef.child('coaches');
   const newKey = coachesRef.push().key;
   let updates = {};
@@ -32,7 +32,7 @@ export const addCoach = coach => {
   };
 };
 
-export const updateCoach = (coachId, coach) => {
+export var updateCoach = (coachId, coach) => {
   let updates = {};
   updates['/coaches/' + coachId] = coach;
   firebase.database().ref().update(updates);
@@ -43,7 +43,7 @@ export const updateCoach = (coachId, coach) => {
   };
 };
 
-export const deleteCoach = coachId => {
+export var deleteCoach = coachId => {
   const coachesRef = firebaseRef.child('coaches/' + coachId);
   coachesRef.remove();
   return {

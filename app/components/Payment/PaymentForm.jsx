@@ -122,6 +122,7 @@ class PaymentForm extends React.Component {
           if (payment.termsPaid !== undefined) {
             Object.keys(payment.termsPaid).map(termId => {
               var term = payment.termsPaid[termId];
+              console.log(term);
               term.map(session => {
                 var index = findIndex(calendarDate, d => {
                   return moment(d).isSame(session.date, 'day');
@@ -140,7 +141,9 @@ class PaymentForm extends React.Component {
           var index = findIndex(calendarDate, d => {
             return moment(d).isSame(makeUp.toDate, 'day');
           });
-          calendarDate.splice(index, 1);
+          if (index !== -1) {
+            calendarDate.splice(index, 1);
+          }
         });
       }
 
@@ -440,6 +443,7 @@ class PaymentForm extends React.Component {
     var fees = [];
     var totalFee = 0;
     var email = '';
+    console.log(this.state.calendarDates[0]);
     this.state.payer.map((student, id) => {
       email = student.email;
       tabs.push(
