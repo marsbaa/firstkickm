@@ -27,7 +27,8 @@ class PaymentDetails extends React.Component {
       total,
       coachDiscount,
       prorate,
-      centreId
+      centreId,
+      paymentMethod
     } = this.props.payment;
     const centre = _.find(centres, { id: centreId });
     let termspaidhtml = [];
@@ -87,6 +88,9 @@ class PaymentDetails extends React.Component {
       <ListGroup fill>
         <ListGroupItem>
           Centre : {centre.name}
+        </ListGroupItem>
+        <ListGroupItem>
+          Payment Method: {paymentMethod}
         </ListGroupItem>
         {isEmpty(termspaidhtml)
           ? null
