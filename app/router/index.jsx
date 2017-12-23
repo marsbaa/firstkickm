@@ -122,6 +122,14 @@ export default (
         <Route path="totalhq" component={TotalCollectionHQ} />
         <Route path="centres" component={CentresApp} />
         <Route path="centres/:centreKey" component={CentreEdit} />
+        <Route
+          path="centres/:centreKey/:calendarKey"
+          component={CalendarEdit}
+        />
+        <Route
+          path="centres/:centreKey/class/:classKey"
+          component={ClassEdit}
+        />
         <Route path="cancel" component={CancelSessionApp} />
         <Route path="trials" component={TrialsApp} />
         <Route path="trials/edit/:trialId" component={TrialEditForm} />
@@ -136,11 +144,9 @@ export default (
           <Route path="summary" component={AttendanceSummary} />
           <Route path="makeup/:studentId" component={AttendanceMakeUp} />
         </Route>
-        <Route path="students" component={StudentApp}>
-          <IndexRoute component={StudentList} />
-          <Route path="edit/:studentId" component={StudentEdit} />
-          <Route path="add" component={StudentAdd} />
-        </Route>
+        <Route path="students" component={StudentApp} />
+        <Route path="students/edit/:studentId" component={StudentEdit} />
+        <Route path="students/add" component={StudentAdd} />
         <Route path="makeup" component={MakeUpApp}>
           <IndexRoute component={MakeUpList} />
         </Route>

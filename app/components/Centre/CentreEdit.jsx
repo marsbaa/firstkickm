@@ -19,7 +19,6 @@ import DeleteModal from 'DeleteModal';
 import { Link, browserHistory } from 'react-router';
 import { addCentre, updateCentre, updateNavTitle } from 'actions';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import filter from 'lodash/filter';
 import size from 'lodash/size';
 import findIndex from 'lodash/findIndex';
@@ -157,8 +156,6 @@ class CentreEdit extends React.Component {
     } else {
       centre = { id: '', name: '', logoURL: '' };
     }
-    let filteredClasses = filter(classes, { venueId: centre.id });
-    console.log(filteredClasses);
     return (
       <div>
         <Grid style={{ marginTop: '20px' }}>
@@ -222,7 +219,7 @@ class CentreEdit extends React.Component {
               </FormGroup>
               <div style={{ marginBottom: '20px' }}>
                 <ClassList
-                  classes={filteredClasses}
+                  classes={classes}
                   openModal={this.open}
                   handleDeleteKey={this.delete}
                   handleDeleteType={this.type}
@@ -244,7 +241,6 @@ class CentreEdit extends React.Component {
                 <DeleteModal
                   showModal={this.state.showModal}
                   closeModal={this.close}
-                  centreKey={centre.key}
                   deleteKey={this.state.delete}
                   type={this.state.type}
                 />
@@ -270,10 +266,10 @@ class CentreEdit extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
     centres: state.centres,
-    classes: state.classes
+    classes: filter(state.classes, { centreKey: props.params.centreKey })
   };
 }
 

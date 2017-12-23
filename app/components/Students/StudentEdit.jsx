@@ -1,8 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import { browserHistory } from 'react-router';
-var { connect } = require('react-redux');
-var actions = require('actions');
+import { connect } from 'react-redux';
+import { deleteStudent, updateStudent } from 'actions';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import {
   Row,
   Col,
@@ -37,15 +39,14 @@ class StudentEdit extends React.Component {
   }
 
   componentWillMount() {
-    var key = this.props.params.studentId;
-    var { selection } = this.props;
+    let key = this.props.params.studentId;
+    let { selection } = this.props;
     this.setState({ selectedCentre: selection.key });
   }
 
   componentDidMount() {
-    var key = this.props.params.studentId;
-    var { students } = this.props;
-    var student = _.find(students, { key: key });
+    const key = this.props.params.studentId;
+    const { student } = this.props;
     document.getElementById('boy').checked =
       student.gender === 'boy' ? true : false;
     document.getElementById('girl').checked =
@@ -55,21 +56,18 @@ class StudentEdit extends React.Component {
 
   deleteStudent(e) {
     e.preventDefault();
-    var { dispatch } = this.props;
-    var key = this.props.params.studentId;
-    dispatch(actions.deleteStudent(key));
+    let { dispatch } = this.props;
+    dispatch(deleteStudent(this.props.params.studentId));
     browserHistory.goBack();
   }
 
   onFormSubmit(e) {
     e.preventDefault();
-    var { dispatch, centres, students } = this.props;
-    var key = this.props.params.studentId;
-    var student = _.find(students, { key: key });
-    var classTimeDay = document.getElementById('timeSlotSelect').value;
-    var a = _.split(classTimeDay, ' (');
-    var b = _.split(a[1], ')');
-    var classDay = b[0];
+    let { dispatch, centres, student } = this.props;
+    let classTimeDay = document.getElementById('timeSlotSelect').value;
+    let a = _.split(classTimeDay, ' (');
+    let b = _.split(a[1], ')');
+    let classDay = b[0];
     student = {
       ...student,
       childName: document.getElementById('childName').value,
@@ -87,17 +85,23 @@ class StudentEdit extends React.Component {
       ageGroup: document.getElementById('ageGroup').value,
       status: document.getElementById('status').value
     };
-    dispatch(actions.updateStudent(key, student));
+    dispatch(updateStudent(student.key, student));
     browserHistory.goBack();
   }
 
   render() {
-    var key = this.props.params.studentId;
-    var { students, centres, ageGroup, users, auth, selection } = this.props;
-    var student = _.find(students, { key: key });
+    const {
+      student,
+      centres,
+      ageGroup,
+      selection,
+      classes,
+      manager
+    } = this.props;
 
+    console.log(student);
     //Age Group List
-    var ageGroups = [];
+    let ageGroups = [];
     ageGroups.push(
       <option key="0" value="0">
         select
@@ -116,14 +120,14 @@ class StudentEdit extends React.Component {
       );
     });
     //Centre List
-    var centreOptions = [];
+    let centreOptions = [];
     centreOptions.push(
       <option key="0" value="0">
         select
       </option>
     );
     Object.keys(centres).map(centreKey => {
-      var centre = centres[centreKey];
+      let centre = centres[centreKey];
       centreOptions.push(
         <option key={centreKey} value={centreKey}>
           {_.upperFirst(centre.name)}
@@ -132,19 +136,21 @@ class StudentEdit extends React.Component {
     });
 
     //Class TimeSlots
-    var classTimeSlots = [];
+    let classTimeSlots = [];
+    let filteredClasses = filter(classes, {
+      centreKey: this.state.selectedCentre
+    });
     classTimeSlots.push(
       <option key="0" value="0">
         select
       </option>
     );
-    var centre = centres[this.state.selectedCentre];
 
-    Object.keys(centre.classes).forEach(classID => {
-      var cla = centre.classes[classID];
+    Object.keys(filteredClasses).forEach(classID => {
+      let cla = filteredClasses[classID];
       if (cla.ageGroup === this.state.ageGroup) {
-        var classTime = cla.startTime + ' - ' + cla.endTime;
-        var classTimeDay = classTime + ' (' + cla.day + ')';
+        let classTime = cla.startTime + ' - ' + cla.endTime;
+        let classTimeDay = classTime + ' (' + cla.day + ')';
         classTimeSlots.push(
           <option key={classTimeDay} value={classTimeDay}>
             {classTimeDay}
@@ -162,7 +168,7 @@ class StudentEdit extends React.Component {
               id="centreSelect"
               componentClass="select"
               placeholder="select"
-              defaultValue={selection.key}
+              defaultValue={this.state.selectedCentre}
               onChange={this.centreSelect.bind(this)}
             >
               {centreOptions}
@@ -301,7 +307,7 @@ class StudentEdit extends React.Component {
           <button className="submitbtn" onClick={this.onFormSubmit.bind(this)}>
             Save Student Profile
           </button>
-          {isManager(auth, users)
+          {manager
             ? <button
                 className="submitbtn"
                 style={{ backgroundColor: 'red' }}
@@ -316,6 +322,15 @@ class StudentEdit extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(StudentEdit);
+function mapStateToProps(state, props) {
+  return {
+    student: find(state.students, { key: props.params.studentId }),
+    manager: isManager(state.auth, state.email),
+    classes: state.classes,
+    selection: state.selection,
+    ageGroup: state.ageGroup,
+    centres: state.centres
+  };
+}
+
+export default connect(mapStateToProps)(StudentEdit);

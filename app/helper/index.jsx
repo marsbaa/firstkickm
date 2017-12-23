@@ -133,11 +133,9 @@ export function getTerm(calendars, centreKey, date) {
       var terms = calendar.terms;
       Object.keys(terms).map(id => {
         var term = terms[id];
-        if (
-          moment(date).isBetween(term[0], term[term.length - 1], null, '[]')
-        ) {
+        if (moment(date).isBetween(term[0], term[term.length - 1], 'day')) {
           t = parseInt(id);
-        } else if (moment(date).isAfter(term[term.length - 1])) {
+        } else if (moment(date).isAfter(term[term.length - 1], 'day')) {
           t = parseInt(id) + 1;
         }
       });

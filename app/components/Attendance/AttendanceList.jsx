@@ -29,6 +29,7 @@ import {
   classToday,
   isManager
 } from 'helper';
+import filter from 'lodash/filter';
 
 class AttendanceList extends React.Component {
   constructor(props) {
@@ -85,28 +86,21 @@ class AttendanceList extends React.Component {
 
   render() {
     var {
+      classes,
       students,
-      searchText,
       selection,
       calendars,
       makeUps,
-      auth,
-      users
+      manager
     } = this.props;
     var html = [];
 
-    var classes = selection.classes;
     classes = sortByEndTime(classes);
     if (this.state.filter !== '') {
       classes = filterByAMPM(classes, this.state.filter);
     }
-    var filteredStudents = StudentsFilter.filter(
-      students,
-      selection.id,
-      searchText
-    );
-    var filteredActive = getActive(filteredStudents);
-    var filteredNotActive = getNotActive(filteredStudents);
+    var filteredActive = getActive(students);
+    var filteredNotActive = getNotActive(students);
 
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
@@ -219,7 +213,7 @@ class AttendanceList extends React.Component {
             </ButtonGroup>
           </Col>
         </Row>
-        {isManager(auth, users)
+        {manager
           ? <Row
               style={{
                 padding: '8px 10px',
@@ -250,13 +244,16 @@ class AttendanceList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    students: state.students,
+    classes: filter(state.classes, { centreKey: state.selection.key }),
+    students: StudentsFilter.filter(
+      state.students,
+      state.selection.id,
+      state.searchText
+    ),
     selection: state.selection,
     calendars: state.calendars,
     makeUps: state.makeUps,
-    searchText: state.searchText,
-    auth: state.auth,
-    users: state.users
+    manager: isManager(state.auth, state.users)
   };
 }
 

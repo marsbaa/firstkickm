@@ -108,8 +108,7 @@ class CancelSessionApp extends React.Component {
         venueId: selection.id,
         date: moment(this.state.selectedDate).format()
       };
-      console.log(classDetails);
-      //  dispatch(addCancelledClass(classDetails));
+      dispatch(addCancelledClass(classDetails));
       classPaid[classKey].map(student => {
         const { key } = student;
         const creditDetails = {
@@ -118,8 +117,7 @@ class CancelSessionApp extends React.Component {
           date: moment(this.state.selectedDate).format(),
           amount: 35
         };
-        console.log(creditDetails);
-        //    dispatch(addStudentCredit(creditDetails));
+        dispatch(addStudentCredit(creditDetails));
       });
     });
     this.close();
@@ -211,7 +209,7 @@ function mapStateToProps(state) {
     students: filter(state.students, { venueId: state.selection.id }),
     calendars: state.calendars,
     selection: state.selection,
-    classes: state.selection.classes,
+    classes: filter(state.classes, { centreKey: selection.key }),
     cancelled: state.cancelled,
     credits: state.credits
   };

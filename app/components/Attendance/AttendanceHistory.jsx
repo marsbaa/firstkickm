@@ -13,9 +13,7 @@ import moment from 'moment';
 
 class AttendanceHistory extends React.Component {
   render() {
-    const { students, selection, calendars } = this.props;
-    const studentKey = this.props.params.studentId;
-    const student = find(students, { key: studentKey });
+    const { student, selection, calendars } = this.props;
     const termId = getTerm(calendars, selection.key, moment().format());
     const terms = calendars[getCalendarKey(student, selection.classes)].terms;
     let html = [];
@@ -82,9 +80,9 @@ class AttendanceHistory extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
-    students: state.students,
+    student: find(state.students, { key: props.params.studentId }),
     selection: state.selection,
     calendars: state.calendars
   };

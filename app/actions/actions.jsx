@@ -815,15 +815,51 @@ export var addClass = (cla, centreKey) => {
   };
 };
 
-export var deleteClass = (centreKey, classKey) => {
-  var ClassRef = firebase
-    .database()
-    .ref('/centres/' + centreKey + '/classes/' + classKey);
+export var deleteClass = classKey => {
+  var ClassRef = firebase.database().ref('/classes/' + classKey);
   ClassRef.remove();
   return {
     type: 'DELETE_CLASS',
-    centreKey,
     classKey
+  };
+};
+
+export var moveClasses = () => {
+  return dispatch => {
+    var centreRef = firebaseRef.child('centres');
+    centreRef.once('value').then(snapshot => {
+      var centres = snapshot.val();
+      var parsedCentres = [];
+
+      Object.keys(centres).map(centreId => {
+        const { classes, id, name } = centres[centreId];
+        Object.keys(classes).map(classKey => {
+          const { ageGroup, startTime, endTime, day } = classes[classKey];
+          let cla = {
+            ...classes[classKey],
+            name: `${ageGroup} ${startTime} - ${endTime} (${day})`,
+            year: 2017,
+            centreName: name,
+            venueId: id,
+            centreKey: centreId
+          };
+          dispatch(addNewClass(cla));
+        });
+      });
+    });
+  };
+};
+
+export var addNewClass = cla => {
+  var ClassRef = firebase.database().ref('classes');
+  var classKey = ClassRef.push().key;
+  var updates = {};
+  updates[classKey] = cla;
+  ClassRef.update(updates);
+  cla.key = classKey;
+  return {
+    type: 'ADD_NEW_CLASS',
+    cla
   };
 };
 
@@ -866,7 +902,8 @@ export var addTerm = calendar => {
   calendar.key = calendarKey;
   return {
     type: 'ADD_TERM',
-    calendar
+    calendar,
+    calendarKey
   };
 };
 
@@ -1702,28 +1739,28 @@ export var removeCredits = key => {
   };
 };
 
-// //Actions for Classes
-// export var startClasses = () => {
-//   return dispatch => {
-//     var classesRef = firebaseRef.child('classes');
-//     classesRef.once('value').then(snapshot => {
-//       var classes = snapshot.val();
-//       var parsedClasses = {};
-//
-//       Object.keys(classes).forEach(classId => {
-//         parsedClasses[classId] = {
-//           key: classId,
-//           ...classes[classId]
-//         };
-//       });
-//       dispatch(addClasses(parsedClasses));
-//     });
-//   };
-// };
-//
-// export const addClasses = classes => {
-//   return {
-//     type: 'ADD_CLASSES',
-//     classes
-//   };
-// };
+//Actions for Classes
+export var startClasses = () => {
+  return dispatch => {
+    var classesRef = firebaseRef.child('classes');
+    classesRef.once('value').then(snapshot => {
+      var classes = snapshot.val();
+      var parsedClasses = {};
+
+      Object.keys(classes).forEach(classId => {
+        parsedClasses[classId] = {
+          key: classId,
+          ...classes[classId]
+        };
+      });
+      dispatch(addClasses(parsedClasses));
+    });
+  };
+};
+
+export const addClasses = classes => {
+  return {
+    type: 'ADD_CLASSES',
+    classes
+  };
+};

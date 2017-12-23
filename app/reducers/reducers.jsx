@@ -496,15 +496,7 @@ export var centreReducer = (state = {}, action) => {
           }
         }
       };
-    case 'DELETE_CLASS':
-      var centre = state[action.centreKey];
-      centre.classes = _.omit(centre.classes, action.classKey);
-      return {
-        ...state,
-        [action.centreKey]: {
-          ...action.centre
-        }
-      };
+
     default:
       return state;
   }
@@ -528,9 +520,7 @@ export var calendarReducer = (state = {}, action) => {
         }
       };
     case 'DELETE_TERM':
-      return state.filter(calendar => {
-        return calendar.key !== action.calendarKey;
-      });
+      return _.omit(state, [action.calendarKey]);
     default:
       return state;
   }
@@ -907,6 +897,13 @@ export const classesReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_CLASSES':
       return action.classes;
+    case 'ADD_NEW_CLASS':
+      return {
+        ...state,
+        [action.cla.key]: { ...action.cla }
+      };
+    case 'DELETE_CLASS':
+      return _.omit(state, [action.classKey]);
     default:
       return state;
   }

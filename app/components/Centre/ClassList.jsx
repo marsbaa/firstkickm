@@ -7,42 +7,43 @@ const ClassList = ({
   handleDeleteKey,
   handleDeleteType
 }) => {
-  let html = [];
-  html.push(
-    <div
-      style={{
-        backgroundColor: '#9a9a9a',
-        padding: '10px',
-        color: 'white',
-        borderRadius: '5px 5px 0px 0px',
-        marginTop: '5px',
-        height: '20px'
-      }}
-      key="Class"
-    />
-  );
-  Object.keys(classes).map(classId => {
-    var { ageGroup, classDayTime } = classes[classId];
-    html.push(
-      <div
-        style={{ border: '1px solid #9a9a9a', padding: '10px' }}
-        key={classId}
-      >
-        {ageGroup + ' ' + classDayTime}
-        <button
-          className="innerbtn"
-          style={{ float: 'right' }}
-          onClick={e => openModal(e, classId)}
-        >
-          <Glyphicon glyph="trash" />
-        </button>
-      </div>
-    );
-  });
-
+  function open(e, id) {
+    e.preventDefault();
+    openModal();
+    handleDeleteKey(id);
+    handleDeleteType('class');
+  }
   return (
     <div>
-      {html}
+      <div
+        style={{
+          backgroundColor: '#9a9a9a',
+          padding: '10px',
+          color: 'white',
+          borderRadius: '5px 5px 0px 0px',
+          marginTop: '5px',
+          height: '20px'
+        }}
+        key="Class"
+      />
+      {Object.keys(classes).map(classId => {
+        const { name, key } = classes[classId];
+        return (
+          <div
+            style={{ border: '1px solid #9a9a9a', padding: '10px' }}
+            key={classId}
+          >
+            {name}
+            <button
+              className="innerbtn"
+              style={{ float: 'right' }}
+              onClick={e => open(e, key)}
+            >
+              <Glyphicon glyph="trash" />
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 };

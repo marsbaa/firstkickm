@@ -8,7 +8,9 @@ import {
   startCalendars,
   startAgeGroup,
   startStudents,
-  startMakeUps
+  startMakeUps,
+  moveClasses,
+  startClasses
 } from 'actions';
 import { startLogout } from 'AuthActions';
 import { Link, browserHistory } from 'react-router';
@@ -57,7 +59,9 @@ class NavBar extends React.Component {
     dispatch(startCalendars());
     dispatch(startStudents());
     dispatch(startAgeGroup());
+    dispatch(startClasses());
     dispatch(startMakeUps());
+    //dispatch(moveClasses());
   }
 
   render() {
