@@ -1,10 +1,10 @@
-import React from 'react';
-import DayPicker, { DateUtils } from 'react-day-picker';
-import 'react-day-picker/lib/style.css';
-import _ from 'lodash';
-import { updateSelectedDays } from 'actions';
-import { Link } from 'react-router';
-import { connect } from 'react-redux';
+import React from "react";
+import DayPicker, { DateUtils } from "react-day-picker";
+import "react-day-picker/lib/style.css";
+import isEmpty from "lodash/isEmpty";
+import { updateSelectedDays } from "actions";
+import { Link } from "react-router";
+import { connect } from "react-redux";
 
 class MultipleDayPicker extends React.Component {
   constructor(props) {
@@ -14,9 +14,40 @@ class MultipleDayPicker extends React.Component {
     };
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    const { terms, year, tab } = this.props;
+    if (nextProps.year !== year) {
+      if (terms[nextProps.year] !== undefined) {
+        if (terms[nextProps.year][tab] !== undefined) {
+          let days = [];
+          terms[nextProps.year][tab].map(i => {
+            days.push(new Date(i));
+          });
+          this.setState({ selectedDays: days });
+        }
+      } else {
+        this.setState({ selectedDays: [] });
+      }
+    }
+  }
+
+  componentWillMount() {
+    const { terms, year, tab } = this.props;
+    if (terms[year] !== undefined) {
+      if (terms[year][tab] !== undefined) {
+        let days = [];
+        terms[year][tab].map(i => {
+          days.push(new Date(i));
+        });
+        this.setState({ selectedDays: days });
+      }
+    }
+  }
+
   handleDayClick(day, { selected }) {
     var { dispatch } = this.props;
     var id = this.props.tab;
+    var year = this.props.year;
     const { selectedDays } = this.state;
     if (selected) {
       const selectedIndex = selectedDays.findIndex(selectedDay =>
@@ -27,28 +58,14 @@ class MultipleDayPicker extends React.Component {
       selectedDays.push(day);
     }
     this.setState({ selectedDays });
-    dispatch(updateSelectedDays(id, selectedDays));
-  }
-
-  componentWillMount() {
-    var { terms } = this.props;
-    var id = this.props.tab;
-    const { selectedDays } = this.state;
-    if (!_.isEmpty(terms)) {
-      if (!_.isEmpty(terms[id])) {
-        terms[id].map(day => {
-          var newDay = new Date(day);
-          selectedDays.push(newDay);
-        });
-      }
-      this.setState({ selectedDays });
-    }
+    dispatch(updateSelectedDays(year, id, selectedDays));
   }
 
   render() {
+    console.log(this.state.selectedDays[0])
     return (
       <DayPicker
-        initialMonth={this.state.selectedDays[0]}
+        month={this.state.selectedDays[0]}
         selectedDays={this.state.selectedDays}
         onDayClick={this.handleDayClick.bind(this)}
         numberOfMonths={2}
@@ -57,6 +74,10 @@ class MultipleDayPicker extends React.Component {
   }
 }
 
-export default connect(state => {
-  return state;
-})(MultipleDayPicker);
+function mapStateToProps(state, props) {
+  return {
+    terms: state.terms
+  };
+}
+
+export default connect(mapStateToProps)(MultipleDayPicker);

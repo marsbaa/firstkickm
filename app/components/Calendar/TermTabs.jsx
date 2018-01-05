@@ -14,12 +14,12 @@ class TermTabs extends React.Component{
     this.setState({key});
   }
 
-  TabContent(tabs) {
+  TabContent(tabs, year) {
     var html = [];
     for (var i=0; i < tabs; i++) {
       var count = i+1;
       html.push(<Tab key={"tab"+count} eventKey={count} title={"T" + count}>
-        <MultipleDayPicker ref={"mdp"+count} key={count} tab={count}/>
+        <MultipleDayPicker ref={"mdp"+count} key={count} tab={count} year={year}/>
       </Tab>
     );
    };
@@ -29,10 +29,10 @@ class TermTabs extends React.Component{
   render() {
      return (
        <Tabs defaultActiveKey={this.state.key} onSelect={this.handleSelect.bind(this)} id="tabsSelector">
-         {this.TabContent(this.props.numOfTerms)}
+         {this.TabContent(this.props.numOfTerms, this.props.year)}
        </Tabs>
      );
    }
 }
 
-export default (TermTabs);
+export default TermTabs;

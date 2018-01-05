@@ -49,10 +49,10 @@ class AttendanceList extends React.Component {
       dispatch(startMakeUps());
     }
     dispatch(
-      updateNavTitle('/m/attendance/HQ', selection.name + ' Attendance')
+      updateNavTitle('/m/attendance/', selection.name + ' Attendance')
     );
 
-    var termDates = getCentreCalendarDates(calendars, selection.key);
+    var termDates = getCentreCalendarDates(calendars);
     this.setState({ termDates });
   }
 
@@ -101,7 +101,7 @@ class AttendanceList extends React.Component {
     }
     var filteredActive = getActive(students);
     var filteredNotActive = getNotActive(students);
-
+    console.log(filteredActive);
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
         classKey
@@ -251,7 +251,7 @@ function mapStateToProps(state) {
       state.searchText
     ),
     selection: state.selection,
-    calendars: state.calendars,
+    calendars: filter(state.calendars, {centreKey: state.selection.key}),
     makeUps: state.makeUps,
     manager: isManager(state.auth, state.users)
   };

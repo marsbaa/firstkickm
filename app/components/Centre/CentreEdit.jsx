@@ -223,6 +223,7 @@ class CentreEdit extends React.Component {
                   openModal={this.open}
                   handleDeleteKey={this.delete}
                   handleDeleteType={this.type}
+                  centreKey={centreKey}
                 />
               </div>
               <ControlLabel>Term Dates</ControlLabel>

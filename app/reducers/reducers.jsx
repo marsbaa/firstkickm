@@ -1,44 +1,44 @@
-import moment from 'moment';
-import _ from 'lodash';
+import moment from "moment";
+import _ from "lodash";
 
 export var authReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'LOGIN':
+    case "LOGIN":
       return {
         uid: action.uid,
         email: action.email,
         loggedIn: true
       };
-    case 'LOGOUT':
+    case "LOGOUT":
       return {};
     default:
       return state;
   }
 };
 
-export var redirectReducer = (state = '', action) => {
+export var redirectReducer = (state = "", action) => {
   switch (action.type) {
-    case 'REDIRECT_URL':
+    case "REDIRECT_URL":
       return action.url;
     default:
       return state;
   }
 };
 
-export var selectedPromotionReducer = (state = '', action) => {
+export var selectedPromotionReducer = (state = "", action) => {
   switch (action.type) {
-    case 'ADD_SELECTED_PROMOTION':
+    case "ADD_SELECTED_PROMOTION":
       return action.promoKey;
-    case 'RESET_SELECTED_PROMOTION':
-      return '';
+    case "RESET_SELECTED_PROMOTION":
+      return "";
     default:
       return state;
   }
 };
 
-export var navbarReducer = (state = { link: '', title: '' }, action) => {
+export var navbarReducer = (state = { link: "", title: "" }, action) => {
   switch (action.type) {
-    case 'UPDATE_NAV_TITLE':
+    case "UPDATE_NAV_TITLE":
       return {
         link: action.link,
         title: action.title
@@ -50,9 +50,9 @@ export var navbarReducer = (state = { link: '', title: '' }, action) => {
 
 export var usersReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_USERS':
+    case "ADD_USERS":
       return [...action.users];
-    case 'ADD_USER':
+    case "ADD_USER":
       var user = action.user;
       return [
         ...state,
@@ -64,7 +64,7 @@ export var usersReducer = (state = [], action) => {
           assignedRoles: user.assignedRoles
         }
       ];
-    case 'UPDATE_USER':
+    case "UPDATE_USER":
       return state.map(user => {
         if (user.key === action.userId) {
           return {
@@ -85,11 +85,11 @@ export var usersReducer = (state = [], action) => {
 
 export var trialsReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_TRIALS':
+    case "ADD_TRIALS":
       return [...state, ...action.trials];
-    case 'ADD_TRIAL':
+    case "ADD_TRIAL":
       return [...state, action.trial];
-    case 'UPDATE_TRIAL':
+    case "UPDATE_TRIAL":
       return state.map(trial => {
         if (trial.id === action.trial.id) {
           return {
@@ -109,19 +109,19 @@ export var trialsReducer = (state = [], action) => {
           return trial;
         }
       });
-    case 'UPDATE_TRIAL_REGISTRATION':
+    case "UPDATE_TRIAL_REGISTRATION":
       return state.map(trial => {
         if (trial.id === action.trialId) {
           return {
             ...trial,
             registered: true,
-            dateRegistered: moment().format('YYYY-MM-DD')
+            dateRegistered: moment().format("YYYY-MM-DD")
           };
         } else {
           return trial;
         }
       });
-    case 'TOGGLE_TRIAL':
+    case "TOGGLE_TRIAL":
       return state.map(trial => {
         if (trial.id === action.id) {
           var nextAttended = !trial.attended;
@@ -135,7 +135,7 @@ export var trialsReducer = (state = [], action) => {
           return trial;
         }
       });
-    case 'ADD_DEPOSIT':
+    case "ADD_DEPOSIT":
       return state.map(trial => {
         if (trial.id === action.id) {
           return {
@@ -155,9 +155,9 @@ export var trialsReducer = (state = [], action) => {
 
 export var openhouseReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_OPENHOUSE':
+    case "ADD_OPENHOUSE":
       return [...action.openhouse];
-    case 'UPDATE_OPENHOUSE':
+    case "UPDATE_OPENHOUSE":
       return state.map(openhouse => {
         if (openhouse.key === action.trial.key) {
           return {
@@ -177,19 +177,19 @@ export var openhouseReducer = (state = [], action) => {
           return openhouse;
         }
       });
-    case 'UPDATE_OPENHOUSE_REGISTRATION':
+    case "UPDATE_OPENHOUSE_REGISTRATION":
       return state.map(openhouse => {
         if (openhouse.key === action.key) {
           return {
             ...openhouse,
             registered: true,
-            dateRegistered: moment().format('YYYY-MM-DD')
+            dateRegistered: moment().format("YYYY-MM-DD")
           };
         } else {
           return openhouse;
         }
       });
-    case 'TOGGLE_OPENHOUSE':
+    case "TOGGLE_OPENHOUSE":
       return state.map(openhouse => {
         if (openhouse.key === action.key) {
           var nextAttended = !openhouse.attended;
@@ -203,7 +203,7 @@ export var openhouseReducer = (state = [], action) => {
           return openhouse;
         }
       });
-    case 'ADD_OH_DEPOSIT':
+    case "ADD_OH_DEPOSIT":
       return state.map(openhouse => {
         if (openhouse.key === action.key) {
           return {
@@ -223,14 +223,14 @@ export var openhouseReducer = (state = [], action) => {
 
 export var paymentReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_PAYMENT':
+    case "ADD_PAYMENT":
       var payment = action.paymentDetails;
       return [...state, action.paymentDetails];
-    case 'REMOVE_PAYMENT':
+    case "REMOVE_PAYMENT":
       return state.filter(({ key }) => key !== action.paymentKey);
-    case 'ADD_PAYMENTS':
+    case "ADD_PAYMENTS":
       return [...action.payments];
-    case 'ISSUE_JERSEY':
+    case "ISSUE_JERSEY":
       return state.map(payment => {
         if (payment.key === action.payment.key) {
           return {
@@ -247,15 +247,15 @@ export var paymentReducer = (state = [], action) => {
 
 export var studentReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_STUDENTS':
+    case "ADD_STUDENTS":
       return [...state, ...action.students];
-    case 'ADD_STUDENT':
+    case "ADD_STUDENT":
       return [...state, { ...action.student }];
-    case 'DELETE_STUDENT':
+    case "DELETE_STUDENT":
       return state.filter(student => {
         return student.key !== action.key;
       });
-    case 'UPDATE_STUDENT':
+    case "UPDATE_STUDENT":
       return state.map(student => {
         if (student.key === action.studentId) {
           return {
@@ -266,7 +266,7 @@ export var studentReducer = (state = [], action) => {
           return student;
         }
       });
-    case 'REMOVE_STUDENT_PAYMENT':
+    case "REMOVE_STUDENT_PAYMENT":
       return state.map(student => {
         if (student.key === action.childKey) {
           var id = Object.keys(student.payments).map(id => {
@@ -285,7 +285,7 @@ export var studentReducer = (state = [], action) => {
           return student;
         }
       });
-    case 'ADD_STUDENT_PAYMENT':
+    case "ADD_STUDENT_PAYMENT":
       return state.map(student => {
         if (student.key === action.paymentDetails.childKey) {
           if (student.payments === undefined) {
@@ -319,7 +319,7 @@ export var studentReducer = (state = [], action) => {
           return student;
         }
       });
-    case 'TOGGLE_ATTENDANCE':
+    case "TOGGLE_ATTENDANCE":
       return state.map(student => {
         if (student.key === action.id) {
           if (student.attendance === undefined) {
@@ -365,11 +365,11 @@ export var studentReducer = (state = [], action) => {
 
 export var coachReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_COACHES':
+    case "ADD_COACHES":
       return action.coaches;
-    case 'ADD_COACH':
+    case "ADD_COACH":
       return [...state, { ...action.coach }];
-    case 'UPDATE_COACH':
+    case "UPDATE_COACH":
       return state.map(coach => {
         if (coach.key === action.coachId) {
           return {
@@ -380,11 +380,11 @@ export var coachReducer = (state = [], action) => {
           return coach;
         }
       });
-    case 'DELETE_COACH':
+    case "DELETE_COACH":
       return state.filter(coach => {
         return coach.key !== action.coachId;
       });
-    case 'TOGGLE_COACH_ATTENDANCE':
+    case "TOGGLE_COACH_ATTENDANCE":
       return state.map(coach => {
         if (coach.key === action.id) {
           if (coach.attendance === undefined) {
@@ -440,20 +440,20 @@ export var coachReducer = (state = [], action) => {
 
 export var adminReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_ADMINS':
+    case "ADD_ADMINS":
       return action.admins;
 
-    case 'ADD_ADMIN':
+    case "ADD_ADMIN":
       return {
         ...state,
         [action.admin.key]: { ...action.admin }
       };
-    case 'UPDATE_ADMIN':
+    case "UPDATE_ADMIN":
       return {
         ...state,
         [action.admin.key]: { ...action.admin }
       };
-    case 'DELETE_ADMIN':
+    case "DELETE_ADMIN":
       return state.filter(admin => {
         return admin.key !== action.adminId;
       });
@@ -464,16 +464,16 @@ export var adminReducer = (state = {}, action) => {
 
 export var centreReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_CENTRES':
+    case "ADD_CENTRES":
       return { ...action.centres };
-    case 'ADD_CENTRE':
+    case "ADD_CENTRE":
       return {
         ...state,
         [action.centre.key]: {
           ...action.centre
         }
       };
-    case 'UPDATE_CENTRE':
+    case "UPDATE_CENTRE":
       return {
         ...state,
         [action.centre.key]: {
@@ -481,7 +481,7 @@ export var centreReducer = (state = {}, action) => {
         }
       };
 
-    case 'ADD_CLASS':
+    case "ADD_CLASS":
       var centre = state[action.centreKey];
       if (centre.classes === undefined) {
         centre = { ...centre, classes: [] };
@@ -504,14 +504,14 @@ export var centreReducer = (state = {}, action) => {
 
 export var calendarReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_CALENDARS':
+    case "ADD_CALENDARS":
       return action.calendars;
-    case 'ADD_TERM':
+    case "ADD_TERM":
       return {
         ...state,
         [action.calendarKey]: { ...action.calendar }
       };
-    case 'UPDATE_TERM':
+    case "UPDATE_TERM":
       return {
         ...state,
         [action.calendarKey]: {
@@ -519,7 +519,7 @@ export var calendarReducer = (state = {}, action) => {
           key: action.calendarKey
         }
       };
-    case 'DELETE_TERM':
+    case "DELETE_TERM":
       return _.omit(state, [action.calendarKey]);
     default:
       return state;
@@ -528,9 +528,9 @@ export var calendarReducer = (state = {}, action) => {
 
 export var coachScheduleReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_COACHSCHEDULE':
+    case "ADD_COACHSCHEDULE":
       return [...action.coachSchedule];
-    case 'TOGGLE_SCHEDULE':
+    case "TOGGLE_SCHEDULE":
       var scheduleKey = action.classKey + action.date;
       if (_.findIndex(state, { scheduleKey: scheduleKey }) === -1) {
         return [
@@ -562,9 +562,9 @@ export var coachScheduleReducer = (state = [], action) => {
   }
 };
 
-export var selectionReducer = (state = { id: '0' }, action) => {
+export var selectionReducer = (state = { id: "0" }, action) => {
   switch (action.type) {
-    case 'UPDATE_SELECTED_CENTRE':
+    case "UPDATE_SELECTED_CENTRE":
       return {
         ...action.centre
       };
@@ -573,25 +573,29 @@ export var selectionReducer = (state = { id: '0' }, action) => {
   }
 };
 
-export var searchTextReducer = (state = '', action) => {
+export var searchTextReducer = (state = "", action) => {
   switch (action.type) {
-    case 'SET_SEARCH_TEXT':
+    case "SET_SEARCH_TEXT":
       return action.searchText;
     default:
       return state;
   }
 };
 
-export var termReducer = (state = [], action) => {
+export var termReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'UPDATE_TERM_SELECTED_DAYS':
-      state[action.id] = action.selectedDays;
-      return state;
-    case 'START_TERMS':
+    case "UPDATE_TERM_SELECTED_DAYS":
+      return {
+        ...state,
+        [action.year]: {
+          ...state[action.year],
+          [action.id]: action.selectedDays
+        }
+      };
+    case "START_TERMS":
       return action.terms;
-
-    case 'RESET_TERMS':
-      return [];
+    case "RESET_TERMS":
+      return {};
     default:
       return state;
   }
@@ -599,13 +603,13 @@ export var termReducer = (state = [], action) => {
 
 export var ageGroupReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_AGE_GROUPS':
+    case "ADD_AGE_GROUPS":
       return [...state, ...action.ageGroups];
-    case 'ADD_AGE_GROUP':
+    case "ADD_AGE_GROUP":
       return [...state, { ...action.ageGroup }];
-    case 'RESET_AGE_GROUP':
+    case "RESET_AGE_GROUP":
       return [];
-    case 'UPDATE_AGE_GROUP':
+    case "UPDATE_AGE_GROUP":
       return state.map(ageGroup => {
         if (ageGroup.key === action.key) {
           return {
@@ -623,18 +627,18 @@ export var ageGroupReducer = (state = [], action) => {
 
 export var inventoryReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_INVENTORIES':
+    case "ADD_INVENTORIES":
       return [...state, ...action.inventories];
     default:
       return state;
   }
 };
 
-export var registrationReducer = (state = {}, action) => {
+export var payerReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_REGISTER':
-      return action.register;
-    case 'ADD_SESSION_DATES':
+    case "ADD_PAYERS":
+      return action.payers;
+      case "ADD_PAYERS_DATES":
       return {
         ...state,
         [action.id]: {
@@ -642,7 +646,7 @@ export var registrationReducer = (state = {}, action) => {
           sessionDates: { ...action.dates }
         }
       };
-    case 'INSERT_SESSION_DATE':
+      case "INSERT_PAYERS_DATE":
       return {
         ...state,
         [action.id]: {
@@ -656,7 +660,7 @@ export var registrationReducer = (state = {}, action) => {
           }
         }
       };
-    case 'REMOVE_SESSION_DATE':
+    case "REMOVE_PAYERS_DATE":
       return {
         ...state,
         [action.id]: {
@@ -671,7 +675,63 @@ export var registrationReducer = (state = {}, action) => {
           }
         }
       };
-    case 'UPDATE_PARENT_DETAILS':
+      case "UPDATE_PAYERS_START_DATE":
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          startDate: action.startDate
+        }
+      };
+      case "RESET_PAYERS":
+      return {};
+    default:
+      return state;
+  }
+};
+
+export var registrationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "ADD_REGISTER":
+      return action.register;
+    case "ADD_SESSION_DATES":
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: { ...action.dates }
+        }
+      };
+    case "INSERT_SESSION_DATE":
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: {
+            ...state[action.id].sessionDates,
+            [action.termId]: [
+              ...state[action.id].sessionDates[action.termId],
+              action.date
+            ]
+          }
+        }
+      };
+    case "REMOVE_SESSION_DATE":
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          sessionDates: {
+            ...state[action.id].sessionDates,
+            [action.termId]: [
+              ...state[action.id].sessionDates[action.termId].filter(date => {
+                return date !== action.date;
+              })
+            ]
+          }
+        }
+      };
+    case "UPDATE_PARENT_DETAILS":
       return state.map(register => {
         return {
           ...register,
@@ -682,7 +742,7 @@ export var registrationReducer = (state = {}, action) => {
           postalcode: action.parentDetails.postalcode
         };
       });
-    case 'UPDATE_CHILDNAME':
+    case "UPDATE_CHILDNAME":
       return {
         ...state,
         [action.id]: {
@@ -690,7 +750,7 @@ export var registrationReducer = (state = {}, action) => {
           childName: action.childName
         }
       };
-    case 'UPDATE_GENDER':
+    case "UPDATE_GENDER":
       return {
         ...state,
         [action.id]: {
@@ -698,7 +758,7 @@ export var registrationReducer = (state = {}, action) => {
           gender: action.gender
         }
       };
-    case 'UPDATE_DATE_OF_BIRTH':
+    case "UPDATE_DATE_OF_BIRTH":
       return {
         ...state,
         [action.id]: {
@@ -706,7 +766,7 @@ export var registrationReducer = (state = {}, action) => {
           dateOfBirth: action.dob
         }
       };
-    case 'UPDATE_DATE_OF_TRIAL':
+    case "UPDATE_DATE_OF_TRIAL":
       return {
         ...state,
         [action.id]: {
@@ -715,7 +775,7 @@ export var registrationReducer = (state = {}, action) => {
           startDate: action.dateOfTrial
         }
       };
-    case 'UPDATE_START_DATE':
+    case "UPDATE_START_DATE":
       return {
         ...state,
         [action.id]: {
@@ -723,7 +783,7 @@ export var registrationReducer = (state = {}, action) => {
           startDate: action.startDate
         }
       };
-    case 'UPDATE_MEDICAL':
+    case "UPDATE_MEDICAL":
       return {
         ...state,
         [action.id]: {
@@ -731,7 +791,7 @@ export var registrationReducer = (state = {}, action) => {
           medicalCondition: action.mc
         }
       };
-    case 'UPDATE_JOINING':
+    case "UPDATE_JOINING":
       return {
         ...state,
         [action.id]: {
@@ -739,7 +799,7 @@ export var registrationReducer = (state = {}, action) => {
           notJoining: action.notJoining
         }
       };
-    case 'UPDATE_CENTREID':
+    case "UPDATE_CENTREID":
       return {
         ...state,
         [action.id]: {
@@ -747,7 +807,7 @@ export var registrationReducer = (state = {}, action) => {
           venueId: action.venueId
         }
       };
-    case 'UPDATE_TIME_DAY':
+    case "UPDATE_TIME_DAY":
       return {
         ...state,
         [action.id]: {
@@ -757,7 +817,7 @@ export var registrationReducer = (state = {}, action) => {
         }
       };
 
-    case 'RESET_REGISTER':
+    case "RESET_REGISTER":
       return {};
     default:
       return state;
@@ -765,25 +825,25 @@ export var registrationReducer = (state = {}, action) => {
 };
 
 export var parentReducer = (
-  state = { address: '', postalCode: '' },
+  state = { address: "", postalCode: "" },
   action
 ) => {
   switch (action.type) {
-    case 'ADD_PARENT':
+    case "ADD_PARENT":
       return { ...state, ...action.parent };
-    case 'RESET_PARENT':
+    case "RESET_PARENT":
       return {};
-    case 'UPDATE_PARENT_NAME':
+    case "UPDATE_PARENT_NAME":
       return { ...state, parentName: action.name };
-    case 'UPDATE_CONTACT':
+    case "UPDATE_CONTACT":
       return { ...state, contact: action.contact };
-    case 'UPDATE_EMAIL':
+    case "UPDATE_EMAIL":
       return { ...state, email: action.email };
-    case 'UPDATE_ADDRESS':
+    case "UPDATE_ADDRESS":
       return { ...state, address: action.address };
-    case 'UPDATE_POSTAL_CODE':
+    case "UPDATE_POSTAL_CODE":
       return { ...state, postalCode: action.postalCode };
-    case 'UPDATE_TC':
+    case "UPDATE_TC":
       return { ...state, tc: action.tc };
     default:
       return state;
@@ -792,7 +852,7 @@ export var parentReducer = (
 
 export var fetchingReducer = (state = { completed: false }, action) => {
   switch (action.type) {
-    case 'IS_FETCHING':
+    case "IS_FETCHING":
       return { completed: action.completed };
     default:
       return state;
@@ -801,11 +861,11 @@ export var fetchingReducer = (state = { completed: false }, action) => {
 
 export var expenseReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_EXPENSES':
+    case "ADD_EXPENSES":
       return [...state, ...action.expenses];
-    case 'ADD_EXPENSE':
+    case "ADD_EXPENSE":
       return [...state, { ...action.expense }];
-    case 'REMOVE_EXPENSE':
+    case "REMOVE_EXPENSE":
       return state.filter(({ key }) => key !== action.key);
     default:
       return state;
@@ -814,20 +874,20 @@ export var expenseReducer = (state = [], action) => {
 
 export var notesReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_NOTES':
+    case "ADD_NOTES":
       return action.notes;
-    case 'ADD_NOTE':
+    case "ADD_NOTE":
       return {
         ...state,
         [action.note.key]: { ...action.note }
       };
-    case 'NOTE_ARCHIVE':
+    case "NOTE_ARCHIVE":
       var note = state[action.key];
       return {
         ...state,
         [action.key]: { ...note, ...action.updates }
       };
-    case 'REMOVE_NOTE':
+    case "REMOVE_NOTE":
       return _.omit(state, [action.key]);
     default:
       return state;
@@ -836,11 +896,11 @@ export var notesReducer = (state = {}, action) => {
 
 export var makeUpReducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_MAKEUPS':
+    case "ADD_MAKEUPS":
       return [...state, ...action.makeUps];
-    case 'ADD_MAKEUP':
+    case "ADD_MAKEUP":
       return [...state, { ...action.makeUp }];
-    case 'REMOVE_MAKEUP':
+    case "REMOVE_MAKEUP":
       return state.filter(({ key }) => key !== action.key);
     default:
       return state;
@@ -849,9 +909,9 @@ export var makeUpReducer = (state = [], action) => {
 
 export const promotionsReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_PROMOTIONS':
+    case "ADD_PROMOTIONS":
       return action.promotions;
-    case 'ADD_PROMOTION':
+    case "ADD_PROMOTION":
       return { ...state, [action.promotion.key]: { ...action.promotion } };
     default:
       return state;
@@ -860,9 +920,9 @@ export const promotionsReducer = (state = {}, action) => {
 
 export const cancelReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_CANCELLED':
+    case "ADD_CANCELLED":
       return action.cancelled;
-    case 'ADD_CANCELLED_CLASS':
+    case "ADD_CANCELLED_CLASS":
       return {
         ...state,
         [action.classDetails.key]: { ...action.classDetails }
@@ -874,19 +934,19 @@ export const cancelReducer = (state = {}, action) => {
 
 export const creditReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_CREDITS':
+    case "ADD_CREDITS":
       return action.credits;
-    case 'ADD_STUDENT_CREDIT':
+    case "ADD_STUDENT_CREDIT":
       return {
         ...state,
         [action.creditDetails.key]: { ...action.creditDetails }
       };
-    case 'USE_STUDENT_CREDIT':
+    case "USE_STUDENT_CREDIT":
       return {
         ...state,
         [action.credit.key]: { ...action.credit }
       };
-    case 'REMOVE_CREDITS':
+    case "REMOVE_CREDITS":
       return _.omit(state, [action.key]);
     default:
       return state;
@@ -895,14 +955,14 @@ export const creditReducer = (state = {}, action) => {
 
 export const classesReducer = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_CLASSES':
+    case "ADD_CLASSES":
       return action.classes;
-    case 'ADD_NEW_CLASS':
+    case "ADD_NEW_CLASS":
       return {
         ...state,
         [action.cla.key]: { ...action.cla }
       };
-    case 'DELETE_CLASS':
+    case "DELETE_CLASS":
       return _.omit(state, [action.classKey]);
     default:
       return state;

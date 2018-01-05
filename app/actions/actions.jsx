@@ -875,9 +875,7 @@ export var startCalendars = () => {
         Object.keys(value).forEach(calendarKey => {
           parsedCalendars[calendarKey] = {
             key: calendarKey,
-            name: value[calendarKey].name,
-            terms: value[calendarKey].terms,
-            centreKey: value[calendarKey].centreKey
+            ...value[calendarKey]
           };
         });
         dispatch(addCalendars(parsedCalendars));
@@ -985,9 +983,10 @@ export var setSearchText = searchText => {
 };
 
 //Term Dates
-export var updateSelectedDays = (id, selectedDays) => {
+export var updateSelectedDays = (year, id, selectedDays) => {
   return {
     type: 'UPDATE_TERM_SELECTED_DAYS',
+    year,
     id,
     selectedDays
   };
@@ -1216,6 +1215,54 @@ export var addInventories = inventories => {
   return {
     type: 'ADD_INVENTORIES',
     inventories
+  };
+};
+
+//Payer Actions
+export var addPayers = payers => {
+  return {
+    type: 'ADD_PAYERS',
+    payers
+  };
+};
+
+export var addPayersDates = (dates, id) => {
+  return {
+    type: 'ADD_PAYERS_DATES',
+    dates,
+    id
+  };
+};
+
+export var insertPayersDate = (date, termId, id) => {
+  return {
+    type: 'INSERT_PAYERS_DATE',
+    date,
+    termId,
+    id
+  };
+};
+
+export var removePayersDate = (date, termId, id) => {
+  return {
+    type: 'REMOVE_PAYERS_DATE',
+    date,
+    termId,
+    id
+  };
+};
+
+export var updatePayersStartDate = (startDate, id) => {
+  return {
+    type: 'UPDATE_PAYERS_START_DATE',
+    startDate,
+    id
+  };
+};
+
+export var resetPayers = () => {
+  return {
+    type: 'RESET_PAYERS'
   };
 };
 

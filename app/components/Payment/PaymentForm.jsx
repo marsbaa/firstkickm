@@ -35,7 +35,7 @@ import PaymentDatesSelector from 'PaymentDatesSelector';
 import SendMail from 'SendMail';
 import InvoiceTemplate from 'InvoiceTemplate';
 import { browserHistory } from 'react-router';
-import { getTerm, getCalendarKey, getCalendarDates } from 'helper';
+import { getTermByDate, getCalendarKey, getCalendarDates } from 'helper';
 
 class PaymentForm extends React.Component {
   constructor(props) {
@@ -61,6 +61,7 @@ class PaymentForm extends React.Component {
       prorateAmount: [],
       coachDiscount: false
     };
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentWillMount() {
@@ -68,6 +69,7 @@ class PaymentForm extends React.Component {
     var {
       students,
       calendars,
+      classes,
       selection,
       coaches,
       makeUps,
@@ -111,12 +113,14 @@ class PaymentForm extends React.Component {
     var calendarKeys = [];
 
     payer.map((child, id) => {
-      var currentTerm = getTerm(calendars, selection.key, moment());
-      var calendarKey = getCalendarKey(child, selection.classes);
+      
+      var calendarKey = getCalendarKey(child, classes);
       var calendar = calendars[calendarKey];
+      var currentTerm = getTermByDate(calendar, moment());
+      var currentYear = moment().year()
       console.log(calendar);
       console.log(currentTerm);
-      var startDate = moment(calendar.terms[currentTerm][0]);
+      var startDate = moment(calendar.terms[currentYear][currentTerm][0]);
       var calendarDate = getCalendarDates(calendar);
       if (child.payments !== undefined) {
         Object.keys(child.payments).map(paymentId => {
@@ -172,10 +176,11 @@ class PaymentForm extends React.Component {
 
   handleChange(date, count) {
     var dates = this.state.startDate;
-    dates[count] = date;
+    dates[count] = moment(date)
     this.setState({
       startDate: dates
     });
+    console.log(this.state.startDate)
   }
 
   handleReceivedDate(date) {
@@ -445,9 +450,10 @@ class PaymentForm extends React.Component {
     var fees = [];
     var totalFee = 0;
     var email = '';
-    console.log(this.state.calendarDates[0]);
+    
     this.state.payer.map((student, id) => {
       email = student.email;
+      console.log(moment(this.state.startDate[id]))
       tabs.push(
         <Tab eventKey={id} key={student.key} title={student.childName}>
           <Row style={{ padding: '10px 20px' }}>
@@ -456,12 +462,11 @@ class PaymentForm extends React.Component {
                 <ControlLabel>Start Date</ControlLabel>
                 <DatePicker
                   id={'datePicker' + id}
-                  dateFormat="YYYY-MM-DD"
-                  selected={this.state.startDate[id]}
+                  selected={moment(this.state.startDate[id])}
                   includeDates={this.state.calendarDates[id]}
-                  onChange={e => {
-                    this.handleChange(moment(e), id);
-                  }}
+                  onSelect={(date)=>
+                    this.handleChange(date, id)
+                  }
                 />
               </FormGroup>
             </Col>
@@ -1185,6 +1190,7 @@ function mapStateToProps(state) {
   return {
     students: state.students,
     calendars: state.calendars,
+    classes: filter(state.classes, {centreKey: state.selection.key}),
     selection: state.selection,
     coaches: state.coaches,
     makeUps: state.makeUps,

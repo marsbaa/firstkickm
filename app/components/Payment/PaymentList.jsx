@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Payer from 'Payer';
-import { startCredits, addPayment, updateNavTitle } from 'actions';
+import { startCredits, addPayment, updateNavTitle, resetPayers } from 'actions';
 import { RadioGroup, Radio } from 'react-radio-group';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
@@ -84,6 +84,7 @@ class PaymentList extends React.Component {
     if (isEmpty(credits)) {
       dispatch(startCredits());
     }
+    dispatch(resetPayers());
   }
 
   componentDidMount() {

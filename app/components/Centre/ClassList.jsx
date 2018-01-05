@@ -1,11 +1,13 @@
 import React from 'react';
 import { Glyphicon, Modal } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 const ClassList = ({
   classes,
   openModal,
   handleDeleteKey,
-  handleDeleteType
+  handleDeleteType,
+  centreKey
 }) => {
   function open(e, id) {
     e.preventDefault();
@@ -34,6 +36,16 @@ const ClassList = ({
             key={classId}
           >
             {name}
+            <Link to={'/m/centres/' + centreKey + '/class/' + key}>
+              <button
+                className="innerbtn"
+                style={{
+                  float: 'right'
+                }}
+              >
+                <Glyphicon glyph="pencil" />
+              </button>
+            </Link>
             <button
               className="innerbtn"
               style={{ float: 'right' }}

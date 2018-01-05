@@ -35,7 +35,7 @@ import JerseyIssuedList from 'JerseyIssuedList';
 
 import PaymentApp from 'PaymentApp';
 import PaymentList from 'PaymentList';
-import PaymentForm from 'PaymentForm';
+import PaymentForm2 from 'PaymentForm2';
 import PaymentHistory from 'PaymentHistory';
 import PaymentReport from 'PaymentReport';
 import PaymentNotPaid from 'PaymentNotPaid';
@@ -153,7 +153,7 @@ export default (
         <Route path="payment" component={PaymentApp}>
           <IndexRoute component={PaymentList} />
           <Route path="report" component={PaymentReport} />
-          <Route path="collection/:studentId" component={PaymentForm} />
+          <Route path="collection/:studentId" component={PaymentForm2} />
           <Route path="history/:studentId" component={PaymentHistory} />
           <Route path="notpaid" component={PaymentNotPaid} />
         </Route>

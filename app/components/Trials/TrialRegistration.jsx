@@ -7,7 +7,7 @@ import find from 'lodash/find';
 import TrialRegChildTab from 'TrialRegChildTab';
 import TrialParentForm from 'TrialParentForm';
 import { addRegister, resetRegister, addParent, resetParent } from 'actions';
-import { getAgeGroup } from 'helper';
+import { getAgeGroup, similarity } from 'helper';
 import moment from 'moment';
 
 class TrialRegistration extends React.Component {
@@ -23,9 +23,14 @@ class TrialRegistration extends React.Component {
     const { trials, dispatch, ageGroup } = this.props;
     const key = this.props.params.trialId;
     const trial = find(trials, { id: key });
-    let payers = filter(trials, {
-      contact: trial.contact
-    });
+    let payers = []
+    payers.push(trial)
+    let similarContact = filter(trials, {contact: trial.contact})
+    similarContact.map(i => {
+      if (i.id !== key && similarity(i.childName, trial.childName) < 0.75) {
+        payers.push(i)
+      }
+    })
     let register = {};
     payers.map(payer => {
       payer.notJoining = false;

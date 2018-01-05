@@ -1,8 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { downbtn, datebtn } from 'styles.css';
-var actions = require('actions');
-var { connect } = require('react-redux');
+import { connect } from 'react-redux';
 import moment from 'moment';
 import { Row, Col, ButtonGroup, Button, Panel } from 'react-bootstrap';
 
@@ -21,12 +19,12 @@ class PaymentDatesSelector extends React.Component {
     var calendarDates = this.props.calendarDates;
     var calendarKey = this.props.calendarKey;
     var payerId = this.props.payerId;
-
+    var year = moment(startDate).year()
     var calendar = calendars[calendarKey];
     var count = 0;
     var selected = [];
-    Object.keys(calendar.terms).map(termId => {
-      var term = calendar.terms[termId];
+    Object.keys(calendar.terms[year]).map(termId => {
+      var term = calendar.terms[year][termId];
       var newTermDates = _.filter(term, date => {
         return moment(date) >= startDate;
       });

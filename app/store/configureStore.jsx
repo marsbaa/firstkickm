@@ -32,7 +32,8 @@ import {
   promotionsReducer,
   cancelReducer,
   creditReducer,
-  classesReducer
+  classesReducer,
+  payerReducer
 } from 'reducers';
 
 export var configure = (initialState = {}) => {
@@ -66,7 +67,8 @@ export var configure = (initialState = {}) => {
     selectedPromotion: selectedPromotionReducer,
     cancelled: cancelReducer,
     credits: creditReducer,
-    classes: classesReducer
+    classes: classesReducer,
+    payers: payerReducer
   });
 
   const store = createStore(
