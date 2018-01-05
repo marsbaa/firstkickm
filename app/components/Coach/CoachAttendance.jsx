@@ -2,30 +2,33 @@ import React from 'react';
 import {Link} from 'react-router'
 import {Row, Col} from 'react-bootstrap'
 import {connect} from 'react-redux';
-import {btn} from 'styles.css'
-var actions = require('actions');
+import {startCoachSchedule, updateNavTitle} from 'actions'
+import {startCoaches} from 'CoachesActions'
 import CoachAttendee from 'CoachAttendee'
 import CoachesFilter from 'CoachesFilter'
 import Search from 'Search'
-import _ from 'lodash'
+import isEmpty from 'lodash/isEmpty'
+import find from 'lodash/find'
+import size from 'lodash/size'
+import filter from 'lodash/filter'
 import moment from 'moment'
 
 class CoachAttendance extends React.Component{
 
   componentWillMount() {
     var {dispatch, coaches, coachSchedule} = this.props;
-    if (_.isEmpty(coaches)) {
-      dispatch(actions.startCoaches());
+    if (isEmpty(coaches)) {
+      dispatch(startCoaches());
     }
-    if (_.isEmpty(coachSchedule)) {
-      dispatch(actions.startCoachSchedule());
+    if (isEmpty(coachSchedule)) {
+      dispatch(startCoachSchedule());
     }
   }
 
 
   componentDidMount () {
     var {dispatch, selection} = this.props;
-    dispatch(actions.updateNavTitle("/m/coachattendance", selection.name+" Coach Attendance"));
+    dispatch(updateNavTitle("/m/coachattendance", selection.name+" Coach Attendance"));
   }
 
 
@@ -37,31 +40,31 @@ class CoachAttendance extends React.Component{
     var html=[];
     Object.keys(calendars).map((calendarKey) => {
       var calendar = calendars[calendarKey]
-      if (calendar.centreKey === selection.key) {
-        Object.keys(calendar.terms).map((termId) => {
-          var term = calendar.terms[termId]
+      Object.keys(calendar.terms).map(year=> {
+        Object.keys(calendar.terms[year]).map((termId) => {
+          var term = calendar.terms[year][termId]
           term.map ((date)=> {
             if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
               today = 1;
             }
           })
         })
-      }
+      })
     });
     if (today !== -1) {
       var classes = selection.classes
       Object.keys(classes).map((classId)=> {
         var {ageGroup, day, endTime, startTime} = classes[classId]
-        var schedule = _.find(coachSchedule, {'classKey' : classId, 'date': moment().format('YYYYMMDD')})
+        var schedule = find(coachSchedule, {'classKey' : classId, 'date': moment().format('YYYYMMDD')})
         if (schedule != undefined) {
-          if(_.size(schedule.assigned) != 0) {
+          if(size(schedule.assigned) != 0) {
             html.push(<Row key={classId} style={{backgroundColor: '#656565', padding: '0px 15px', color: '#ffc600'}}>
                <Col xs={12} md={12}>
                  <h5>{ageGroup} {startTime} - {endTime} ({day})</h5>
                </Col>
              </Row>)
              schedule.assigned.map((c) => {
-               var coach = _.find(filteredCoaches, {'key': c.coachKey })
+               var coach = find(filteredCoaches, {'key': c.coachKey })
                if (coach != undefined) {
                  html.push(<CoachAttendee key={c.coachKey} coach={coach} classKey={classId} date={moment().format("YYYYMMDD")}/> )
                }
@@ -89,5 +92,14 @@ class CoachAttendance extends React.Component{
  }
  }
 
- export default connect((state) => {return state;
-})(CoachAttendance);
+ function mapStateToProps(state) {
+   return {
+    coaches: state.coaches, 
+    searchText: state.searchText, 
+    selection: state.selection, 
+    calendars: filter(state.calendars, {centreKey: state.selection.key}), 
+    coachSchedule: state.coachSchedule
+   }
+ }
+
+ export default connect(mapStateToProps)(CoachAttendance);

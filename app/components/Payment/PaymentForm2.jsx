@@ -14,7 +14,10 @@ class PaymentForm extends React.Component {
   componentWillMount() {
     let { dispatch, students, promotions } = this.props;
     let student = find(students, { key: this.props.params.studentId });
-    let siblings = filter(students, { contact: student.contact });
+    let siblings;
+    if (student.contact !== '' && student.contact !== undefined) {
+      siblings = filter(students, { contact: student.contact });
+    }
     let payers = {};
     siblings.map(s => {
       payers[s.key] = {

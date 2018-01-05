@@ -6,14 +6,18 @@ import { updateNavTitle, startCoachSchedule } from 'actions';
 import ScheduleTermButton from 'ScheduleTermButton';
 import moment from 'moment';
 import _ from 'lodash';
+import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
+import orderBy from 'lodash/orderBy'
+import slice from 'lodash/slice'
 
 class ScheduleApp extends React.Component {
   componentWillMount() {
     var { dispatch, coaches, coachSchedule } = this.props;
-    if (_.isEmpty(coaches)) {
+    if (isEmpty(coaches)) {
       dispatch(startCoaches());
     }
-    if (_.isEmpty(coachSchedule)) {
+    if (isEmpty(coachSchedule)) {
       dispatch(startCoachSchedule());
     }
   }
@@ -24,14 +28,14 @@ class ScheduleApp extends React.Component {
   }
 
   render() {
-    var { selection, calendars } = this.props;
+    var { calendars } = this.props;
     var termDates = [];
     var count = 0;
     Object.keys(calendars).map(calendarKey => {
       var calendar = calendars[calendarKey];
-      if (calendar.centreKey === selection.key) {
-        Object.keys(calendar.terms).map(termId => {
-          var term = calendar.terms[termId];
+      Object.keys(calendar.terms).map(year => {
+        Object.keys(calendar.terms[year]).map(termId => {
+          var term = calendar.terms[year][termId];
           term.map((date, dateID) => {
             var today = moment().subtract(2, 'week').format('YYYYMMDD');
             if (moment(date).isSameOrAfter(today, 'day')) {
@@ -44,15 +48,15 @@ class ScheduleApp extends React.Component {
             }
           });
         });
-      }
+      })
     });
 
-    var termDates = _.orderBy(
+    var termDates = orderBy(
       termDates,
       ['date', 'term', 'session'],
       ['asc', 'asc', 'asc']
     );
-    termDates = _.slice(termDates, 0, 8);
+    termDates = slice(termDates, 0, 8);
     var html = [];
     termDates.map(dateInfo => {
       html.push(
@@ -90,7 +94,7 @@ class ScheduleApp extends React.Component {
 function mapStateToProps(state) {
   return {
     selection: state.selection,
-    calendars: state.calendars,
+    calendars: filter(state.calendars, {centreKey: state.selection.key}),
     coaches: state.coaches,
     coachSchedule: state.coachSchedule
   };
