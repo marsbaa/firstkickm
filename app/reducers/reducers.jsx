@@ -25,16 +25,7 @@ export var redirectReducer = (state = "", action) => {
   }
 };
 
-export var selectedPromotionReducer = (state = "", action) => {
-  switch (action.type) {
-    case "ADD_SELECTED_PROMOTION":
-      return action.promoKey;
-    case "RESET_SELECTED_PROMOTION":
-      return "";
-    default:
-      return state;
-  }
-};
+
 
 export var navbarReducer = (state = { link: "", title: "" }, action) => {
   switch (action.type) {
@@ -629,6 +620,22 @@ export var inventoryReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_INVENTORIES":
       return [...state, ...action.inventories];
+    default:
+      return state;
+  }
+};
+
+export var selectedPromotionReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "ADD_SELECTED_PROMOTION":
+      return {
+        ...state,
+        [action.payerKey] : {
+          promoKey: action.promoKey
+        }
+      }
+    case "RESET_SELECTED_PROMOTION":
+      return {};
     default:
       return state;
   }

@@ -2,6 +2,7 @@ import React from "react";
 import { Panel, Row, Col } from "react-bootstrap";
 import { connect } from "react-redux";
 import filter from "lodash/filter";
+import reduce from "lodash/reduce";
 import ChildPayDetails from "ChildPayDetails";
 import RegistrationFee from "RegistrationFee";
 import SiblingDiscount from "SiblingDiscount";
@@ -36,7 +37,14 @@ class PaymentBreakdown2 extends React.Component {
     const eb = 20;
     const sd = [20, 30];
     const rg = 80;
-    const { payers, classes, calendars, promotion } = this.props;
+    const {
+      payers,
+      classes,
+      calendars,
+      promotions,
+      selectedPromotion,
+      credits
+    } = this.props;
     const { termFee, termsTotal } = getBreakDown(payers);
     let count = 0;
     let total = 0;
@@ -61,7 +69,7 @@ class PaymentBreakdown2 extends React.Component {
 
       if (sessionDates !== undefined) {
         const totalSessions = getTotalSessions(sessionDates);
-        console.log(totalSessions)
+        console.log(totalSessions);
         const actualTerms =
           calendars[getCalendarKey(payers[payerKey], classes)].terms;
         const earlybird = checkEarlyBird(
@@ -107,18 +115,65 @@ class PaymentBreakdown2 extends React.Component {
         } else {
           paymentDetail.siblingDiscount = false;
         }
-        if (promotion !== undefined) {
-          html.push(
-            <PromotionDiscount
-              key={"promotiondiscount" + childName}
-              amount={promotion.amount}
-              title={promotion.name}
-            />
-          );
-          childTotal -= promotion.amount;
-          paymentDetail.promotionDiscount = promotion.name;
-          paymentDetail.promotionDiscountAmount = promotion.amount;
+        if (selectedPromotion !== undefined) {
+          if (selectedPromotion[payerKey] !== undefined) {
+            let promoKey = selectedPromotion[payerKey].promoKey;
+            console.log(promoKey);
+            if (promoKey !== undefined) {
+              let promotion = promotions[promoKey];
+              const { type, discount, name } = promotion;
+              if (promotion !== undefined) {
+                let discountAmount = 0;
+                if (type === "Percentage") {
+                  console.log(termFee);
+                  discountAmount = termsTotal[payerKey] * discount / 100;
+                } else if (type === "Amount") {
+                  discountAmount = discount;
+                }
+                html.push(
+                  <PromotionDiscount
+                    key={"promotiondiscount" + childName}
+                    amount={discountAmount}
+                    title={name}
+                  />
+                );
+                childTotal -= discountAmount;
+                paymentDetail.promotionDiscount = name;
+                paymentDetail.promotionDiscountAmount = discountAmount;
+              }
+            }
+          }
         }
+        let filteredCredits = filter(credits, o => {
+          return o.dateUsed === undefined;
+        });
+        let studentCredits = filter(filteredCredits, { studentKey: payerKey });
+        if (studentCredits.length > 0) {
+          let totalCredit = reduce(
+            studentCredits,
+            function(sum, n) {
+              return sum + n.amount;
+            },
+            0
+          );
+          html.push(
+            <Row
+              key={"credit" + id}
+              style={{ padding: "0px 15px", marginTop: "5px" }}
+            >
+              <Col xs={8} md={8}>
+                <b style={{ color: "#1796d3" }}>Credits</b>
+              </Col>
+              <Col xs={4} md={4} style={{ float: "right" }}>
+                <p style={{ textAlign: "right" }}>(${totalCredit})</p>
+              </Col>
+            </Row>
+          );
+          childTotal -= totalCredit;
+          paymentDetail.credit = totalCredit;
+          paymentDetail.credits = studentCredits
+        }
+
         let termsPaid = [];
         const perSession = getPerSession(sessionDates);
         Object.keys(sessionDates).map(termId => {
@@ -195,7 +250,9 @@ function mapStateToProps(state) {
     payers: state.payers,
     classes: state.selection.classes,
     calendars: state.calendars,
-    promotion: state.promotions[state.selectedPromotion]
+    promotions: state.promotions,
+    selectedPromotion: state.selectedPromotion,
+    credits: state.credits
   };
 }
 

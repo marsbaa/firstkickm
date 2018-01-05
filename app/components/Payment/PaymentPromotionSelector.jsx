@@ -3,21 +3,14 @@ import { Panel, FormGroup, FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
   startPromotions,
-  addSelectedPromotion,
-  resetSelectedPromotion
+  addSelectedPromotion
 } from 'actions';
 import isEmpty from 'lodash/isEmpty';
 
 class PaymentPromotionSelector extends React.Component {
-  componentWillMount() {
-    const { dispatch, promotions } = this.props;
-    if (!isEmpty(promotions)) {
-      dispatch(startPromotions());
-    }
-  }
 
   render() {
-    const { promotions, onChange, id } = this.props;
+    const { dispatch, promotions, payerKey } = this.props;
     return (
       <Panel
         header={
@@ -31,7 +24,7 @@ class PaymentPromotionSelector extends React.Component {
             componentClass="select"
             defaultValue={0}
             onChange={e => {
-              onChange(e.target.value, id);
+              dispatch(addSelectedPromotion(e.target.value, payerKey));
             }}
           >
             <option key="0" value="0">

@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 require('react-datepicker/dist/react-datepicker.css');
-import { updateTrialRegistration, addTrialStudent, addPayment } from 'actions';
+import { updateTrialRegistration, addTrialStudent, addPayment, useStudentCredit } from 'actions';
 import moment from 'moment';
 import { browserHistory } from 'react-router';
 import InvoiceTemplate from 'InvoiceTemplate';
@@ -38,13 +38,21 @@ class PayersPaymentMethodSelector extends React.Component {
   }
 
   formSubmit() {
-    const { dispatch, paymentDetails, childDetails, parent } = this.props;
+    const { dispatch, paymentDetails, childDetails, parent, receivedDate } = this.props;
     let finalPaymentDetails = [];
 
     Object.keys(childDetails).map(payerKey => {
+        paymentDetails[payerKey].credits.map(credit => {
+        const newCredit = {
+          ...credit,
+          dateUsed: moment(receivedDate).format()
+        };
+        console.log(newCredit)
+        dispatch(useStudentCredit(newCredit));
+      });
        let finalPaymentDetail = {
           ...paymentDetails[payerKey],
-          date: moment().format(),
+          date: moment(receivedDate).format(),
           childKey: childDetails[payerKey].key,
           paymentMethod: this.state.paymentMethod,
           email: this.state.email
@@ -55,17 +63,16 @@ class PayersPaymentMethodSelector extends React.Component {
         if (this.state.paymentMethod === 'Cheque') {
           finalPaymentDetail.chequeNumber = this.state.chequeNumber;
         }
-        console.log(finalPaymentDetail)
-      //dispatch(addPayment(finalPaymentDetail));
-      //finalPaymentDetails.push(finalPaymentDetail);
+      dispatch(addPayment(finalPaymentDetail));
+      finalPaymentDetails.push(finalPaymentDetail);
     });
-   // const invoiceHTML = InvoiceTemplate.render(finalPaymentDetails);
-    // SendMail.mail(
-    //   this.state.email,
-    //   'First Kick Academy - Payment Receipt',
-    //   invoiceHTML
-    // );
-    //browserHistory.push('/m/jersey/');
+   const invoiceHTML = InvoiceTemplate.render(finalPaymentDetails);
+    SendMail.mail(
+      this.state.email,
+      'First Kick Academy - Payment Receipt',
+      invoiceHTML
+    );
+    browserHistory.push('/m/payment/');
   }
 
   render() {
@@ -76,8 +83,7 @@ class PayersPaymentMethodSelector extends React.Component {
       email,
       formSubmit,
       childDetails,
-      paymentDetails,
-      parent
+      paymentDetails
     } = this.props;
     return (
       <Row>

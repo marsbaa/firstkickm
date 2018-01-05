@@ -209,7 +209,7 @@ function mapStateToProps(state) {
     students: filter(state.students, { venueId: state.selection.id }),
     calendars: state.calendars,
     selection: state.selection,
-    classes: filter(state.classes, { centreKey: selection.key }),
+    classes: filter(state.classes, { centreKey: state.selection.key }),
     cancelled: state.cancelled,
     credits: state.credits
   };

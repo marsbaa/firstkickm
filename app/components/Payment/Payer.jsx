@@ -16,7 +16,7 @@ const Payer = ({ student, credit, creditAmount, onShow }) => {
   if (payments !== undefined) {
     Object.keys(payments).map(paymentId => {
       const { termsPaid, date } = payments[paymentId];
-      if (moment().year(date, 'year')) {
+      if (moment().isSame(date, 'year')) {
         if (termsPaid !== undefined) {
           terms = union(terms, Object.keys(termsPaid));
         }
@@ -55,7 +55,6 @@ const Payer = ({ student, credit, creditAmount, onShow }) => {
               {truncatedName}
             </font>
           </Link>
-
           {termsPaidHTML}
         </Col>
         <Col xs={5} md={5} lg={5} style={{ textAlign: 'right' }}>

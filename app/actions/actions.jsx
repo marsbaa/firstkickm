@@ -1674,10 +1674,11 @@ export var addPromotion = promotion => {
 };
 
 //Selected promotion
-export var addSelectedPromotion = promoKey => {
+export var addSelectedPromotion = (promoKey, payerKey) => {
   return {
     type: 'ADD_SELECTED_PROMOTION',
-    promoKey
+    promoKey,
+    payerKey
   };
 };
 
