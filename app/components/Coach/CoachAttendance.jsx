@@ -44,7 +44,7 @@ class CoachAttendance extends React.Component{
         Object.keys(calendar.terms[year]).map((termId) => {
           var term = calendar.terms[year][termId]
           term.map ((date)=> {
-            if( moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+            if( moment().isSame(date, 'day')) {
               today = 1;
             }
           })
