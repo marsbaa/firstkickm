@@ -69,7 +69,6 @@ class PaymentBreakdown2 extends React.Component {
 
       if (sessionDates !== undefined) {
         const totalSessions = getTotalSessions(sessionDates);
-        console.log(totalSessions);
         const actualTerms =
           calendars[getCalendarKey(payers[payerKey], classes)].terms;
         const earlybird = checkEarlyBird(
