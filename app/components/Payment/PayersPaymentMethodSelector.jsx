@@ -31,7 +31,7 @@ class PayersPaymentMethodSelector extends React.Component {
       paymentMethod: "",
       chequeNumber: "",
       refNumber: "",
-      email: props.childDetails.email ? props.childDetails.email : "",
+      email: props.email ? props.email: "",
       show: false
     };
     this.close = this.close.bind(this);
@@ -47,7 +47,6 @@ class PayersPaymentMethodSelector extends React.Component {
       dispatch,
       paymentDetails,
       childDetails,
-      parent,
       receivedDate
     } = this.props;
     let finalPaymentDetails = [];
@@ -94,8 +93,8 @@ class PayersPaymentMethodSelector extends React.Component {
       total,
       receivedDate,
       handleReceivedDate,
-      email,
       formSubmit,
+      email,
       childDetails,
       paymentDetails
     } = this.props;

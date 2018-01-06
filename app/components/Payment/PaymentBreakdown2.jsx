@@ -51,7 +51,7 @@ class PaymentBreakdown2 extends React.Component {
     let html = [];
     let paymentDetails = [];
     let childDetails = [];
-
+    let parentEmail = ""
     Object.keys(payers).map((payerKey, index) => {
       const {
         childName,
@@ -66,7 +66,9 @@ class PaymentBreakdown2 extends React.Component {
         medicalCondition,
         email
       } = payers[payerKey];
-
+      if (email !== "") {
+          parentEmail = email
+      }
       if (sessionDates !== undefined) {
         const totalSessions = getTotalSessions(sessionDates);
         const actualTerms =
@@ -238,6 +240,7 @@ class PaymentBreakdown2 extends React.Component {
           handleReceivedDate={this.handleReceivedDate}
           paymentDetails={paymentDetails}
           childDetails={payers}
+          email={parentEmail}
         />
       </div>
     );
