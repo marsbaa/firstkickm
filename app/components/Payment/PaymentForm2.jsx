@@ -68,7 +68,9 @@ class PaymentForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    students: state.students,
+    students: filter(state.students, o => {
+      return o.status !== 'Not Active'
+    }),
     payers: state.payers,
     promotions: state.promotions
   };

@@ -116,7 +116,7 @@ class PaymentList extends React.Component {
       return !(o.status === 'Not Active');
     });
     var notActiveStudents = filter(filteredStudents, o => {
-      return o.status === 'Not Active';
+      return o.status === 'Not Active' || o.currentClassDay=== "" || o.currentClassTime ==="0";
     });
 
     Object.keys(classes).forEach(classKey => {
@@ -197,6 +197,7 @@ class PaymentList extends React.Component {
               <Payer
                 key={student.key}
                 student={student}
+                type={"Not Active"}
                 onShow={this.onShow.bind(this)}
               />
             );

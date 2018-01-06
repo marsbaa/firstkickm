@@ -269,8 +269,9 @@ export function getActive(students) {
 
 export function getNotActive(students) {
   return _.filter(students, o => {
-    return o.status === "Not Active";
+    return o.status === "Not Active" || o.currentClassDay === "" || o.currentClassTime === "0"
   });
+
 }
 
 export function getCentreCalendarDates(calendars) {

@@ -6,7 +6,7 @@ import uniq from "lodash/uniq";
 import truncate from "lodash/truncate";
 import moment from "moment";
 
-const Payer = ({ student, credit, creditAmount, onShow }) => {
+const Payer = ({ student, credit, creditAmount, onShow, type }) => {
   const { childName, key, gender, payments, email } = student;
   let truncatedName = truncate(childName, {
     length: 28
@@ -57,17 +57,22 @@ const Payer = ({ student, credit, creditAmount, onShow }) => {
           {credit ? (
             <button className="innerbtn">${creditAmount}</button>
           ) : null}
+          {type !== "Not Active" ? 
           <button
-            className="innerbtn"
-            onClick={e => onShow(e, key, childName, email)}
-          >
-            <Glyphicon glyph="shopping-cart" />{" "}
-          </button>
-          <Link to={"/m/payment/collection/" + key}>
+          className="innerbtn"
+          onClick={e => onShow(e, key, childName, email)}
+        >
+          <Glyphicon glyph="shopping-cart" />{" "}
+        </button>: null  
+        }
+          {type !== "Not Active" ?
+            <Link to={"/m/payment/collection/" + key}>
             <button className="innerbtn">
               <Glyphicon glyph="usd" />{" "}
             </button>
-          </Link>
+          </Link>: null
+          }
+          
           <Link to={"/m/payment/history/" + key}>
             <button className="innerbtn">
               <Glyphicon glyph="list-alt" />{" "}
