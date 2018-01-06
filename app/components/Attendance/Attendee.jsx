@@ -1,12 +1,12 @@
 import React from 'react';
-var { connect } = require('react-redux');
+import {connect} from 'react-redux'
 import { Row, Col, Glyphicon } from 'react-bootstrap';
 import { updateAttendance } from 'actions';
 import { Link } from 'react-router';
-import _ from 'lodash';
+import truncate from 'lodash/truncate'
 import moment from 'moment';
 import Switch from 'Switch';
-import { attendedDate, paidDate, getClassTerm, getCalendarKey } from 'helper';
+import { attendedDate, paidDate, getTermByDate, getCalendarKey } from 'helper';
 
 class Attendee extends React.Component {
   render() {
@@ -20,7 +20,7 @@ class Attendee extends React.Component {
       ageGroup
     } = this.props.student;
     date = moment(date).format('YYYY-MM-DD');
-    var truncatedName = _.truncate(childName, {
+    var truncatedName = truncate(childName, {
       length: 28
     });
     var attended = attendedDate(attendance, date);
@@ -29,8 +29,8 @@ class Attendee extends React.Component {
       selection.classes,
       ageGroup
     );
-    var termId = getClassTerm(calendars[calendarKey], date);
-    var paid = paidDate(payments, date, termId);
+    var termId = getTermByDate(calendars[calendarKey], date);
+    var paid = paidDate(payments, date, termId, moment(date).year());
     var backgroundColor;
     if (type === 'normal') {
       backgroundColor = 'none';

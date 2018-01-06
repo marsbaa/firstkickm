@@ -16,13 +16,14 @@ import size from 'lodash/size';
 import filter from 'lodash/filter';
 
 const ChartPaymentReport = props => {
-  const { calendars, students, selectedTerm, centres } = props;
+  const { calendars, students, selectedTerm, selectedYear, centres, classes, makeUps} = props;
   let data = [];
   let totalStudents = 0,
     totalPaid = 0,
     totalUnPaid = 0;
   Object.keys(centres).map(centreKey => {
-    const { name, id, classes } = centres[centreKey];
+    const { name, id } = centres[centreKey];
+    const filteredClasses = filter(classes, {centreKey: centreKey})
 
     const centreCalendars = _.filter(calendars, { centreKey: centreKey });
 
@@ -33,13 +34,15 @@ const ChartPaymentReport = props => {
       const { terms, key } = centreCalendars[calendarId];
       //Get TermDates from Calendar
       let termDates = [];
-      if (terms[selectedTerm] !== undefined) {
-        terms[selectedTerm].map(date => {
-          termDates.push(date);
-        });
+      if (terms[selectedYear] !== undefined) {
+        if (terms[selectedYear][selectedTerm] !== undefined) {
+          terms[selectedYear][selectedTerm].map(date => {
+            termDates.push(date);
+          });
+        }
       }
       //Filter Students by centre
-      const clas = filter(classes, { calendarKey: key });
+      const clas = filter(filteredClasses, { calendarKey: key });
       clas.map(c => {
         const { day, ageGroup, startTime, endTime } = c;
         const classTime = startTime + ' - ' + endTime;
@@ -54,7 +57,9 @@ const ChartPaymentReport = props => {
         const { paid, paidAmount, unpaid } = findPaymentDetails(
           filteredStudents,
           termDates,
-          selectedTerm
+          selectedTerm,
+          selectedYear,
+          makeUps
         );
 
         studentsPaid += size(paid);

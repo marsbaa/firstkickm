@@ -11,13 +11,13 @@ import {
   Legend,
   Text
 } from 'recharts';
-import { getCalendarKeysByCentre, getAllCalendarDatesByTerm } from 'helper';
+import { getCalendarKeysByCentre, getAllCalendarDatesByYearAndTerm } from 'helper';
 import size from 'lodash/size';
 import filter from 'lodash/filter';
 import moment from 'moment';
 
 const ChartTrialConversion = props => {
-  const { calendars, trials, selectedTerm, centres } = props;
+  const { calendars, trials, selectedTerm, selectedYear, centres } = props;
   let data = [];
   let totalTrials = 0,
     totalAttended = 0,
@@ -26,10 +26,11 @@ const ChartTrialConversion = props => {
     const { id, name } = centres[centreKey];
     //Get Term Dates by centre
     const calendarKeys = getCalendarKeysByCentre(calendars, centreKey);
-    const calendarDates = getAllCalendarDatesByTerm(
+    const calendarDates = getAllCalendarDatesByYearAndTerm(
       calendars,
       calendarKeys,
-      selectedTerm
+      selectedTerm,
+      selectedYear
     );
     let filteredTrials = filter(trials, { venueId: id });
 

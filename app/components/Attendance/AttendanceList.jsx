@@ -16,7 +16,6 @@ import AttendanceClassList from 'AttendanceClassList';
 import { startMakeUps, updateNavTitle } from 'actions';
 import StudentsFilter from 'StudentsFilter';
 import Search from 'Search';
-import _ from 'lodash';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -30,6 +29,10 @@ import {
   isManager
 } from 'helper';
 import filter from 'lodash/filter';
+import size from 'lodash/size'
+import sortBy from 'lodash/sortBy'
+import isEmpty from 'lodash/isEmpty'
+import find from 'lodash/find'
 
 class AttendanceList extends React.Component {
   constructor(props) {
@@ -45,7 +48,7 @@ class AttendanceList extends React.Component {
   componentWillMount() {
     var { dispatch, selection, calendars, makeUps } = this.props;
 
-    if (_.isEmpty(makeUps)) {
+    if (isEmpty(makeUps)) {
       dispatch(startMakeUps());
     }
     dispatch(
@@ -111,15 +114,15 @@ class AttendanceList extends React.Component {
       var classTimeDay = classTime + ' (' + day + ')';
       //Filter Students base on class
 
-      var filteredActiveClass = _.filter(filteredActive, {
+      var filteredActiveClass = filter(filteredActive, {
         currentClassDay: moment(this.state.startDate).format('dddd'),
         currentClassTime: classTime,
         ageGroup: ageGroup
       });
 
       //Display Class Header
-      if (_.size(filteredActiveClass) !== 0) {
-        var sortedActiveClass = _.sortBy(filteredActiveClass, ['childName']);
+      if (size(filteredActiveClass) !== 0) {
+        var sortedActiveClass = sortBy(filteredActiveClass, ['childName']);
         html.push(
           <AttendanceClassList
             key={ageGroup + classTimeDay}
@@ -131,16 +134,16 @@ class AttendanceList extends React.Component {
         );
 
         //Display Make Up List
-        var filteredMakeUps = _.filter(makeUps, {
+        var filteredMakeUps = filter(makeUps, {
           toCentre: selection.key,
           toDate: moment(this.state.startDate).format('YYYY-MM-DD'),
           ageGroup: ageGroup,
           toClassTimeDay: classTimeDay
         });
-        if (!_.isEmpty(filteredMakeUps)) {
+        if (!isEmpty(filteredMakeUps)) {
           Object.keys(filteredMakeUps).forEach(makeUpId => {
             const { studentKey } = filteredMakeUps[makeUpId];
-            const student = _.find(filteredActive, { key: studentKey });
+            const student = find(filteredActive, { key: studentKey });
             html.push(
               <Attendee
                 key={studentKey}

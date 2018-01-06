@@ -3,6 +3,9 @@ import Attendee from 'Attendee';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import { countAttended } from 'helper';
+import size from 'lodash/size'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
 
 class AttendanceClassList extends React.Component {
   constructor(props) {
@@ -36,20 +39,20 @@ class AttendanceClassList extends React.Component {
           <Col xs={3} md={3} style={{ textAlign: 'center' }}>
             <h5>
               <font style={{ color: 'white' }}>{attended}</font> /{' '}
-              {_.size(group)}
+              {size(group)}
             </h5>
           </Col>
         </Row>
         {this.state.show
           ? Object.keys(group).map(studentId => {
-              let filteredMakeUps = _.filter(makeUps, {
+              let filteredMakeUps = filter(makeUps, {
                 studentKey: group[studentId].key
               });
 
-              let toMakeUp = _.find(filteredMakeUps, o => {
+              let toMakeUp = find(filteredMakeUps, o => {
                 return moment(date).isSame(o.toDate, 'day');
               });
-              let fromMakeUp = _.find(filteredMakeUps, o => {
+              let fromMakeUp = find(filteredMakeUps, o => {
                 return moment(date).isSame(o.fromDate, 'day');
               });
               if (toMakeUp !== undefined) {

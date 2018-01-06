@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 import {
   Row,
   Col,
@@ -8,14 +8,17 @@ import {
   Badge,
   ProgressBar,
   Label
-} from 'react-bootstrap';
-import { connect } from 'react-redux';
-import PayerReport from 'PayerReport';
-import { updateNavTitle } from 'actions';
-import StudentsFilter from 'StudentsFilter';
-import _ from 'lodash';
-import moment from 'moment';
-import { getTerm, getAllTermId, findPaymentDetails } from 'helper';
+} from "react-bootstrap";
+import { connect } from "react-redux";
+import PayerReport from "PayerReport";
+import { updateNavTitle } from "actions";
+import StudentsFilter from "StudentsFilter";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import size from "lodash/size";
+import capitalize from "lodash/capitalize";
+import moment from "moment";
+import { getTerm, getAllTermId, findPaymentDetails } from "helper";
 
 class PaymentReport extends React.Component {
   constructor(props) {
@@ -32,106 +35,110 @@ class PaymentReport extends React.Component {
 
   handleSelectYear(e) {
     e.preventDefault();
-    this.setState({ year: e.target.value });
+    this.setState({ selectedYear: e.target.value });
   }
 
   componentDidMount() {
     var { dispatch, selection, calendars } = this.props;
     var id = getTerm(calendars, selection.key, moment());
-    document.getElementById('termSelect').value = id;
+    document.getElementById("termSelect").value = id;
     this.setState({ selectedTerm: id });
     dispatch(
-      updateNavTitle('/m/payment/report', selection.name + ' Payment Report')
+      updateNavTitle("/m/payment/report", selection.name + " Payment Report")
     );
   }
 
   render() {
-    var { students, selection, calendars, makeUps } = this.props;
+    var { students, selection, calendars, makeUps, classes } = this.props;
 
     var html = [];
     var studentsPaid = 0;
     var studentsUnPaid = 0;
     var totalPaid = 0;
     var calendar;
-    var classes = selection.classes;
 
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
         classKey
       ];
 
-      var classTime = startTime + ' - ' + endTime;
+      var classTime = startTime + " - " + endTime;
 
       //Create TermDates Array
-      calendar = _.find(calendars, { key: calendarKey });
+      calendar = find(calendars, { key: calendarKey });
       var termDates = [];
-      calendar.terms[this.state.selectedTerm].map(date => {
-        termDates.push(date);
-      });
+      if (calendar.terms !== undefined) {
+        if (calendar.terms[this.state.selectedYear] !== undefined) {
+          if (calendar.terms[this.state.selectedYear][this.state.selectedTerm] !== undefined) {
+            calendar.terms[this.state.selectedYear][this.state.selectedTerm].map(date => {
+              termDates.push(date);
+            });
+          }
+        }
+      }
 
       //Filter Students base on Class
 
-      var filteredStudents = _.filter(students, {
+      var filteredStudents = filter(students, {
         venueId: selection.id,
-        currentClassDay: _.capitalize(day),
+        currentClassDay: capitalize(day),
         currentClassTime: classTime,
         ageGroup: ageGroup
       });
-      filteredStudents = _.filter(filteredStudents, o => {
-        return !(o.status === 'Not Active');
+      filteredStudents = filter(filteredStudents, o => {
+        return !(o.status === "Not Active");
       });
 
       const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
         filteredStudents,
         termDates,
         this.state.selectedTerm,
+        this.state.selectedYear,
         makeUps
       );
 
       //Display Class Time Day Header
-      if (_.size(paid) !== 0 || _.size(unpaid) !== 0) {
+      if (size(paid) !== 0 || size(unpaid) !== 0) {
         html.push(
           <Row
             key={ageGroup + classTime + day}
             style={{
-              backgroundColor: '#656565',
-              padding: '0px 15px',
-              color: '#ffc600'
+              backgroundColor: "#656565",
+              padding: "0px 15px",
+              color: "#ffc600"
             }}
           >
             <Col xs={12} md={12}>
               <h5>
-                {ageGroup} {classTime} ({_.capitalize(day)})
+                {ageGroup} {classTime} ({capitalize(day)})
               </h5>
             </Col>
           </Row>
         );
       }
 
-      studentsPaid += _.size(paid);
+      studentsPaid += size(paid);
       totalPaid += paidAmount;
-      studentsUnPaid += _.size(unpaid);
+      studentsUnPaid += size(unpaid);
 
       //Progress Bar Value
-      const now = Math.round(
-        _.size(paid) / (_.size(paid) + _.size(unpaid)) * 100
-      );
+      const now = Math.round(size(paid) / (size(paid) + size(unpaid)) * 100);
 
       //Display Paid List
-      if (_.size(paid) !== 0) {
+      if (size(paid) !== 0) {
         html.push(
           <Row
-            key={'paidlist' + ageGroup + classTime + day}
+            key={"paidlist" + ageGroup + classTime + day}
             style={{
-              backgroundColor: '#f5f5f5',
-              padding: '10px 15px',
-              borderBottom: '1px solid #cccccc',
-              fontSize: '12px',
-              fontWeight: '800'
+              backgroundColor: "#f5f5f5",
+              padding: "10px 15px",
+              borderBottom: "1px solid #cccccc",
+              fontSize: "12px",
+              fontWeight: "800"
             }}
           >
             <Col xs={6} md={6}>
-              Paid <Badge>{_.size(paid)}</Badge> Amount{' '}
+              Paid <Badge>{size(paid)}</Badge> Amount{" "}
               <Badge>${paidAmount}</Badge>
             </Col>
             <Col xs={6} md={6}>
@@ -141,7 +148,7 @@ class PaymentReport extends React.Component {
                 bsStyle="success"
                 now={now}
                 label={`${now}%`}
-                style={{ marginBottom: '0' }}
+                style={{ marginBottom: "0" }}
               />
             </Col>
           </Row>
@@ -160,20 +167,20 @@ class PaymentReport extends React.Component {
       }
 
       //Display UnPaid List
-      if (_.size(unpaid) !== 0) {
+      if (size(unpaid) !== 0) {
         html.push(
           <Row
-            key={'unpaidlist' + ageGroup + classTime + day}
+            key={"unpaidlist" + ageGroup + classTime + day}
             style={{
-              backgroundColor: '#f5f5f5',
-              padding: '10px 15px',
-              borderBottom: '1px solid #cccccc',
-              fontSize: '12px',
-              fontWeight: '800'
+              backgroundColor: "#f5f5f5",
+              padding: "10px 15px",
+              borderBottom: "1px solid #cccccc",
+              fontSize: "12px",
+              fontWeight: "800"
             }}
           >
             <Col xs={12} md={12}>
-              Unpaid <Badge>{_.size(unpaid)}</Badge>
+              Unpaid <Badge>{size(unpaid)}</Badge>
             </Col>
           </Row>
         );
@@ -194,19 +201,19 @@ class PaymentReport extends React.Component {
     //Display Number of Students Paid
     html.push(
       <Row
-        key={'studentsPaid'}
+        key={"studentsPaid"}
         style={{
-          padding: '8px 20px',
-          borderBottom: '1px solid #cccccc',
-          display: 'flex',
-          alignItems: 'center'
+          padding: "8px 20px",
+          borderBottom: "1px solid #cccccc",
+          display: "flex",
+          alignItems: "center"
         }}
       >
         <Col
           xs={12}
           md={12}
           lg={12}
-          style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
+          style={{ fontWeight: "bold", textAlign: "right", fontSize: "16px" }}
         >
           <h4>
             Students (Paid)
@@ -219,19 +226,19 @@ class PaymentReport extends React.Component {
     //Display Total Amount Paid
     html.push(
       <Row
-        key={'amountPaid'}
+        key={"amountPaid"}
         style={{
-          padding: '8px 20px',
-          borderBottom: '1px solid #cccccc',
-          display: 'flex',
-          alignItems: 'center'
+          padding: "8px 20px",
+          borderBottom: "1px solid #cccccc",
+          display: "flex",
+          alignItems: "center"
         }}
       >
         <Col
           xs={12}
           md={12}
           lg={12}
-          style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
+          style={{ fontWeight: "bold", textAlign: "right", fontSize: "16px" }}
         >
           <h4>
             Total (Paid)
@@ -244,19 +251,19 @@ class PaymentReport extends React.Component {
     //Display Number of Student Not Paid
     html.push(
       <Row
-        key={'studentsUnPaid'}
+        key={"studentsUnPaid"}
         style={{
-          padding: '8px 20px',
-          borderBottom: '1px solid #cccccc',
-          display: 'flex',
-          alignItems: 'center'
+          padding: "8px 20px",
+          borderBottom: "1px solid #cccccc",
+          display: "flex",
+          alignItems: "center"
         }}
       >
         <Col
           xs={12}
           md={12}
           lg={12}
-          style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
+          style={{ fontWeight: "bold", textAlign: "right", fontSize: "16px" }}
         >
           <h4>
             Students (Unpaid) <Label>{studentsUnPaid}</Label>
@@ -268,19 +275,19 @@ class PaymentReport extends React.Component {
     //Display Potential Collection
     html.push(
       <Row
-        key={'amountUnPaid'}
+        key={"amountUnPaid"}
         style={{
-          padding: '8px 20px',
-          borderBottom: '1px solid #cccccc',
-          display: 'flex',
-          alignItems: 'center'
+          padding: "8px 20px",
+          borderBottom: "1px solid #cccccc",
+          display: "flex",
+          alignItems: "center"
         }}
       >
         <Col
           xs={12}
           md={12}
           lg={12}
-          style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
+          style={{ fontWeight: "bold", textAlign: "right", fontSize: "16px" }}
         >
           <h4>
             Potential Total (Unpaid)
@@ -299,28 +306,28 @@ class PaymentReport extends React.Component {
     );
     html.push(
       <Row
-        key={'progressBar'}
+        key={"progressBar"}
         style={{
-          padding: '8px 20px',
-          borderBottom: '1px solid #cccccc',
-          display: 'flex',
-          alignItems: 'center'
+          padding: "8px 20px",
+          borderBottom: "1px solid #cccccc",
+          display: "flex",
+          alignItems: "center"
         }}
       >
         <Col
           xs={12}
           md={12}
           lg={12}
-          style={{ fontWeight: 'bold', textAlign: 'right', fontSize: '16px' }}
+          style={{ fontWeight: "bold", textAlign: "right", fontSize: "16px" }}
         >
-          <ProgressBar style={{ marginBottom: '0' }}>
+          <ProgressBar style={{ marginBottom: "0" }}>
             <ProgressBar
               striped
               active
               bsStyle="success"
               now={nowPaid}
               label={`${nowPaid}%`}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: "0" }}
               key={1}
             />
             <ProgressBar
@@ -329,7 +336,7 @@ class PaymentReport extends React.Component {
               bsStyle="danger"
               now={nowUnPaid}
               label={`${nowUnPaid}%`}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: "0" }}
               key={2}
             />
           </ProgressBar>
@@ -357,15 +364,15 @@ class PaymentReport extends React.Component {
       <div>
         <Row
           style={{
-            backgroundColor: '#ffc600',
-            color: '#656565',
-            padding: '15px 15px 5px 15px'
+            backgroundColor: "#ffc600",
+            color: "#656565",
+            padding: "15px 15px 5px 15px"
           }}
         >
           <Col xs={3} md={3}>
             <FormGroup>
               <FormControl
-                style={{ padding: '6px 6px 5px 2px' }}
+                style={{ padding: "6px 6px 5px 2px" }}
                 id="yearSelect"
                 componentClass="select"
                 placeholder="select"
@@ -376,7 +383,7 @@ class PaymentReport extends React.Component {
               </FormControl>
             </FormGroup>
           </Col>
-          <Col xs={4} md={4} lg={4} style={{ paddingLeft: '0px' }}>
+          <Col xs={4} md={4} lg={4} style={{ paddingLeft: "0px" }}>
             <FormGroup>
               <FormControl
                 id="termSelect"
@@ -396,7 +403,7 @@ class PaymentReport extends React.Component {
             </FormGroup>
           </Col>
           <Col xs={5} md={5} lg={5}>
-            <button className="btn" style={{ float: 'right', height: '34px' }}>
+            <button className="btn" style={{ float: "right", height: "34px" }}>
               Send Reminder
             </button>
           </Col>
@@ -412,6 +419,7 @@ function mapStateToProps(state) {
     students: state.students,
     selection: state.selection,
     calendars: state.calendars,
+    classes : filter(state.classes, {centreKey: state.selection.key}),
     makeUps: state.makeUps
   };
 }

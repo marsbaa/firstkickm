@@ -41,7 +41,13 @@ export function isAttended(attendance, date) {
   return found;
 }
 
-export function findPaymentDetails(students, termDates, selectedTerm, makeUps) {
+export function findPaymentDetails(
+  students,
+  termDates,
+  selectedTerm,
+  selectedYear,
+  makeUps
+) {
   let paid = [];
   let unpaid = [];
   let paidDetails = [];
@@ -56,7 +62,9 @@ export function findPaymentDetails(students, termDates, selectedTerm, makeUps) {
     //Check if payment is made for this term
     let payment = _.find(student.payments, o => {
       if (o.termsPaid !== undefined) {
-        return o.termsPaid[selectedTerm] !== undefined;
+        if (moment(o.date).isSame(selectedYear, "year")) {
+          return o.termsPaid[selectedTerm] !== undefined;
+        }
       }
       return false;
     });
@@ -131,13 +139,20 @@ export function getTerm(calendars, centreKey, date) {
     var calendar = calendars[calendarKey];
     if (calendar.centreKey === centreKey) {
       var terms = calendar.terms;
-      Object.keys(terms).map(id => {
-        var term = terms[id];
-        if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
-          t = parseInt(id);
-        } else if (moment(date).isAfter(term[term.length - 1], "day")) {
-          t = parseInt(id) + 1;
-        }
+      Object.keys(terms).map(year => {
+        Object.keys(terms[year]).map(id => {
+          var term = terms[year][id];
+          if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
+            t = parseInt(id);
+          } else if (moment(date).isAfter(term[term.length - 1], "day")) {
+            if (id === _.size(terms[year])) {
+              t = 1
+            }
+            else {
+              t = parseInt(id) + 1;
+            }
+          }
+        });
       });
     }
   });
@@ -146,35 +161,25 @@ export function getTerm(calendars, centreKey, date) {
 
 export function getTermByDate(calendar, date) {
   var t = 1;
-  var year = moment().year();
+  var year = moment(date).year();
   var terms = calendar.terms[year];
   Object.keys(terms).map(id => {
     var term = terms[id];
     if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
       t = parseInt(id);
     } else if (moment(date).isAfter(term[term.length - 1], "day")) {
-      t = parseInt(id) + 1;
+      if (id === _.size(terms[year])) {
+        t = 1
+      }
+      else {
+        t = parseInt(id) + 1;
+      }
     }
   });
 
   return t;
 }
 
-export function getClassTerm(calendar, date) {
-  var t = 1;
-  if (calendar !== undefined) {
-    Object.keys(calendar.terms).map(id => {
-      var term = calendar.terms[id];
-      if (moment(date).isBetween(term[0], term[term.length - 1], null, "[]")) {
-        t = parseInt(id);
-      } else if (moment(date).isAfter(term[term.length - 1])) {
-        t = parseInt(id) + 1;
-      }
-    });
-  }
-
-  return t;
-}
 
 export function getCalendarKey(student, classes, ag) {
   var key = "";
@@ -214,7 +219,7 @@ export function checkEarlyBird(actualTerms, sessionDates, date) {
   Object.keys(sessionDates).map(termId => {
     const term = sessionDates[termId];
     if (actualTerms[year][termId].length === term.length) {
-      if (moment(date).isSameOrBefore(actualTerms[year][termId][1], 'day')) {
+      if (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
         check = true;
       }
     }
@@ -319,10 +324,10 @@ export function sortByEndTime(classes) {
   });
 }
 
-export function filterByAMPM(classes) {
+export function filterByAMPM(classes, type) {
   return _.filter(classes, o => {
     var startTime = o.startTime.split(":");
-    if (startTime[1].endsWith(this.state.filter)) {
+    if (startTime[1].endsWith(type)) {
       return true;
     } else {
       false;
@@ -331,7 +336,7 @@ export function filterByAMPM(classes) {
 }
 
 export function attendedDate(attendance, date) {
-  let formattedDate = moment(date).format("YYYY-MM-DD")
+  let formattedDate = moment(date).format("YYYY-MM-DD");
   if (attendance !== undefined) {
     if (attendance[formattedDate] !== undefined) {
       return attendance[formattedDate].attended;
@@ -418,11 +423,13 @@ export function getAllTermId(calendars, centreKey) {
     var calendar = calendars[calendarKey];
     if (calendar.centreKey === centreKey) {
       var terms = calendar.terms;
-      Object.keys(terms).map(id => {
-        if (_.indexOf(termIds, id) === -1) {
-          termIds.push(id);
-        }
-      });
+      Object.keys(terms).map(year => {
+        Object.keys(terms[year]).map(id => {
+          if (_.indexOf(termIds, id) === -1) {
+            termIds.push(id);
+          }
+        });
+      })
     }
   });
   termIds = termIds.sort();
@@ -634,6 +641,28 @@ export function getAllCalendarDatesByTerm(
     term.map(date => {
       calendarDates.push(date);
     });
+  });
+
+  return _.uniq(calendarDates).sort();
+}
+
+export function getAllCalendarDatesByYearAndTerm(
+  calendars,
+  calendarKeys,
+  selectedTerm,
+  selectedYear
+) {
+  let calendarDates = [];
+  calendarKeys.map(calendarKey => {
+    const calendar = calendars[calendarKey].terms;
+    if (calendar[selectedYear] !== undefined) {
+      if (calendar[selectedYear][selectedTerm] !== undefined) {
+        const term = calendar[selectedYear][selectedTerm];
+        term.map(date => {
+          calendarDates.push(date);
+        });
+      }
+    }
   });
 
   return _.uniq(calendarDates).sort();

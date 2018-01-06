@@ -12,9 +12,12 @@ import {
 import { connect } from 'react-redux';
 import PaymentClassList from 'PaymentClassList';
 import SMSModal from 'SMSModal';
-var actions = require('actions');
+import {updateNavTitle} from 'actions'
 import StudentsFilter from 'StudentsFilter';
-import _ from 'lodash';
+import find from 'lodash/find'
+import capitalize from 'lodash/capitalize'
+import size from 'lodash/size'
+import filter from 'lodash/filter'
 import moment from 'moment';
 import { getTerm, findPaymentDetails, getAllTermId } from 'helper';
 
@@ -34,7 +37,7 @@ class PaymentNotPaid extends React.Component {
 
   handleSelectYear(e) {
     e.preventDefault();
-    this.setState({ year: e.target.value });
+    this.setState({ selectedYear: e.target.value });
   }
 
   open() {
@@ -51,7 +54,7 @@ class PaymentNotPaid extends React.Component {
     document.getElementById('termSelect').value = id;
     this.setState({ selectedTerm: id });
     dispatch(
-      actions.updateNavTitle(
+      updateNavTitle(
         '/m/payment/notpaid',
         selection.name + ' Not Paid List'
       )
@@ -59,12 +62,11 @@ class PaymentNotPaid extends React.Component {
   }
 
   render() {
-    var { selection, calendars, students } = this.props;
+    const { selection, calendars, students, classes, makeUps } = this.props;
 
     var html = [];
     var calendar;
     var contacts = '';
-    var classes = selection.classes;
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
         classKey
@@ -73,35 +75,44 @@ class PaymentNotPaid extends React.Component {
       var classTime = startTime + ' - ' + endTime;
 
       //Create TermDates Array
-      calendar = _.find(calendars, { key: calendarKey });
+      calendar = find(calendars, { key: calendarKey });
       var termDates = [];
-      calendar.terms[this.state.selectedTerm].map(date => {
-        termDates.push(date);
-      });
+      if (calendar.terms !== undefined) {
+        if (calendar.terms[this.state.selectedYear] !== undefined) {
+          if (calendar.terms[this.state.selectedYear][this.state.selectedTerm] !== undefined) {
+            calendar.terms[this.state.selectedYear][this.state.selectedTerm].map(date => {
+              termDates.push(date);
+            });
+          }
+        }
+      }
+     
 
       //Filter Students base on Class
 
-      var filteredStudents = _.filter(students, {
+      var filteredStudents = filter(students, {
         venueId: selection.id,
-        currentClassDay: _.capitalize(day),
+        currentClassDay: capitalize(day),
         currentClassTime: classTime,
         ageGroup: ageGroup
       });
-      filteredStudents = _.filter(filteredStudents, o => {
+      filteredStudents = filter(filteredStudents, o => {
         return !(o.status === 'Not Active');
       });
 
       const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
         filteredStudents,
         termDates,
-        this.state.selectedTerm
+        this.state.selectedTerm,
+        this.state.selectedYear,
+        makeUps
       );
-      if (_.size(unpaid) !== 0) {
+      if (size(unpaid) !== 0) {
         html.push(
           <PaymentClassList
             key={classKey}
             group={unpaid}
-            title={ageGroup + ' ' + classTime + ' (' + _.capitalize(day) + ')'}
+            title={ageGroup + ' ' + classTime + ' (' + capitalize(day) + ')'}
           />
         );
       }
@@ -199,6 +210,14 @@ FKA-Admin`;
   }
 }
 
-export default connect(state => {
-  return state;
-})(PaymentNotPaid);
+function mapStateToProps(state) {
+  return {
+    selection: state.selection, 
+    calendars: state.calendars, 
+    students: state.students, 
+    classes: filter(state.classes, {centreKey: state.selection.key}),
+    makeUps: state.makeUps
+  }
+}
+
+export default connect(mapStateToProps)(PaymentNotPaid);

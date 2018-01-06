@@ -40,11 +40,12 @@ class DashboardApp extends React.Component {
 
   handleSelectYear(e) {
     e.preventDefault();
-    this.setState({ year: e.target.value });
+    console.log(e.target.value)
+    this.setState({ selectedYear: e.target.value });
   }
 
   render() {
-    const { calendars, students, centres, trials } = this.props;
+    const { calendars, students, centres, trials, classes, makeUps} = this.props;
 
     //Generate Year Options
     let terms = ['1', '2', '3', '4', '5', '6'];
@@ -104,12 +105,16 @@ class DashboardApp extends React.Component {
         </Row>
         <ChartPaymentReport
           selectedTerm={this.state.selectedTerm}
+          selectedYear={this.state.selectedYear}
           students={students}
           calendars={calendars}
           centres={centres}
+          classes={classes}
+          makeUps={makeUps}
         />
         <ChartTrialConversion
           selectedTerm={this.state.selectedTerm}
+          selectedYear={this.state.selectedYear}
           calendars={calendars}
           centres={centres}
           trials={trials}
@@ -121,6 +126,7 @@ class DashboardApp extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    classes: state.classes,
     calendars: state.calendars,
     students: filter(state.students, o => {
       return !(o.status === 'Not Active');
@@ -128,7 +134,8 @@ function mapStateToProps(state) {
     centres: state.centres,
     trials: filter(state.trials, o => {
       return moment(o.dateAdded).isAfter('2017-03-01', 'day');
-    })
+    }),
+    makeUps: state.makeUps
   };
 }
 

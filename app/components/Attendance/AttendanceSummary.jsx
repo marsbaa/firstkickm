@@ -5,16 +5,22 @@ import { updateNavTitle } from 'actions';
 import moment from 'moment';
 import AttendanceTable from 'AttendanceTable';
 import { getTerm, getAllTermId } from 'helper';
+import filter from 'lodash/filter'
 
 class AttendanceSummary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTerm: 3
+      selectedTerm: 3,
+      selectedYear: moment().year()
     };
   }
   handleSelect(e) {
     this.setState({ selectedTerm: e.target.value });
+  }
+
+  handleSelectYear(e) {
+    this.setState({ selectedYear: e.target.value });
   }
 
   componentDidMount() {
@@ -31,12 +37,44 @@ class AttendanceSummary extends React.Component {
   }
 
   render() {
-    const { classes, terms } = this.props;
+    const { classes } = this.props;
+    let terms = ['1', '2', '3', '4', '5', '6'];
+    let yearOptions = [];
+    yearOptions.push(
+      <option key={moment().year()} value={moment().year()}>
+        {moment().year()}
+      </option>
+    );
+    yearOptions.push(
+      <option key={moment().year() - 1} value={moment().year() - 1}>
+        {moment().year() - 1}
+      </option>
+    );
 
     return (
       <Grid style={{ marginTop: '20px' }}>
-        <Row>
-          <Col xs={12} md={12} lg={12}>
+      <Row
+          style={{
+            borderBottom: '1px solid #e2e2e2',
+            color: '#656565',
+            padding: '15px 15px 5px 15px'
+          }}
+        >
+          <Col xs={3} md={3}>
+            <FormGroup>
+              <FormControl
+                style={{ padding: '6px 6px 5px 2px' }}
+                id="yearSelect"
+                componentClass="select"
+                placeholder="select"
+                defaultValue={this.state.selectedYear}
+                onChange={this.handleSelectYear.bind(this)}
+              >
+                {yearOptions}
+              </FormControl>
+            </FormGroup>
+          </Col>
+          <Col xs={4} md={4} lg={4} style={{ paddingLeft: '0px' }}>
             <FormGroup>
               <FormControl
                 id="termSelect"
@@ -64,6 +102,7 @@ class AttendanceSummary extends React.Component {
                   key={classKey}
                   cla={classes[classKey]}
                   selectedTerm={this.state.selectedTerm}
+                  selectedYear={this.state.selectedYear}
                 />
               );
             })}
@@ -76,10 +115,9 @@ class AttendanceSummary extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    terms: getAllTermId(state.calendars, state.selection.key),
     selection: state.selection,
     calendars: state.calendars,
-    classes: state.selection.classes
+    classes: filter(state.classes, {centreKey: state.selection.key})
   };
 }
 
