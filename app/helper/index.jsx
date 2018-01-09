@@ -62,7 +62,7 @@ export function findPaymentDetails(
     //Check if payment is made for this term
     let payment = _.find(student.payments, o => {
       if (o.termsPaid !== undefined) {
-        if (moment(o.date).year() === selectedYear) {
+        if (moment(o.date).year() === parseInt(selectedYear)) {
           return o.termsPaid[selectedTerm] !== undefined;
         }
       }

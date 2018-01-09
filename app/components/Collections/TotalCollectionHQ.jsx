@@ -1,7 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
-var actions = require('actions');
-var { connect } = require('react-redux');
+import { connect } from 'react-redux';
+import {updateNavTitle, startPayments} from 'actions'
 import {
   Row,
   Col,
@@ -13,6 +12,11 @@ import {
   FormControl
 } from 'react-bootstrap';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty'
+import filter from 'lodash/filter'
+import size from 'lodash/size'
+import groupBy from 'lodash/groupBy'
+import reduce from 'lodash/reduce'
 
 class TotalCollectionHQ extends React.Component {
   constructor(props) {
@@ -28,10 +32,10 @@ class TotalCollectionHQ extends React.Component {
   componentWillMount() {
     var { dispatch, payments, selection } = this.props;
     dispatch(
-      actions.updateNavTitle('/m/totalhq', selection.name + ' Collections')
+      updateNavTitle('/m/totalhq', selection.name + ' Collections')
     );
-    if (_.isEmpty(payments)) {
-      dispatch(actions.startPayments());
+    if (isEmpty(payments)) {
+      dispatch(startPayments());
     }
   }
 
@@ -48,17 +52,18 @@ class TotalCollectionHQ extends React.Component {
   render() {
     var { payments, selection } = this.props;
     var html = [];
-    var filteredPayments = _.filter(payments, p => {
+    console.log(payments)
+    var filteredPayments = filter(payments, p => {
       return (
         moment(p.date).format('MMYYYY') ===
         moment([this.state.year, this.state.month, 1]).format('MMYYYY')
       );
     });
-    filteredPayments = _.filter(filteredPayments, ['centreId', selection.id]);
+    filteredPayments = filter(filteredPayments, ['centreId', selection.id]);
     var grandTotal = 0;
-    if (_.size(filteredPayments) !== 0) {
-      var cashPayments = _.filter(filteredPayments, ['paymentMethod', 'Cash']);
-      if (_.size(cashPayments) !== 0) {
+    if (size(filteredPayments) !== 0) {
+      var cashPayments = filter(filteredPayments, ['paymentMethod', 'Cash']);
+      if (size(cashPayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -74,11 +79,11 @@ class TotalCollectionHQ extends React.Component {
             </Col>
           </Row>
         );
-        var groupCashPayments = _.groupBy(cashPayments, function(p) {
+        var groupCashPayments = groupBy(cashPayments, function(p) {
           return moment(p.date).format('DD MMM YYYY');
         });
         Object.keys(groupCashPayments).forEach(date => {
-          var subTotal = _.reduce(
+          var subTotal = reduce(
             groupCashPayments[date],
             function(sum, n) {
               return sum + n.total;
@@ -157,8 +162,8 @@ class TotalCollectionHQ extends React.Component {
         grandTotal += total;
       }
 
-      var netsPayments = _.filter(filteredPayments, ['paymentMethod', 'NETS']);
-      if (_.size(netsPayments) !== 0) {
+      var netsPayments = filter(filteredPayments, ['paymentMethod', 'NETS']);
+      if (size(netsPayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -174,11 +179,11 @@ class TotalCollectionHQ extends React.Component {
             </Col>
           </Row>
         );
-        var groupNETSPayments = _.groupBy(netsPayments, function(p) {
+        var groupNETSPayments = groupBy(netsPayments, function(p) {
           return moment(p.date).format('DD MMM YYYY');
         });
         Object.keys(groupNETSPayments).forEach(date => {
-          var subTotal = _.reduce(
+          var subTotal = reduce(
             groupNETSPayments[date],
             function(sum, n) {
               return sum + n.total;
@@ -257,11 +262,11 @@ class TotalCollectionHQ extends React.Component {
         grandTotal += total;
       }
 
-      var bankTransferPayments = _.filter(filteredPayments, [
+      var bankTransferPayments = filter(filteredPayments, [
         'paymentMethod',
         'Bank Transfer'
       ]);
-      if (_.size(bankTransferPayments) !== 0) {
+      if (size(bankTransferPayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -277,14 +282,14 @@ class TotalCollectionHQ extends React.Component {
             </Col>
           </Row>
         );
-        var groupBankTransferPayments = _.groupBy(
+        var groupBankTransferPayments = groupBy(
           bankTransferPayments,
           function(p) {
             return moment(p.date).format('DD MMM YYYY');
           }
         );
         Object.keys(groupBankTransferPayments).forEach(date => {
-          var subTotal = _.reduce(
+          var subTotal = reduce(
             groupBankTransferPayments[date],
             function(sum, n) {
               return sum + n.total;
@@ -362,11 +367,11 @@ class TotalCollectionHQ extends React.Component {
         );
         grandTotal += total;
       }
-      var chequePayments = _.filter(filteredPayments, [
+      var chequePayments = filter(filteredPayments, [
         'paymentMethod',
         'Cheque'
       ]);
-      if (_.size(chequePayments) !== 0) {
+      if (size(chequePayments) !== 0) {
         var total = 0;
         html.push(
           <Row
@@ -382,11 +387,11 @@ class TotalCollectionHQ extends React.Component {
             </Col>
           </Row>
         );
-        var groupChequePayments = _.groupBy(chequePayments, function(p) {
+        var groupChequePayments = groupBy(chequePayments, function(p) {
           return moment(p.date).format('DD MMM YYYY');
         });
         Object.keys(groupChequePayments).forEach(date => {
-          var subTotal = _.reduce(
+          var subTotal = reduce(
             groupChequePayments[date],
             function(sum, n) {
               return sum + n.total;
@@ -486,6 +491,9 @@ class TotalCollectionHQ extends React.Component {
       );
     }
     var monthOptions = [];
+    monthOptions.push( <option key={"Select"} value={"Select"}>
+    Select
+   </option>)
     for (var i = 0; i < 12; i++) {
       if (moment(new Date(this.state.year, i, 0)).isSameOrBefore()) {
         monthOptions.push(
@@ -497,6 +505,9 @@ class TotalCollectionHQ extends React.Component {
     }
 
     var yearOptions = [];
+    yearOptions.push( <option key={"Select"} value={"Select"}>
+    Select
+   </option>)
     yearOptions.push(
       <option key={moment().year()} value={moment().year()}>
         {moment().year()}

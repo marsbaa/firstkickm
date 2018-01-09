@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -10,6 +9,7 @@ import { Link } from "react-router";
 import { getActive, paidDate, findPaymentDetails, makeUpDate } from "helper";
 import filter from "lodash/filter";
 import size from "lodash/size";
+import capitalize from 'lodash/capitalize'
 
 class AttendanceTable extends React.Component {
   render() {
@@ -21,10 +21,8 @@ class AttendanceTable extends React.Component {
       selectedYear,
       makeUps
     } = this.props;
-    const { day, startTime, endTime, ageGroup, calendarKey } = this.props.cla;
+    const { day, startTime, endTime, ageGroup, calendarKey, name } = this.props.cla;
 
-    const headerTitle =
-      ageGroup + " " + _.capitalize(day) + " " + startTime + " - " + endTime;
     const classTime = startTime + " - " + endTime;
     const calendar = _.find(calendars, { key: calendarKey });
     let termDates = [];
@@ -228,7 +226,7 @@ class AttendanceTable extends React.Component {
     return (
       <div>
         <Row
-          key={headerTitle}
+          key={name}
           style={{
             backgroundColor: "#656565",
             textAlign: "center",
@@ -236,7 +234,7 @@ class AttendanceTable extends React.Component {
           }}
         >
           <Col xs={12} md={12} lg={12}>
-            <h5>{headerTitle}</h5>
+            <h5>{name}</h5>
           </Col>
         </Row>
         <ReactTable

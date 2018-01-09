@@ -40,6 +40,7 @@ const ChartTrialConversion = props => {
         calendarDates[calendarDates.length - 1]
       );
     });
+    console.log(filteredTrials)
 
     const filteredAttended = filter(filteredTrials, { attended: true });
 
