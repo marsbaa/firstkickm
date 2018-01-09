@@ -62,12 +62,13 @@ export function findPaymentDetails(
     //Check if payment is made for this term
     let payment = _.find(student.payments, o => {
       if (o.termsPaid !== undefined) {
-        if (moment(o.date).isSame(selectedYear, "year")) {
+        if (moment(o.date).year() === selectedYear) {
           return o.termsPaid[selectedTerm] !== undefined;
         }
       }
       return false;
     });
+    console.log(payment)
 
     if (payment !== undefined) {
       paid.push(student);

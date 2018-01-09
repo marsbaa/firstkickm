@@ -96,6 +96,7 @@ class PaymentReport extends React.Component {
         this.state.selectedYear,
         makeUps
       );
+      console.log(paid)
 
       //Display Class Time Day Header
       if (size(paid) !== 0 || size(unpaid) !== 0) {
