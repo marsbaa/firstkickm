@@ -311,6 +311,17 @@ class MainMenu extends React.Component {
             <Link to="m/coaches">
               <button className="mainbtn">Coaches Profile</button>
             </Link>
+            {isSuperAdmin(auth.email)
+              ? <Link to="m/studentstransfer">
+                  <button
+                    className="mainbtn"
+                    id="studentTransfer"
+                    disabled={selection.id === '0' ? true : false}
+                  >
+                    Student Transfer
+                  </button>
+                </Link>
+              : null}
           </Col>
         </Row>
       );

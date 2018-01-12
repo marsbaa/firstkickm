@@ -63,7 +63,7 @@ const Payer = ({ student, credit, creditAmount, onShow, type }) => {
           onClick={e => onShow(e, key, childName, email)}
         >
           <Glyphicon glyph="shopping-cart" />{" "}
-        </button>: null``  
+        </button>: null  
         }
           {type !== "Not Active" ?
             <Link to={"/m/payment/collection/" + key}>

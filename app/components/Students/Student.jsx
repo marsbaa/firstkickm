@@ -1,18 +1,18 @@
 import React from 'react'
-var {connect} = require('react-redux')
+import {connect} from 'react-redux'
 import {Row, Col, Glyphicon} from 'react-bootstrap'
 import {boy, girl} from 'styles.css'
-var actions = require('actions')
 import {Link} from 'react-router'
-import _ from 'lodash'
 import moment from 'moment'
+import truncate from 'lodash/truncate'
+import find from 'lodash/find'
 
 class Student extends React.Component {
   render() {
-    var {dispatch, users, auth} = this.props;
-    var user = _.find(users, ['email', auth.email])
+    var {users, auth} = this.props;
+    var user = find(users, ['email', auth.email])
     var {childName, key, gender, contact} = this.props.student;
-    var truncatedName = _.truncate(childName, {
+    var truncatedName = truncate(childName, {
   'length': 28});
 
   return (
@@ -30,6 +30,11 @@ class Student extends React.Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    users: state.users,
+    auth: state.auth
+  }
+}
 
-export default connect((state) => {return state;
-})(Student);
+export default connect(mapStateToProps)(Student);

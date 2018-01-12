@@ -74,6 +74,7 @@ import StudentApp from 'StudentApp';
 import StudentList from 'StudentList';
 import StudentEdit from 'StudentEdit';
 import StudentAdd from 'StudentAdd';
+import StudentTransfer from 'StudentTransfer'
 
 //Total collection
 import BankInCollection from 'BankInCollection';
@@ -145,6 +146,7 @@ export default (
           <Route path="makeup/:studentId" component={AttendanceMakeUp} />
         </Route>
         <Route path="students" component={StudentApp} />
+        <Route path="studentstransfer" component={StudentTransfer}/>
         <Route path="students/edit/:studentId" component={StudentEdit} />
         <Route path="students/add" component={StudentAdd} />
         <Route path="makeup" component={MakeUpApp}>
