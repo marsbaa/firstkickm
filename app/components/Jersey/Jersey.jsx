@@ -1,15 +1,11 @@
 import React from 'react'
-var {connect} = require('react-redux')
 import {Row, Col, Glyphicon} from 'react-bootstrap'
-var actions = require('actions')
 import {Link} from 'react-router'
-import _ from 'lodash'
+import truncate from 'lodash/truncate'
 
-class Jersey extends React.Component{
-  render() {
-    var {childName, childKey} = this.props.student;
-    var paymentKey = this.props.paymentKey
-    var truncatedName = _.truncate(childName, {
+const Jersey = ({student, paymentKey}) => {
+  const {childName, childKey} = student;
+    let truncatedName = truncate(childName, {
   'length': 28});
 
   return (
@@ -24,8 +20,6 @@ class Jersey extends React.Component{
 
   )
 }
-}
 
 
-export default connect((state) => {return state;
-})(Jersey);
+export default Jersey;
