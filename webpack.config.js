@@ -93,6 +93,7 @@ module.exports = {
       './app/components/Calendar',
       './app/components/Openhouse',
       './app/components/Cancel',
+      './app/components/Expenses',
       './app/api',
       './app/css',
       './app/actions'

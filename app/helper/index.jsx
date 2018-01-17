@@ -219,11 +219,17 @@ export function checkEarlyBird(actualTerms, sessionDates, date) {
   let year = moment(date).year();
   Object.keys(sessionDates).map(termId => {
     const term = sessionDates[termId];
-    if (actualTerms[year][termId].length === term.length) {
-      if (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
-        check = true;
+    if (moment(moment(date).format()).isSameOrBefore(actualTerms[moment(term[0]).year()][termId][0], 'day')) {
+      check = true
+    }
+    else {
+      if (actualTerms[year][termId].length === term.length) {
+        if (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
+          check = true;
+        }
       }
     }
+    
   });
   return check;
 }
@@ -687,6 +693,20 @@ export function getAllCalendarDates(calendars, calendarKeys) {
   return _.uniq(calendarDates).sort();
 }
 
+export function getCalendarDateByYearAndMonth(calendar, year, month) {
+  let dates = []
+  if (calendar.terms[year] !== undefined) {
+    let terms = calendar.terms[year]
+    Object.keys(terms).map(id => {
+      terms[id].map(date => {
+        if (moment(date).format('M') === month+1) {
+          dates.push(date)
+        }
+      })
+    })
+  }
+}
+
 export function getAllClassTimeDays(classes, ag, dayOfTrial) {
   let classTimeDays = [];
   Object.keys(classes).map(classId => {
@@ -751,3 +771,4 @@ function editDistance(s1, s2) {
   }
   return costs[s2.length];
 }
+

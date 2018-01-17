@@ -1448,55 +1448,6 @@ export var updateTC = tc => {
   };
 };
 
-//Expense Actions
-export var addExpense = expense => {
-  var expensesRef = firebaseRef.child('expenses');
-  var newKey = expensesRef.push().key;
-  var updates = {};
-  updates[newKey] = expense;
-  expensesRef.update(updates);
-  expense.key = newKey;
-  return {
-    type: 'ADD_EXPENSE',
-    expense
-  };
-};
-
-export var startExpenses = () => {
-  return dispatch => {
-    var expensesRef = firebaseRef.child('expenses');
-    expensesRef.once('value').then(snapshot => {
-      var expense = snapshot.val();
-      if (expense !== null) {
-        var parsedExpense = [];
-
-        Object.keys(expense).forEach(expenseId => {
-          parsedExpense.push({
-            key: expenseId,
-            ...expense[expenseId]
-          });
-        });
-        dispatch(addExpenses(parsedExpense));
-      }
-    });
-  };
-};
-
-export var addExpenses = expenses => {
-  return {
-    type: 'ADD_EXPENSES',
-    expenses
-  };
-};
-
-export var deleteExpense = key => {
-  var expensesRef = firebaseRef.child('expenses/' + key);
-  expensesRef.remove();
-  return {
-    type: 'REMOVE_EXPENSE',
-    key
-  };
-};
 
 //Notes
 export var startNotes = () => {
@@ -1810,5 +1761,55 @@ export const addClasses = classes => {
   return {
     type: 'ADD_CLASSES',
     classes
+  };
+};
+
+
+//Expense
+export const startExpenses = () => {
+  return dispatch => {
+    const expenseRef = firebaseRef.child('expenses');
+    expenseRef.once('value').then(snapshot => {
+      const expenses  = snapshot.val();
+      let parsedExpenses = {};
+      if (expenses !== null) {
+        Object.keys(expenses).map(key => {
+          parsedExpenses[key] = {
+            key,
+            ...expenses[key]
+          };
+        });
+        dispatch(addExpenses(parsedExpenses));
+      }
+    });
+  };
+};
+
+export const addExpenses = expenses => {
+  return {
+    type: 'ADD_EXPENSES',
+    expenses
+  };
+};
+
+export var addExpense = expense => {
+  var expensesRef = firebaseRef.child('expenses');
+  var newKey = expensesRef.push().key;
+  var updates = {};
+  updates[newKey] = expense;
+  expensesRef.update(updates);
+  expense.key = newKey;
+  return {
+    type: 'ADD_EXPENSE',
+    expense
+  };
+};
+
+export var deleteExpense = key => {
+  var expensesRef = firebaseRef.child('expenses/' + key);
+  expensesRef.remove();
+  return {
+    type: 'REMOVE_EXPENSE',
+    key
   };
 };

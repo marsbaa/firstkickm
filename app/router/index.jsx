@@ -100,6 +100,9 @@ import PromotionAdd from 'PromotionAdd';
 
 import CancelSessionApp from 'CancelSessionApp';
 
+//Expenses
+import ExpenseApp from 'ExpenseApp'
+
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
     replace('/');
@@ -191,6 +194,7 @@ export default (
           <IndexRoute component={SettingsList} />
           <Route path="ageGroup/:name" component={EditAgeGroup} />
         </Route>
+        <Route path="expenses" component={ExpenseApp} />
         <Route path="promotions" component={PromotionsApp} />
         <Route path="promotions/add" component={PromotionAdd} />
       </Route>

@@ -32,15 +32,17 @@ const ChartTrialConversion = props => {
       selectedTerm,
       selectedYear
     );
+    console.log(name)
+    console.log(calendarDates)
     let filteredTrials = filter(trials, { venueId: id });
-
     filteredTrials = filter(filteredTrials, o => {
       return moment(o.dateOfTrial).isBetween(
-        calendarDates[0],
-        calendarDates[calendarDates.length - 1]
+        moment(calendarDates[0]).format('YYYY-MM-DD'),
+        moment(calendarDates[calendarDates.length - 1]).format('YYYY-MM-DD'), null, '[]'
       );
     });
     console.log(filteredTrials)
+    
 
     const filteredAttended = filter(filteredTrials, { attended: true });
 

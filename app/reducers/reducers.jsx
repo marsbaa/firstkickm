@@ -25,8 +25,6 @@ export var redirectReducer = (state = "", action) => {
   }
 };
 
-
-
 export var navbarReducer = (state = { link: "", title: "" }, action) => {
   switch (action.type) {
     case "UPDATE_NAV_TITLE":
@@ -630,10 +628,10 @@ export var selectedPromotionReducer = (state = {}, action) => {
     case "ADD_SELECTED_PROMOTION":
       return {
         ...state,
-        [action.payerKey] : {
+        [action.payerKey]: {
           promoKey: action.promoKey
         }
-      }
+      };
     case "RESET_SELECTED_PROMOTION":
       return {};
     default:
@@ -645,7 +643,7 @@ export var payerReducer = (state = {}, action) => {
   switch (action.type) {
     case "ADD_PAYERS":
       return action.payers;
-      case "ADD_PAYERS_DATES":
+    case "ADD_PAYERS_DATES":
       return {
         ...state,
         [action.id]: {
@@ -653,7 +651,7 @@ export var payerReducer = (state = {}, action) => {
           sessionDates: { ...action.dates }
         }
       };
-      case "INSERT_PAYERS_DATE":
+    case "INSERT_PAYERS_DATE":
       return {
         ...state,
         [action.id]: {
@@ -682,7 +680,7 @@ export var payerReducer = (state = {}, action) => {
           }
         }
       };
-      case "UPDATE_PAYERS_START_DATE":
+    case "UPDATE_PAYERS_START_DATE":
       return {
         ...state,
         [action.id]: {
@@ -690,7 +688,7 @@ export var payerReducer = (state = {}, action) => {
           startDate: action.startDate
         }
       };
-      case "RESET_PAYERS":
+    case "RESET_PAYERS":
       return {};
     default:
       return state;
@@ -866,14 +864,17 @@ export var fetchingReducer = (state = { completed: false }, action) => {
   }
 };
 
-export var expenseReducer = (state = [], action) => {
+export var expenseReducer = (state = {}, action) => {
   switch (action.type) {
     case "ADD_EXPENSES":
-      return [...state, ...action.expenses];
+      return action.expenses;
     case "ADD_EXPENSE":
-      return [...state, { ...action.expense }];
+      return {
+        ...state,
+        [action.expense.key]: { ...action.expense }
+      };
     case "REMOVE_EXPENSE":
-      return state.filter(({ key }) => key !== action.key);
+      return _.omit(state, [action.key]);
     default:
       return state;
   }

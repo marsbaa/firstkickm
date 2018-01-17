@@ -312,6 +312,16 @@ class MainMenu extends React.Component {
               <button className="mainbtn">Coaches Profile</button>
             </Link>
             {isSuperAdmin(auth.email)
+              ? <Link to="m/expenses">
+                  <button
+                    className="mainbtn"
+                    id="expenses"
+                  >
+                    Expenses
+                  </button>
+                </Link>
+              : null}
+            {isSuperAdmin(auth.email)
               ? <Link to="m/studentstransfer">
                   <button
                     className="mainbtn"
