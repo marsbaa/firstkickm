@@ -220,15 +220,17 @@ export function checkEarlyBird(actualTerms, sessionDates, date) {
   Object.keys(sessionDates).map(termId => {
     const term = sessionDates[termId];
     if (moment(moment(date).format()).isSameOrBefore(actualTerms[moment(term[0]).year()][termId][0], 'day')) {
-      check = true
+      if (actualTerms[moment(term[0]).year()][termId].length === term.length) {
+        check = true
+      } 
     }
-    else {
-      if (actualTerms[year][termId].length === term.length) {
-        if (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
-          check = true;
-        }
-      }
-    }
+    // else {
+    //   if (actualTerms[year][termId].length === term.length) {
+    //     if (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
+    //       check = true;
+    //     }
+    //   }
+    //}
     
   });
   return check;

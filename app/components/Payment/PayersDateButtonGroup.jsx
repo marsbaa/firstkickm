@@ -40,7 +40,7 @@ class PayersDateButtonGroup extends React.Component {
                 return (
                   <button
                     className="datebtn"
-                    key={date}
+                    key={date+student.key}
                     style={{
                       width: '25%',
                       margin: '0px',
@@ -54,8 +54,8 @@ class PayersDateButtonGroup extends React.Component {
               } else {
                 return (
                   <button
-                    className="datebtn"
-                    key={date}
+                    className="btnon"
+                    key={date+student.key}
                     style={{ width: '25%', margin: '0px', height: '40px' }}
                     onClick={e => {
                       this.handleChange(e, date);

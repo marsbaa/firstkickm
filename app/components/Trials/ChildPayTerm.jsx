@@ -22,7 +22,7 @@ const ChildPayTerm = props => {
         {dates.map((date, dateId) => {
           if (dateId === 0) {
             return (
-              <font key={date} style={{ fontSize: '9px' }}>
+              <font key={termId+date} style={{ fontSize: '9px' }}>
                 <i>
                   {moment(date).format('D MMM')}
                 </i>
