@@ -166,7 +166,7 @@ class PaymentBreakdown2 extends React.Component {
             paymentDetail.credits = studentCredits
           }
 
-          let termsPaid = [];
+          let termsPaid = {};
           const perSession = getPerSession(sessionDates);
           Object
             .keys(sessionDates)

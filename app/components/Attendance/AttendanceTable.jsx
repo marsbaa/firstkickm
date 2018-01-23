@@ -54,7 +54,7 @@ class AttendanceTable extends React.Component {
       currentClassDay: day,
       currentClassTime: classTime
     });
-
+  
     const { paid, paidAmount, paidDetails, unpaid } = findPaymentDetails(
       filteredActiveStudents,
       termDates,
@@ -146,7 +146,6 @@ class AttendanceTable extends React.Component {
         ]
       }
     ];
-
     Object.keys(unpaid).map(studentId => {
       let termData = [];
       const { payments, attendance, childName, key } = unpaid[studentId];
