@@ -10,13 +10,15 @@ import {
   startStudents,
   startMakeUps,
   moveClasses,
-  startClasses
+  startClasses,
+  startAddTrials
 } from 'actions';
 import { startLogout } from 'AuthActions';
 import { Link, browserHistory } from 'react-router';
 import styled from 'styled-components';
 import Loading from 'Loading';
 import StudentCSV from 'StudentCSV';
+import TrialsCSV from 'TrialsCSV'
 
 const Button = styled.button`
   border-radius: 3px;
@@ -56,16 +58,18 @@ class NavBar extends React.Component {
     var { dispatch } = this.props;
     dispatch(startUsers());
     dispatch(startCentres());
+    dispatch(startAddTrials())
     dispatch(startCalendars());
     dispatch(startStudents());
     dispatch(startAgeGroup());
     dispatch(startClasses());
     dispatch(startMakeUps());
+    
     //dispatch(moveClasses());
   }
 
   render() {
-    const { navbar, auth, users, isFetching, students, centres } = this.props;
+    const { navbar, auth, users, isFetching, students, centres, trials } = this.props;
     return (
       <div>
         <Navbar
@@ -135,6 +139,7 @@ class NavBar extends React.Component {
                   </NavItem>
 
                   <StudentCSV students={students} centres={centres} />
+                  <TrialsCSV trials={trials} centres={centres} />
 
                   <NavItem eventKey={6}>
                     <Button onClick={this.onLogout.bind(this)}>Log Out</Button>
@@ -164,7 +169,8 @@ function mapStateToProps(state) {
     users: state.users,
     isFetching: state.isFetching,
     students: state.students,
-    centres: state.centres
+    centres: state.centres,
+    trials: state.trials
   };
 }
 
