@@ -14,7 +14,9 @@ const csvData = [
         'Time of Trial',
         'Gender',
         'Venue',
-        'Medical'
+        'Medical',
+        'Attended',
+        'Registered'
     ]
 ];
 
@@ -40,7 +42,9 @@ const TrialsCSV = ({trials, centres}) => {
                 trial.timeOfTrial,
                 trial.gender,
                 centreName,
-                trial.medicalCondition
+                trial.medicalCondition,
+                trial.attended,
+                trial.registered
             ]);
             })
             
