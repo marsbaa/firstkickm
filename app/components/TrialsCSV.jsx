@@ -22,7 +22,6 @@ const csvData = [
 
 const TrialsCSV = ({trials, centres}) => {
     const groupByCentre = groupBy(trials, 'venueId');
-    console.log(groupByCentre)
     Object
         .keys(groupByCentre)
         .map(id => {

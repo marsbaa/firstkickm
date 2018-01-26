@@ -18,7 +18,7 @@ class PromotionSelector extends React.Component {
     dispatch(resetSelectedPromotion());
   }
   render() {
-    const { promotions, dispatch } = this.props;
+    const { promotions, dispatch, payerKey } = this.props;
     return (
       <Panel
         header={
@@ -32,7 +32,7 @@ class PromotionSelector extends React.Component {
             componentClass="select"
             defaultValue={0}
             onChange={e => {
-              dispatch(addSelectedPromotion(e.target.value));
+              dispatch(addSelectedPromotion(e.target.value, 'trial'));
             }}
           >
             <option key="0" value="0">

@@ -36,7 +36,7 @@ class PaymentBreakdown extends React.Component {
     const eb = 20;
     const sd = [20, 30];
     const rg = 80;
-    const { register, classes, calendars, parent, promotion } = this.props;
+    const { register, classes, calendars, parent, promotions, selectedPromotion } = this.props;
     const { termFee, termsTotal } = getBreakDown(register);
 
     let count = 0;
@@ -124,8 +124,10 @@ class PaymentBreakdown extends React.Component {
       } else {
         paymentDetail.siblingDiscount = false;
       }
-      if (promotion !== undefined) {
-        html.push(
+      if (selectedPromotion !== undefined) {
+        if (selectedPromotion['trial'] !== undefined && selectedPromotion['trial'].promoKey !== '0') {
+          let promotion = promotions[selectedPromotion['trial'].promoKey]
+          html.push(
           <PromotionDiscount
             key={'promotiondiscount' + childName}
             amount={promotion.amount}
@@ -135,6 +137,8 @@ class PaymentBreakdown extends React.Component {
         childTotal -= promotion.amount;
         paymentDetail.promotionDiscount = promotion.name;
         paymentDetail.promotionDiscountAmount = promotion.amount;
+        }
+        
       }
       let termsPaid = [];
       const perSession = getPerSession(sessionDates);
@@ -210,7 +214,8 @@ function mapStateToProps(state) {
     register: filter(state.register, o => !o.notJoining),
     classes: state.selection.classes,
     calendars: state.calendars,
-    promotion: state.promotions[state.selectedPromotion]
+    promotions: state.promotions,
+    selectedPromotion : state.selectedPromotion
   };
 }
 
