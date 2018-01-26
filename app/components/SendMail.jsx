@@ -1,6 +1,8 @@
 module.exports = {
   mail: function(to, subject, html) {
-
+    console.log(to)
+    console.log(subject)
+    console.log(html)
     $.ajax({
       url: '/send',
       type: 'POST',

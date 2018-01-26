@@ -30,7 +30,8 @@ class PaymentHistory extends React.Component {
       show: false,
       showR: false,
       paymentKey: '',
-      childKey: ''
+      childKey: '',
+      email: ''
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.resendReceipt = this.resendReceipt.bind(this);
@@ -61,10 +62,9 @@ class PaymentHistory extends React.Component {
     if (payment.invoiceKey !== '') {
       paymentDetails = filter(payments, { invoiceKey: payment.invoiceKey });
     }
-    var email = document.getElementById('email').value;
+    console.log(this.state.email)
     const invoiceHTML = InvoiceTemplate.render(paymentDetails);
-    console.log(invoiceHTML);
-    SendMail.mail(email, 'First Kick Academy - Payment Receipt', invoiceHTML);
+    SendMail.mail(this.state.email, 'First Kick Academy - Payment Receipt', invoiceHTML);
     this.setState({ showR: false });
   }
 
@@ -173,6 +173,7 @@ class PaymentHistory extends React.Component {
                                 type="text"
                                 placeholder="Enter Email"
                                 defaultValue={email}
+                                onChange={(e) => this.setState({email: e.target.value})}
                               />
                             </FormGroup>
                           </Modal.Body>
