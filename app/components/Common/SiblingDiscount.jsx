@@ -10,7 +10,7 @@ const SiblingDiscount = props => {
       </Col>
       <Col xs={4} md={4} style={{ float: 'right' }}>
         <p style={{ textAlign: 'right', marginBottom: '0px' }}>
-          (${count > 1 ? amount[1] : amount[0]})
+          (${count > 2 ? amount[1] : amount[0]})
         </p>
       </Col>
     </Row>
