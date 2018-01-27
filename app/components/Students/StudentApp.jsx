@@ -10,28 +10,28 @@ import Search from 'Search';
 import StudentList from 'StudentList';
 
 class StudentApp extends React.Component {
-  componentWillMount() {
-    let {dispatch, students} = this.props
-    let activeStudents = getActive(students);
-    Object
-      .keys(activeStudents)
-      .map(key => {
-        const {currentClassTime} = activeStudents[key]
-        if (currentClassTime === '4:00pm - 5:00pm') {
-          let newData = {
-            ...activeStudents[key],
-            currentClassTime: '5:00pm - 6:00pm'
-          }
-          dispatch(updateStudent(activeStudents[key].key, newData))
-        } else if (currentClassTime === '4:00pm - 5:30pm') {
-          let newData = {
-            ...activeStudents[key],
-            currentClassTime: '4:30pm - 6:00pm'
-          }
-          dispatch(updateStudent(activeStudents[key].key, newData))
-        }
-      })
-  }
+  // componentWillMount() {
+  //   let {dispatch, students} = this.props
+  //   let activeStudents = getActive(students);
+  //   Object
+  //     .keys(activeStudents)
+  //     .map(key => {
+  //       const {currentClassTime} = activeStudents[key]
+  //       if (currentClassTime === '5:00pm - 6:00pm') {
+  //         let newData = {
+  //           ...activeStudents[key],
+  //           currentClassTime: '4:00pm - 5:00pm'
+  //         }
+  //         dispatch(updateStudent(activeStudents[key].key, newData))
+  //       } else if (currentClassTime === '4:30pm - 6:00pm') {
+  //         let newData = {
+  //           ...activeStudents[key],
+  //           currentClassTime: '4:00pm - 5:30pm'
+  //         }
+  //         dispatch(updateStudent(activeStudents[key].key, newData))
+  //       }
+  //     })
+  // }
   componentDidMount() {
     var {dispatch, selection} = this.props;
     dispatch(updateNavTitle('/m/students', selection.name));
