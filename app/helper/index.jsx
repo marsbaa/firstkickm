@@ -364,9 +364,7 @@ export function sortByEndTime(classes) {
 
 export function filterByAMPM(classes, type) {
   return _.filter(classes, o => {
-    var startTime = o
-      .startTime
-      .split(":");
+    var startTime = o.startTime.split(":");
     if (startTime[1].endsWith(type)) {
       return true;
     } else {
