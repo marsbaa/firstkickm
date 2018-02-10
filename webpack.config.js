@@ -11,7 +11,9 @@ try {
 
 module.exports = {
   entry: {
-    app: ['script-loader!jquery/dist/jquery.min.js', './app/app.jsx'],
+    app: [
+      'script-loader!jquery/dist/jquery.min.js', './app/app.jsx'
+    ],
     vendor: [
       'react',
       'react-dom',
@@ -29,28 +31,17 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.bundle.js',
-      minChunks: Infinity
-    }),
+    new webpack.ProvidePlugin({$: 'jquery', jQuery: 'jquery'}),
+    new webpack
+      .optimize
+      .CommonsChunkPlugin({name: 'vendor', filename: 'vendor.bundle.js', minChunks: Infinity}),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public/index.html'),
       filename: 'index.html',
       inject: 'body'
     }),
-    /*new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      output: {
-        comments: false
-      }
-    }),*/
+    // new webpack   .optimize   .UglifyJsPlugin({     compress: {       warnings:
+    // false     },     output: {       comments: false     }   }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
@@ -116,16 +107,13 @@ module.exports = {
         query: {
           presets: ['react', 'es2015', 'stage-0']
         }
-      },
-      {
+      }, {
         test: /\.png$/,
         use: ['url-loader']
-      },
-      {
+      }, {
         test: /\.jpg$/,
         use: ['file-loader']
-      },
-      {
+      }, {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       }
