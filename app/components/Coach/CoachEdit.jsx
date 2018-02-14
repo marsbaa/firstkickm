@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {
   Grid,
   Row,
@@ -12,11 +12,11 @@ import {
   Modal,
   Button
 } from 'react-bootstrap';
-import { addCoach, updateCoach } from 'actions';
+import {addCoach, updateCoach} from 'CoachesActions';
 import moment from 'moment';
-import { Link } from 'react-router';
-import _ from 'lodash';
-import { browserHistory } from 'react-router';
+import {Link} from 'react-router';
+import find from 'lodash/find';
+import {browserHistory} from 'react-router';
 
 class CoachEdit extends React.Component {
   constructor(props) {
@@ -24,39 +24,75 @@ class CoachEdit extends React.Component {
     this.state = {
       showModal: false
     };
-    this.close = this.close.bind(this);
-    this.open = this.open.bind(this);
-    this.deleteCoach = this.deleteCoach.bind(this);
+    this.close = this
+      .close
+      .bind(this);
+    this.open = this
+      .open
+      .bind(this);
+    this.deleteCoach = this
+      .deleteCoach
+      .bind(this);
   }
 
   close() {
-    this.setState({ showModal: false });
+    this.setState({showModal: false});
   }
 
   open() {
-    this.setState({ showModal: true });
+    this.setState({showModal: true});
   }
 
   formSubmit(e) {
     e.preventDefault();
-    let { dispatch } = this.props;
+    let {dispatch} = this.props;
     let coachId = this.props.params.coachId;
     let coach = {
-      shortName: document.getElementById('shortName').value,
-      name: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      dateOfBirth: document.getElementById('dateOfBirth').value,
-      contact: document.getElementById('contact').value,
-      occupation: document.getElementById('occupation').value,
-      address: document.getElementById('address').value,
-      bank: document.getElementById('bank').value,
-      accountNumber: document.getElementById('accountNumber').value,
-      qualification: document.getElementById('qualification').value,
-      firstAid: document.getElementById('firstAid').value,
-      startDate: document.getElementById('startDate').value,
-      nric: document.getElementById('nric').value,
-      education: document.getElementById('education').value,
-      paymentRate: document.getElementById('paymentRate').value
+      shortName: document
+        .getElementById('shortName')
+        .value,
+      name: document
+        .getElementById('name')
+        .value,
+      email: document
+        .getElementById('email')
+        .value,
+      dateOfBirth: document
+        .getElementById('dateOfBirth')
+        .value,
+      contact: document
+        .getElementById('contact')
+        .value,
+      occupation: document
+        .getElementById('occupation')
+        .value,
+      address: document
+        .getElementById('address')
+        .value,
+      bank: document
+        .getElementById('bank')
+        .value,
+      accountNumber: document
+        .getElementById('accountNumber')
+        .value,
+      qualification: document
+        .getElementById('qualification')
+        .value,
+      firstAid: document
+        .getElementById('firstAid')
+        .value,
+      startDate: document
+        .getElementById('startDate')
+        .value,
+      nric: document
+        .getElementById('nric')
+        .value,
+      education: document
+        .getElementById('education')
+        .value,
+      paymentRate: document
+        .getElementById('paymentRate')
+        .value
     };
     if (coachId === 'add') {
       dispatch(addCoach(coach));
@@ -69,14 +105,14 @@ class CoachEdit extends React.Component {
 
   deleteCoach(e) {
     e.preventDefault();
-    let { dispatch } = this.props;
+    let {dispatch} = this.props;
     let coachId = this.props.params.coachId;
     dispatch(actions.deleteCoach(coachId));
     browserHistory.push('/m/coaches');
   }
 
   render() {
-    const { coach } = this.props;
+    const {coach} = this.props;
     let coachId = this.props.params.coachId;
     let coachData = coach;
     if (coachData === undefined) {
@@ -99,150 +135,156 @@ class CoachEdit extends React.Component {
       };
     }
     return (
-      <Grid style={{ marginTop: '15px' }}>
+      <Grid style={{
+        marginTop: '15px'
+      }}>
         <Row>
           <Col md={6}>
             <FormGroup>
               <ControlLabel>Short Name</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="shortName"
                 type="text"
                 placeholder="Coach Short Name"
-                defaultValue={coachData.shortName}
-              />
+                defaultValue={coachData.shortName}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Full Name</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="name"
                 type="text"
                 placeholder="Coach Name"
-                defaultValue={coachData.name}
-              />
+                defaultValue={coachData.name}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Email</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="email"
                 type="text"
                 placeholder="Enter Email"
-                defaultValue={coachData.email}
-              />
+                defaultValue={coachData.email}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Date of Birth</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="dateOfBirth"
                 type="text"
                 placeholder="Enter Date of Birth"
-                defaultValue={moment(coachData.dateOfBirth).format(
-                  'DD/MM/YYYY'
-                )}
-              />
+                defaultValue={moment(coachData.dateOfBirth).format('DD/MM/YYYY')}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Occupation</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="occupation"
                 type="text"
                 placeholder="Enter Occupation"
-                defaultValue={coachData.occupation}
-              />
+                defaultValue={coachData.occupation}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Address</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="address"
                 componentClass="textarea"
                 placeholder="Enter Address"
-                defaultValue={coachData.address}
-              />
+                defaultValue={coachData.address}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Bank</ControlLabel>
-              <FormControl
-                id="bank"
-                componentClass="select"
-                defaultValue={coachData.bank}
-              >
+              <FormControl id="bank" componentClass="select" defaultValue={coachData.bank}>
                 <option value="select">Select</option>
                 <option value="DBS">DBS</option>
                 <option value="POSB">POSB</option>
                 <option value="OCBC">OCBC</option>
                 <option value="UOB">UOB</option>
+                <option value="MAYBANK">MAYBANK</option>
               </FormControl>
               <FormControl
                 id="accountNumber"
                 type="text"
                 placeholder="Enter Account Number"
-                defaultValue={coachData.accountNumber}
-              />
+                defaultValue={coachData.accountNumber}/>
             </FormGroup>
           </Col>
           <Col md={6}>
             <FormGroup>
               <ControlLabel>NRIC</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="nric"
                 type="text"
                 placeholder="Enter NRIC"
-                defaultValue={coachData.nric}
-              />
+                defaultValue={coachData.nric}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Contact Number</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="contact"
                 type="text"
                 placeholder="Enter Contact Number"
-                defaultValue={coachData.contact}
-              />
+                defaultValue={coachData.contact}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Education Level</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="education"
                 type="text"
                 placeholder="Enter Education Level"
-                defaultValue={coachData.education}
-              />
+                defaultValue={coachData.education}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Coaching Qualification</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="qualification"
                 type="text"
                 placeholder="Enter Coaching Qualification"
-                defaultValue={coachData.qualification}
-              />
+                defaultValue={coachData.qualification}/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Start Date</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{
+                marginBottom: '10px'
+              }}
                 id="startDate"
                 type="text"
                 placeholder="Enter Start Date"
-                defaultValue=""
-              />
+                defaultValue=""/>
             </FormGroup>
             <FormGroup>
               <ControlLabel>Payment Rate</ControlLabel>
               <FormControl
                 id="paymentRate"
                 componentClass="select"
-                defaultValue={coachData.paymentRate}
-              >
+                defaultValue={coachData.paymentRate}>
                 <option value="select">Select</option>
                 <option value="OJT">OJT</option>
                 <option value="30">30</option>
@@ -257,24 +299,29 @@ class CoachEdit extends React.Component {
               <FormControl
                 id="firstAid"
                 componentClass="select"
-                defaultValue={coachData.firstAid}
-              >
+                defaultValue={coachData.firstAid}>
                 <option value="true">Yes</option>
                 <option value="false">No</option>
               </FormControl>
             </FormGroup>
-            <button className="submitbtn" onClick={this.formSubmit.bind(this)}>
+            <button
+              className="submitbtn"
+              onClick={this
+              .formSubmit
+              .bind(this)}>
               Save Coach Profile
             </button>
             {coachId === 'add'
               ? []
               : <button
-                  className="submitbtn"
-                  style={{ backgroundColor: 'red', marginTop: '20px' }}
-                  onClick={this.open}
-                >
-                  Delete Coach Profile
-                </button>}
+                className="submitbtn"
+                style={{
+                backgroundColor: 'red',
+                marginTop: '20px'
+              }}
+                onClick={this.open}>
+                Delete Coach Profile
+              </button>}
           </Col>
         </Row>
         <Modal show={this.state.showModal} onHide={this.close}>
@@ -282,7 +329,8 @@ class CoachEdit extends React.Component {
             <b>Delete Coach</b>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to delete coach {coachData.name} ?
+            Are you sure you want to delete coach {coachData.name}
+            ?
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.deleteCoach}>Yes</Button>
@@ -296,10 +344,8 @@ class CoachEdit extends React.Component {
 
 function mapStateToProps(state, props) {
   return {
-    coach: find(state.coaches, { key: props.params.coachId })
+    coach: find(state.coaches, {key: props.params.coachId})
   };
 }
 
-export default connect(state => {
-  return state;
-})(CoachEdit);
+export default connect(mapStateToProps)(CoachEdit);

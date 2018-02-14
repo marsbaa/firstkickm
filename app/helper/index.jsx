@@ -59,13 +59,10 @@ export function findPaymentDetails(students, termDates, selectedTerm, selectedYe
       let attended = false;
       let p = false;
 
-      console.log(student.childName)
-      console.log(student.payments)
       //Check if payment is made for this term
       let payment = _.find(student.payments, o => {
         if (o.termsPaid !== undefined) {
           if (o.termsPaid[selectedTerm] !== undefined) {
-            console.log(moment(o.termsPaid[selectedTerm][0].date).year())
             if (moment(o.termsPaid[selectedTerm][0].date).year() === parseInt(selectedYear)) {
               return true
             }
@@ -74,8 +71,6 @@ export function findPaymentDetails(students, termDates, selectedTerm, selectedYe
         }
         return false;
       });
-
-      console.log(payment)
 
       if (payment !== undefined) {
         paid.push(student);
@@ -239,8 +234,8 @@ export function checkEarlyBird(actualTerms, sessionDates, date) {
         }
       }
       // else {   if (actualTerms[year][termId].length === term.length) {     if
-      // (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) {
-      // check = true;     }   } }
+      // (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) { check =
+      // true;     }   } }
 
     });
   return check;
@@ -364,7 +359,9 @@ export function sortByEndTime(classes) {
 
 export function filterByAMPM(classes, type) {
   return _.filter(classes, o => {
-    var startTime = o.startTime.split(":");
+    var startTime = o
+      .startTime
+      .split(":");
     if (startTime[1].endsWith(type)) {
       return true;
     } else {

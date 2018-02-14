@@ -10,28 +10,30 @@ import Search from 'Search';
 import StudentList from 'StudentList';
 
 class StudentApp extends React.Component {
-  // componentWillMount() {
-  //   let {dispatch, students} = this.props
-  //   let activeStudents = getActive(students);
-  //   Object
-  //     .keys(activeStudents)
-  //     .map(key => {
-  //       const {currentClassTime} = activeStudents[key]
-  //       if (currentClassTime === '5:00pm - 6:00pm') {
-  //         let newData = {
-  //           ...activeStudents[key],
-  //           currentClassTime: '4:00pm - 5:00pm'
-  //         }
-  //         dispatch(updateStudent(activeStudents[key].key, newData))
-  //       } else if (currentClassTime === '4:30pm - 6:00pm') {
-  //         let newData = {
-  //           ...activeStudents[key],
-  //           currentClassTime: '4:00pm - 5:30pm'
-  //         }
-  //         dispatch(updateStudent(activeStudents[key].key, newData))
-  //       }
-  //     })
-  // }
+
+  // componentWillMount() {   const {classes, students, dispatch} = this.props
+  // let activeStudents = getActive(students);   let notActiveStudents =
+  // getNotActive(students);   Object     .keys(classes)     .map(classKey => {
+  //    const {day, startTime, endTime, ageGroup} = classes[classKey];       let
+  // classTime = startTime + ' - ' + endTime;       let title = ageGroup + ' ' +
+  // classTime + ' (' + day + ')';       //Filter Students base on class       let
+  // classStudents = _.filter(activeStudents, {         currentClassDay: day,
+  //    currentClassTime: classTime,         ageGroup: ageGroup       });
+  // Object         .keys(classStudents)         .map(studentKey => {
+  // let newData = {             ...classStudents[studentKey],
+  // classKey           }           dispatch(updateStudent(studentKey, newData))
+  //       })     })   Object     .keys(notActiveStudents)     .map(studentKey =>
+  // {       let newData = {         ...classStudents[studentKey],
+  // classKey: ""       }       dispatch(updateStudent(studentKey, newData))
+  // }) } Changing of Class Time componentWillMount() {   let {dispatch, students}
+  // = this.props   let activeStudents = getActive(students);   Object
+  // .keys(activeStudents)     .map(key => {       const {currentClassTime} =
+  // activeStudents[key]       if (currentClassTime === '5:00pm - 6:00pm') {   let
+  // newData = {           ...activeStudents[key], currentClassTime: '4:00pm -
+  // 5:00pm'         } dispatch(updateStudent(activeStudents[key].key, newData)) }
+  // else if (currentClassTime === '4:30pm - 6:00pm') {         let newData = {
+  // ...activeStudents[key],           currentClassTime: '4:00pm - 5:30pm' }
+  // dispatch(updateStudent(activeStudents[key].key, newData))       }   }) }
   componentDidMount() {
     var {dispatch, selection} = this.props;
     dispatch(updateNavTitle('/m/students', selection.name));
