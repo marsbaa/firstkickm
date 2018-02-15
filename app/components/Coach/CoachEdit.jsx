@@ -12,7 +12,7 @@ import {
   Modal,
   Button
 } from 'react-bootstrap';
-import {addCoach, updateCoach} from 'CoachesActions';
+import {addCoach, updateCoach, deleteCoach} from 'CoachesActions';
 import moment from 'moment';
 import {Link} from 'react-router';
 import find from 'lodash/find';
@@ -107,7 +107,7 @@ class CoachEdit extends React.Component {
     e.preventDefault();
     let {dispatch} = this.props;
     let coachId = this.props.params.coachId;
-    dispatch(actions.deleteCoach(coachId));
+    dispatch(deleteCoach(coachId));
     browserHistory.push('/m/coaches');
   }
 
