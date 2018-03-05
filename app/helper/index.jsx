@@ -761,6 +761,28 @@ export function getCalendarDateByYearAndMonth(calendar, year, month) {
         })
       })
   }
+
+}
+
+export function getAllCalendarDatesByYearAndMonth(calendars, year, month) {
+  let dates = []
+  calendars.map(calendar => {
+    if (calendar.terms[year] !== undefined) {
+      Object
+        .keys(calendar.terms[year])
+        .map(termKey => {
+          let term = calendar.terms[year][termKey]
+          term.map(date => {
+            if (moment(date).month() === parseInt(month)) {
+              dates.push(date)
+            }
+          })
+        })
+    }
+  })
+  return _
+    .uniq(dates)
+    .sort();
 }
 
 export function getAllClassTimeDays(classes, ag, dayOfTrial) {

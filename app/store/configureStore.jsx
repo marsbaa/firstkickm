@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
-import { reducer as formReducer } from 'redux-form';
+import {reducer as formReducer} from 'redux-form';
 import reduxReset from 'redux-reset';
-import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
+import {composeWithDevTools} from 'redux-devtools-extension/logOnlyInProduction';
 import {
   authReducer,
   usersReducer,
@@ -33,7 +33,8 @@ import {
   cancelReducer,
   creditReducer,
   classesReducer,
-  payerReducer
+  payerReducer,
+  expenseTableReducer
 } from 'reducers';
 
 export var configure = (initialState = {}) => {
@@ -68,14 +69,11 @@ export var configure = (initialState = {}) => {
     cancelled: cancelReducer,
     credits: creditReducer,
     classes: classesReducer,
-    payers: payerReducer
+    payers: payerReducer,
+    expensesTable: expenseTableReducer
   });
 
-  const store = createStore(
-    reducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(thunk), reduxReset())
-  );
+  const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk), reduxReset()));
 
   return store;
 };
