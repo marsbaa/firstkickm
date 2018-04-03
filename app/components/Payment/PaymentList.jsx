@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 import {
   Row,
   Col,
@@ -8,34 +8,34 @@ import {
   ControlLabel,
   FormControl,
   Button
-} from 'react-bootstrap';
-import { connect } from 'react-redux';
-import Payer from 'Payer';
-import { startCredits, addPayment, updateNavTitle, resetPayers } from 'actions';
-import { RadioGroup, Radio } from 'react-radio-group';
-import DatePicker from 'react-datepicker';
-require('react-datepicker/dist/react-datepicker.css');
-import StudentsFilter from 'StudentsFilter';
-import InvoiceTemplateOthers from 'InvoiceTemplateOthers';
-import { firebaseRef } from 'firebaseApp';
-import SendMail from 'SendMail';
-import Search from 'Search';
-import moment from 'moment';
-import isEmpty from 'lodash/isEmpty';
-import find from 'lodash/find';
-import filter from 'lodash/filter';
-import size from 'lodash/size';
-import reduce from 'lodash/reduce';
+} from "react-bootstrap";
+import { connect } from "react-redux";
+import Payer from "Payer";
+import { startCredits, addPayment, updateNavTitle, resetPayers } from "actions";
+import { RadioGroup, Radio } from "react-radio-group";
+import DatePicker from "react-datepicker";
+require("react-datepicker/dist/react-datepicker.css");
+import StudentsFilter from "StudentsFilter";
+import InvoiceTemplateOthers from "InvoiceTemplateOthers";
+import { firebaseRef } from "firebaseApp";
+import SendMail from "SendMail";
+import Search from "Search";
+import moment from "moment";
+import isEmpty from "lodash/isEmpty";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import size from "lodash/size";
+import reduce from "lodash/reduce";
 
 class PaymentList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       show: false,
-      childKey: '',
-      childName: '',
-      email: '',
-      paymentMethod: 'Cash',
+      childKey: "",
+      childName: "",
+      email: "",
+      paymentMethod: "Cash",
       receivedDate: moment()
     };
   }
@@ -52,19 +52,19 @@ class PaymentList extends React.Component {
 
   formSubmit() {
     var { dispatch, users, auth, selection, students } = this.props;
-    var user = find(users, ['email', auth.email]);
-    var invoiceRef = firebaseRef.child('invoices');
+    var user = find(users, ["email", auth.email]);
+    var invoiceRef = firebaseRef.child("invoices");
     var newKey = invoiceRef.push().key;
     var payment = {
-      paymentDescription: document.getElementById('description').value,
-      total: parseInt(document.getElementById('amount').value),
+      paymentDescription: document.getElementById("description").value,
+      total: parseInt(document.getElementById("amount").value),
       date: moment(this.state.receivedDate).format(),
       centreId: selection.id,
       childKey: this.state.childKey,
       childName: this.state.childName,
       paymentMethod: this.state.paymentMethod,
       invoiceKey: newKey,
-      email: document.getElementById('email').value
+      email: document.getElementById("email").value
     };
     dispatch(addPayment(payment));
     var invoiceHTML = InvoiceTemplateOthers.render(payment);
@@ -72,8 +72,8 @@ class PaymentList extends React.Component {
     updates[newKey] = { invoiceHTML };
     invoiceRef.update(updates);
     SendMail.mail(
-      document.getElementById('email').value,
-      'First Kick Academy - Payment Receipt',
+      document.getElementById("email").value,
+      "First Kick Academy - Payment Receipt",
       invoiceHTML
     );
     this.setState({ show: false });
@@ -89,7 +89,7 @@ class PaymentList extends React.Component {
 
   componentDidMount() {
     var { dispatch, selection } = this.props;
-    dispatch(updateNavTitle('/m/payment', selection.name + ' Payment'));
+    dispatch(updateNavTitle("/m/payment", selection.name + " Payment"));
   }
 
   onShow(e, key, childName, email) {
@@ -113,10 +113,14 @@ class PaymentList extends React.Component {
       searchText
     );
     var activeStudents = filter(filteredStudents, o => {
-      return !(o.status === 'Not Active');
+      return !(o.status === "Not Active");
     });
     var notActiveStudents = filter(filteredStudents, o => {
-      return o.status === 'Not Active' || o.currentClassDay=== "" || o.currentClassTime ==="0";
+      return (
+        o.status === "Not Active" ||
+        o.currentClassDay === "" ||
+        o.currentClassTime === "0"
+      );
     });
 
     Object.keys(classes).forEach(classKey => {
@@ -124,7 +128,7 @@ class PaymentList extends React.Component {
         classKey
       ];
 
-      var classTime = startTime + ' - ' + endTime;
+      var classTime = startTime + " - " + endTime;
 
       var classStudents = filter(activeStudents, {
         currentClassDay: day,
@@ -137,9 +141,9 @@ class PaymentList extends React.Component {
           <div key={ageGroup + classTime + day}>
             <Row
               style={{
-                backgroundColor: '#656565',
-                padding: '0px 15px',
-                color: '#ffc600'
+                backgroundColor: "#656565",
+                padding: "0px 15px",
+                color: "#ffc600"
               }}
             >
               <Col xs={12} md={12}>
@@ -150,8 +154,8 @@ class PaymentList extends React.Component {
             </Row>
             {Object.keys(classStudents).map(studentId => {
               var student = classStudents[studentId];
-              let studentCredits = filter(filteredCredits, {
-                studentKey: student.key
+              let studentCredits = filter(filteredCredits, i => {
+                return i.studentKey === student.key && !i.inactive;
               });
               let totalCredit = reduce(
                 studentCredits,
@@ -182,9 +186,9 @@ class PaymentList extends React.Component {
         <div key="Not Active">
           <Row
             style={{
-              backgroundColor: '#656565',
-              padding: '0px 15px',
-              color: '#ffc600'
+              backgroundColor: "#656565",
+              padding: "0px 15px",
+              color: "#ffc600"
             }}
           >
             <Col xs={12} md={12}>
@@ -227,7 +231,7 @@ class PaymentList extends React.Component {
                 <ControlLabel>Date Received</ControlLabel>
                 <DatePicker
                   className="form-control"
-                  style={{ textAlign: 'center' }}
+                  style={{ textAlign: "center" }}
                   id="paymentDatePicker"
                   dateFormat="DD-MM-YYYY"
                   selected={this.state.receivedDate}
@@ -238,7 +242,7 @@ class PaymentList extends React.Component {
               </FormGroup>
               <ControlLabel>Payment Description</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{ marginBottom: "10px" }}
                 id="description"
                 type="text"
                 placeholder="Enter Payment Description"
@@ -247,7 +251,7 @@ class PaymentList extends React.Component {
             <FormGroup>
               <ControlLabel>Amount</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{ marginBottom: "10px" }}
                 id="amount"
                 type="text"
                 placeholder="Enter Amount"
@@ -255,24 +259,24 @@ class PaymentList extends React.Component {
             </FormGroup>
             <RadioGroup
               name="fruit"
-              style={{ marginBottom: '10px' }}
+              style={{ marginBottom: "10px" }}
               selectedValue={this.state.paymentMethod}
               onChange={this.handleChange.bind(this)}
             >
-              <label style={{ marginLeft: '5px' }}>
+              <label style={{ marginLeft: "5px" }}>
                 <Radio value="Cash" />Cash
               </label>
-              <label style={{ marginLeft: '5px' }}>
+              <label style={{ marginLeft: "5px" }}>
                 <Radio value="Cheque" />Cheque
               </label>
-              <label style={{ marginLeft: '5px' }}>
+              <label style={{ marginLeft: "5px" }}>
                 <Radio value="Bank Transfer" />Bank Transfer
               </label>
             </RadioGroup>
             <FormGroup>
               <ControlLabel>Email for Receipt</ControlLabel>
               <FormControl
-                style={{ marginBottom: '10px' }}
+                style={{ marginBottom: "10px" }}
                 id="email"
                 type="text"
                 placeholder="Enter Email"
@@ -291,10 +295,10 @@ class PaymentList extends React.Component {
         </Modal>
         <Row
           style={{
-            padding: '8px 10px',
-            borderBottom: '1px solid #cccccc',
-            display: 'flex',
-            alignItems: 'center'
+            padding: "8px 10px",
+            borderBottom: "1px solid #cccccc",
+            display: "flex",
+            alignItems: "center"
           }}
         >
           <Col xs={12} md={12}>

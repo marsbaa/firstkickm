@@ -4,7 +4,7 @@ import _ from "lodash";
 export var authReducer = (state = {}, action) => {
   switch (action.type) {
     case "LOGIN":
-      return {uid: action.uid, email: action.email, loggedIn: true};
+      return { uid: action.uid, email: action.email, loggedIn: true };
     case "LOGOUT":
       return {};
     default:
@@ -21,13 +21,16 @@ export var redirectReducer = (state = "", action) => {
   }
 };
 
-export var navbarReducer = (state = {
-  link: "",
-  title: ""
-}, action) => {
+export var navbarReducer = (
+  state = {
+    link: "",
+    title: ""
+  },
+  action
+) => {
   switch (action.type) {
     case "UPDATE_NAV_TITLE":
-      return {link: action.link, title: action.title};
+      return { link: action.link, title: action.title };
     default:
       return state;
   }
@@ -40,7 +43,8 @@ export var usersReducer = (state = [], action) => {
     case "ADD_USER":
       var user = action.user;
       return [
-        ...state, {
+        ...state,
+        {
           key: user.key,
           name: user.name,
           email: user.email,
@@ -70,15 +74,9 @@ export var usersReducer = (state = [], action) => {
 export var trialsReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_TRIALS":
-      return [
-        ...state,
-        ...action.trials
-      ];
+      return [...state, ...action.trials];
     case "ADD_TRIAL":
-      return [
-        ...state,
-        action.trial
-      ];
+      return [...state, action.trial];
     case "UPDATE_TRIAL":
       return state.map(trial => {
         if (trial.id === action.trial.id) {
@@ -215,12 +213,9 @@ export var paymentReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_PAYMENT":
       var payment = action.paymentDetails;
-      return [
-        ...state,
-        action.paymentDetails
-      ];
+      return [...state, action.paymentDetails];
     case "REMOVE_PAYMENT":
-      return state.filter(({key}) => key !== action.paymentKey);
+      return state.filter(({ key }) => key !== action.paymentKey);
     case "ADD_PAYMENTS":
       return [...action.payments];
     case "ISSUE_JERSEY":
@@ -241,13 +236,11 @@ export var paymentReducer = (state = [], action) => {
 export var studentReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_STUDENTS":
-      return [
-        ...state,
-        ...action.students
-      ];
+      return [...state, ...action.students];
     case "ADD_STUDENT":
       return [
-        ...state, {
+        ...state,
+        {
           ...action.student
         }
       ];
@@ -269,13 +262,11 @@ export var studentReducer = (state = [], action) => {
     case "REMOVE_STUDENT_PAYMENT":
       return state.map(student => {
         if (student.key === action.childKey) {
-          var id = Object
-            .keys(student.payments)
-            .map(id => {
-              if (student.payments[id].paymentKey === action.paymentKey) {
-                return id;
-              }
-            });
+          var id = Object.keys(student.payments).map(id => {
+            if (student.payments[id].paymentKey === action.paymentKey) {
+              return id;
+            }
+          });
           student.payments = _.omit(student.payments, id);
           if (_.isEmpty(student.payments)) {
             student.payments = undefined;
@@ -351,9 +342,7 @@ export var studentReducer = (state = [], action) => {
               attendance: {
                 ...attendance,
                 [action.date]: {
-                  attended: attendance[action.date].attended
-                    ? false
-                    : true
+                  attended: attendance[action.date].attended ? false : true
                 }
               }
             };
@@ -373,7 +362,8 @@ export var coachReducer = (state = [], action) => {
       return action.coaches;
     case "ADD_COACH":
       return [
-        ...state, {
+        ...state,
+        {
           ...action.coach
         }
       ];
@@ -426,9 +416,10 @@ export var coachReducer = (state = [], action) => {
                 attendance: {
                   ...attendance,
                   [action.date]: {
-                    attended: coach.attendance[action.date].attended === true
-                      ? false
-                      : true,
+                    attended:
+                      coach.attendance[action.date].attended === true
+                        ? false
+                        : true,
                     classId: action.classId,
                     sessionRate: action.sessionRate
                   }
@@ -550,9 +541,10 @@ export var coachScheduleReducer = (state = [], action) => {
       return [...action.coachSchedule];
     case "TOGGLE_SCHEDULE":
       var scheduleKey = action.classKey + action.date;
-      if (_.findIndex(state, {scheduleKey: scheduleKey}) === -1) {
+      if (_.findIndex(state, { scheduleKey: scheduleKey }) === -1) {
         return [
-          ...state, {
+          ...state,
+          {
             scheduleKey,
             classKey: action.classKey,
             date: action.date,
@@ -562,7 +554,12 @@ export var coachScheduleReducer = (state = [], action) => {
       } else {
         return state.map(schedule => {
           if (schedule.scheduleKey === scheduleKey) {
-            return {scheduleKey, classKey: action.classKey, date: action.date, assigned: action.val};
+            return {
+              scheduleKey,
+              classKey: action.classKey,
+              date: action.date,
+              assigned: action.val
+            };
           } else {
             return schedule;
           }
@@ -574,9 +571,12 @@ export var coachScheduleReducer = (state = [], action) => {
   }
 };
 
-export var selectionReducer = (state = {
-  id: "0"
-}, action) => {
+export var selectionReducer = (
+  state = {
+    id: "0"
+  },
+  action
+) => {
   switch (action.type) {
     case "UPDATE_SELECTED_CENTRE":
       return {
@@ -618,13 +618,11 @@ export var termReducer = (state = {}, action) => {
 export var ageGroupReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_AGE_GROUPS":
-      return [
-        ...state,
-        ...action.ageGroups
-      ];
+      return [...state, ...action.ageGroups];
     case "ADD_AGE_GROUP":
       return [
-        ...state, {
+        ...state,
+        {
           ...action.ageGroup
         }
       ];
@@ -649,10 +647,7 @@ export var ageGroupReducer = (state = [], action) => {
 export var inventoryReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_INVENTORIES":
-      return [
-        ...state,
-        ...action.inventories
-      ];
+      return [...state, ...action.inventories];
     default:
       return state;
   }
@@ -710,11 +705,9 @@ export var payerReducer = (state = {}, action) => {
           sessionDates: {
             ...state[action.id].sessionDates,
             [action.termId]: [
-              ...state[action.id]
-                .sessionDates[action.termId]
-                .filter(date => {
-                  return date !== action.date;
-                })
+              ...state[action.id].sessionDates[action.termId].filter(date => {
+                return date !== action.date;
+              })
             ]
           }
         }
@@ -770,11 +763,9 @@ export var registrationReducer = (state = {}, action) => {
           sessionDates: {
             ...state[action.id].sessionDates,
             [action.termId]: [
-              ...state[action.id]
-                .sessionDates[action.termId]
-                .filter(date => {
-                  return date !== action.date;
-                })
+              ...state[action.id].sessionDates[action.termId].filter(date => {
+                return date !== action.date;
+              })
             ]
           }
         }
@@ -872,10 +863,13 @@ export var registrationReducer = (state = {}, action) => {
   }
 };
 
-export var parentReducer = (state = {
-  address: "",
-  postalCode: ""
-}, action) => {
+export var parentReducer = (
+  state = {
+    address: "",
+    postalCode: ""
+  },
+  action
+) => {
   switch (action.type) {
     case "ADD_PARENT":
       return {
@@ -919,12 +913,15 @@ export var parentReducer = (state = {
   }
 };
 
-export var fetchingReducer = (state = {
-  completed: false
-}, action) => {
+export var fetchingReducer = (
+  state = {
+    completed: false
+  },
+  action
+) => {
   switch (action.type) {
     case "IS_FETCHING":
-      return {completed: action.completed};
+      return { completed: action.completed };
     default:
       return state;
   }
@@ -966,7 +963,7 @@ export var expenseTableReducer = (state = {}, action) => {
           key: action.key,
           ...action.expenseTable
         }
-      }
+      };
     default:
       return state;
   }
@@ -1002,18 +999,16 @@ export var notesReducer = (state = {}, action) => {
 export var makeUpReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_MAKEUPS":
-      return [
-        ...state,
-        ...action.makeUps
-      ];
+      return [...state, ...action.makeUps];
     case "ADD_MAKEUP":
       return [
-        ...state, {
+        ...state,
+        {
           ...action.makeUp
         }
       ];
     case "REMOVE_MAKEUP":
-      return state.filter(({key}) => key !== action.key);
+      return state.filter(({ key }) => key !== action.key);
     default:
       return state;
   }
@@ -1063,6 +1058,13 @@ export const creditReducer = (state = {}, action) => {
         }
       };
     case "USE_STUDENT_CREDIT":
+      return {
+        ...state,
+        [action.credit.key]: {
+          ...action.credit
+        }
+      };
+    case "UPDATE_CREDIT":
       return {
         ...state,
         [action.credit.key]: {

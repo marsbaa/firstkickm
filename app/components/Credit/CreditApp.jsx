@@ -1,5 +1,5 @@
 import React from "react";
-import { startCredits, removeCredit } from "actions";
+import { startCredits, updateCredit } from "actions";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import filter from "lodash/filter";
@@ -17,9 +17,13 @@ class MakeUpApp extends React.Component {
     }
   }
 
-  cancelCredit(key) {
+  updateCreditStatus(credit) {
     let { dispatch } = this.props;
-    dispatch(removeCredit(key));
+    let inactiveCredit = {
+      ...credit,
+      inactive: credit.inactive ? false : true
+    };
+    dispatch(updateCredit(inactiveCredit));
   }
 
   render() {
@@ -51,8 +55,8 @@ class MakeUpApp extends React.Component {
                 <Credit
                   childName={student.childName}
                   date={moment(date).format("DD/MM/YY")}
-                  cancelCredit={this.cancelCredit.bind(this)}
-                  creditKey={credits[key].key}
+                  updateCreditStatus={this.updateCreditStatus.bind(this)}
+                  credit={credits[key]}
                 />
               </div>
             );

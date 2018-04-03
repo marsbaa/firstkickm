@@ -1401,6 +1401,13 @@ export var useStudentCredit = credit => {
   creditRef.update(updates);
   return { type: "USE_STUDENT_CREDIT", credit };
 };
+export var updateCredit = credit => {
+  var creditRef = firebaseRef.child("credits");
+  var updates = {};
+  updates[credit.key] = credit;
+  creditRef.update(updates);
+  return { type: "UPDATE_CREDIT", credit };
+};
 
 export var removeCredit = key => {
   var creditsRef = firebaseRef.child("credits/" + key);
