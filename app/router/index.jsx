@@ -1,111 +1,114 @@
-import firebase from 'firebaseApp';
-import React from 'react';
-import { Route, Router, IndexRoute, browserHistory } from 'react-router';
-import Login from 'Login';
+import firebase from "firebaseApp";
+import React from "react";
+import { Route, Router, IndexRoute, browserHistory } from "react-router";
+import Login from "Login";
 
-import DashboardApp from 'DashboardApp';
-import NavBar from 'NavBar';
-import MainMenu from 'MainMenu';
+import DashboardApp from "DashboardApp";
+import NavBar from "NavBar";
+import MainMenu from "MainMenu";
 //Components for Access
-import UserApp from 'UserApp';
-import UserList from 'UserList';
-import UserEdit from 'UserEdit';
+import UserApp from "UserApp";
+import UserList from "UserList";
+import UserEdit from "UserEdit";
 //Components for Centre Profile
-import CentresApp from 'CentresApp';
-import CentreEdit from 'CentreEdit';
-import CalendarEdit from 'CalendarEdit';
-import ClassEdit from 'ClassEdit';
+import CentresApp from "CentresApp";
+import CentreEdit from "CentreEdit";
+import CalendarEdit from "CalendarEdit";
+import ClassEdit from "ClassEdit";
 
 //Components for Trials
-import TrialsApp from 'TrialsApp';
-import TrialEditForm from 'TrialEditForm';
-import TrialAddForm from 'TrialAddForm';
-import TrialRegistration from 'TrialRegistration';
-import TrialPayment from 'TrialPayment';
+import TrialsApp from "TrialsApp";
+import TrialEditForm from "TrialEditForm";
+import TrialAddForm from "TrialAddForm";
+import TrialRegistration from "TrialRegistration";
+import TrialPayment from "TrialPayment";
 
 //Components for Openhouse
-import OpenhouseEdit from 'OpenhouseEdit';
-import OpenhouseRegister from 'OpenhouseRegister';
-import OpenhousePayment from 'OpenhousePayment';
+import OpenhouseEdit from "OpenhouseEdit";
+import OpenhouseRegister from "OpenhouseRegister";
+import OpenhousePayment from "OpenhousePayment";
 //JerseyIssue
-import JerseyIssue from 'JerseyIssue';
-import JerseyIssueList from 'JerseyIssueList';
-import JerseyIssueForm from 'JerseyIssueForm';
-import JerseyIssuedList from 'JerseyIssuedList';
+import JerseyIssue from "JerseyIssue";
+import JerseyIssueList from "JerseyIssueList";
+import JerseyIssueForm from "JerseyIssueForm";
+import JerseyIssuedList from "JerseyIssuedList";
 
-import PaymentApp from 'PaymentApp';
-import PaymentList from 'PaymentList';
-import PaymentForm2 from 'PaymentForm2';
-import PaymentHistory from 'PaymentHistory';
-import PaymentReport from 'PaymentReport';
-import PaymentNotPaid from 'PaymentNotPaid';
-import PaymentCheck from 'PaymentCheck';
+import PaymentApp from "PaymentApp";
+import PaymentList from "PaymentList";
+import PaymentForm2 from "PaymentForm2";
+import PaymentHistory from "PaymentHistory";
+import PaymentReport from "PaymentReport";
+import PaymentNotPaid from "PaymentNotPaid";
+import PaymentCheck from "PaymentCheck";
 
 //Components for Coaches
-import CoachesApp from 'CoachesApp';
-import CoachesList from 'CoachesList';
-import CoachEdit from 'CoachEdit';
-import CoachAttendance from 'CoachAttendance';
-import CoachAttendanceHQ from 'CoachAttendanceHQ';
+import CoachesApp from "CoachesApp";
+import CoachesList from "CoachesList";
+import CoachEdit from "CoachEdit";
+import CoachAttendance from "CoachAttendance";
+import CoachAttendanceHQ from "CoachAttendanceHQ";
 
 //Components for Admins
-import AdminApp from 'AdminApp';
-import AdminList from 'AdminList';
-import AdminEdit from 'AdminEdit';
-import AdminAdd from 'AdminAdd';
+import AdminApp from "AdminApp";
+import AdminList from "AdminList";
+import AdminEdit from "AdminEdit";
+import AdminAdd from "AdminAdd";
 
-import Settings from 'Settings';
-import SettingsList from 'SettingsList';
-import EditAgeGroup from 'EditAgeGroup';
+import Settings from "Settings";
+import SettingsList from "SettingsList";
+import EditAgeGroup from "EditAgeGroup";
 
-import ScheduleApp from 'ScheduleApp';
-import ScheduleContainer from 'ScheduleContainer';
-import ScheduleMain from 'ScheduleMain';
+import ScheduleApp from "ScheduleApp";
+import ScheduleContainer from "ScheduleContainer";
+import ScheduleMain from "ScheduleMain";
 
 //Student Attendance
-import AttendanceApp from 'AttendanceApp';
-import AttendanceList from 'AttendanceList';
-import AttendanceSummary from 'AttendanceSummary';
-import AttendanceMakeUp from 'AttendanceMakeUp';
-import AttendanceHistory from 'AttendanceHistory';
+import AttendanceApp from "AttendanceApp";
+import AttendanceList from "AttendanceList";
+import AttendanceSummary from "AttendanceSummary";
+import AttendanceMakeUp from "AttendanceMakeUp";
+import AttendanceHistory from "AttendanceHistory";
 
 //Student Profile
-import StudentApp from 'StudentApp';
-import StudentList from 'StudentList';
-import StudentEdit from 'StudentEdit';
-import StudentAdd from 'StudentAdd';
-import StudentTransfer from 'StudentTransfer'
+import StudentApp from "StudentApp";
+import StudentList from "StudentList";
+import StudentEdit from "StudentEdit";
+import StudentAdd from "StudentAdd";
+import StudentTransfer from "StudentTransfer";
 
 //Total collection
-import BankInCollection from 'BankInCollection';
-import TotalCollection from 'TotalCollection';
-import TotalCollectionHQ from 'TotalCollectionHQ';
+import BankInCollection from "BankInCollection";
+import TotalCollection from "TotalCollection";
+import TotalCollectionHQ from "TotalCollectionHQ";
 
 //Inventory
-import InventoryApp from 'InventoryApp';
-import InventoryList from 'InventoryList';
+import InventoryApp from "InventoryApp";
+import InventoryList from "InventoryList";
 
 //Notes
-import NotesApp from 'NotesApp';
-import NotesList from 'NotesList';
-import NotesAll from 'NotesAll';
+import NotesApp from "NotesApp";
+import NotesList from "NotesList";
+import NotesAll from "NotesAll";
 
 //Make Up
-import MakeUpApp from 'MakeUpApp';
-import MakeUpList from 'MakeUpList';
+import MakeUpApp from "MakeUpApp";
+import MakeUpList from "MakeUpList";
 
 //Promotions
-import PromotionsApp from 'PromotionsApp';
-import PromotionAdd from 'PromotionAdd';
+import PromotionsApp from "PromotionsApp";
+import PromotionAdd from "PromotionAdd";
 
-import CancelSessionApp from 'CancelSessionApp';
+import CancelSessionApp from "CancelSessionApp";
 
 //Expenses
-import ExpenseApp from 'ExpenseApp'
+import ExpenseApp from "ExpenseApp";
+
+//Credits
+import CreditApp from "CreditApp";
 
 function requireAuth(nextState, replace, next) {
   if (!firebase.auth().currentUser) {
-    replace('/');
+    replace("/");
   }
   next();
 }
@@ -149,7 +152,7 @@ export default (
           <Route path="makeup/:studentId" component={AttendanceMakeUp} />
         </Route>
         <Route path="students" component={StudentApp} />
-        <Route path="studentstransfer" component={StudentTransfer}/>
+        <Route path="studentstransfer" component={StudentTransfer} />
         <Route path="students/edit/:studentId" component={StudentEdit} />
         <Route path="students/add" component={StudentAdd} />
         <Route path="makeup" component={MakeUpApp}>
@@ -195,6 +198,7 @@ export default (
           <Route path="ageGroup/:name" component={EditAgeGroup} />
         </Route>
         <Route path="expenses" component={ExpenseApp} />
+        <Route path="credits" component={CreditApp} />
         <Route path="promotions" component={PromotionsApp} />
         <Route path="promotions/add" component={PromotionAdd} />
       </Route>

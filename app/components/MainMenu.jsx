@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Grid,
   Row,
@@ -6,18 +6,18 @@ import {
   FormGroup,
   FormControl,
   ControlLabel
-} from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { Link, IndexLink } from 'react-router';
-import { updateSelectedCentre, updateNavTitle } from 'actions';
-import { isManager, isSuperAdmin } from 'helper';
-import find from 'lodash/find';
-import isEmpty from 'lodash/isEmpty';
+} from "react-bootstrap";
+import { connect } from "react-redux";
+import { Link, IndexLink } from "react-router";
+import { updateSelectedCentre, updateNavTitle } from "actions";
+import { isManager, isSuperAdmin } from "helper";
+import find from "lodash/find";
+import isEmpty from "lodash/isEmpty";
 
 class MainMenu extends React.Component {
   componentDidMount() {
     const { dispatch, user, centres } = this.props;
-    dispatch(updateNavTitle('/m', 'Dashboard'));
+    dispatch(updateNavTitle("/m", "Dashboard"));
   }
 
   handleSelect(e) {
@@ -28,7 +28,7 @@ class MainMenu extends React.Component {
   render() {
     const { selection, centres, user, auth } = this.props;
     var menuHTML = [];
-    if (user.assignedRoles === 'Administrator') {
+    if (user.assignedRoles === "Administrator") {
       menuHTML.push(
         <Row key="adminmenu">
           <Col xs={12} md={12} lg={12}>
@@ -36,7 +36,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="trials"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Trials
               </button>
@@ -45,7 +45,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="attendance"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Student Attendance
               </button>
@@ -54,7 +54,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="makePayment"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Payment
               </button>
@@ -63,7 +63,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="jersey"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Jersey Issue
               </button>
@@ -72,7 +72,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="totalCollection"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Total Collection (Today)
               </button>
@@ -81,7 +81,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="coach"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Coach Attendance
               </button>
@@ -90,7 +90,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="notes"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Notes to HQ
               </button>
@@ -99,7 +99,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="student"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Students Profile
               </button>
@@ -108,7 +108,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="makeUp"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Make Up List
               </button>
@@ -116,14 +116,14 @@ class MainMenu extends React.Component {
           </Col>
         </Row>
       );
-    } else if (user.assignedRoles === 'Head Coach') {
+    } else if (user.assignedRoles === "Head Coach") {
       menuHTML.push(
         <div key="headcoachmenu">
           <Link to="m/coachattendance">
             <button
               className="mainbtn"
               id="coach"
-              disabled={selection.id === '0' ? true : false}
+              disabled={selection.id === "0" ? true : false}
             >
               Coach Attendance
             </button>
@@ -132,54 +132,54 @@ class MainMenu extends React.Component {
             <button
               className="mainbtn"
               id="coachSchedule"
-              disabled={selection.id === '0' ? true : false}
+              disabled={selection.id === "0" ? true : false}
             >
               Coach Scheduling
             </button>
           </Link>
         </div>
       );
-    } else if (user.assignedRoles === 'Manager') {
+    } else if (user.assignedRoles === "Manager") {
       menuHTML.push(
         <Row key="managermenu">
           <Col xs={12} md={12} lg={12}>
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/dashboard">
-                  <button className="mainbtn" id="dashboard">
-                    Dashboard
-                  </button>
-                </Link>
-              : null}
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/totalhq">
-                  <button
-                    className="mainbtn"
-                    id="totalCollectionHQ"
-                    disabled={selection.id === '0' ? true : false}
-                  >
-                    Total Collection (HQ)
-                  </button>
-                </Link>
-              : null}
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/bankin">
-                  <button className="mainbtn" id="bankInCollection">
-                    Bank In Collection
-                  </button>
-                </Link>
-              : null}
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/cancel">
-                  <button className="mainbtn" id="cancelSession">
-                    Cancel Session
-                  </button>
-                </Link>
-              : null}
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/dashboard">
+                <button className="mainbtn" id="dashboard">
+                  Dashboard
+                </button>
+              </Link>
+            ) : null}
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/totalhq">
+                <button
+                  className="mainbtn"
+                  id="totalCollectionHQ"
+                  disabled={selection.id === "0" ? true : false}
+                >
+                  Total Collection (HQ)
+                </button>
+              </Link>
+            ) : null}
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/bankin">
+                <button className="mainbtn" id="bankInCollection">
+                  Bank In Collection
+                </button>
+              </Link>
+            ) : null}
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/cancel">
+                <button className="mainbtn" id="cancelSession">
+                  Cancel Session
+                </button>
+              </Link>
+            ) : null}
             <Link to="m/attendance/summary">
               <button
                 className="mainbtn"
                 id="attendanceSummary"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Attendance Summary
               </button>
@@ -188,7 +188,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="paymentReport"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Payment Report (HQ)
               </button>
@@ -197,7 +197,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="trials"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Trials
               </button>
@@ -206,7 +206,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="attendance"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Student Attendance
               </button>
@@ -216,7 +216,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="makePayment"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Payment
               </button>
@@ -225,7 +225,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="jersey"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Jersey Issue
               </button>
@@ -234,7 +234,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="makeUp"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Make Up List
               </button>
@@ -243,7 +243,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="paymentnotpaid"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Not Paid List
               </button>
@@ -253,7 +253,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="totalCollection"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Total Collection (Today)
               </button>
@@ -262,7 +262,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="coach"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Coach Attendance
               </button>
@@ -271,7 +271,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="coach"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Coach Attendance (HQ)
               </button>
@@ -280,7 +280,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="coachSchedule"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Coach Scheduling
               </button>
@@ -289,7 +289,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="notes"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Notes to HQ
               </button>
@@ -303,7 +303,7 @@ class MainMenu extends React.Component {
               <button
                 className="mainbtn"
                 id="student"
-                disabled={selection.id === '0' ? true : false}
+                disabled={selection.id === "0" ? true : false}
               >
                 Students Profile
               </button>
@@ -311,37 +311,37 @@ class MainMenu extends React.Component {
             <Link to="m/coaches">
               <button className="mainbtn">Coaches Profile</button>
             </Link>
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/expenses">
-                  <button
-                    className="mainbtn"
-                    id="expenses"
-                  >
-                    Expenses
-                  </button>
-                </Link>
-              : null}
-            {isSuperAdmin(auth.email)
-              ? <Link to="m/studentstransfer">
-                  <button
-                    className="mainbtn"
-                    id="studentTransfer"
-                    disabled={selection.id === '0' ? true : false}
-                  >
-                    Student Transfer
-                  </button>
-                </Link>
-              : null}
+            <Link to="m/credits">
+              <button className="mainbtn">Credits</button>
+            </Link>
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/expenses">
+                <button className="mainbtn" id="expenses">
+                  Expenses
+                </button>
+              </Link>
+            ) : null}
+            {isSuperAdmin(auth.email) ? (
+              <Link to="m/studentstransfer">
+                <button
+                  className="mainbtn"
+                  id="studentTransfer"
+                  disabled={selection.id === "0" ? true : false}
+                >
+                  Student Transfer
+                </button>
+              </Link>
+            ) : null}
           </Col>
         </Row>
       );
     }
 
     return (
-      <Grid style={{ margin: '10px 15px' }}>
+      <Grid style={{ margin: "10px 15px" }}>
         <Row>
           <Col xs={12} md={12} lg={12}>
-            <FormGroup style={{ textAlign: 'center' }}>
+            <FormGroup style={{ textAlign: "center" }}>
               <ControlLabel>Select Centre</ControlLabel>
               <FormControl
                 id="centreSelect"
