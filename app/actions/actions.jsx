@@ -98,7 +98,6 @@ export var startAddTrials = () => {
       .get("https://www.fka.sg/trialstudents/")
       .then(function(response) {
         var trialList = response.data.data;
-        console.log(response.data);
         trialsRef.once("value").then(snapshot => {
           var firebaseTrialList = snapshot.val();
           trialList.forEach(trials => {
