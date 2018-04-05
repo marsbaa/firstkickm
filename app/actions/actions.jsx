@@ -844,6 +844,10 @@ export var setSearchText = searchText => {
   return { type: "SET_SEARCH_TEXT", searchText };
 };
 
+export var resetSearchText = () => {
+  return { type: "RESET_SEARCH_TEXT" };
+};
+
 //Term Dates
 export var updateSelectedDays = (year, id, selectedDays) => {
   return { type: "UPDATE_TERM_SELECTED_DAYS", year, id, selectedDays };
