@@ -1,21 +1,21 @@
-import React from 'react';
-import { Panel, Row, Col } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import filter from 'lodash/filter';
-import ChildPayDetails from 'ChildPayDetails';
-import RegistrationFee from 'RegistrationFee';
-import SiblingDiscount from 'SiblingDiscount';
-import PromotionDiscount from 'PromotionDiscount';
-import PaymentMethodSelector from 'PaymentMethodSelector';
-import EarlyBird from 'EarlyBird';
+import React from "react";
+import { Panel, Row, Col } from "react-bootstrap";
+import { connect } from "react-redux";
+import filter from "lodash/filter";
+import ChildPayDetails from "ChildPayDetails";
+import RegistrationFee from "RegistrationFee";
+import SiblingDiscount from "SiblingDiscount";
+import PromotionDiscount from "PromotionDiscount";
+import PaymentMethodSelector from "PaymentMethodSelector";
+import EarlyBird from "EarlyBird";
 import {
   getBreakDown,
   getTotalSessions,
   getCalendarKey,
   checkEarlyBird,
   getPerSession
-} from 'helper';
-import moment from 'moment';
+} from "helper";
+import moment from "moment";
 
 class PaymentBreakdown extends React.Component {
   constructor(props) {
@@ -36,7 +36,14 @@ class PaymentBreakdown extends React.Component {
     const eb = 20;
     const sd = [20, 30];
     const rg = 80;
-    const { register, classes, calendars, parent, promotions, selectedPromotion } = this.props;
+    const {
+      register,
+      classes,
+      calendars,
+      parent,
+      promotions,
+      selectedPromotion
+    } = this.props;
     const { termFee, termsTotal } = getBreakDown(register);
 
     let count = 0;
@@ -92,7 +99,7 @@ class PaymentBreakdown extends React.Component {
       );
       childTotal += termsTotal[payerKey];
       html.push(
-        <RegistrationFee key={'registration' + childName} amount={rg} />
+        <RegistrationFee key={"registration" + childName} amount={rg} />
       );
       paymentDetail.registration = true;
       paymentDetail.registrationAmount = rg;
@@ -101,7 +108,7 @@ class PaymentBreakdown extends React.Component {
 
       //Display Early Bird Discount
       if (earlybird) {
-        html.push(<EarlyBird key={'earlybird' + childName} amount={eb} />);
+        html.push(<EarlyBird key={"earlybird" + childName} amount={eb} />);
         childTotal -= eb;
         paymentDetail.earlyBird = true;
         paymentDetail.earlyBirdAmount = eb;
@@ -113,7 +120,7 @@ class PaymentBreakdown extends React.Component {
       if (count > 1 && totalSessions > 4) {
         html.push(
           <SiblingDiscount
-            key={'siblingdiscount' + childName}
+            key={"siblingdiscount" + childName}
             count={count}
             amount={sd}
           />
@@ -125,20 +132,31 @@ class PaymentBreakdown extends React.Component {
         paymentDetail.siblingDiscount = false;
       }
       if (selectedPromotion !== undefined) {
-        if (selectedPromotion['trial'] !== undefined && selectedPromotion['trial'].promoKey !== '0') {
-          let promotion = promotions[selectedPromotion['trial'].promoKey]
-          html.push(
-          <PromotionDiscount
-            key={'promotiondiscount' + childName}
-            amount={promotion.amount}
-            title={promotion.name}
-          />
-        );
-        childTotal -= promotion.amount;
-        paymentDetail.promotionDiscount = promotion.name;
-        paymentDetail.promotionDiscountAmount = promotion.amount;
+        if (
+          selectedPromotion["trial"] !== undefined &&
+          selectedPromotion["trial"].promoKey !== "0"
+        ) {
+          let promotion = promotions[selectedPromotion["trial"].promoKey];
+          if (promotion !== undefined) {
+            const { type, discount, name } = promotion;
+            let discountAmount = 0;
+            if (type === "Percentage") {
+              discountAmount = termsTotal[payerKey] * discount / 100;
+            } else if (type === "Amount") {
+              discountAmount = discount;
+            }
+            html.push(
+              <PromotionDiscount
+                key={"promotiondiscount" + childName}
+                amount={discountAmount}
+                title={name}
+              />
+            );
+            childTotal -= discountAmount;
+            paymentDetail.promotionDiscount = name;
+            paymentDetail.promotionDiscountAmount = discountAmount;
+          }
         }
-        
       }
       let termsPaid = [];
       const perSession = getPerSession(sessionDates);
@@ -169,24 +187,24 @@ class PaymentBreakdown extends React.Component {
       <div>
         <Panel
           header={
-            <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            <font style={{ fontSize: "16px", fontWeight: "bold" }}>
               Fees Breakdown
             </font>
           }
           footer={
-            <Row style={{ paddingRight: '20px' }}>
+            <Row style={{ paddingRight: "20px" }}>
               <Col xs={8} md={8} lg={8}>
-                <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                <font style={{ fontSize: "16px", fontWeight: "bold" }}>
                   Total:
                 </font>
               </Col>
               <Col xs={4} md={4} lg={4}>
                 <font
                   style={{
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    float: 'right',
-                    textDecoration: 'underline'
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    float: "right",
+                    textDecoration: "underline"
                   }}
                 >
                   ${total}
@@ -215,7 +233,7 @@ function mapStateToProps(state) {
     classes: state.selection.classes,
     calendars: state.calendars,
     promotions: state.promotions,
-    selectedPromotion : state.selectedPromotion
+    selectedPromotion: state.selectedPromotion
   };
 }
 
