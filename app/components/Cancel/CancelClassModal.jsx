@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Modal,
   FormGroup,
@@ -6,7 +6,7 @@ import {
   FormControl,
   HelpBlock,
   Button
-} from 'react-bootstrap';
+} from "react-bootstrap";
 
 const CancelClassModal = ({
   classes,
@@ -25,12 +25,8 @@ const CancelClassModal = ({
         <h6>Are you sure you want to cancel these classes?</h6>
         {cancelList.map(classKey => {
           const { ageGroup, startTime, endTime, day } = classes[classKey];
-          const name = ageGroup + ' ' + startTime + ' - ' + endTime + ' ' + day;
-          return (
-            <p key={name}>
-              {name}
-            </p>
-          );
+          const name = ageGroup + " " + startTime + " - " + endTime + " " + day;
+          return <p key={name}>{name}</p>;
         })}
       </Modal.Body>
       <Modal.Footer>
