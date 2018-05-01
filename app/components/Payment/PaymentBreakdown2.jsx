@@ -6,12 +6,14 @@ import reduce from "lodash/reduce";
 import ChildPayDetails from "ChildPayDetails";
 import RegistrationFee from "RegistrationFee";
 import SiblingDiscount from "SiblingDiscount";
+import SessionDiscount from "SessionDiscount";
 import PromotionDiscount from "PromotionDiscount";
 import PayersPaymentMethodSelector from "PayersPaymentMethodSelector";
 import EarlyBird from "EarlyBird";
 import {
   getBreakDown,
   getTotalSessions,
+  getBreakdownWithSessionPromo,
   getCalendarKey,
   checkEarlyBird,
   getPerSession
@@ -43,7 +45,14 @@ class PaymentBreakdown2 extends React.Component {
       selectedPromotion,
       credits
     } = this.props;
-    const { termFee, termsTotal } = getBreakDown(payers);
+
+    const feeBeforePromo = getBreakDown(payers);
+    console.log(feeBeforePromo);
+    const { termFee, termsTotal } = getBreakdownWithSessionPromo(
+      payers,
+      selectedPromotion,
+      promotions
+    );
     let count = 0;
     let total = 0;
     let html = [];
@@ -88,7 +97,6 @@ class PaymentBreakdown2 extends React.Component {
           />
         );
         childTotal += termsTotal[payerKey];
-
         //Display Early Bird Discount
         let promoOn = false;
         if (selectedPromotion !== undefined) {
@@ -98,7 +106,7 @@ class PaymentBreakdown2 extends React.Component {
             }
           }
         }
-        console.log(promoOn);
+
         if (earlybird && !promoOn) {
           html.push(<EarlyBird key={"earlybird" + childName} amount={eb} />);
           childTotal -= eb;
@@ -131,17 +139,36 @@ class PaymentBreakdown2 extends React.Component {
             let discountAmount = 0;
             if (type === "Percentage") {
               discountAmount = termsTotal[payerKey] * discount / 100;
+              html.push(
+                <PromotionDiscount
+                  key={"promotiondiscount" + childName}
+                  amount={discountAmount}
+                  title={name}
+                />
+              );
+              childTotal -= discountAmount;
             } else if (type === "Amount") {
               discountAmount = discount;
+              html.push(
+                <PromotionDiscount
+                  key={"promotiondiscount" + childName}
+                  amount={discountAmount}
+                  title={name}
+                />
+              );
+              childTotal -= discountAmount;
+            } else if (type === "Session") {
+              discountAmount =
+                feeBeforePromo.termsTotal[payerKey] - termsTotal[payerKey];
+              html.push(
+                <SessionDiscount
+                  key={"sessiondiscount" + childName}
+                  amount={discount}
+                  title={name}
+                />
+              );
             }
-            html.push(
-              <PromotionDiscount
-                key={"promotiondiscount" + childName}
-                amount={discountAmount}
-                title={name}
-              />
-            );
-            childTotal -= discountAmount;
+
             paymentDetail.promotionDiscount = name;
             paymentDetail.promotionDiscountAmount = discountAmount;
           }

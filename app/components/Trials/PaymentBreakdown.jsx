@@ -6,10 +6,12 @@ import ChildPayDetails from "ChildPayDetails";
 import RegistrationFee from "RegistrationFee";
 import SiblingDiscount from "SiblingDiscount";
 import PromotionDiscount from "PromotionDiscount";
+import SessionDiscount from "SessionDiscount";
 import PaymentMethodSelector from "PaymentMethodSelector";
 import EarlyBird from "EarlyBird";
 import {
   getBreakDown,
+  getBreakdownWithSessionPromo,
   getTotalSessions,
   getCalendarKey,
   checkEarlyBird,
@@ -44,8 +46,14 @@ class PaymentBreakdown extends React.Component {
       promotions,
       selectedPromotion
     } = this.props;
-    const { termFee, termsTotal } = getBreakDown(register);
-
+    const feeBeforePromo = getBreakDown(register);
+    console.log(feeBeforePromo);
+    const { termFee, termsTotal } = getBreakdownWithSessionPromo(
+      register,
+      selectedPromotion,
+      promotions
+    );
+    console.log(selectedPromotion);
     let count = 0;
     let total = 0;
     let html = [];
@@ -142,17 +150,36 @@ class PaymentBreakdown extends React.Component {
             let discountAmount = 0;
             if (type === "Percentage") {
               discountAmount = termsTotal[payerKey] * discount / 100;
+              html.push(
+                <PromotionDiscount
+                  key={"promotiondiscount" + childName}
+                  amount={discountAmount}
+                  title={name}
+                />
+              );
+              childTotal -= discountAmount;
             } else if (type === "Amount") {
               discountAmount = discount;
+              html.push(
+                <PromotionDiscount
+                  key={"promotiondiscount" + childName}
+                  amount={discountAmount}
+                  title={name}
+                />
+              );
+              childTotal -= discountAmount;
+            } else if (type === "Session") {
+              discountAmount =
+                feeBeforePromo.termsTotal[payerKey] - termsTotal[payerKey];
+              html.push(
+                <SessionDiscount
+                  key={"sessiondiscount" + childName}
+                  amount={discount}
+                  title={name}
+                />
+              );
             }
-            html.push(
-              <PromotionDiscount
-                key={"promotiondiscount" + childName}
-                amount={discountAmount}
-                title={name}
-              />
-            );
-            childTotal -= discountAmount;
+
             paymentDetail.promotionDiscount = name;
             paymentDetail.promotionDiscountAmount = discountAmount;
           }

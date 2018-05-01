@@ -1,20 +1,21 @@
-import React from 'react';
-import { Panel, FormGroup, FormControl } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import {
-  startPromotions,
-  addSelectedPromotion
-} from 'actions';
-import isEmpty from 'lodash/isEmpty';
+import React from "react";
+import { Panel, FormGroup, FormControl } from "react-bootstrap";
+import { connect } from "react-redux";
+import { startPromotions, addSelectedPromotion } from "actions";
+import isEmpty from "lodash/isEmpty";
+import filter from "lodash/filter";
+import moment from "moment";
 
 class PaymentPromotionSelector extends React.Component {
-
   render() {
     const { dispatch, promotions, payerKey } = this.props;
+    let filteredPromotions = filter(promotions, o => {
+      return moment().isSameOrBefore(o.endDate, "day");
+    });
     return (
       <Panel
         header={
-          <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          <font style={{ fontSize: "16px", fontWeight: "bold" }}>
             Promotion Discount
           </font>
         }
@@ -30,11 +31,11 @@ class PaymentPromotionSelector extends React.Component {
             <option key="0" value="0">
               select
             </option>
-            {Object.keys(promotions).map(promoKey => {
-              const { name, group } = promotions[promoKey];
-              if (group === 'Current' || group === 'All') {
+            {Object.keys(filteredPromotions).map(promoKey => {
+              const { name, group, key } = filteredPromotions[promoKey];
+              if (group === "Current" || group === "All") {
                 return (
-                  <option key={promoKey} value={promoKey}>
+                  <option key={key} value={key}>
                     {name}
                   </option>
                 );

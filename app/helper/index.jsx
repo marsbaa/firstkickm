@@ -11,156 +11,150 @@ export function getClosestDate(termDates) {
 
 export function isDatePaid(payments, date) {
   let found = false;
-  Object
-    .keys(payments)
-    .map(paymentKey => {
-      const {termsPaid} = payments[paymentKey];
-      if (termsPaid !== undefined) {
-        Object
-          .keys(termsPaid)
-          .map(termId => {
-            if (_.find(termsPaid[termId], o => {
-              return moment(o.date).isSame(date, "day");
-            }) !== undefined) {
-              found = true;
-            }
-          });
-      }
-    });
+  Object.keys(payments).map(paymentKey => {
+    const { termsPaid } = payments[paymentKey];
+    if (termsPaid !== undefined) {
+      Object.keys(termsPaid).map(termId => {
+        if (
+          _.find(termsPaid[termId], o => {
+            return moment(o.date).isSame(date, "day");
+          }) !== undefined
+        ) {
+          found = true;
+        }
+      });
+    }
+  });
   return found;
 }
 
 export function isAttended(attendance, date) {
   let found = false;
-  Object
-    .keys(attendance)
-    .map(attendedDate => {
-      const {attended} = attendance[attendedDate];
-      if (attended !== undefined) {
-        if (moment(attendedDate).isSame(date, "day")) {
-          found = attended;
-        }
+  Object.keys(attendance).map(attendedDate => {
+    const { attended } = attendance[attendedDate];
+    if (attended !== undefined) {
+      if (moment(attendedDate).isSame(date, "day")) {
+        found = attended;
       }
-    });
+    }
+  });
   return found;
 }
 
-export function findPaymentDetails(students, termDates, selectedTerm, selectedYear, makeUps) {
+export function findPaymentDetails(
+  students,
+  termDates,
+  selectedTerm,
+  selectedYear,
+  makeUps
+) {
   let paid = [];
   let unpaid = [];
   let paidDetails = [];
   let paidAmount = 0;
 
-  Object
-    .keys(students)
-    .map(studentId => {
-      const student = students[studentId];
-      let studentMakeUps = _.filter(makeUps, {studentKey: student.key});
-      let attended = false;
-      let p = false;
+  Object.keys(students).map(studentId => {
+    const student = students[studentId];
+    let studentMakeUps = _.filter(makeUps, { studentKey: student.key });
+    let attended = false;
+    let p = false;
 
-      //Check if payment is made for this term
-      let payment = _.find(student.payments, o => {
-        if (o.termsPaid !== undefined) {
-          if (o.termsPaid[selectedTerm] !== undefined) {
-            if (moment(o.termsPaid[selectedTerm][0].date).year() === parseInt(selectedYear)) {
-              return true
+    //Check if payment is made for this term
+    let payment = _.find(student.payments, o => {
+      if (o.termsPaid !== undefined) {
+        if (o.termsPaid[selectedTerm] !== undefined) {
+          if (
+            moment(o.termsPaid[selectedTerm][0].date).year() ===
+            parseInt(selectedYear)
+          ) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+
+    if (payment !== undefined) {
+      paid.push(student);
+      paidDetails.push(payment);
+      paidAmount += parseInt(payment.total);
+      p = true;
+    }
+
+    //Check if student attends term
+    termDates.map(date => {
+      var dateId = moment(date).format("YYYY-MM-DD");
+      let makeUpDate = _.find(studentMakeUps, o => {
+        return moment(o.toDate).isSame(date, "day");
+      });
+      if (student.attendance !== undefined) {
+        if (student.attendance[dateId] !== undefined) {
+          if (student.attendance[dateId].attended) {
+            if (makeUpDate === undefined) {
+              attended = true;
             }
           }
-
         }
-        return false;
-      });
+      }
 
       if (payment !== undefined) {
-        paid.push(student);
-        paidDetails.push(payment);
-        paidAmount += parseInt(payment.total);
-        p = true;
-      }
-
-      //Check if student attends term
-      termDates.map(date => {
-        var dateId = moment(date).format("YYYY-MM-DD");
-        let makeUpDate = _.find(studentMakeUps, o => {
-          return moment(o.toDate).isSame(date, "day");
-        });
-        if (student.attendance !== undefined) {
-          if (student.attendance[dateId] !== undefined) {
-            if (student.attendance[dateId].attended) {
-              if (makeUpDate === undefined) {
-                attended = true;
-              }
-            }
-          }
-        }
-
-        if (payment !== undefined) {
-          if (_.find(payment.termsPaid[selectedTerm], o => {
+        if (
+          _.find(payment.termsPaid[selectedTerm], o => {
             return moment(o.date).isSame(dateId, "day");
-          }) !== undefined) {
-            p = true;
-          }
+          }) !== undefined
+        ) {
+          p = true;
         }
-      });
-      //If attended and not paid
-      if (attended && !p) {
-        unpaid.push(student);
       }
     });
-  return {paid, paidAmount, paidDetails, unpaid};
+    //If attended and not paid
+    if (attended && !p) {
+      unpaid.push(student);
+    }
+  });
+  return { paid, paidAmount, paidDetails, unpaid };
 }
 
 export function classToday(calendars, centreKey, selectedDate) {
   var today = false;
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === centreKey) {
-        Object
-          .keys(calendar.terms)
-          .map(termId => {
-            var term = calendar.terms[termId];
-            term.map(date => {
-              if (moment(date).isSame(selectedDate, "day")) {
-                today = true;
-              }
-            });
-          });
-      }
-    });
+  Object.keys(calendars).map(calendarKey => {
+    var calendar = calendars[calendarKey];
+    if (calendar.centreKey === centreKey) {
+      Object.keys(calendar.terms).map(termId => {
+        var term = calendar.terms[termId];
+        term.map(date => {
+          if (moment(date).isSame(selectedDate, "day")) {
+            today = true;
+          }
+        });
+      });
+    }
+  });
   return today;
 }
 
 export function getTerm(calendars, centreKey, date) {
   var t = 1;
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === centreKey) {
-        var terms = calendar.terms;
-        Object
-          .keys(terms)
-          .map(year => {
-            Object
-              .keys(terms[year])
-              .map(id => {
-                var term = terms[year][id];
-                if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
-                  t = parseInt(id);
-                } else if (moment(date).isAfter(term[term.length - 1], "day")) {
-                  if (id === _.size(terms[year])) {
-                    t = 1
-                  } else {
-                    t = parseInt(id) + 1;
-                  }
-                }
-              });
-          });
-      }
-    });
+  Object.keys(calendars).map(calendarKey => {
+    var calendar = calendars[calendarKey];
+    if (calendar.centreKey === centreKey) {
+      var terms = calendar.terms;
+      Object.keys(terms).map(year => {
+        Object.keys(terms[year]).map(id => {
+          var term = terms[year][id];
+          if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
+            t = parseInt(id);
+          } else if (moment(date).isAfter(term[term.length - 1], "day")) {
+            if (id === _.size(terms[year])) {
+              t = 1;
+            } else {
+              t = parseInt(id) + 1;
+            }
+          }
+        });
+      });
+    }
+  });
   return t;
 }
 
@@ -168,20 +162,18 @@ export function getTermByDate(calendar, date) {
   var t = 1;
   var year = moment(date).year();
   var terms = calendar.terms[year];
-  Object
-    .keys(terms)
-    .map(id => {
-      var term = terms[id];
-      if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
-        t = parseInt(id);
-      } else if (moment(date).isAfter(term[term.length - 1], "day")) {
-        if (id === _.size(terms[year])) {
-          t = 1
-        } else {
-          t = parseInt(id) + 1;
-        }
+  Object.keys(terms).map(id => {
+    var term = terms[id];
+    if (moment(date).isBetween(term[0], term[term.length - 1], "day")) {
+      t = parseInt(id);
+    } else if (moment(date).isAfter(term[term.length - 1], "day")) {
+      if (id === _.size(terms[year])) {
+        t = 1;
+      } else {
+        t = parseInt(id) + 1;
       }
-    });
+    }
+  });
 
   return t;
 }
@@ -190,8 +182,7 @@ export function getCalendarKey(student, classes, ag) {
   var key = "";
   let sKey = "";
   var studentAgeGroup = "";
-  var currentClassDay,
-    currentClassTime;
+  var currentClassDay, currentClassTime;
   if (student.ageGroup === undefined) {
     studentAgeGroup = ag;
     currentClassDay = moment(student.dateOfTrial).format("dddd");
@@ -201,20 +192,18 @@ export function getCalendarKey(student, classes, ag) {
     currentClassDay = _.capitalize(student.currentClassDay);
     currentClassTime = student.currentClassTime;
   }
-  Object
-    .keys(classes)
-    .forEach(classId => {
-      var {ageGroup, day, startTime, endTime, calendarKey} = classes[classId];
-      if (ageGroup === studentAgeGroup) {
-        if (day === currentClassDay) {
-          sKey = calendarKey;
-          var classTime = startTime + " - " + endTime;
-          if (classTime === currentClassTime) {
-            key = calendarKey;
-          }
+  Object.keys(classes).forEach(classId => {
+    var { ageGroup, day, startTime, endTime, calendarKey } = classes[classId];
+    if (ageGroup === studentAgeGroup) {
+      if (day === currentClassDay) {
+        sKey = calendarKey;
+        var classTime = startTime + " - " + endTime;
+        if (classTime === currentClassTime) {
+          key = calendarKey;
         }
       }
-    });
+    }
+  });
   if (key === "") {
     key = sKey;
   }
@@ -224,37 +213,35 @@ export function getCalendarKey(student, classes, ag) {
 export function checkEarlyBird(actualTerms, sessionDates, date) {
   let check = false;
   let year = moment(date).year();
-  Object
-    .keys(sessionDates)
-    .map(termId => {
-      const term = sessionDates[termId];
-      if (moment(moment(date).format()).isSameOrBefore(actualTerms[moment(term[0]).year()][termId][0], 'day')) {
-        if (actualTerms[moment(term[0]).year()][termId].length === term.length) {
-          check = true
-        }
+  Object.keys(sessionDates).map(termId => {
+    const term = sessionDates[termId];
+    if (
+      moment(moment(date).format()).isSameOrBefore(
+        actualTerms[moment(term[0]).year()][termId][0],
+        "day"
+      )
+    ) {
+      if (actualTerms[moment(term[0]).year()][termId].length === term.length) {
+        check = true;
       }
-      // else {   if (actualTerms[year][termId].length === term.length) {     if
-      // (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) { check =
-      // true;     }   } }
-
-    });
+    }
+    // else {   if (actualTerms[year][termId].length === term.length) {     if
+    // (moment(date).isSameOrBefore(actualTerms[year][termId][1], "day")) { check =
+    // true;     }   } }
+  });
   return check;
 }
 
 export function getCalendarDates(calendar) {
   var calendarDates = [];
-  Object
-    .keys(calendar.terms)
-    .map(year => {
-      Object
-        .keys(calendar.terms[year])
-        .map(termId => {
-          var term = calendar.terms[year][termId];
-          term.map(date => {
-            calendarDates.push(moment(date));
-          });
-        });
+  Object.keys(calendar.terms).map(year => {
+    Object.keys(calendar.terms[year]).map(termId => {
+      var term = calendar.terms[year][termId];
+      term.map(date => {
+        calendarDates.push(moment(date));
+      });
     });
+  });
   return calendarDates;
 }
 
@@ -287,67 +274,56 @@ export function getActive(students) {
 
 export function getNotActive(students) {
   return _.filter(students, o => {
-    return o.status === "Not Active" || o.currentClassDay === "" || o.currentClassTime === "0"
+    return (
+      o.status === "Not Active" ||
+      o.currentClassDay === "" ||
+      o.currentClassTime === "0"
+    );
   });
-
 }
 
 export function getCentreCalendarDates(calendars) {
   var termDates = [];
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      Object
-        .keys(calendar.terms)
-        .map(year => {
-          Object
-            .keys(calendar.terms[year])
-            .map(termId => {
-              var term = calendar.terms[year][termId];
-              term.map(date => {
-                date = moment(date).format("YYYYMMDD");
-                termDates.push(moment(date));
-              });
-            });
+  Object.keys(calendars).map(calendarKey => {
+    var calendar = calendars[calendarKey];
+    Object.keys(calendar.terms).map(year => {
+      Object.keys(calendar.terms[year]).map(termId => {
+        var term = calendar.terms[year][termId];
+        term.map(date => {
+          date = moment(date).format("YYYYMMDD");
+          termDates.push(moment(date));
         });
+      });
     });
+  });
 
   return termDates;
 }
 
 export function getCentreCalendarDatesAfter(calendars, centreKey) {
   var termDates = [];
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === centreKey) {
-        Object
-          .keys(calendar.terms)
-          .map(termId => {
-            var term = calendar.terms[termId];
-            term.map(date => {
-              date = moment(date).format("YYYYMMDD");
-              if (moment(date).isSameOrAfter()) {
-                termDates.push(moment(date));
-              }
-            });
-          });
-      }
-    });
+  Object.keys(calendars).map(calendarKey => {
+    var calendar = calendars[calendarKey];
+    if (calendar.centreKey === centreKey) {
+      Object.keys(calendar.terms).map(termId => {
+        var term = calendar.terms[termId];
+        term.map(date => {
+          date = moment(date).format("YYYYMMDD");
+          if (moment(date).isSameOrAfter()) {
+            termDates.push(moment(date));
+          }
+        });
+      });
+    }
+  });
   return termDates;
 }
 
 export function sortByEndTime(classes) {
   return _.orderBy(classes, o => {
-    var endTime = o
-      .endTime
-      .split(":");
+    var endTime = o.endTime.split(":");
     if (endTime[1] === undefined) {
-      endTime = o
-        .endTime
-        .split(".");
+      endTime = o.endTime.split(".");
     }
     if (endTime[1].endsWith("pm")) {
       endTime[0] = endTime[0] + 12;
@@ -359,9 +335,7 @@ export function sortByEndTime(classes) {
 
 export function filterByAMPM(classes, type) {
   return _.filter(classes, o => {
-    var startTime = o
-      .startTime
-      .split(":");
+    var startTime = o.startTime.split(":");
     if (startTime[1].endsWith(type)) {
       return true;
     } else {
@@ -392,13 +366,15 @@ export function paidDate(payments, date, term, year) {
     }
   });
   if (payment !== undefined) {
-    if (_.find(payment.termsPaid[term], o => {
-      if (moment(o.date).isSame(date, "day")) {
-        return true;
-      } else {
-        return false;
-      }
-    }) !== undefined) {
+    if (
+      _.find(payment.termsPaid[term], o => {
+        if (moment(o.date).isSame(date, "day")) {
+          return true;
+        } else {
+          return false;
+        }
+      }) !== undefined
+    ) {
       return true;
     }
   } else {
@@ -408,17 +384,21 @@ export function paidDate(payments, date, term, year) {
 
 export function countAttended(group, date) {
   var attended = 0;
-  Object
-    .keys(group)
-    .forEach(studentId => {
-      if (group[studentId].attendance !== undefined) {
-        if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")] !== undefined) {
-          if (group[studentId].attendance[moment(date).format("YYYY-MM-DD")].attended) {
-            attended = attended + 1;
-          }
+  Object.keys(group).forEach(studentId => {
+    if (group[studentId].attendance !== undefined) {
+      if (
+        group[studentId].attendance[moment(date).format("YYYY-MM-DD")] !==
+        undefined
+      ) {
+        if (
+          group[studentId].attendance[moment(date).format("YYYY-MM-DD")]
+            .attended
+        ) {
+          attended = attended + 1;
         }
       }
-    });
+    }
+  });
   return attended;
 }
 
@@ -443,53 +423,41 @@ export function getAgeGroup(ageGroup, dob) {
 }
 
 export function getCentreKey(centres, venueId) {
-  return _
-    .find(centres, {id: venueId})
-    .key;
+  return _.find(centres, { id: venueId }).key;
 }
 
 export function getAllTermId(calendars, centreKey) {
   var termIds = [];
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      var calendar = calendars[calendarKey];
-      if (calendar.centreKey === centreKey) {
-        var terms = calendar.terms;
-        Object
-          .keys(terms)
-          .map(year => {
-            Object
-              .keys(terms[year])
-              .map(id => {
-                if (_.indexOf(termIds, id) === -1) {
-                  termIds.push(id);
-                }
-              });
-          })
-      }
-    });
+  Object.keys(calendars).map(calendarKey => {
+    var calendar = calendars[calendarKey];
+    if (calendar.centreKey === centreKey) {
+      var terms = calendar.terms;
+      Object.keys(terms).map(year => {
+        Object.keys(terms[year]).map(id => {
+          if (_.indexOf(termIds, id) === -1) {
+            termIds.push(id);
+          }
+        });
+      });
+    }
+  });
   termIds = termIds.sort();
   return termIds;
 }
 
 export function getTermId(calendars) {
   let termId = 0;
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      let terms = calendars[calendarKey].terms;
-      Object
-        .keys(terms)
-        .map(id => {
-          let term = terms[id];
-          if (moment().isBetween(term[0], term[term.length - 1], null, "[]")) {
-            termId = parseInt(id);
-          } else if (moment().isAfter(term[term.length - 1])) {
-            termId = parseInt(id) + 1;
-          }
-        });
+  Object.keys(calendars).map(calendarKey => {
+    let terms = calendars[calendarKey].terms;
+    Object.keys(terms).map(id => {
+      let term = terms[id];
+      if (moment().isBetween(term[0], term[term.length - 1], null, "[]")) {
+        termId = parseInt(id);
+      } else if (moment().isAfter(term[term.length - 1])) {
+        termId = parseInt(id) + 1;
+      }
     });
+  });
   return termId;
 }
 
@@ -524,21 +492,18 @@ export function makeUpDate(makeUps, date) {
 }
 
 export function getCKey(classes, ageGroup, timeDay) {
-  let cKey,
-    sKey;
-  Object
-    .keys(classes)
-    .forEach(classId => {
-      const c = classes[classId];
-      if (c.ageGroup === ageGroup) {
-        sKey = c.calendarKey;
-        const classTime = c.startTime + " - " + c.endTime;
-        const classTimeDay = classTime + " (" + c.day + ")";
-        if (classTimeDay === timeDay) {
-          cKey = c.calendarKey;
-        }
+  let cKey, sKey;
+  Object.keys(classes).forEach(classId => {
+    const c = classes[classId];
+    if (c.ageGroup === ageGroup) {
+      sKey = c.calendarKey;
+      const classTime = c.startTime + " - " + c.endTime;
+      const classTimeDay = classTime + " (" + c.day + ")";
+      if (classTimeDay === timeDay) {
+        cKey = c.calendarKey;
       }
-    });
+    }
+  });
   if (cKey === undefined) {
     cKey = sKey;
   }
@@ -548,38 +513,32 @@ export function getCKey(classes, ageGroup, timeDay) {
 export function getSessionDates(terms, startDate) {
   let selected = {};
   let count = 0;
-  Object
-    .keys(terms)
-    .map(year => {
-      Object
-        .keys(terms[year])
-        .map(termId => {
-          let term = terms[year][termId];
-          let newTermDates = _.filter(term, date => {
-            return moment(date).isSameOrAfter(startDate, "day");
-          });
+  Object.keys(terms).map(year => {
+    Object.keys(terms[year]).map(termId => {
+      let term = terms[year][termId];
+      let newTermDates = _.filter(term, date => {
+        return moment(date).isSameOrAfter(startDate, "day");
+      });
 
-          if (newTermDates.length > 0 && count < 2) {
-            selected[termId] = newTermDates;
-            if (newTermDates.length > 4) {
-              count = 2;
-            } else {
-              count += 1;
-            }
-          }
-        });
+      if (newTermDates.length > 0 && count < 2) {
+        selected[termId] = newTermDates;
+        if (newTermDates.length > 4) {
+          count = 2;
+        } else {
+          count += 1;
+        }
+      }
     });
+  });
 
   return selected;
 }
 
 export function getTotalSessions(sessionDates) {
   let total = 0;
-  Object
-    .keys(sessionDates)
-    .map(termId => {
-      total += sessionDates[termId].length;
-    });
+  Object.keys(sessionDates).map(termId => {
+    total += sessionDates[termId].length;
+  });
   return total;
 }
 
@@ -599,9 +558,7 @@ export function getTermFee(dates, totalSessions) {
       cost = 220;
       break;
     default:
-      cost = dates.length * (totalSessions > 8
-        ? 35
-        : 45);
+      cost = dates.length * (totalSessions > 8 ? 35 : 45);
       break;
   }
   return cost;
@@ -609,88 +566,132 @@ export function getTermFee(dates, totalSessions) {
 
 export function getPerSession(sessionDates) {
   let childPerSession = [];
-  Object
-    .keys(sessionDates)
-    .map(termId => {
-      const term = sessionDates[termId];
-      let perSession = 0;
-      switch (term.length) {
-        case 8:
-          perSession = 37.5;
-          break;
-        case 7:
-          perSession = 38.5;
-          break;
-        case 6:
-          perSession = 40;
-          break;
-        case 5:
-          perSession = 44;
-          break;
-        default:
-          perSession = term.length > 8
-            ? 35
-            : 45;
-          break;
-      }
-      childPerSession[termId] = perSession;
-    });
+  Object.keys(sessionDates).map(termId => {
+    const term = sessionDates[termId];
+    let perSession = 0;
+    switch (term.length) {
+      case 8:
+        perSession = 37.5;
+        break;
+      case 7:
+        perSession = 38.5;
+        break;
+      case 6:
+        perSession = 40;
+        break;
+      case 5:
+        perSession = 44;
+        break;
+      default:
+        perSession = term.length > 8 ? 35 : 45;
+        break;
+    }
+    childPerSession[termId] = perSession;
+  });
   return childPerSession;
+}
+
+export function getBreakdownWithSessionPromo(
+  students,
+  selectedPromotion,
+  promotions
+) {
+  let termFee = [];
+  let termsTotal = [];
+  let perSession = [];
+  Object.keys(students).map(key => {
+    const { sessionDates } = students[key];
+    if (sessionDates !== undefined) {
+      let termTotal = [];
+      termsTotal[key] = 0;
+      let promoRate = 0;
+      if (selectedPromotion !== undefined) {
+        if (selectedPromotion[key] !== undefined) {
+          if (selectedPromotion[key].promoKey !== "0") {
+            let promoKey = selectedPromotion[key].promoKey;
+            if (promotions !== undefined) {
+              if (promotions[promoKey].type === "Session") {
+                promoRate = promotions[promoKey].discount;
+              }
+            }
+          }
+        } else if (selectedPromotion["trial"] !== undefined) {
+          if (selectedPromotion["trial"] !== "0") {
+            let promoKey = selectedPromotion["trial"].promoKey;
+            if (promotions !== undefined) {
+              if (promotions[promoKey].type === "Session") {
+                promoRate = promotions[promoKey].discount;
+              }
+            }
+          }
+        }
+      }
+      Object.keys(sessionDates).map(termId => {
+        const dates = sessionDates[termId];
+        let fee = 0;
+        if (promoRate !== 0) {
+          fee = dates.length * promoRate;
+        } else {
+          fee = getTermFee(dates, getTotalSessions(sessionDates));
+        }
+        termTotal[termId] = fee;
+        termsTotal[key] += fee;
+      });
+      termFee[key] = termTotal;
+    }
+  });
+  return { termFee, termsTotal };
 }
 
 export function getBreakDown(students) {
   let termFee = [];
   let termsTotal = [];
   let perSession = [];
-  Object
-    .keys(students)
-    .map(key => {
-      const {sessionDates} = students[key];
-      if (sessionDates !== undefined) {
-        let termTotal = [];
-        termsTotal[key] = 0;
-        Object
-          .keys(sessionDates)
-          .map(termId => {
-            const dates = sessionDates[termId];
-            const fee = getTermFee(dates, getTotalSessions(sessionDates));
-            termTotal[termId] = fee;
-            termsTotal[key] += fee;
-          });
-        termFee[key] = termTotal;
-      }
-    });
-  return {termFee, termsTotal};
+  Object.keys(students).map(key => {
+    const { sessionDates } = students[key];
+    if (sessionDates !== undefined) {
+      let termTotal = [];
+      termsTotal[key] = 0;
+      Object.keys(sessionDates).map(termId => {
+        const dates = sessionDates[termId];
+        const fee = getTermFee(dates, getTotalSessions(sessionDates));
+        termTotal[termId] = fee;
+        termsTotal[key] += fee;
+      });
+      termFee[key] = termTotal;
+    }
+  });
+  return { termFee, termsTotal };
 }
 
 export function getAllCalendarKeys(classes, ageGroup) {
   let calendarKeys = [];
-  Object
-    .keys(classes)
-    .map(classId => {
-      const c = classes[classId];
-      if (ageGroup === undefined) {
-        calendarKeys.push(c.calendarKey);
-      } else if (ageGroup === c.ageGroup) {
-        calendarKeys.push(c.calendarKey);
-      }
-    });
+  Object.keys(classes).map(classId => {
+    const c = classes[classId];
+    if (ageGroup === undefined) {
+      calendarKeys.push(c.calendarKey);
+    } else if (ageGroup === c.ageGroup) {
+      calendarKeys.push(c.calendarKey);
+    }
+  });
   return _.uniq(calendarKeys);
 }
 
 export function getCalendarKeysByCentre(calendars, centreKey) {
   let calendarKeys = [];
-  Object
-    .keys(calendars)
-    .map(calendarKey => {
-      if (calendars[calendarKey].centreKey === centreKey) {
-        calendarKeys.push(calendarKey);
-      }
-    });
+  Object.keys(calendars).map(calendarKey => {
+    if (calendars[calendarKey].centreKey === centreKey) {
+      calendarKeys.push(calendarKey);
+    }
+  });
   return calendarKeys;
 }
 
-export function getAllCalendarDatesByTerm(calendars, calendarKeys, selectedTerm) {
+export function getAllCalendarDatesByTerm(
+  calendars,
+  calendarKeys,
+  selectedTerm
+) {
   let calendarDates = [];
   calendarKeys.map(calendarKey => {
     const calendar = calendars[calendarKey];
@@ -700,12 +701,15 @@ export function getAllCalendarDatesByTerm(calendars, calendarKeys, selectedTerm)
     });
   });
 
-  return _
-    .uniq(calendarDates)
-    .sort();
+  return _.uniq(calendarDates).sort();
 }
 
-export function getAllCalendarDatesByYearAndTerm(calendars, calendarKeys, selectedTerm, selectedYear) {
+export function getAllCalendarDatesByYearAndTerm(
+  calendars,
+  calendarKeys,
+  selectedTerm,
+  selectedYear
+) {
   let calendarDates = [];
   calendarKeys.map(calendarKey => {
     const calendar = calendars[calendarKey].terms;
@@ -719,105 +723,88 @@ export function getAllCalendarDatesByYearAndTerm(calendars, calendarKeys, select
     }
   });
 
-  return _
-    .uniq(calendarDates)
-    .sort();
+  return _.uniq(calendarDates).sort();
 }
 
 export function getAllCalendarDates(calendars, calendarKeys) {
   let calendarDates = [];
   calendarKeys.map(calendarKey => {
     const calendar = calendars[calendarKey];
-    Object
-      .keys(calendar.terms)
-      .map(year => {
-        Object
-          .keys(calendar.terms[year])
-          .map(termId => {
-            const term = calendar.terms[year][termId];
-            term.map(date => {
-              calendarDates.push(date);
-            });
-          });
+    Object.keys(calendar.terms).map(year => {
+      Object.keys(calendar.terms[year]).map(termId => {
+        const term = calendar.terms[year][termId];
+        term.map(date => {
+          calendarDates.push(date);
+        });
       });
+    });
   });
 
-  return _
-    .uniq(calendarDates)
-    .sort();
+  return _.uniq(calendarDates).sort();
 }
 
 export function getCalendarDateByYearAndMonth(calendar, year, month) {
-  let dates = []
+  let dates = [];
   if (calendar.terms[year] !== undefined) {
-    let terms = calendar.terms[year]
-    Object
-      .keys(terms)
-      .map(id => {
-        terms[id].map(date => {
-          if (moment(date).format('M') === month + 1) {
-            dates.push(date)
-          }
-        })
-      })
+    let terms = calendar.terms[year];
+    Object.keys(terms).map(id => {
+      terms[id].map(date => {
+        if (moment(date).format("M") === month + 1) {
+          dates.push(date);
+        }
+      });
+    });
   }
-
 }
 
 export function getAllCalendarDatesByYearAndMonth(calendars, year, month) {
-  let dates = []
+  let dates = [];
   calendars.map(calendar => {
     if (calendar.terms[year] !== undefined) {
-      Object
-        .keys(calendar.terms[year])
-        .map(termKey => {
-          let term = calendar.terms[year][termKey]
-          term.map(date => {
-            if (moment(date).month() === parseInt(month)) {
-              dates.push(date)
-            }
-          })
-        })
+      Object.keys(calendar.terms[year]).map(termKey => {
+        let term = calendar.terms[year][termKey];
+        term.map(date => {
+          if (moment(date).month() === parseInt(month)) {
+            dates.push(date);
+          }
+        });
+      });
     }
-  })
-  return _
-    .uniq(dates)
-    .sort();
+  });
+  return _.uniq(dates).sort();
 }
 
 export function getAllClassTimeDays(classes, ag, dayOfTrial) {
   let classTimeDays = [];
-  Object
-    .keys(classes)
-    .map(classId => {
-      const {ageGroup, day, startTime, endTime} = classes[classId];
-      if (ag === undefined) {
-        if (day === dayOfTrial) {
-          let classTime = startTime + " - " + endTime;
-          let classTimeDay = classTime + " (" + day + ")";
-          classTimeDays.push({
-            key: classTimeDay,
-            value: classTime + "," + day
-          });
-        } else {
-          let classTime = startTime + " - " + endTime;
-          let classTimeDay = classTime + " (" + day + ")";
-          classTimeDays.push({
-            key: classTimeDay,
-            value: classTime + "," + day
-          });
-        }
-      } else if (ag === ageGroup) {
-        if (day === dayOfTrial) {
-          let classTime = startTime + " - " + endTime;
-          let classTimeDay = classTime + " (" + day + ")";
-          classTimeDays.push({
-            key: classTimeDay,
-            value: classTime + "," + day
-          });
-        }
+  Object.keys(classes).map(classId => {
+    const { ageGroup, day, startTime, endTime } = classes[classId];
+    if (ag === undefined) {
+      if (day === dayOfTrial) {
+        let classTime = startTime + " - " + endTime;
+        let classTimeDay = classTime + " (" + day + ")";
+        classTimeDays.push({
+          key: classTimeDay,
+          value: classTime + "," + day
+        });
+      } else {
+        let classTime = startTime + " - " + endTime;
+        let classTimeDay = classTime + " (" + day + ")";
+        classTimeDays.push({
+          key: classTimeDay,
+          value: classTime + "," + day
+        });
       }
-    });
+    } else if (ag === ageGroup) {
+      if (day === dayOfTrial) {
+        let classTime = startTime + " - " + endTime;
+        let classTimeDay = classTime + " (" + day + ")";
+        classTimeDays.push({
+          key: classTimeDay,
+          value: classTime + "," + day
+        });
+      }
+    }
+  });
   return _.uniqBy(classTimeDays, "key");
 }
 
@@ -832,7 +819,9 @@ export function similarity(s1, s2) {
   if (longerLength == 0) {
     return 1.0;
   }
-  return ((longerLength - editDistance(longer, shorter)) / parseFloat(longerLength));
+  return (
+    (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength)
+  );
 }
 
 function editDistance(s1, s2) {
@@ -843,20 +832,18 @@ function editDistance(s1, s2) {
   for (var i = 0; i <= s1.length; i++) {
     var lastValue = i;
     for (var j = 0; j <= s2.length; j++) {
-      if (i == 0) 
-        costs[j] = j;
+      if (i == 0) costs[j] = j;
       else {
         if (j > 0) {
           var newValue = costs[j - 1];
-          if (s1.charAt(i - 1) != s2.charAt(j - 1)) 
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
             newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
           costs[j - 1] = lastValue;
           lastValue = newValue;
         }
       }
     }
-    if (i > 0) 
-      costs[s2.length] = lastValue;
-    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
   return costs[s2.length];
 }

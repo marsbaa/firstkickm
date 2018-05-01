@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   FormGroup,
   FormControl,
@@ -6,27 +6,27 @@ import {
   Grid,
   Row,
   Col
-} from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-require('react-datepicker/dist/react-datepicker.css');
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
-import { updateNavTitle, addPromotion } from 'actions';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { browserHistory } from 'react-router';
+} from "react-bootstrap";
+import DatePicker from "react-datepicker";
+require("react-datepicker/dist/react-datepicker.css");
+import Select from "react-select";
+import "react-select/dist/react-select.css";
+import { updateNavTitle, addPromotion } from "actions";
+import { connect } from "react-redux";
+import moment from "moment";
+import { browserHistory } from "react-router";
 
 class PromotionAdd extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      value: "",
       startDate: moment(),
       endDate: moment(),
-      name: '',
-      discount: '',
-      type: '',
-      group: ''
+      name: "",
+      discount: "",
+      type: "",
+      group: ""
     };
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
@@ -36,7 +36,7 @@ class PromotionAdd extends React.Component {
 
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch(updateNavTitle('/m/promotions', 'Add Promotion'));
+    dispatch(updateNavTitle("/m/promotions", "Add Promotion"));
   }
 
   handleStartDateChange(date) {
@@ -63,24 +63,24 @@ class PromotionAdd extends React.Component {
       discount: this.state.discount,
       type: this.state.type,
       group: this.state.group,
-      startDate: moment(this.state.startDate).format('YYYY-MM-DD'),
-      endDate: moment(this.state.endDate).format('YYYY-MM-DD')
+      startDate: moment(this.state.startDate).format("YYYY-MM-DD"),
+      endDate: moment(this.state.endDate).format("YYYY-MM-DD")
     };
 
     dispatch(addPromotion(promotion));
-    browserHistory.push('/m/promotions/');
+    browserHistory.push("/m/promotions/");
   }
 
   render() {
     const { centres } = this.props;
-    let options = [{ label: 'All Centres', value: 'All' }];
+    let options = [{ label: "All Centres", value: "All" }];
     Object.keys(centres).map(centreKey => {
       const { name } = centres[centreKey];
       options.push({ label: name, value: name });
     });
 
     return (
-      <Grid style={{ marginTop: '20px' }}>
+      <Grid style={{ marginTop: "20px" }}>
         <Row>
           <Col xs={12} md={12} lg={12}>
             <FormGroup>
@@ -128,6 +128,7 @@ class PromotionAdd extends React.Component {
                   <option value="select">Select</option>
                   <option value="Amount">Amount</option>
                   <option value="Percentage">Percentage</option>
+                  <option value="Session">Session</option>
                 </FormControl>
               </Col>
               <Col xs={6}>
@@ -144,14 +145,14 @@ class PromotionAdd extends React.Component {
             </Row>
           </Col>
         </Row>
-        <Row style={{ marginTop: '15px' }}>
+        <Row style={{ marginTop: "15px" }}>
           <Col xs={6}>
-            <p style={{ textAlign: 'center' }}>
+            <p style={{ textAlign: "center" }}>
               <b>Start Date</b>
             </p>
           </Col>
           <Col xs={6}>
-            <p style={{ textAlign: 'center' }}>
+            <p style={{ textAlign: "center" }}>
               <b>End Date</b>
             </p>
           </Col>
