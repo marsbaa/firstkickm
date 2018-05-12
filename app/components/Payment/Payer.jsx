@@ -16,7 +16,7 @@ const Payer = ({ student, credit, creditAmount, onShow, type }) => {
   if (payments !== undefined) {
     Object.keys(payments).map(paymentId => {
       const { termsPaid, date } = payments[paymentId];
-      if (termsPaid !== undefined) {
+      if (termsPaid !== undefined && moment().isSame(date, "year")) {
         terms = union(terms, Object.keys(termsPaid));
       }
     });
@@ -57,22 +57,22 @@ const Payer = ({ student, credit, creditAmount, onShow, type }) => {
           {credit ? (
             <button className="innerbtn">${creditAmount}</button>
           ) : null}
-          {type !== "Not Active" ? 
-          <button
-          className="innerbtn"
-          onClick={e => onShow(e, key, childName, email)}
-        >
-          <Glyphicon glyph="shopping-cart" />{" "}
-        </button>: null  
-        }
-          {type !== "Not Active" ?
-            <Link to={"/m/payment/collection/" + key}>
-            <button className="innerbtn">
-              <Glyphicon glyph="usd" />{" "}
+          {type !== "Not Active" ? (
+            <button
+              className="innerbtn"
+              onClick={e => onShow(e, key, childName, email)}
+            >
+              <Glyphicon glyph="shopping-cart" />{" "}
             </button>
-          </Link>: null
-          }
-          
+          ) : null}
+          {type !== "Not Active" ? (
+            <Link to={"/m/payment/collection/" + key}>
+              <button className="innerbtn">
+                <Glyphicon glyph="usd" />{" "}
+              </button>
+            </Link>
+          ) : null}
+
           <Link to={"/m/payment/history/" + key}>
             <button className="innerbtn">
               <Glyphicon glyph="list-alt" />{" "}
