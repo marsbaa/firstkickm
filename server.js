@@ -1,17 +1,17 @@
-var express = require('express');
-var path = require('path');
-var nodemailer = require('nodemailer');
-var compression = require('compression');
-var fs = require('fs');
-var bodyParser = require('body-parser');
+var express = require("express");
+var path = require("path");
+var nodemailer = require("nodemailer");
+var compression = require("compression");
+var fs = require("fs");
+var bodyParser = require("body-parser");
 
 var smtpConfig = {
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   port: 465,
   secure: true, // use SSL
   auth: {
-    user: 'payment@fka.sg', // Your email id
-    pass: 'Firstkick123<' // Your password
+    user: "payment@fka.sg", // Your email id
+    pass: "Firstkick123<" // Your password
   }
 };
 
@@ -21,22 +21,22 @@ var smtpTransport = nodemailer.createTransport(smtpConfig);
 var app = express();
 const PORT = process.env.PORT || 3000;
 app.use(compression());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Cache-Control", "no-cache");
   next();
 });
 
-app.get('*', function(req, res) {
+app.get("*", function(req, res) {
   // and drop 'public' in the middle of here
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post('/send', function(req, res) {
+app.post("/send", function(req, res) {
   var mailOptions = {
     to: req.body.to,
     subject: req.body.subject,
@@ -49,10 +49,10 @@ app.post('/send', function(req, res) {
     } else {
       res.sendStatus(200);
     }
-    console.log('Message sent: ' + response.message);
+    console.log("Message sent: " + response.message);
     smtpTransport.close();
   });
 });
 
 app.listen(PORT);
-console.log('server started on port ' + PORT);
+console.log("server started on port " + PORT);
