@@ -4,13 +4,15 @@
   "description": "First Kick Management System",
   "main": "server.js",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-    "start:dev": "webpack-dev-server --inline --content-base public --history-api-fallback",
+    "start":
+      "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev":
+      "webpack-dev-server --inline --content-base public --history-api-fallback",
     "start:prod": "webpack -p && node server.js"
   },
   "engines": {
-    "node": "6.7.0",
-    "npm": "4.6.1"
+    "node": "v8.2.1",
+    "npm": "6.0.1"
   },
   "author": "Ray Yee",
   "license": "MIT",
