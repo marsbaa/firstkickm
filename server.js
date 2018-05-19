@@ -54,5 +54,6 @@ app.post("/send", function(req, res) {
   });
 });
 
-app.listen(PORT);
-console.log("server started on port " + PORT);
+app.listen(PORT, "0.0.0.0", function() {
+  console.log("Listening on Port 3000");
+});
