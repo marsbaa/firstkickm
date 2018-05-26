@@ -188,7 +188,7 @@ class PaymentBreakdown2 extends React.Component {
           );
           html.push(
             <Row
-              key={"credit" + id}
+              key={"credit" + childName}
               style={{
                 padding: "0px 15px",
                 marginTop: "5px"
@@ -251,14 +251,14 @@ class PaymentBreakdown2 extends React.Component {
 
     return (
       <div>
-        <Panel
-          header={
+        <Panel id="paymentBreakdown">
+          <Panel.Heading>
             <font style={{ fontSize: "16px", fontWeight: "bold" }}>
               {" "}
               Fees Breakdown{" "}
             </font>
-          }
-          footer={
+          </Panel.Heading>
+          <Panel.Footer>
             <Row style={{ paddingRight: "20px" }}>
               {" "}
               <Col xs={8} md={8} lg={8}>
@@ -285,9 +285,8 @@ class PaymentBreakdown2 extends React.Component {
                 </font>{" "}
               </Col>{" "}
             </Row>
-          }
-        >
-          {html}
+          </Panel.Footer>
+          <Panel.Body>{html}</Panel.Body>
         </Panel>
         <PayersPaymentMethodSelector
           total={total}

@@ -20,36 +20,37 @@ class PromotionSelector extends React.Component {
   render() {
     const { promotions, dispatch } = this.props;
     return (
-      <Panel
-        header={
+      <Panel>
+        <Panel.Heading>
           <font style={{ fontSize: "16px", fontWeight: "bold" }}>
             Promotion Discount
           </font>
-        }
-      >
-        <FormGroup>
-          <FormControl
-            componentClass="select"
-            defaultValue={0}
-            onChange={e => {
-              dispatch(addSelectedPromotion(e.target.value, "trial"));
-            }}
-          >
-            <option key="0" value="0">
-              select
-            </option>
-            {Object.keys(promotions).map(promoKey => {
-              const { name, group } = promotions[promoKey];
-              if (group === "Trial" || group === "All") {
-                return (
-                  <option key={promoKey} value={promoKey}>
-                    {name}
-                  </option>
-                );
-              }
-            })}
-          </FormControl>
-        </FormGroup>
+        </Panel.Heading>
+        <Panel.Body>
+          <FormGroup>
+            <FormControl
+              componentClass="select"
+              defaultValue={0}
+              onChange={e => {
+                dispatch(addSelectedPromotion(e.target.value, "trial"));
+              }}
+            >
+              <option key="0" value="0">
+                select
+              </option>
+              {Object.keys(promotions).map(promoKey => {
+                const { name, group } = promotions[promoKey];
+                if (group === "Trial" || group === "All") {
+                  return (
+                    <option key={promoKey} value={promoKey}>
+                      {name}
+                    </option>
+                  );
+                }
+              })}
+            </FormControl>
+          </FormGroup>
+        </Panel.Body>
       </Panel>
     );
   }

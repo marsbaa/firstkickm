@@ -212,13 +212,13 @@ class PaymentBreakdown extends React.Component {
 
     return (
       <div>
-        <Panel
-          header={
+        <Panel>
+          <Panel.Heading>
             <font style={{ fontSize: "16px", fontWeight: "bold" }}>
               Fees Breakdown
             </font>
-          }
-          footer={
+          </Panel.Heading>
+          <Panel.Footer>
             <Row style={{ paddingRight: "20px" }}>
               <Col xs={8} md={8} lg={8}>
                 <font style={{ fontSize: "16px", fontWeight: "bold" }}>
@@ -238,9 +238,8 @@ class PaymentBreakdown extends React.Component {
                 </font>
               </Col>
             </Row>
-          }
-        >
-          {html}
+          </Panel.Footer>
+          <Panel.Body>{html}</Panel.Body>
         </Panel>
         <PaymentMethodSelector
           total={total}

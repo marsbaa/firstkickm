@@ -496,13 +496,13 @@ class PaymentForm extends React.Component {
           </Row>
           <Row>
             <Col md={12} xs={12}>
-              <Panel
-                header={
-                  <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+              <Panel>
+                <Panel.Heading>
+                <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
                     Pro-rate from Last Term
                   </font>
-                }
-              >
+                </Panel.Heading>
+                <Panel.Body>
                 <FormGroup>
                   <ControlLabel>Amount</ControlLabel>
                   <FormControl
@@ -515,6 +515,10 @@ class PaymentForm extends React.Component {
                     }}
                   />
                 </FormGroup>
+                </Panel.Body>
+              </Panel>
+
+               
               </Panel>
             </Col>
           </Row>
@@ -1098,14 +1102,17 @@ class PaymentForm extends React.Component {
         </Row>
         <Row>
           <Col md={12} xs={12}>
-            <Panel
-              header={
-                <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            <Panel>
+              <Panel.Heading>
+              <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
                   Fees Breakdown
                 </font>
-              }
-              footer={
-                <Row style={{ paddingRight: '20px' }}>
+              </Panel.Heading>
+              <Panel.Body>
+              {fees}
+              </Panel.Body>
+              <Panel.Footer>
+              <Row style={{ paddingRight: '20px' }}>
                   <Col xs={8} md={8}>
                     <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
                       Total:
@@ -1124,21 +1131,19 @@ class PaymentForm extends React.Component {
                     </font>
                   </Col>
                 </Row>
-              }
-            >
-              {fees}
+              </Panel.Footer>
             </Panel>
           </Col>
         </Row>
         <Row>
           <Col md={12} xs={12}>
-            <Panel
-              header={
-                <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            <Panel>
+              <Panel.Heading>
+              <font style={{ fontSize: '16px', fontWeight: 'bold' }}>
                   Payment Method
                 </font>
-              }
-            >
+              </Panel.Heading>
+              <Panel.Body>
               <button
                 className={cashClass}
                 onClick={e => {
@@ -1175,6 +1180,7 @@ class PaymentForm extends React.Component {
               >
                 NETS
               </button>
+              </Panel.Body>
             </Panel>
           </Col>
           <Col md={12} xs={12}>

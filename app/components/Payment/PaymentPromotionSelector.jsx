@@ -13,36 +13,37 @@ class PaymentPromotionSelector extends React.Component {
       return moment().isSameOrBefore(o.endDate, "day");
     });
     return (
-      <Panel
-        header={
+      <Panel>
+        <Panel.Heading>
           <font style={{ fontSize: "16px", fontWeight: "bold" }}>
             Promotion Discount
           </font>
-        }
-      >
-        <FormGroup>
-          <FormControl
-            componentClass="select"
-            defaultValue={0}
-            onChange={e => {
-              dispatch(addSelectedPromotion(e.target.value, payerKey));
-            }}
-          >
-            <option key="0" value="0">
-              select
-            </option>
-            {Object.keys(filteredPromotions).map(promoKey => {
-              const { name, group, key } = filteredPromotions[promoKey];
-              if (group === "Current" || group === "All") {
-                return (
-                  <option key={key} value={key}>
-                    {name}
-                  </option>
-                );
-              }
-            })}
-          </FormControl>
-        </FormGroup>
+        </Panel.Heading>
+        <Panel.Body>
+          <FormGroup>
+            <FormControl
+              componentClass="select"
+              defaultValue={0}
+              onChange={e => {
+                dispatch(addSelectedPromotion(e.target.value, payerKey));
+              }}
+            >
+              <option key="0" value="0">
+                select
+              </option>
+              {Object.keys(filteredPromotions).map(promoKey => {
+                const { name, group, key } = filteredPromotions[promoKey];
+                if (group === "Current" || group === "All") {
+                  return (
+                    <option key={key} value={key}>
+                      {name}
+                    </option>
+                  );
+                }
+              })}
+            </FormControl>
+          </FormGroup>
+        </Panel.Body>
       </Panel>
     );
   }

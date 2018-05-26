@@ -1,8 +1,8 @@
-import React from 'react';
-import _ from 'lodash';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { Row, Col, ButtonGroup, Button, Panel } from 'react-bootstrap';
+import React from "react";
+import _ from "lodash";
+import { connect } from "react-redux";
+import moment from "moment";
+import { Row, Col, ButtonGroup, Button, Panel } from "react-bootstrap";
 
 class PaymentDatesSelector extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class PaymentDatesSelector extends React.Component {
     var calendarDates = this.props.calendarDates;
     var calendarKey = this.props.calendarKey;
     var payerId = this.props.payerId;
-    var year = moment(startDate).year()
+    var year = moment(startDate).year();
     var calendar = calendars[calendarKey];
     var count = 0;
     var selected = [];
@@ -95,11 +95,11 @@ class PaymentDatesSelector extends React.Component {
     if (deselected === undefined) {
       deselected = [];
     }
-    if (e.target.className === 'datebtn') {
-      e.target.className = 'downbtn';
+    if (e.target.className === "datebtn") {
+      e.target.className = "downbtn";
       deselected.push(date);
-    } else if (e.target.className === 'downbtn') {
-      e.target.className = 'datebtn';
+    } else if (e.target.className === "downbtn") {
+      e.target.className = "datebtn";
       var index = _.findIndex(deselected, d => {
         return moment(d).isSame(date);
       });
@@ -113,82 +113,80 @@ class PaymentDatesSelector extends React.Component {
     var html = [];
     this.state.selectedDates.map((term, termId) => {
       html.push(
-        <Panel
-          key={termId}
-          header={
+        <Panel key={termId}>
+          <Panel.Heading>
             <Row>
-              <Col xs={8} md={8}>Term {termId}</Col>
+              <Col xs={8} md={8}>
+                Term {termId}
+              </Col>
               <Col xs={4} md={4}>
                 <font
                   style={{
-                    fontSize: '14px',
-                    fontWeight: 'normal',
-                    float: 'right',
-                    textDecoration: 'underline'
+                    fontSize: "14px",
+                    fontWeight: "normal",
+                    float: "right",
+                    textDecoration: "underline"
                   }}
                 >
                   Sessions: {term.length}
                 </font>
               </Col>
             </Row>
-          }
-        >
-          <ButtonGroup key={termId} style={{ width: '100%' }}>
-            {term.map(date => {
-              var attended = false;
-              if (student.attendance !== undefined) {
-                if (
-                  student.attendance[moment(date).format('YYYY-MM-DD')] !==
-                  undefined
-                ) {
+          </Panel.Heading>
+          <Panel.Body>
+            <ButtonGroup key={termId} style={{ width: "100%" }}>
+              {term.map(date => {
+                var attended = false;
+                if (student.attendance !== undefined) {
                   if (
-                    student.attendance[moment(date).format('YYYY-MM-DD')]
-                      .attended
+                    student.attendance[moment(date).format("YYYY-MM-DD")] !==
+                    undefined
                   ) {
-                    attended = true;
+                    if (
+                      student.attendance[moment(date).format("YYYY-MM-DD")]
+                        .attended
+                    ) {
+                      attended = true;
+                    }
                   }
                 }
-              }
-              if (attended) {
-                return (
-                  <button
-                    className="datebtn"
-                    key={date}
-                    style={{
-                      width: '25%',
-                      margin: '0px',
-                      height: '40px',
-                      backgroundColor: 'green'
-                    }}
-                  >
-                    {moment(date).format('D MMM')}
-                  </button>
-                );
-              } else {
-                return (
-                  <button
-                    className="datebtn"
-                    key={date}
-                    style={{ width: '25%', margin: '0px', height: '40px' }}
-                    onClick={e => {
-                      this.handleDatesChange(e, date);
-                    }}
-                  >
-                    {moment(date).format('D MMM')}
-                  </button>
-                );
-              }
-            })}
-          </ButtonGroup>
+                if (attended) {
+                  return (
+                    <button
+                      className="datebtn"
+                      key={date}
+                      style={{
+                        width: "25%",
+                        margin: "0px",
+                        height: "40px",
+                        backgroundColor: "green"
+                      }}
+                    >
+                      {moment(date).format("D MMM")}
+                    </button>
+                  );
+                } else {
+                  return (
+                    <button
+                      className="datebtn"
+                      key={date}
+                      style={{ width: "25%", margin: "0px", height: "40px" }}
+                      onClick={e => {
+                        this.handleDatesChange(e, date);
+                      }}
+                    >
+                      {moment(date).format("D MMM")}
+                    </button>
+                  );
+                }
+              })}
+            </ButtonGroup>
+          </Panel.Body>
         </Panel>
       );
     });
 
-    return (
-      <div>
-        {html}
-      </div>
-    );
+    return <div>{html}</div>;
   }
 }
 
