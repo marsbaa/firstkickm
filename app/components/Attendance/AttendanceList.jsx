@@ -104,7 +104,6 @@ class AttendanceList extends React.Component {
     }
     var filteredActive = getActive(students);
     var filteredNotActive = getNotActive(students);
-    console.log(filteredActive);
     Object.keys(classes).forEach(classKey => {
       var { day, startTime, endTime, ageGroup, calendarKey } = classes[
         classKey
@@ -123,6 +122,7 @@ class AttendanceList extends React.Component {
       //Display Class Header
       if (size(filteredActiveClass) !== 0) {
         var sortedActiveClass = sortBy(filteredActiveClass, ['childName']);
+        console.log(sortedActiveClass)
         html.push(
           <AttendanceClassList
             key={ageGroup + classTimeDay}
@@ -144,14 +144,17 @@ class AttendanceList extends React.Component {
           Object.keys(filteredMakeUps).forEach(makeUpId => {
             const { studentKey } = filteredMakeUps[makeUpId];
             const student = find(filteredActive, { key: studentKey });
-            html.push(
-              <Attendee
-                key={studentKey}
-                student={student}
-                date={this.state.startDate}
-                type="makeup"
-              />
-            );
+            if (student !== undefined) {
+              html.push(
+                <Attendee
+                  key={studentKey}
+                  student={student}
+                  date={this.state.startDate}
+                  type="makeup"
+                />
+              );
+            }
+           
           });
         }
       }
