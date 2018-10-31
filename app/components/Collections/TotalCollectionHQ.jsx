@@ -52,7 +52,6 @@ class TotalCollectionHQ extends React.Component {
   render() {
     var { payments, selection } = this.props;
     var html = [];
-    console.log(payments)
     var filteredPayments = filter(payments, p => {
       return (
         moment(p.date).format('MMYYYY') ===
@@ -182,6 +181,7 @@ class TotalCollectionHQ extends React.Component {
         var groupNETSPayments = groupBy(netsPayments, function(p) {
           return moment(p.date).format('DD MMM YYYY');
         });
+        console.log(groupNETSPayments)
         Object.keys(groupNETSPayments).forEach(date => {
           var subTotal = reduce(
             groupNETSPayments[date],
@@ -192,7 +192,7 @@ class TotalCollectionHQ extends React.Component {
           );
           html.push(
             <Row
-              key={'cash' + date}
+              key={'nets' + date}
               style={{
                 backgroundColor: '#f5f5f5',
                 padding: '8px 15px',
@@ -207,7 +207,7 @@ class TotalCollectionHQ extends React.Component {
                 {date}
               </Col>
               <Col xs={6} md={6} style={{ textAlign: 'right' }}>
-                Day Cash Total : ${subTotal}
+                Day NETS Total : ${subTotal}
               </Col>
             </Row>
           );
@@ -255,7 +255,7 @@ class TotalCollectionHQ extends React.Component {
                 fontSize: '14px'
               }}
             >
-              Month Total Cash: ${total}
+              Month Total NETS: ${total}
             </Col>
           </Row>
         );
