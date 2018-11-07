@@ -47,7 +47,6 @@ class PaymentBreakdown2 extends React.Component {
     } = this.props;
 
     const feeBeforePromo = getBreakDown(payers);
-    console.log(feeBeforePromo);
     const { termFee, termsTotal } = getBreakdownWithSessionPromo(
       payers,
       selectedPromotion,

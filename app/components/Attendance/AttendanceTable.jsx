@@ -71,7 +71,6 @@ class AttendanceTable extends React.Component {
         let attended = "";
 
         const paid = paidDate(payments, dateId, selectedTerm, selectedYear);
-
         const filteredMakeUps = _.filter(makeUps, { studentKey: key });
         const { to, from } = makeUpDate(filteredMakeUps, dateId);
 
@@ -92,7 +91,7 @@ class AttendanceTable extends React.Component {
             style={{
               width: "100%",
               height: "15px",
-              backgroundColor: from ? "blue" : paid ? "green" : "none",
+              backgroundColor: from ? "blue" : paid ? "green" : "white",
               textAlign: "center",
               color: "white",
               fontSize: "9px"

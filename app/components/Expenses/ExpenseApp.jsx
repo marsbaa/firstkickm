@@ -64,7 +64,6 @@ class ExpenseApp extends React.Component {
       month: this.state.month,
       classKey: key
     })
-    console.log(findExpensesTable)
     let expenseTable = {
       centreKey: this.state.centre,
       year: this.state.year,

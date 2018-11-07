@@ -94,10 +94,11 @@ class AttendanceList extends React.Component {
       selection,
       calendars,
       makeUps,
-      manager
+      manager,
+      allStudents,
+      centres
     } = this.props;
     var html = [];
-
     classes = sortByEndTime(classes);
     if (this.state.filter !== '') {
       classes = filterByAMPM(classes, this.state.filter);
@@ -122,7 +123,6 @@ class AttendanceList extends React.Component {
       //Display Class Header
       if (size(filteredActiveClass) !== 0) {
         var sortedActiveClass = sortBy(filteredActiveClass, ['childName']);
-        console.log(sortedActiveClass)
         html.push(
           <AttendanceClassList
             key={ageGroup + classTimeDay}
@@ -143,7 +143,8 @@ class AttendanceList extends React.Component {
         if (!isEmpty(filteredMakeUps)) {
           Object.keys(filteredMakeUps).forEach(makeUpId => {
             const { studentKey } = filteredMakeUps[makeUpId];
-            const student = find(filteredActive, { key: studentKey });
+            const student = find(allStudents, { key: studentKey });
+            const centreName = find(centres, { id: student.venueId }).name;
             if (student !== undefined) {
               html.push(
                 <Attendee
@@ -151,6 +152,7 @@ class AttendanceList extends React.Component {
                   student={student}
                   date={this.state.startDate}
                   type="makeup"
+                  centreName={centreName}
                 />
               );
             }
@@ -256,6 +258,8 @@ function mapStateToProps(state) {
       state.selection.id,
       state.searchText
     ),
+    centres: state.centres,
+    allStudents: state.students,
     selection: state.selection,
     calendars: filter(state.calendars, {centreKey: state.selection.key}),
     makeUps: state.makeUps,

@@ -34,7 +34,6 @@ class PromotionsApp extends React.Component {
         />
         {Object.keys(promotions).map(promoKey => {
           const { name, discount, type } = promotions[promoKey];
-          console.log(promotions);
           return (
             <ListContent
               key={promoKey}

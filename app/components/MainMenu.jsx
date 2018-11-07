@@ -59,6 +59,15 @@ class MainMenu extends React.Component {
                 Payment
               </button>
             </Link>
+            <Link to="m/attendance/summary">
+              <button
+                className="mainbtn"
+                id="attendanceSummary"
+                disabled={selection.id === "0" ? true : false}
+              >
+                Attendance Summary
+              </button>
+            </Link>
             <Link to="m/jersey">
               <button
                 className="mainbtn"

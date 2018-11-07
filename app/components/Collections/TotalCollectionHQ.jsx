@@ -181,7 +181,6 @@ class TotalCollectionHQ extends React.Component {
         var groupNETSPayments = groupBy(netsPayments, function(p) {
           return moment(p.date).format('DD MMM YYYY');
         });
-        console.log(groupNETSPayments)
         Object.keys(groupNETSPayments).forEach(date => {
           var subTotal = reduce(
             groupNETSPayments[date],

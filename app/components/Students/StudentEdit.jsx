@@ -98,8 +98,6 @@ class StudentEdit extends React.Component {
       classes,
       manager
     } = this.props;
-
-    console.log(student);
     //Age Group List
     let ageGroups = [];
     ageGroups.push(

@@ -118,8 +118,6 @@ class PaymentForm extends React.Component {
       var calendar = calendars[calendarKey];
       var currentTerm = getTermByDate(calendar, moment());
       var currentYear = moment().year()
-      console.log(calendar);
-      console.log(currentTerm);
       var startDate = moment(calendar.terms[currentYear][currentTerm][0]);
       var calendarDate = getCalendarDates(calendar);
       if (child.payments !== undefined) {
@@ -128,7 +126,6 @@ class PaymentForm extends React.Component {
           if (payment.termsPaid !== undefined) {
             Object.keys(payment.termsPaid).map(termId => {
               var term = payment.termsPaid[termId];
-              console.log(term);
               term.map(session => {
                 var index = findIndex(calendarDate, d => {
                   return moment(d).isSame(session.date, 'day');
@@ -180,7 +177,6 @@ class PaymentForm extends React.Component {
     this.setState({
       startDate: dates
     });
-    console.log(this.state.startDate)
   }
 
   handleReceivedDate(date) {
@@ -430,7 +426,6 @@ class PaymentForm extends React.Component {
       paymentDetails.push(paymentDetail);
     });
     let invoiceHTML = InvoiceTemplate.render(paymentDetails);
-    console.log(invoiceHTML);
     SendMail.mail(
       this.state.email,
       'First Kick Academy - Payment Receipt',
@@ -453,7 +448,6 @@ class PaymentForm extends React.Component {
     
     this.state.payer.map((student, id) => {
       email = student.email;
-      console.log(moment(this.state.startDate[id]))
       tabs.push(
         <Tab eventKey={id} key={student.key} title={student.childName}>
           <Row style={{ padding: '10px 20px' }}>

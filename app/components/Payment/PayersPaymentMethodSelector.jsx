@@ -53,7 +53,6 @@ class PayersPaymentMethodSelector extends React.Component {
             ...credit,
             dateUsed: moment(receivedDate).format()
           };
-          console.log(newCredit);
           dispatch(useStudentCredit(newCredit));
         });
       }

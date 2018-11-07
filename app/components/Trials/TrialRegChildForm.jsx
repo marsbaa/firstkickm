@@ -47,7 +47,6 @@ class TrialRegChildForm extends React.Component {
       ageGroup
     } = register[id];
     const centre = find(centres, { id: venueId });
-    console.log(dateOfTrial)
 
     //Get all term dates for Term Dates Selector
     const calendarKeys = getAllCalendarKeys(centre.classes, ageGroup);

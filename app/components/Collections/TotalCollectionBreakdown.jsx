@@ -27,7 +27,6 @@ class TotalCollectionBreakdown extends Component {
     let filteredPayments = filter(students, o => {
       return paidTerm(o.payments, this.state.term);
     });
-    console.log(filteredPayments);
     let paidAmounts = [];
     filteredPayments.map(student => {
       let studentTotal = 0;
@@ -49,9 +48,7 @@ class TotalCollectionBreakdown extends Component {
         });
       }
     });
-    console.log(paidAmounts);
     let groupPayments = groupBy(paidAmounts, 'total');
-    console.log(groupPayments);
     return <div>Hello</div>;
   }
 }

@@ -40,7 +40,6 @@ class DashboardApp extends React.Component {
 
   handleSelectYear(e) {
     e.preventDefault();
-    console.log(e.target.value);
     this.setState({ selectedYear: e.target.value });
   }
 

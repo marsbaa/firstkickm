@@ -62,7 +62,6 @@ class MultipleDayPicker extends React.Component {
   }
 
   render() {
-    console.log(this.state.selectedDays[0])
     return (
       <DayPicker
         month={this.state.selectedDays[0]}
