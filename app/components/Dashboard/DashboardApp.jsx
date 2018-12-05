@@ -57,6 +57,11 @@ class DashboardApp extends React.Component {
     let terms = ["1", "2", "3", "4", "5", "6"];
     let yearOptions = [];
     yearOptions.push(
+      <option key={moment().year() + 1} value={moment().year() + 1}>
+        {moment().year()+ 1}
+      </option>
+    );
+    yearOptions.push(
       <option key={moment().year()} value={moment().year()}>
         {moment().year()}
       </option>
