@@ -178,7 +178,7 @@ class AttendanceList extends React.Component {
         </div>
       );
     }
-
+    console.log('Attendance')
     return (
       <Grid style={{ padding: '10px 0px' }}>
         <Row

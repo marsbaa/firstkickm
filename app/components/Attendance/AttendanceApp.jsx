@@ -4,7 +4,7 @@ import { startStudents } from 'actions';
 import { connect } from 'react-redux';
 
 class AttendanceApp extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     let { dispatch, students } = this.props;
     if (_.isEmpty(students)) {
       dispatch(startStudents());
