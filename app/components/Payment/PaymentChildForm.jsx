@@ -6,7 +6,6 @@ import StartDateSelector from "StartDateSelector";
 import PayersDateSelector from "PayersDateSelector";
 import PaymentPromotionSelector from 'PaymentPromotionSelector';
 import {
-  getCentreKey,
   getCalendarDates,
   getCKey,
   getSessionDates

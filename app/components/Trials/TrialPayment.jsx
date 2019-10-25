@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Row, Col, Tabs, Tab } from 'react-bootstrap';
+import { Grid, Row, Col, Tabs } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import ChildPayTab from 'ChildPayTab';
 import PaymentBreakdown from 'PaymentBreakdown';
@@ -8,6 +8,7 @@ import PromotionSelector from 'PromotionSelector';
 class TrialPayment extends React.Component {
   render() {
     const { register } = this.props;
+    console.log(register)
     return (
       <Grid>
         <Row>

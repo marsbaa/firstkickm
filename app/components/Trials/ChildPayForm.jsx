@@ -1,22 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tab } from 'react-bootstrap';
+import filter from 'lodash/filter'
 import StartDateSelector from 'StartDateSelector';
 import SessionDatesSelector from 'SessionDatesSelector';
 import {
-  getCentreKey,
   getCalendarDates,
   getCKey,
   getSessionDates
 } from 'helper';
 import { updateStartDate } from 'actions';
-import moment from 'moment';
 
 class ChildPayForm extends React.Component {
   render() {
-    const { payerKey, centres, calendars, dispatch, register } = this.props;
+    const { payerKey, calendars, dispatch, register, classes } = this.props;
     const {
-      venueId,
       ageGroup,
       currentClassDay,
       currentClassTime,
@@ -24,7 +21,6 @@ class ChildPayForm extends React.Component {
     } = register[payerKey];
 
     //Get Calendar Dates
-    const { classes } = centres[getCentreKey(centres, venueId)];
     const timeDay = currentClassTime + ' (' + currentClassDay + ')';
     const cKey = getCKey(classes, ageGroup, timeDay);
     const calendar = calendars[cKey];
@@ -54,7 +50,8 @@ function mapStateToProps(state) {
   return {
     register: state.register,
     centres: state.centres,
-    calendars: state.calendars
+    calendars: state.calendars,
+    classes: filter(state.classes, { centreKey: state.selection.key })
   };
 }
 

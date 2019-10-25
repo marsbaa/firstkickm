@@ -12,6 +12,8 @@ import moment from 'moment';
 
 const StartDateSelector = props => {
   const { startDate, calendarDates } = props;
+  console.log(startDate)
+  console.log(calendarDates)
   return (
     <Row style={{ marginBottom: '10px', marginLeft: '10px' }}>
       <Col xs={12} md={12} lg={12}>
@@ -20,7 +22,7 @@ const StartDateSelector = props => {
           <DatePicker
             id="datePicker"
             dateFormat="YYYY-MM-DD"
-            selected={moment(startDate)}
+            selected={moment(startDate, 'YYYY-MM-DD')}
             includeDates={calendarDates}
             onChange={e => props.handleChange(moment(e).format('YYYY-MM-DD'))}
           />

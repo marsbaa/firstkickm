@@ -1,7 +1,6 @@
 import React from "react";
-import { Grid, Glyphicon, Row, Col } from "react-bootstrap";
+import {Glyphicon, Row, Col } from "react-bootstrap";
 import ChildPayTerm from "ChildPayTerm";
-import { getTotalSessions } from "helper";
 
 const ChildPayDetails = props => {
   const { childName, termFee, sessionDates } = props;

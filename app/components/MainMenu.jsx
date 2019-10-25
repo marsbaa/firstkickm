@@ -128,7 +128,43 @@ class MainMenu extends React.Component {
     } else if (user.assignedRoles === "Head Coach") {
       menuHTML.push(
         <div key="headcoachmenu">
-          <Link to="m/coachattendance">
+          <Link to="m/trials">
+              <button
+                className="mainbtn"
+                id="trials"
+                disabled={selection.id === "0" ? true : false}
+              >
+                Trials
+              </button>
+            </Link>
+            <Link to="m/attendance">
+              <button
+                className="mainbtn"
+                id="attendance"
+                disabled={selection.id === "0" ? true : false}
+              >
+                Student Attendance
+              </button>
+            </Link>
+          <Link to="m/students">
+              <button
+                className="mainbtn"
+                id="student"
+                disabled={selection.id === "0" ? true : false}
+              >
+                Students Profile
+              </button>
+            </Link>
+            <Link to="m/jersey">
+              <button
+                className="mainbtn"
+                id="jersey"
+                disabled={selection.id === "0" ? true : false}
+              >
+                Jersey Issue
+              </button>
+            </Link>
+          {/* <Link to="m/coachattendance">
             <button
               className="mainbtn"
               id="coach"
@@ -145,7 +181,7 @@ class MainMenu extends React.Component {
             >
               Coach Scheduling
             </button>
-          </Link>
+          </Link> */}
         </div>
       );
     } else if (user.assignedRoles === "Manager") {

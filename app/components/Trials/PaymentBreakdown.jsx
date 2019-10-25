@@ -42,7 +42,6 @@ class PaymentBreakdown extends React.Component {
       register,
       classes,
       calendars,
-      parent,
       promotions,
       selectedPromotion
     } = this.props;
@@ -62,7 +61,6 @@ class PaymentBreakdown extends React.Component {
       const {
         childName,
         sessionDates,
-        notJoining,
         venueId,
         ageGroup,
         gender,
@@ -84,6 +82,7 @@ class PaymentBreakdown extends React.Component {
         medicalCondition,
         venueId
       };
+      if (sessionDates) {
       const totalSessions = getTotalSessions(sessionDates);
       const actualTerms =
         calendars[getCalendarKey(register[payerKey], classes)].terms;
@@ -206,6 +205,7 @@ class PaymentBreakdown extends React.Component {
       paymentDetail.termsPaid = termsPaid;
       total += childTotal;
       paymentDetails[payerKey] = paymentDetail;
+    }
     });
 
     return (
@@ -254,7 +254,7 @@ class PaymentBreakdown extends React.Component {
 function mapStateToProps(state) {
   return {
     register: filter(state.register, o => !o.notJoining),
-    classes: state.selection.classes,
+    classes: filter(state.classes, { centreKey: state.selection.key }),
     calendars: state.calendars,
     promotions: state.promotions,
     selectedPromotion: state.selectedPromotion

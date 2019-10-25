@@ -7,18 +7,16 @@ import {
   ControlLabel,
   FormControl
 } from 'react-bootstrap';
-import find from 'lodash/find';
+import filter from 'lodash/filter'
 import { RadioGroup, Radio } from 'react-radio-group';
 import CentreSelector from 'CentreSelector';
 import TimeDaySelector from 'TimeDaySelector';
 import TermDateSelector from 'TermDateSelector';
 import { connect } from 'react-redux';
 import {
-  getAgeGroup,
   getAllCalendarKeys,
   getAllCalendarDates,
   getAllClassTimeDays,
-  getCentreKey
 } from 'helper';
 import {
   updateChildName,
@@ -33,28 +31,25 @@ import moment from 'moment';
 
 class TrialRegChildForm extends React.Component {
   render() {
-    const { register, id, dispatch, centres, calendars } = this.props;
+    const { register, id, dispatch, calendars, classes } = this.props;
     const {
       childName,
       gender,
       dateOfBirth,
       venueId,
-      timeOfTrial,
       dateOfTrial,
       medicalCondition,
       currentClassTime,
       currentClassDay,
       ageGroup
     } = register[id];
-    const centre = find(centres, { id: venueId });
-
     //Get all term dates for Term Dates Selector
-    const calendarKeys = getAllCalendarKeys(centre.classes, ageGroup);
+    const calendarKeys = getAllCalendarKeys(classes, ageGroup);
     const calendarDates = getAllCalendarDates(calendars, calendarKeys);
 
     //Get all Time Days for TimeDaySelector
     const classTimeDays = getAllClassTimeDays(
-      centre.classes,
+      classes,
       ageGroup,
       moment(dateOfTrial).format('dddd')
     );
@@ -140,8 +135,8 @@ class TrialRegChildForm extends React.Component {
 function mapStateToProps(state) {
   return {
     register: state.register,
-    centres: state.centres,
-    calendars: state.calendars
+    calendars: state.calendars,
+    classes: filter(state.classes, { centreKey: state.selection.key })
   };
 }
 
