@@ -7,7 +7,8 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --inline --content-base public --history-api-fallback",
     "start:prod": "node server.js",
-    "heroku-postbuild": "webpack -p"
+    "build": "webpack -p",
+    "heroku-postbuild": "echo Skip build on Heroku"
   },
   "engines": {
     "node": "v10.16.3",
