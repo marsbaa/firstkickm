@@ -58,7 +58,7 @@
     "if-env": "^1.0.4",
     "image-webpack-loader": "^3.3.0",
     "node-env-file": "^0.1.8",
-    "papaparse": "^4.2.0",
+    "papaparse": "^5.3.0",
     "path": "^0.12.7",
     "prop-types": "^15.6.0",
     "redux-devtools-extension": "^2.13.0",
